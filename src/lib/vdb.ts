@@ -1,4 +1,5 @@
 // Server-only client for the VDB diamond API. Credentials come from env vars and never reach the browser.
+import { unstable_cache } from "next/cache";
 const BASE = process.env.VDB_BASE_URL || "https://apiservices.vdbapp.com";
 export const vdbConfigured = !!(process.env.VDB_API_KEY && process.env.VDB_ACCESS_TOKEN);
 // Price shown on the site = VDB price x DIAMOND_MARKUP (default 1 = the price VDB returns).
@@ -132,12 +133,16 @@ async function harvestFancy(): Promise<Diamond[]> {
   return [...out.values()];
 }
 
+// The harvested list is kept in Vercel's shared data cache (one copy for every server instance, refreshed in the background every
+// 30 minutes, stale copy served meanwhile) and also in memory on this instance. The cron in vercel.json keeps it warm.
+const harvestCached = unstable_cache(async () => { const items = await harvestFancy(); return items.map(d => ({ ...d })); }, ["vdb-fancy-v1"], { revalidate: 1800 });
 let fancyCache: { at: number; items: Diamond[] } | null = null;
 let fancyBusy: Promise<Diamond[]> | null = null;
 export async function getFancy(): Promise<Diamond[]> {
-  const fresh = fancyCache && Date.now() - fancyCache.at < 30 * 60 * 1000;
+  const fresh = fancyCache && Date.now() - fancyCache.at < 10 * 60 * 1000;
   if (fresh) return fancyCache!.items;
-  if (!fancyBusy) fancyBusy = harvestFancy().then(items => { fancyCache = { at: Date.now(), items }; return items; }).finally(() => { fancyBusy = null; });
+  if (!fancyBusy) fancyBusy = harvestCached().then(items => { if (items.length || !fancyCache) fancyCache = { at: Date.now(), items }; return fancyCache!.items; })
+    .catch(e => { if (fancyCache) return fancyCache.items; throw e; }).finally(() => { fancyBusy = null; });
   return fancyCache ? fancyCache.items : fancyBusy; // stale list is served while the refresh runs
 }
 
