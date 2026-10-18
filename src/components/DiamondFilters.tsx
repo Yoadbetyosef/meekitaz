@@ -15,7 +15,7 @@ function Dual({ label, min, max, step, lo, hi, fmt, onChange }: { label: string;
         <input type="range" min={min} max={max} step={step} value={hi} onChange={e => onChange(lo, +e.target.value)} aria-label={`${label} maximum`} />
         <div className="rng-track"><div className="rng-fill" style={{ left: `${L}%`, right: `${R}%` }} /></div>
       </div>
-      <div className="rng-val"><span>{fmt(a)}</span><span>{fmt(b)}</span></div>
+      <div className="rng-val"><span>{fmt(a)}</span><span>{fmt(b)}{b >= max ? "+" : ""}</span></div>
     </div>
   );
 }
@@ -40,7 +40,7 @@ export default function DiamondFilters({ f, setF }: { f: DFilters; setF: (f: DFi
       <div className="wrap">
         <div className="dfp">
           <div className="dfp-head"><div><small className="eyebrow">Refine</small><h2>Carat, price, color, clarity</h2></div><button className="flt-reset" type="button" onClick={() => setF(DEFAULT_FILTERS)}>Reset</button></div>
-          <Dual label="Carat" min={0.5} max={10} step={0.1} lo={f.carat[0]} hi={f.carat[1]} fmt={v => v.toFixed(1) + " ct"} onChange={(a, b) => setF({ ...f, carat: [a, b] })} />
+          <Dual label="Carat" min={0.5} max={20} step={0.1} lo={f.carat[0]} hi={f.carat[1]} fmt={v => v.toFixed(1) + " ct"} onChange={(a, b) => setF({ ...f, carat: [a, b] })} />
           <Dual label="Price" min={100} max={50000} step={100} lo={f.price[0]} hi={f.price[1]} fmt={v => "$" + Math.round(v).toLocaleString("en-US")} onChange={(a, b) => setF({ ...f, price: [a, b] })} />
           <Scale label="Color" kind="col" items={COLORS} notes={["Colorless", "", "", "Near colorless", "", ""]} hint="D is colorless. We stop at I. Tap one grade, then another, for a range." value={f.color} onChange={v => setF({ ...f, color: v })} />
           <Scale label="Clarity" kind="cla" items={CLARITIES} notes={["Flawless", "Internal", "Very, very slight", "Very, very slight", "Very slight", "Very slight"]} hint="Eye-clean from VS2 up. Nothing below." value={f.clarity} onChange={v => setF({ ...f, clarity: v })} />

@@ -6,7 +6,9 @@ export default function ShapeRow({ styles, className }: { styles: { img: string;
   const router = useRouter(), path = usePathname(), sel = useSearchParams().get("style") || "";
   function choose(label: string) {
     const next = sel === label ? "" : label;
-    router.replace(next ? `${path}?style=${encodeURIComponent(next)}` : path, { scroll: false });
+    const q = new URLSearchParams(window.location.search);
+    if (next) q.set("style", next); else q.delete("style");
+    router.replace(q.toString() ? `${path}?${q}` : path, { scroll: false });
     if (next) setTimeout(() => document.getElementById("results")?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
   }
   return (

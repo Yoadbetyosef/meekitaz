@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import StoneMedia from "@/components/StoneMedia";
 import { getDiamond, vdbConfigured } from "@/lib/vdb";
 
 export const revalidate = 300;
@@ -27,7 +28,7 @@ export default async function DiamondPage({ params }: { params: Promise<{ id: st
   return (
     <main className="dd">
       <div className="wrap dd-grid">
-        <div className="dd-media">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={d.image} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} referrerPolicy="no-referrer" /></div>
+        <StoneMedia image={d.image} embed={d.embed} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />
         <div className="dd-info">
           <Link href="/diamonds" className="dd-back">← All diamonds</Link>
           <small className="eyebrow">Lab-grown · {d.lab} certified</small>
@@ -36,7 +37,7 @@ export default async function DiamondPage({ params }: { params: Promise<{ id: st
           <div className="dd-price">{usd(d.price)}</div>
           <div className="dd-cta">
             <Link href="/#contact" className="pill">Book a private appointment</Link>
-            {d.video && <a href={d.video} target="_blank" rel="noopener noreferrer" className="dd-ghost">360° view</a>}
+            {d.video && !d.embed && <a href={d.video} target="_blank" rel="noopener noreferrer" className="dd-ghost">360° view</a>}
             <a href={d.certUrl} target="_blank" rel="noopener noreferrer" className="dd-ghost">View certificate</a>
           </div>
           <dl className="dd-specs">{rows.filter(r => r[1]).map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>

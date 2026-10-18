@@ -5,20 +5,30 @@ import { useSearchParams } from "next/navigation";
 import DiamondFilters, { COLORS, CLARITIES, DEFAULT_FILTERS, type DFilters } from "./DiamondFilters";
 
 type Item = { id: string; vendor: number; stock: string; shape: string; carat: number; color: string | null; clarity: string | null; cut: string | null; lab: string; image: string; embed: string | null; price: number };
+const DEF = DEFAULT_FILTERS;
+const pair = (v: string | null, lo: number, hi: number, def: [number, number], int = false): [number, number] => {
+  const m = v?.match(/^(-?[\d.]+)-(-?[\d.]+)$/); if (!m) return def;
+  const a = Number(m[1]), b = Number(m[2]);
+  return isFinite(a) && isFinite(b) && a >= lo && b <= hi && a <= b && (!int || (Number.isInteger(a) && Number.isInteger(b))) ? [a, b] : def;
+};
+const parseF = (sp: URLSearchParams): DFilters => ({
+  carat: pair(sp.get("c"), 0.5, 20, DEF.carat), price: pair(sp.get("p"), 100, 50000, DEF.price),
+  color: pair(sp.get("col"), 0, 5, DEF.color, true), clarity: pair(sp.get("cl"), 0, 5, DEF.clarity, true),
+});
+const same = (a: [number, number], b: [number, number]) => a[0] === b[0] && a[1] === b[1];
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 const isTouch = () => typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
 
-function Card({ d, playing, setPlaying }: { d: Item; playing: boolean; setPlaying: (id: string | null) => void }) {
+function Card({ d, playing, setPlaying, onOpen }: { d: Item; playing: boolean; setPlaying: (id: string | null) => void; onOpen: () => void }) {
   const t = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stop = () => { if (t.current) clearTimeout(t.current); t.current = null; };
   return (
-    <Link href={`/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}`} className={`pcard dcard${playing ? " playing" : ""}`}>
+    <Link href={`/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}`} className={`pcard dcard${playing ? " playing" : ""}`} onClick={e => { if (!e.defaultPrevented) onOpen(); }}>
       <div
         className="pcard-img"
-        // desktop: hover plays the 360 video in place. phone: tap the picture to play, tap again to stop (the rest of the card opens the stone)
+        // desktop: hover plays the 360 video in place. On phones the video lives on the stone page.
         onMouseEnter={() => { if (d.embed && !isTouch()) { stop(); t.current = setTimeout(() => setPlaying(d.id), 220); } }}
         onMouseLeave={() => { if (!isTouch()) { stop(); setPlaying(null); } }}
-        onClick={e => { if (d.embed && isTouch()) { e.preventDefault(); setPlaying(playing ? null : d.id); } }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={d.image} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} loading="lazy" referrerPolicy="no-referrer" />
@@ -31,9 +41,11 @@ function Card({ d, playing, setPlaying }: { d: Item; playing: boolean; setPlayin
 }
 
 export default function DiamondsBrowser() {
-  const style = useSearchParams().get("style") || "";
-  const [f, setF] = useState<DFilters>(DEFAULT_FILTERS);
-  const [sort, setSort] = useState("price_asc");
+  const sp = useSearchParams();
+  const style = sp.get("style") || "";
+  const [f, setF] = useState<DFilters>(() => parseF(sp));
+  const [sort, setSort] = useState(() => (["price_asc", "price_desc", "carat_desc", "carat_asc"].includes(sp.get("sort") || "") ? (sp.get("sort") as string) : "price_asc"));
+  const restore = useRef<{ pages: number; y: number } | null>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -41,11 +53,32 @@ export default function DiamondsBrowser() {
   const [busy, setBusy] = useState(false);
   const [playing, setPlaying] = useState<string | null>(null);
 
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const put = (k: string, v: string | null) => (v === null ? q.delete(k) : q.set(k, v));
+    put("c", same(f.carat, DEF.carat) ? null : f.carat.join("-")); put("p", same(f.price, DEF.price) ? null : f.price.join("-"));
+    put("col", same(f.color, DEF.color) ? null : f.color.join("-")); put("cl", same(f.clarity, DEF.clarity) ? null : f.clarity.join("-"));
+    put("sort", sort === "price_asc" ? null : sort);
+    const next = window.location.pathname + (q.toString() ? "?" + q : "");
+    if (next !== window.location.pathname + window.location.search) window.history.replaceState(window.history.state, "", next);
+  }, [f, sort]);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("dmd"); if (!raw) return;
+      const v = JSON.parse(raw); sessionStorage.removeItem("dmd");
+      if (v.q === window.location.search && v.pages >= 1) restore.current = { pages: v.pages, y: v.y || 0 };
+    } catch { /* ignore */ }
+  }, []);
+  const remember = () => { try { sessionStorage.setItem("dmd", JSON.stringify({ q: window.location.search, pages: page, y: window.scrollY })); } catch { /* ignore */ } };
+
   const qs = useCallback((p: number) => {
     const q = new URLSearchParams({
-      caratFrom: String(f.carat[0]), caratTo: String(f.carat[1]), priceFrom: String(f.price[0]), priceTo: String(f.price[1]), sort, page: String(p),
+      caratFrom: String(f.carat[0]), priceFrom: String(f.price[0]), sort, page: String(p),
       colorFrom: COLORS[f.color[0]], colorTo: COLORS[f.color[1]], clarityFrom: CLARITIES[f.clarity[0]], clarityTo: CLARITIES[f.clarity[1]],
     });
+    if (f.carat[1] < 20) q.set("caratTo", String(f.carat[1])); // top of the slider = no upper limit
+    if (f.price[1] < 50000) q.set("priceTo", String(f.price[1]));
     if (style) q.set("shapes", style);
     return q.toString();
   }, [f, sort, style]);
@@ -58,7 +91,14 @@ export default function DiamondsBrowser() {
         const j = await r.json();
         if (!r.ok) throw new Error("x");
         if (j.configured === false) { setState("off"); return; }
-        setItems(j.items); setTotal(j.total); setPage(1); setPlaying(null); setState(j.items.length ? "ready" : "empty");
+        let all: Item[] = j.items, pg = 1;
+        const rs = restore.current; restore.current = null;
+        if (rs && rs.pages > 1 && j.items.length) {
+          const rest = await Promise.all(Array.from({ length: rs.pages - 1 }, (_, i) => fetch(`/api/diamonds?${qs(i + 2)}`, { signal: ac.signal }).then(r => r.json()).catch(() => null)));
+          for (const x of rest) { if (x?.items) { all = all.concat(x.items); pg++; } }
+        }
+        setItems(all); setTotal(j.total); setPage(pg); setPlaying(null); setState(all.length ? "ready" : "empty");
+        if (rs) { const go = () => window.scrollTo({ top: rs.y }); setTimeout(go, 80); setTimeout(go, 450); setTimeout(go, 1100); }
       } catch (e) { if ((e as Error)?.name !== "AbortError") setState("error"); }
     }, 350);
     return () => { clearTimeout(t); ac.abort(); };
@@ -92,7 +132,7 @@ export default function DiamondsBrowser() {
           {state === "empty" && <p className="dmsg">No diamonds match these filters. Try widening carat, price, color or clarity.</p>}
           {state === "ready" && (
             <>
-              <div className="pgrid">{items.map(d => <Card key={d.id} d={d} playing={playing === d.id} setPlaying={setPlaying} />)}</div>
+              <div className="pgrid">{items.map(d => <Card key={d.id} d={d} playing={playing === d.id} setPlaying={setPlaying} onOpen={remember} />)}</div>
               {page * 24 < total && <div className="dmore"><button type="button" onClick={more} disabled={busy}>{busy ? "Loading…" : "Show more"}</button></div>}
             </>
           )}
