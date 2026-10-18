@@ -19,17 +19,18 @@ function Seg({ label, opts, on, toggle, note }: { label: string; opts: string[];
   return (<div className="flt"><label>{label}</label><div className="seg">{opts.map(o => <button key={o} type="button" className={on.includes(o) ? "on" : ""} onClick={() => toggle(o)}>{o}</button>)}</div><div className="flt-note">{note}</div></div>);
 }
 
-export default function DiamondFilters() {
-  const init = { carat: [1, 5] as [number, number], price: [1500, 20000] as [number, number], color: ["D", "E", "F"], clarity: ["FL", "IF", "VVS1", "VVS2"] };
-  const [f, setF] = useState(init);
-  const tog = (k: "color" | "clarity") => (v: string) => setF(s => ({ ...s, [k]: s[k].includes(v) ? s[k].filter(x => x !== v) : [...s[k], v] }));
+export type DFilters = { carat: [number, number]; price: [number, number]; color: string[]; clarity: string[] };
+export const DEFAULT_FILTERS: DFilters = { carat: [1, 3], price: [100, 20000], color: ["D", "E", "F", "G"], clarity: ["VVS1", "VVS2", "VS1", "VS2"] };
+
+export default function DiamondFilters({ f, setF }: { f: DFilters; setF: (f: DFilters) => void }) {
+  const tog = (k: "color" | "clarity") => (v: string) => setF({ ...f, [k]: f[k].includes(v) ? f[k].filter(x => x !== v) : [...f[k], v] });
   return (
     <section className="filters" aria-label="Filter diamonds">
       <div className="wrap">
-        <div className="flt-head"><small className="eyebrow" style={{ width: "100%" }}>Refine</small><h2>Carat, price, color, clarity</h2><button className="flt-reset" type="button" onClick={() => setF(init)}>Reset</button></div>
+        <div className="flt-head"><small className="eyebrow" style={{ width: "100%" }}>Refine</small><h2>Carat, price, color, clarity</h2><button className="flt-reset" type="button" onClick={() => setF(DEFAULT_FILTERS)}>Reset</button></div>
         <div className="flt-grid">
-          <Dual label="Carat" min={0.5} max={10} step={0.1} lo={f.carat[0]} hi={f.carat[1]} fmt={v => v.toFixed(1) + " ct"} onChange={(a, b) => setF(s => ({ ...s, carat: [a, b] }))} />
-          <Dual label="Price" min={500} max={50000} step={100} lo={f.price[0]} hi={f.price[1]} fmt={v => "$" + Math.round(v).toLocaleString("en-US")} onChange={(a, b) => setF(s => ({ ...s, price: [a, b] }))} />
+          <Dual label="Carat" min={0.5} max={10} step={0.1} lo={f.carat[0]} hi={f.carat[1]} fmt={v => v.toFixed(1) + " ct"} onChange={(a, b) => setF({ ...f, carat: [a, b] })} />
+          <Dual label="Price" min={100} max={50000} step={100} lo={f.price[0]} hi={f.price[1]} fmt={v => "$" + Math.round(v).toLocaleString("en-US")} onChange={(a, b) => setF({ ...f, price: [a, b] })} />
           <Seg label="Color" opts={["D", "E", "F", "G", "H", "I"]} on={f.color} toggle={tog("color")} note="D is colorless. We stop at I." />
           <Seg label="Clarity" opts={["FL", "IF", "VVS1", "VVS2", "VS1", "VS2"]} on={f.clarity} toggle={tog("clarity")} note="Eye-clean from VS2 up. Nothing below." />
         </div>

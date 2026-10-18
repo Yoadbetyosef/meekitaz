@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { categories } from "@/lib/data";
 import ProductGrid from "@/components/ProductGrid";
-import DiamondFilters from "@/components/DiamondFilters";
+import { Suspense } from "react";
+import DiamondsBrowser from "@/components/DiamondsBrowser";
 
 export function generateStaticParams() { return categories.map(c => ({ category: c.slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
@@ -40,8 +41,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             </div>
           </section>
         )}
-        {p.filters && <DiamondFilters />}
-        <ProductGrid page={p} />
+        {p.filters ? <Suspense fallback={null}><DiamondsBrowser /></Suspense> : <ProductGrid page={p} />}
       </div>
     </main>
   );
