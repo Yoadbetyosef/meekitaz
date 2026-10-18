@@ -88,14 +88,19 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 
 /* ===== FILM ===== */
 .mkfilm{position:relative;z-index:6;background:var(--blue-light);border-radius:30px 30px 0 0;box-shadow:0 -24px 60px rgba(0,0,0,.18);padding:clamp(28px,5vw,64px) 0 clamp(40px,6vw,80px)}
-.mkfilm-in{max-width:min(92vw,880px);margin:0 auto;position:relative}
+.mkfilm-in{max-width:min(92vw,1100px);margin:0 auto;display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center}
+.mkfilm-vid{position:relative}
+.mkfilm-txt h2{font:500 clamp(30px,3.6vw,52px)/1.05 var(--display);margin:0 0 16px}
+.mkfilm-txt p{font:400 17px/1.6 var(--sub);color:#444;margin:0 0 22px;max-width:40ch}
+.mkfilm-txt .pill{background:var(--red);color:#fff}
 .mkfilm video{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:22px;background:#111}
-.mkctl{position:absolute;right:14px;bottom:14px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-radius:999px;padding:6px 8px 6px 6px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.mkctl{position:absolute;left:14px;bottom:14px;display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-radius:999px;padding:6px 8px 6px 6px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .mkmute{width:38px;height:38px;border-radius:50%;border:0;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
 .mkmute svg{width:19px;height:19px}
 .mkmute.on{background:var(--red)}
 .mkvol{-webkit-appearance:none;appearance:none;width:0;height:3px;border-radius:2px;background:var(--ink);opacity:0;transition:width .3s,opacity .3s;margin:0}
 .mkvol.on{width:84px;opacity:1;margin-right:6px}
+@media(max-width:767px){.mkfilm-in{grid-template-columns:1fr;gap:22px}.mkfilm-txt{text-align:center}.mkfilm-txt p{margin-left:auto;margin-right:auto}}
 .mkvol::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--red);border:2px solid #fff;cursor:pointer}
 @media(max-width:767px){.mkfilm{border-radius:28px 28px 0 0}.mkfilm-in{max-width:calc(100% - 28px)}.mkfilm video{border-radius:18px}.mkvol{display:none}}
 
