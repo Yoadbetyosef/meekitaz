@@ -1,16 +1,25 @@
 "use client";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { Cart } from "@/lib/shopify";
+import type { Setting, Stone } from "@/lib/setting";
+import { addLocalRing, clearLocalRings, loadRings, removeLocalRing, setLocalRingSize, type LocalRing } from "@/lib/rings";
 
 type Ctx = {
   cart: Cart | null; open: boolean; busy: boolean; configured: boolean;
+  rings: LocalRing[]; ringError: string; bagCount: number;
   setOpen: (v: boolean) => void;
   add: (variantId: string, quantity?: number) => Promise<void>;
   setQty: (lineId: string, quantity: number) => Promise<void>;
   remove: (lineId: string) => Promise<void>;
-  addRing: (variantId: string, vendor: number, stock: string) => Promise<{ ok: boolean; error?: string }>;
-  setRingSize: (lineIds: string[], size: string) => Promise<void>;
-  removeRing: (lineIds: string[]) => Promise<void>;
+  /** A ring (setting + diamond) goes into the bag. It stays in the browser until checkout. */
+  addRing: (setting: Setting, stone: Stone) => void;
+  setRingSize: (id: string, size: string) => void;
+  removeRing: (id: string) => void;
+  /** Rings already inside the Shopify cart (after a checkout attempt that was abandoned). */
+  setCartRingSize: (lineIds: string[], size: string) => Promise<void>;
+  removeCartRing: (lineIds: string[]) => Promise<void>;
+  /** Sends the rings in the bag to Shopify and goes to checkout. */
+  checkout: () => Promise<void>;
 };
 const CartCtx = createContext<Ctx | null>(null);
 export const useCart = () => { const c = useContext(CartCtx); if (!c) throw new Error("useCart outside CartProvider"); return c; };
@@ -29,10 +38,13 @@ export default function CartProvider({ children }: { children: React.ReactNode }
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [configured, setConfigured] = useState(true);
+  const [rings, setRings] = useState<LocalRing[]>([]);
+  const [ringError, setRingError] = useState("");
 
   useEffect(() => {
     fetch("/api/cart").then(r => r.json()).then(d => { setCart(d.cart ?? null); setConfigured(d.configured !== false); }).catch(() => {});
   }, []);
+  useEffect(() => { const sync = () => setRings(loadRings()); sync(); window.addEventListener("mk-rings", sync); window.addEventListener("storage", sync); return () => { window.removeEventListener("mk-rings", sync); window.removeEventListener("storage", sync); }; }, []);
 
   const run = useCallback(async (body: unknown, openAfter = false) => {
     setBusy(true);
@@ -42,15 +54,34 @@ export default function CartProvider({ children }: { children: React.ReactNode }
     return r;
   }, []);
 
+  const checkout = useCallback(async () => {
+    const list = loadRings();
+    if (!list.length || list.some(r => !r.size)) return;
+    setRingError(""); setBusy(true);
+    const r = await call({ action: "ringsCheckout", rings: list.map(x => ({ variantId: x.setting.variantId, vendor: x.stone.vendor, stock: x.stone.stock, size: x.size })) });
+    if (r.cart) { clearLocalRings(); setCart(r.cart); window.location.href = r.cart.checkoutUrl; return; }
+    setBusy(false);
+    setRingError(r.error === "not_configured" ? "Checkout for custom rings is being connected. Please book an appointment and we will complete your order with you."
+      : r.error === "gone" ? "One of the diamonds is no longer available. Please choose another." : "We could not start your checkout. Please try again, or book an appointment.");
+  }, []);
+
   const value = useMemo<Ctx>(() => ({
-    cart, open, busy, configured, setOpen,
+    cart, open, busy, configured, rings, ringError, setOpen,
+    bagCount: (() => {
+      const builds = new Set<string>(); let plain = 0;
+      (cart?.lines ?? []).forEach(l => { const b = l.attributes?.find(a => a.key === "Build")?.value; if (b) builds.add(b); else plain += l.quantity; });
+      return plain + builds.size + rings.length;
+    })(),
     add: (variantId, quantity = 1) => run({ action: "add", variantId, quantity }, true).then(() => undefined),
     setQty: (lineId, quantity) => run({ action: "update", lineId, quantity }).then(() => undefined),
     remove: lineId => { run({ action: "remove", lineId }); return Promise.resolve(); },
-    addRing: async (variantId, vendor, stock) => { const r = await run({ action: "addRing", variantId, vendor, stock }, true); return { ok: !!r.cart, error: r.error }; },
-    setRingSize: async (lineIds, size) => { await run({ action: "ringSize", lineIds, size }); },
-    removeRing: async lineIds => { await run({ action: "removeRing", lineIds }); },
-  }), [cart, open, busy, configured, run]);
+    addRing: (setting, stone) => { setRingError(""); addLocalRing(setting, stone); setOpen(true); },
+    setRingSize: (id, size) => { setRingError(""); setLocalRingSize(id, size); },
+    removeRing: id => { removeLocalRing(id); },
+    setCartRingSize: async (lineIds, size) => { await run({ action: "ringSize", lineIds, size }); },
+    removeCartRing: async lineIds => { await run({ action: "removeRing", lineIds }); },
+    checkout,
+  }), [cart, open, busy, configured, rings, ringError, run, checkout]);
 
   return <CartCtx.Provider value={value}>{children}</CartCtx.Provider>;
 }

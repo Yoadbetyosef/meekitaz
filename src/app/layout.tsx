@@ -3,6 +3,7 @@ import { Prata, Cormorant_Garamond, Archivo } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import Toast from "@/components/Toast";
 import CartProvider from "@/components/CartProvider";
 import CartDrawer from "@/components/CartDrawer";
 
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Nav />
           {children}
           <Footer />
+          <Toast />
           <CartDrawer />
         </CartProvider>
       </body>

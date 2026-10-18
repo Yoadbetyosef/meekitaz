@@ -8,6 +8,7 @@ import type { ProductFull, Related, Sibling } from "@/lib/shopify";
 import { metalOf } from "@/lib/shopify";
 import type { RingVariant } from "@/lib/shopify";
 import { saveSetting, diamondsUrl, loadStone } from "@/lib/setting";
+import { toast } from "./Toast";
 import { photoSrc, isCleaned } from "@/lib/img";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
@@ -44,16 +45,20 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
     if (!next) return; setRh(next.handle); setSlide(0); car.current?.scrollTo({ left: 0 });
     window.history.replaceState(null, "", `/products/${next.handle}`);
   };
-  const chooseSetting = async () => {
+  const chooseSetting = () => {
     if (!cv || !ring) return;
     const stone = loadStone();
     // a diamond is already chosen: the ring is that setting in the shape of the diamond, and it goes into the bag
     let pick = cv;
-    if (stone && stone.shape !== cv.shape) { const alt = ring.family.find(v => v.shape === stone.shape && v.metal === cv.metal); if (alt) pick = alt; else { saveSetting({ ns: ring.ns, handle: cv.handle, variantId: cv.variantId, title: cv.title, shape: cv.shape, metal: cv.metal, price: cv.price, image: cv.images[0] || "" }); router.push("/build"); return; } }
-    saveSetting({ ns: ring.ns, handle: pick.handle, variantId: pick.variantId, title: pick.title, shape: pick.shape, metal: pick.metal, price: pick.price, image: pick.images[0] || "" });
+    if (stone && stone.shape !== cv.shape) {
+      const alt = ring.family.find(v => v.shape === stone.shape && v.metal === cv.metal) || ring.family.find(v => v.shape === stone.shape);
+      if (!alt) { toast(`This setting is not made in ${stone.shape.toLowerCase()}. Pick another setting for your ${stone.shape.toLowerCase()} diamond.`); return; }
+      pick = alt;
+    }
+    const setting = { ns: ring.ns, handle: pick.handle, variantId: pick.variantId, title: pick.title, shape: pick.shape, metal: pick.metal, price: pick.price, image: pick.images[0] || "" };
+    saveSetting(setting);
     if (!stone) { router.push(diamondsUrl(pick.shape)); return; }
-    const r = await addRing(pick.variantId, stone.vendor, stone.stock);
-    if (!r.ok) router.push("/build");
+    addRing(setting, stone);
   };
 
   return (

@@ -9,8 +9,8 @@ import { useCart } from "./CartProvider";
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const { cart, setOpen: openCart } = useCart();
-  const count = cart?.totalQuantity ?? 0;
+  const { bagCount, setOpen: openCart } = useCart();
+  const count = bagCount;
   useEffect(() => { setOpen(false); }, [pathname]);
   useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open]);
   return (

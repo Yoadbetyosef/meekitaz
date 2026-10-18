@@ -14,19 +14,17 @@ export const loadStone = (): Stone | null => { try { const v = JSON.parse(localS
 export const saveStone = (s: Stone) => { try { localStorage.setItem(SKEY, JSON.stringify(s)); window.dispatchEvent(new Event("mk-stone")); } catch { /* ignore */ } };
 export const clearStone = () => { try { localStorage.removeItem(SKEY); window.dispatchEvent(new Event("mk-stone")); } catch { /* ignore */ } };
 export const stoneLabel = (s: Stone) => `${s.carat.toFixed(2)} ct ${s.shape}`;
-/** "Choose this diamond": with a setting chosen the ring (setting + this diamond) goes into the bag; otherwise the customer picks a setting for this stone's shape. */
-export async function chooseStone(s: Stone, deps: { push: (url: string) => void; addRing: (variantId: string, vendor: number, stock: string) => Promise<{ ok: boolean; error?: string }> }) {
+/** "Choose this diamond": with a setting chosen, the ring (that setting in the diamond's shape + this diamond) goes into the bag; otherwise the customer picks a setting for this stone. */
+export async function chooseStone(s: Stone, deps: { push: (url: string) => void; addRing: (setting: Setting, stone: Stone) => void; notify: (msg: string) => void }) {
   saveStone(s);
   let setting = loadSetting();
   if (!setting) { deps.push(`/engagement-rings?style=${encodeURIComponent(s.shape)}&build=1`); return; }
   if (setting.shape !== s.shape) { // the setting follows the shape of the diamond
-    try {
-      const j = await (await fetch(`/api/setting?${new URLSearchParams({ ns: setting.ns, shape: s.shape, metal: setting.metal })}`)).json();
-      if (!j.item) { deps.push("/build"); return; }
-      setting = { ns: setting.ns, handle: j.item.handle, variantId: j.item.variantId, title: j.item.title, shape: j.item.shape, metal: j.item.metal, price: j.item.price, image: j.item.images[0] || "" };
-      saveSetting(setting);
-    } catch { deps.push("/build"); return; }
+    let item = null;
+    try { item = (await (await fetch(`/api/setting?${new URLSearchParams({ ns: setting.ns, shape: s.shape, metal: setting.metal })}`)).json()).item; } catch { /* handled below */ }
+    if (!item) { deps.notify(`That setting is not made in ${s.shape.toLowerCase()}. Choose a setting for your ${s.shape.toLowerCase()} diamond.`); deps.push(`/engagement-rings?style=${encodeURIComponent(s.shape)}&build=1`); return; }
+    setting = { ns: setting.ns, handle: item.handle, variantId: item.variantId, title: item.title, shape: item.shape, metal: item.metal, price: item.price, image: item.images[0] || "" };
+    saveSetting(setting);
   }
-  const r = await deps.addRing(setting.variantId, s.vendor, s.stock);
-  if (!r.ok) deps.push("/build"); // the bag could not take it (for example checkout is not connected yet): the review page explains
+  deps.addRing(setting, s);
 }
