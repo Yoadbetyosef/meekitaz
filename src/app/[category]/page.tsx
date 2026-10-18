@@ -8,6 +8,7 @@ import DiamondsBrowser from "@/components/DiamondsBrowser";
 import ShapeRow from "@/components/ShapeRow";
 import FancyBrowser from "@/components/FancyBrowser";
 import RingsSection from "@/components/RingsSection";
+import SettingBar from "@/components/SettingBar";
 
 export function generateStaticParams() { return categories.map(c => ({ category: c.slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
@@ -30,6 +31,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         <div className="wrap"><h1><small>{p.small}</small>{p.title}</h1></div>
       </section>
       <div className="catbody">
+        {p.slug === "diamonds" && <Suspense fallback={null}><SettingBar /></Suspense>}
         {n > 0 && p.styleHead && (
           <section className="shapes" aria-label={p.styleHead[0]}>
             <div className="wrap">

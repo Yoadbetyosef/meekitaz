@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
-import { getProductByHandle, getSiblings, getRelated, designCode, shopifyConfigured } from "@/lib/shopify";
+import { getProductByHandle, getSiblings, getRelated, getRingFamily, designCode, shopifyConfigured } from "@/lib/shopify";
+import { categories } from "@/lib/data";
 import { brandify, isBlocked } from "@/lib/text";
 import ProductView from "@/components/ProductView";
 
@@ -20,7 +21,10 @@ export async function generateMetadata({ params }: { params: Promise<{ handle: s
 export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
   const p = await load((await params).handle);
   if (!p) notFound();
-  const [siblings, related] = await Promise.all([getSiblings(designCode(p.tags), p.handle), getRelated(p.productType, p.handle)]);
+  const code = designCode(p.tags), isRing = p.tags.includes("Engagement Ring");
+  const [siblings, related, family] = await Promise.all([isRing ? Promise.resolve([]) : getSiblings(code, p.handle), getRelated(p.productType, p.handle), isRing ? getRingFamily(code) : Promise.resolve([])]);
+  const shapes = categories.find(c => c.slug === "engagement-rings")?.styles ?? [];
+  const ring = isRing && family.some(v => v.handle === p.handle) && family.length > 1 ? { family: family.map(v => ({ ...v, title: brandify(v.title) })), shapes, ns: code } : undefined;
   const v = p.variants[0];
   const ld = {
     "@context": "https://schema.org", "@type": "Product", name: brandify(p.title), image: p.images.map(i => i.url), description: brandify(p.description).slice(0, 500),
@@ -34,6 +38,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         product={{ ...p, title: brandify(p.title), descriptionHtml: brandify(p.descriptionHtml), description: brandify(p.description) }}
         siblings={siblings.map(s => ({ ...s, title: brandify(s.title) }))}
         related={related.map(r => ({ ...r, title: brandify(r.title) }))}
+        ring={ring}
       />
     </>
   );

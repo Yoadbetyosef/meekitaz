@@ -2,13 +2,18 @@
 import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "./CartProvider";
 import type { ProductFull, Related, Sibling } from "@/lib/shopify";
 import { metalOf } from "@/lib/shopify";
+import type { RingVariant } from "@/lib/shopify";
+import { saveSetting, diamondsUrl } from "@/lib/setting";
 import { photoSrc, isCleaned } from "@/lib/img";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
-const SW: Record<string, string> = { "Rose Gold": "#E3AE98", "Yellow Gold": "#E6C56B", "White Gold": "#E8E8EA", Platinum: "#DADCE2", Silver: "#D3D5DB" };
+const SW: Record<string, string> = { "Rose Gold": "#E3AE98", "Yellow Gold": "#E6C56B", "White Gold": "#E8E8EA", Platinum: "#DADCE2", Silver: "#D3D5DB", "Rose gold": "#E3AE98", "Yellow gold": "#E6C56B", "White gold": "#E8E8EA" };
+const RING_METALS = ["Silver", "Platinum", "White gold", "Yellow gold", "Rose gold"];
+export type RingProp = { family: RingVariant[]; shapes: { img: string; label: string }[]; ns: string };
 const Ic = ({ d }: { d: string }) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>;
 const TRUST = [
   ["M12 3l8 4v5c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V7zM8.5 12l2.5 2.5L15.5 10", "IGI / GIA certified diamonds"],
@@ -17,8 +22,11 @@ const TRUST = [
   ["M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 17.5h.01M17 17.5h.01", "Free insured shipping"],
 ];
 
-export default function ProductView({ product: p, siblings, related }: { product: ProductFull; siblings: Sibling[]; related: Related[] }) {
+export default function ProductView({ product: p, siblings, related, ring }: { product: ProductFull; siblings: Sibling[]; related: Related[]; ring?: RingProp }) {
   const { add, busy } = useCart();
+  const router = useRouter();
+  const [rh, setRh] = useState(p.handle);
+  const cv = ring?.family.find(v => v.handle === rh) ?? null; // the ring design in the shape and metal chosen on this page
   const real = p.options.filter(o => !(o.values.length === 1 && o.values[0] === "Default Title") && o.name !== "Title");
   const [sel, setSel] = useState<Record<string, string>>(() => Object.fromEntries((p.variants[0]?.selected || []).map(s => [s.name, s.value])));
   const variant = useMemo(() => p.variants.find(v => v.selected.every(s => sel[s.name] === s.value)) || p.variants[0], [p, sel]);
@@ -27,7 +35,20 @@ export default function ProductView({ product: p, siblings, related }: { product
   const metal = metalOf(p.tags);
   const save = variant.compareAt ? variant.compareAt - variant.price : 0;
   const details = p.tags.filter(t => !/gold|silver|platinum|rose|yellow|white|^NS-|^CBR$|express|normal_side|^RJ-/i.test(t)).slice(0, 4);
-  const imgs = p.images;
+  const imgs = cv ? cv.images.map(u => ({ url: u, alt: cv.title, width: 1000, height: 1000 })) : p.images;
+  const title = cv ? cv.title : p.title, price = cv ? cv.price : variant.price, compareAt = cv ? cv.compareAt : variant.compareAt;
+  const shapesHere = ring ? ring.shapes.filter(s => ring.family.some(v => v.shape === s.label)) : [];
+  const metalsHere = cv && ring ? RING_METALS.filter(m => ring.family.some(v => v.shape === cv.shape && v.metal === m)) : [];
+  const pickRing = (shape: string, metal: string) => {
+    const next = ring?.family.find(v => v.shape === shape && v.metal === metal) || ring?.family.find(v => v.shape === shape);
+    if (!next) return; setRh(next.handle); setSlide(0); car.current?.scrollTo({ left: 0 });
+    window.history.replaceState(null, "", `/products/${next.handle}`);
+  };
+  const chooseSetting = () => {
+    if (!cv || !ring) return;
+    saveSetting({ ns: ring.ns, handle: cv.handle, variantId: cv.variantId, title: cv.title, shape: cv.shape, metal: cv.metal, price: cv.price, image: cv.images[0] || "" });
+    router.push(diamondsUrl(cv.shape));
+  };
 
   return (
     <main className="pp">
@@ -38,25 +59,38 @@ export default function ProductView({ product: p, siblings, related }: { product
           <div className="pp-gal">
             {imgs.map((im, i) => (
               <figure key={im.url} className={i === 0 ? "first" : ""}>
-                <Image src={photoSrc(im.url, 1100, p.title, i)} alt={im.alt} fill sizes="(max-width:1100px) 50vw, 620px" quality={78} priority={i === 0} unoptimized={isCleaned(photoSrc(im.url, 1100, p.title, i))} />
+                <Image src={photoSrc(im.url, 1100, title, i)} alt={im.alt} fill sizes="(max-width:1100px) 50vw, 620px" quality={78} priority={i === 0} unoptimized={isCleaned(photoSrc(im.url, 1100, title, i))} />
               </figure>
             ))}
           </div>
           {/* phone: swipe */}
           <div className="pp-carw">
             <div className="pp-car" ref={car} onScroll={() => car.current && setSlide(Math.round(car.current.scrollLeft / car.current.clientWidth))}>
-              {imgs.map((im, i) => <figure key={im.url}><Image src={photoSrc(im.url, 900, p.title, i)} alt={im.alt} fill sizes="100vw" quality={75} priority={i === 0} unoptimized={isCleaned(photoSrc(im.url, 900, p.title, i))} /></figure>)}
+              {imgs.map((im, i) => <figure key={im.url}><Image src={photoSrc(im.url, 900, title, i)} alt={im.alt} fill sizes="100vw" quality={75} priority={i === 0} unoptimized={isCleaned(photoSrc(im.url, 900, title, i))} /></figure>)}
             </div>
             {imgs.length > 1 && <span className="pp-cnt">{slide + 1} / {imgs.length}</span>}
           </div>
 
           <div className="pp-info">
             <small className="eyebrow">Lab-grown · IGI certified</small>
-            <h1>{p.title}</h1>
-            <div className="pp-price"><b>{usd(variant.price)}</b>{variant.compareAt > 0 && <><s>{usd(variant.compareAt)}</s><i>Save {usd(save)}</i></>}</div>
-            <p className="pp-sub">Serious diamonds, worn lightly.</p>
+            <h1>{title}</h1>
+            <div className="pp-price"><b>{usd(price)}</b>{compareAt > 0 && <><s>{usd(compareAt)}</s><i>{ring ? "Setting only" : `Save ${usd(compareAt - price)}`}</i></>}</div>
+            <p className="pp-sub">{ring ? "Choose the setting first. Next, pick your diamond." : "Serious diamonds, worn lightly."}</p>
 
-            {siblings.length > 1 && (
+            {ring && cv && (
+              <>
+                <span className="pp-lbl">Shape · {cv.shape}</span>
+                <div className="rp-shapes">{shapesHere.map(sh => (
+                  <button key={sh.label} type="button" className={`rp-sh${cv.shape === sh.label ? " on" : ""}`} aria-pressed={cv.shape === sh.label} onClick={() => pickRing(sh.label, cv.metal)}>
+                    <i><Image src={sh.img} alt="" fill sizes="64px" quality={60} /></i><b>{sh.label}</b></button>))}</div>
+                <span className="pp-lbl">Metal · {cv.metal}</span>
+                <div className="rp-metals">{metalsHere.map(m => (
+                  <button key={m} type="button" className={`rp-mt${cv.metal === m ? " on" : ""}`} aria-pressed={cv.metal === m} onClick={() => pickRing(cv.shape, m)}>
+                    <span className="rp-sw"><i style={{ background: SW[m] || "#ddd" }} /></span>{m.replace(" gold", "")}</button>))}</div>
+              </>
+            )}
+
+            {!ring && siblings.length > 1 && (
               <>
                 <span className="pp-lbl">Metal{metal ? ` · ${metal}` : ""}</span>
                 <div className="pp-sw">
@@ -75,7 +109,11 @@ export default function ProductView({ product: p, siblings, related }: { product
             ))}
 
             <div className="pp-cta">
-              <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={() => add(variant.id)}>{!variant.available ? "Sold out" : busy ? "Adding…" : `Add to bag · ${usd(variant.price)}`}</button>
+              {ring && cv ? (
+                <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting<small>Next: pick your {cv.shape.toLowerCase()} diamond</small></button>
+              ) : (
+                <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={() => add(variant.id)}>{!variant.available ? "Sold out" : busy ? "Adding…" : `Add to bag · ${usd(variant.price)}`}</button>
+              )}
               <Link href="/#contact" className="pp-appt">Book a private appointment</Link>
             </div>
             <div className="pp-trust">{TRUST.map(([d, t]) => <div key={t}><Ic d={d} />{t}</div>)}</div>
@@ -106,8 +144,8 @@ export default function ProductView({ product: p, siblings, related }: { product
       </div>
 
       <div className="pp-sbar">
-        <div><b>{usd(variant.price)}</b>{variant.compareAt > 0 && <s>{usd(variant.compareAt)}</s>}</div>
-        <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={() => add(variant.id)}>{variant.available ? "Add to bag" : "Sold out"}</button>
+        <div><b>{usd(price)}</b>{compareAt > 0 && <s>{usd(compareAt)}</s>}</div>
+        {ring && cv ? <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting</button> : <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={() => add(variant.id)}>{variant.available ? "Add to bag" : "Sold out"}</button>}
       </div>
     </main>
   );
