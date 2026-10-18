@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCart } from "./CartProvider";
-import type { ProductFull, Related, Sibling } from "@/lib/shopify";
+import { ringMetalOf, type ProductFull, type Related, type Sibling } from "@/lib/shopify";
 import { metalOf } from "@/lib/shopify";
 import type { RingVariant } from "@/lib/shopify";
 import { saveSetting, diamondsUrl, loadStone } from "@/lib/setting";
@@ -71,7 +71,7 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
   const variant = useMemo(() => p.variants.find(v => v.selected.every(s => sel[s.name] === s.value)) || p.variants[0], [p, sel]);
   const [slide, setSlide] = useState(0);
   const car = useRef<HTMLDivElement>(null);
-  const metal = metalOf(p.tags);
+  const metal = metalOf(p.tags) || ringMetalOf(p.title);
   const save = variant.compareAt ? variant.compareAt - variant.price : 0;
   const details = p.tags.filter(t => !/gold|silver|platinum|rose|yellow|white|^NS-|^CBR$|express|normal_side|^RJ-/i.test(t)).slice(0, 4);
   const imgs = cv ? cv.images.map(u => ({ url: u, alt: cv.title, width: 1000, height: 1000 })) : p.images;

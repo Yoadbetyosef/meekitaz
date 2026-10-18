@@ -205,17 +205,17 @@ export async function getProductsByQuery(query: string, opts: { first?: number; 
 }
 
 /* ---------------- Engagement-ring settings: one design in every shape and metal ---------------- */
-export type RingVariant = { handle: string; title: string; shape: string; metal: string; price: number; compareAt: number; images: string[]; variantId: string };
+export type RingVariant = { id: string; handle: string; title: string; shape: string; metal: string; price: number; compareAt: number; images: string[]; variantId: string };
 const SHAPE_NAMES = ["Round", "Oval", "Cushion", "Emerald", "Pear", "Princess", "Radiant", "Marquise", "Asscher", "Heart"];
 const METAL_RE = /(Rose gold|Yellow gold|White gold|Platinum|Silver)/i;
 export const ringMetalOf = (title: string) => { const m = title.match(METAL_RE); if (!m) return ""; const t = m[1].toLowerCase(); return t.charAt(0).toUpperCase() + t.slice(1); };
 export const ringShapeOf = (tags: string[], title: string) => SHAPE_NAMES.find(n => tags.includes(n)) || SHAPE_NAMES.find(n => new RegExp(`\\b${n}\\b`, "i").test(title)) || "";
 export async function getRingFamily(code: string): Promise<RingVariant[]> {
   if (!code) return [];
-  const d = await sf<{ products: { edges: { node: { handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; images: { edges: { node: { url: string } }[] }; variants: { edges: { node: { id: string } }[] } } }[] } }>(
-    `query($q:String!){ products(first:60, query:$q){ edges{ node{ handle title tags priceRange{ minVariantPrice{ amount } } compareAtPriceRange{ minVariantPrice{ amount } } images(first:4){ edges{ node{ url } } } variants(first:1){ edges{ node{ id } } } } } } }`, { q: `tag:${code}` });
+  const d = await sf<{ products: { edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; images: { edges: { node: { url: string } }[] }; variants: { edges: { node: { id: string } }[] } } }[] } }>(
+    `query($q:String!){ products(first:60, query:$q){ edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount } } compareAtPriceRange{ minVariantPrice{ amount } } images(first:4){ edges{ node{ url } } } variants(first:1){ edges{ node{ id } } } } } } }`, { q: `tag:${code}` });
   return (d?.products.edges || []).map(e => e.node).filter(n => n.tags.includes("Engagement Ring") && n.tags.includes(code)).map(n => ({
-    handle: n.handle, title: n.title, shape: ringShapeOf(n.tags, n.title), metal: ringMetalOf(n.title), price: +n.priceRange.minVariantPrice.amount,
+    id: n.id, handle: n.handle, title: n.title, shape: ringShapeOf(n.tags, n.title), metal: ringMetalOf(n.title), price: +n.priceRange.minVariantPrice.amount,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
     images: n.images.edges.map(i => i.node.url), variantId: n.variants.edges[0]?.node.id || "",
   })).filter(v => v.shape && v.metal);
