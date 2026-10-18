@@ -16,26 +16,34 @@ const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 const SW: Record<string, string> = { "Rose Gold": "#E3AE98", "Yellow Gold": "#E6C56B", "White Gold": "#E8E8EA", Platinum: "#DADCE2", Silver: "#D3D5DB", "Rose gold": "#E3AE98", "Yellow gold": "#E6C56B", "White gold": "#E8E8EA" };
 const RING_METALS = ["Silver", "Platinum", "White gold", "Yellow gold", "Rose gold"];
 const nm = (m: string) => { const l = m.toLowerCase(); return l.startsWith("rose") ? "Rose gold" : l.startsWith("yellow") ? "Yellow gold" : l.startsWith("white") ? "White gold" : l.startsWith("plat") ? "Platinum" : l.startsWith("silver") ? "Silver" : m; };
-const KSW = "#E6C56B";
-/** Silver · 10K · 14K · 18K · Platinum, and for gold the colour. The karat prices come from our price list. */
+const FACTS: Record<string, string> = {
+  Silver: "92.5% pure silver. Everyday value; can tarnish and needs polishing.",
+  "10K": "41.7% gold. The most durable gold, with a slightly paler tone.",
+  "14K": "58.3% gold. The classic balance of colour and strength.",
+  "18K": "75% gold. The richest colour; a little softer.",
+  Platinum: "95% pure platinum. Naturally white, dense and long-wearing.",
+};
+const COLG: Record<string, string> = { "White gold": "linear-gradient(135deg,#F4F4F6,#C9CBD2)", "Yellow gold": "linear-gradient(135deg,#F3DC8B,#D9A93C)", "Rose gold": "linear-gradient(135deg,#F2C3B2,#CF8F78)" };
+/** The approved two-step picker: Silver · 10K · 14K · 18K · Platinum, then the colour (dimmed for silver and platinum). The karat prices come from our price list. */
 function Material({ ns, metals, metal, karat, onMetal, onKarat }: { ns: string; metals: string[]; metal: string; karat: string; onMetal: (m: string) => void; onKarat: (k: string) => void }) {
   const golds = GOLD_COLORS.filter(g => metals.includes(g)), ks = golds.length ? karatsFor(ns) : [];
   const gold = isGoldMetal(metal);
-  const items: { id: string; sw: string; on: boolean; go: () => void }[] = [
-    ...(metals.includes("Silver") ? [{ id: "Silver", sw: SW.Silver, on: metal === "Silver", go: () => onMetal("Silver") }] : []),
-    ...ks.map(k => ({ id: k, sw: KSW, on: gold && karat === k, go: () => onKarat(k) })),
-    ...(metals.includes("Platinum") ? [{ id: "Platinum", sw: SW.Platinum, on: metal === "Platinum", go: () => onMetal("Platinum") }] : []),
+  const items: { id: string; on: boolean; go: () => void }[] = [
+    ...(metals.includes("Silver") ? [{ id: "Silver", on: metal === "Silver", go: () => onMetal("Silver") }] : []),
+    ...ks.map(k => ({ id: k, on: gold && karat === k, go: () => onKarat(k) })),
+    ...(metals.includes("Platinum") ? [{ id: "Platinum", on: metal === "Platinum", go: () => onMetal("Platinum") }] : []),
   ];
+  const picked = metal === "Silver" ? "Silver" : metal === "Platinum" ? "Platinum" : karat;
   return (
     <>
-      <span className="pp-lbl">Metal · {gold ? `${karat} ${metal}` : metal}</span>
-      <div className="rp-metals">{items.map(i => (
-        <button key={i.id} type="button" className={`rp-mt${i.on ? " on" : ""}`} aria-pressed={i.on} onClick={i.go}><span className="rp-sw"><i style={{ background: i.sw }} /></span>{i.id}</button>))}</div>
-      {gold && golds.length > 1 && (<>
-        <span className="pp-lbl">Colour · {metal.replace(" gold", "")}</span>
-        <div className="rp-metals">{golds.map(g => (
-          <button key={g} type="button" className={`rp-mt${metal === g ? " on" : ""}`} aria-pressed={metal === g} onClick={() => onMetal(g)}><span className="rp-sw"><i style={{ background: SW[g] }} /></span>{g.replace(" gold", "")}</button>))}</div>
-      </>)}
+      <div className="mk-lbl">Metal <em>{gold ? `${karat} ${metal}` : metal}</em></div>
+      <div className="mk-seg" style={{ gridTemplateColumns: `repeat(${items.length},1fr)` }}>{items.map(i => (
+        <button key={i.id} type="button" className={i.on ? "on" : ""} aria-pressed={i.on} onClick={i.go}>{i.id}</button>))}</div>
+      <div className="mk-lbl">Colour <em>{gold ? metal : "Natural white"}</em></div>
+      <div className="mk-cols">{golds.map(g => (
+        <button key={g} type="button" className={`mk-col${gold && metal === g ? " on" : ""}${gold ? "" : " off"}`} aria-pressed={gold && metal === g} disabled={!gold} onClick={() => onMetal(g)}>
+          <span><i style={{ background: COLG[g] }} /></span>{g.replace(" gold", "")}</button>))}</div>
+      <p className="mk-hint">{FACTS[picked]}</p>
     </>
   );
 }
