@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { vdbRaw } from "@/lib/vdb";
+import { vdbRaw, getFancy } from "@/lib/vdb";
 
-export const maxDuration = 60;
+export const maxDuration = 120;
 export const dynamic = "force-dynamic";
 // Diagnostic: which VDB parameters return fancy-colour lab-grown stones directly. Open /api/admin/vdb?key=ADMIN_TASK_KEY
 const BASE = "type=Lab_grown_Diamond&markup_mode=true&with_images=true&total_or_price_per_carat=total_sales_price&price_total_from=1&page_size=50&page_number=1";
@@ -25,6 +25,11 @@ export async function GET(req: NextRequest) {
   const key = process.env.ADMIN_TASK_KEY;
   if (!key || req.nextUrl.searchParams.get("key") !== key) return new NextResponse("Not found", { status: 404 });
   const out: Record<string, unknown> = {};
+  if (req.nextUrl.searchParams.get("harvest")) { // time the real harvest: /api/admin/vdb?key=…&harvest=1
+    const t = Date.now();
+    try { const items = await getFancy(); return NextResponse.json({ fancyStones: items.length, ms: Date.now() - t, byColor: items.reduce<Record<string, number>>((a, d) => { a[d.fancyColor || "?"] = (a[d.fancyColor || "?"] || 0) + 1; return a; }, {}) }); }
+    catch (e) { return NextResponse.json({ error: e instanceof Error ? e.message : String(e), ms: Date.now() - t }, { status: 502 }); }
+  }
   for (const [name, qs] of PROBES) {
     const t = Date.now();
     try {

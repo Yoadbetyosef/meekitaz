@@ -116,43 +116,28 @@ const FANCY_QS = "type=Lab_grown_Diamond&markup_mode=true&with_images=true&total
 const fancyPage = (n: number) => vdb(`${FANCY_QS}&page_number=${n}`, 3600);
 const rawFancy = (d: Record<string, unknown>) => !!(d.fancy_color_dominant_color || d.fancy_color_intensity);
 
-const FANCY_QS_DESC = FANCY_QS.replace("preference[]=color%20ASC", "preference[]=color%20DESC");
 async function harvestFancy(): Promise<Diamond[]> {
-  // Fast path: with colour sorted descending the stones without a letter colour (the fancy ones) may come first; read forward until they stop.
-  try {
-    const first = await vdb(`${FANCY_QS_DESC}&page_number=1`, 3600);
-    if (first.diamonds.some(rawFancy)) {
-      const out = new Map<string, Diamond>();
-      let n = 1, page = first;
-      for (; n <= 60; n++) {
-        if (n > 1) page = await vdb(`${FANCY_QS_DESC}&page_number=${n}`, 3600);
-        let hit = 0;
-        page.diamonds.forEach(x => { if (!rawFancy(x)) return; hit++; const d = norm(x); if (d) out.set(`${d.vendor}-${d.stock}`, d); });
-        if (hit === 0 || page.diamonds.length < 50) break;
-      }
-      if (out.size) return [...out.values()];
-    }
-  } catch { /* fall back to the tail scan */ }
+  // The colour-ASC order puts the stones without a letter colour (the fancy ones) at the very end. Find where they start with a
+  // binary search over page numbers (~11 requests), then read from there to the end in parallel batches.
   const head = await fancyPage(1);
-  const last = Math.ceil((head.total_diamonds_found || 0) / 50);
+  const last = Math.max(1, Math.ceil((head.total_diamonds_found || 0) / 50));
+  const pageHasFancy = async (n: number) => (await fancyPage(n)).diamonds.some(rawFancy);
+  if (!(await pageHasFancy(last))) return []; // nothing fancy in the feed at all
+  let lo = 1, hi = last; // invariant: page hi has fancy stones; page lo may not
+  while (hi - lo > 1) { const mid = Math.floor((lo + hi) / 2); if (await pageHasFancy(mid)) hi = mid; else lo = mid; }
+  const first = Math.max(1, hi - 2); // a little overlap in case the boundary page is mixed
   const out = new Map<string, Diamond>();
-  for (let hi = last, round = 0; hi >= 1 && round < 20; hi -= 10, round++) {
-    const nums = Array.from({ length: Math.min(10, hi) }, (_, i) => hi - i);
-    const pages = await Promise.all(nums.map(n => fancyPage(n)));
-    let tail = 0;
-    pages.forEach((p, i) => p.diamonds.forEach(x => {
-      if (!rawFancy(x)) return;
-      if (i >= pages.length - 3) tail++;
-      const d = norm(x); if (d) out.set(`${d.vendor}-${d.stock}`, d);
-    }));
-    if (tail === 0) break; // the last pages of this round had nothing fancy: we are past the block
+  for (let n = first; n <= last; n += 20) {
+    const nums = Array.from({ length: Math.min(20, last - n + 1) }, (_, i) => n + i);
+    const pages = await Promise.all(nums.map(k => fancyPage(k)));
+    pages.forEach(pg => pg.diamonds.forEach(x => { if (!rawFancy(x)) return; const d = norm(x); if (d) out.set(`${d.vendor}-${d.stock}`, d); }));
   }
   return [...out.values()];
 }
 
 // The harvested list is kept in Vercel's shared data cache (one copy for every server instance, refreshed in the background every
 // 30 minutes, stale copy served meanwhile) and also in memory on this instance. The cron in vercel.json keeps it warm.
-const harvestCached = unstable_cache(async () => { const items = await harvestFancy(); return items.map(d => ({ ...d })); }, ["vdb-fancy-v1"], { revalidate: 1800 });
+const harvestCached = unstable_cache(async () => { const items = await harvestFancy(); return items.map(d => ({ ...d })); }, ["vdb-fancy-v2"], { revalidate: 1800 });
 let fancyCache: { at: number; items: Diamond[] } | null = null;
 let fancyBusy: Promise<Diamond[]> | null = null;
 export async function getFancy(): Promise<Diamond[]> {
