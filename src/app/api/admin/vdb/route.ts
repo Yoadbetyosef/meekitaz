@@ -6,16 +6,20 @@ export const dynamic = "force-dynamic";
 // Diagnostic: which VDB parameters return fancy-colour lab-grown stones directly. Open /api/admin/vdb?key=ADMIN_TASK_KEY
 const BASE = "type=Lab_grown_Diamond&markup_mode=true&with_images=true&total_or_price_per_carat=total_sales_price&price_total_from=1&page_size=50&page_number=1";
 const PROBES: [string, string][] = [
-  ["colour DESC order (fast path)", `${BASE}&preference[]=color%20DESC`],
-  ["colour ASC order (tail)", `${BASE}&preference[]=color%20ASC`],
-  ["fancy_colors[]=Yellow", `${BASE}&fancy_colors[]=Yellow`],
-  ["fancy_color[]=Yellow", `${BASE}&fancy_color[]=Yellow`],
-  ["fancy_color_dominant_color[]=Yellow", `${BASE}&fancy_color_dominant_color[]=Yellow`],
-  ["colors[]=Fancy Yellow", `${BASE}&colors[]=Fancy%20Yellow`],
-  ["color_from=Fancy", `${BASE}&color_from=Fancy`],
-  ["fancy=true", `${BASE}&fancy=true`],
-  ["is_fancy=true", `${BASE}&is_fancy=true`],
-  ["fancy_colors=true", `${BASE}&fancy_colors=true`],
+  ["fancy_color_dominant_colors[]=Yellow", `${BASE}&fancy_color_dominant_colors[]=Yellow`],
+  ["fancy_color_intensities[]=Fancy", `${BASE}&fancy_color_intensities[]=Fancy`],
+  ["fancy_color_intensity[]=Fancy", `${BASE}&fancy_color_intensity[]=Fancy`],
+  ["fancy_color_overtones[]=none", `${BASE}&fancy_color_overtones[]=none`],
+  ["colors[]=Fancy", `${BASE}&colors[]=Fancy`],
+  ["color[]=Fancy", `${BASE}&color[]=Fancy`],
+  ["color_from=Fancy&color_to=Fancy", `${BASE}&color_from=Fancy&color_to=Fancy`],
+  ["color_type=fancy", `${BASE}&color_type=fancy`],
+  ["fancy_colored=true", `${BASE}&fancy_colored=true`],
+  ["is_fancy_color=true", `${BASE}&is_fancy_color=true`],
+  ["fancy_color=true", `${BASE}&fancy_color=true`],
+  ["has_fancy_color=true", `${BASE}&has_fancy_color=true`],
+  ["natural_fancy=true", `${BASE}&natural_fancy=true`],
+  ["page_size=200 (bigger pages?)", `${BASE.replace("page_size=50", "page_size=200")}&preference[]=color%20ASC`],
 ];
 export async function GET(req: NextRequest) {
   const key = process.env.ADMIN_TASK_KEY;
