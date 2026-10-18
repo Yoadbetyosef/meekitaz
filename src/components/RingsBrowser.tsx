@@ -12,7 +12,7 @@ const csv = (v: string | null) => (v ? v.split(",").filter(Boolean) : []);
 const Gem = () => <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M12 8h24l8 12-20 22L4 20z" /><path d="M4 20h40M12 8l12 34M36 8L24 42M18 20l6-12 6 12" /></svg>;
 type Pop = "metal" | "shape" | "style" | "price" | null;
 
-export default function RingsBrowser({ initial, hasNext: h0, cursor: c0 }: { initial: Product[]; hasNext: boolean; cursor: string | null }) {
+export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle = "engagement-rings", fancy }: { initial: Product[]; hasNext: boolean; cursor: string | null; handle?: string; fancy?: string }) {
   const router = useRouter(), path = usePathname(), sp = useSearchParams();
   const shapes = csv(sp.get("style")), metals = csv(sp.get("metal")), styles = csv(sp.get("look"));
   const sort = sp.get("sort") || "best";
@@ -29,7 +29,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0 }: { ini
   const wrap = useRef<HTMLDivElement>(null);
 
   const api = useCallback((after: string | null) => {
-    const q = new URLSearchParams({ handle: "engagement-rings", sort });
+    const q = new URLSearchParams({ handle, sort }); if (fancy) q.set("fancy", fancy);
     if (shapes.length) q.set("shape", shapes.join(",")); if (metals.length) q.set("metal", metals.join(",")); if (styles.length) q.set("look", styles.join(","));
     if (sp.get("min")) q.set("min", String(pmin)); if (sp.get("max")) q.set("max", String(pmax)); if (after) q.set("after", after);
     return fetch(`/api/products?${q}`).then(r => r.json());
@@ -79,7 +79,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0 }: { ini
   );
 
   return (
-    <section className="grid-wrap" id="results" aria-label="The collection">
+    <section className="grid-wrap" id={fancy ? "settings" : "results"} aria-label="The collection">
       <div className="wrap" ref={wrap}>
         <div className="rf-bar">
           {chip("metal", "Metal", lab(metals), <div className="rf-sws">{RING_METALS.map(m => (

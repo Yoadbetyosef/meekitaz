@@ -11,7 +11,6 @@ import RingsSection from "@/components/RingsSection";
 import SettingBar from "@/components/SettingBar";
 import JumpToResults from "@/components/JumpToResults";
 import StoneBar from "@/components/StoneBar";
-import FancyPieces from "@/components/FancyPieces";
 
 export function generateStaticParams() { return categories.map(c => ({ category: c.slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
@@ -54,7 +53,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
             </div>
           </section>
         )}
-        {p.special === "fancy" ? <><FancyPieces color={one("color")} style={one("style")} /><Suspense fallback={null}><FancyBrowser /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><DiamondsBrowser /></Suspense> : <ProductGrid page={p} />}
+        {p.special === "fancy" ? <><Suspense fallback={null}><RingsSection fancy={one("color") || "all"} /></Suspense><Suspense fallback={null}><FancyBrowser /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><DiamondsBrowser /></Suspense> : <ProductGrid page={p} />}
       </div>
     </main>
   );

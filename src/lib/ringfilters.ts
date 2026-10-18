@@ -13,12 +13,15 @@ export const RING_STYLES: { label: string; tag: string }[] = [
 ];
 export const RING_PRICE = { min: 100, max: 5000, step: 50 }; // the top of the slider is open-ended ("$5,000+")
 
-export type RingSel = { shapes: string[]; metals: string[]; styles: string[]; min?: number; max?: number };
+export type RingSel = { shapes: string[]; metals: string[]; styles: string[]; min?: number; max?: number; fancy?: string };
 const or = (xs: string[]) => (xs.length === 1 ? xs[0] : `(${xs.join(" OR ")})`);
 
 /** The Shopify product search for a set of selected filters. */
 export function ringQuery(sel: RingSel): string {
   const parts = ["tag:'Engagement Ring'"];
+  // Fancy-colour settings are titled "… Fancy Blue Cushion Cut Diamond …"; the fancy page lists only those, in one colour or all four.
+  if (sel.fancy === "all") parts.push("title:Fancy");
+  else if (sel.fancy && ["Yellow", "Pink", "Blue", "Green"].includes(sel.fancy)) parts.push(`title:'Fancy ${sel.fancy}'`);
   const shapes = sel.shapes.filter(s => RING_SHAPES.includes(s)).map(s => `tag:${s}`);
   const metals = RING_METALS.filter(m => sel.metals.includes(m.label)).map(m => `title:${m.phrase}`);
   const styles = RING_STYLES.filter(s => sel.styles.includes(s.label)).map(s => `tag:${s.tag}`);
