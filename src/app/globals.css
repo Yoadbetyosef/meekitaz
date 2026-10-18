@@ -178,7 +178,8 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 
 /* ===== CATEGORY PAGES ===== */
 .cat-hero{position:relative;height:100vh;height:100svh;min-height:560px;background:var(--red);display:flex;align-items:flex-end;overflow:hidden}
-.cat-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cat-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--hero-pos,50% 50%)}
+@media(min-width:768px){.cat-hero img{transform:scale(var(--hero-zoom,1));transform-origin:var(--hero-pos,50% 50%)}}
 .cat-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(40,4,4,.75) 100%)}
 .cat-hero .wrap{position:relative;z-index:2;color:#fff;padding-bottom:clamp(40px,6vw,80px);width:100%}
 .cat-hero h1{font-size:clamp(44px,8vw,120px);line-height:.95;text-transform:uppercase}
