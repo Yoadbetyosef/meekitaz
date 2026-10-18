@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { addToCart, createCart, getCart, removeCartLine, shopifyConfigured, updateCartLine, type Cart } from "@/lib/shopify";
+import { addCartLines, addToCart, createCart, createCartWithLines, getCart, removeCartLine, removeCartLines, shopifyConfigured, updateCartLine, updateLineAttributes, type Cart } from "@/lib/shopify";
+import { getDiamond, vdbConfigured } from "@/lib/vdb";
+import { adminConfigured, ensureStoneVariant } from "@/lib/shopifyAdmin";
+
+const SIZES = new Set(Array.from({ length: 21 }, (_, i) => String(3 + i * 0.5)));
 
 const COOKIE = "meekitaz_cart";
 const opts = { httpOnly: true, sameSite: "lax" as const, secure: process.env.NODE_ENV === "production", path: "/", maxAge: 60 * 60 * 24 * 30 };
@@ -23,6 +27,33 @@ export async function POST(req: Request) {
     const qty = Math.max(1, Math.min(10, +body.quantity || 1));
     cart = id ? await addToCart(id, body.variantId, qty) : null;
     if (!cart) cart = await createCart(body.variantId, qty); // no cart yet, or the old one expired
+  } else if (body.action === "addRing") {
+    // a ring = the setting and its diamond, kept together in the bag by a shared "Build" id
+    if (!adminConfigured || !vdbConfigured) return NextResponse.json({ error: "not_configured" }, { status: 503 });
+    const vendor = Number(body.vendor), stock = String(body.stock || ""), variantId = String(body.variantId || "");
+    if (!isFinite(vendor) || !stock || !variantId.startsWith("gid://shopify/ProductVariant/")) return NextResponse.json({ error: "bad_request" }, { status: 400 });
+    try {
+      const d = await getDiamond(vendor, stock); // the price always comes from our supplier feed
+      if (!d) return NextResponse.json({ error: "gone" }, { status: 410 });
+      const title = `${d.carat.toFixed(2)} ct ${d.shape} lab-grown diamond`;
+      const note = [title, [d.fancy || d.color, d.clarity, d.cut && `${d.cut} cut`].filter(Boolean).join(" "), `${d.lab} ${d.cert}`].filter(Boolean).join(" · ");
+      const html = `<ul><li>${title}</li><li>Colour: ${d.fancy || d.color || "—"}</li><li>Clarity: ${d.clarity || "—"}</li><li>Cut: ${d.cut || "—"}</li><li>Certificate: ${d.lab} ${d.cert}</li></ul>`;
+      const stoneVariant = await ensureStoneVariant({ vendor: d.vendor, stock: d.stock, title: `${title} (${d.lab} ${d.cert})`, price: d.price, html, sku: `${d.lab}-${d.cert}` });
+      const build = crypto.randomUUID().slice(0, 8);
+      const lines = [
+        { merchandiseId: variantId, quantity: 1, attributes: [{ key: "Build", value: build }, { key: "Diamond", value: note }] },
+        { merchandiseId: stoneVariant, quantity: 1, attributes: [{ key: "Build", value: build }] },
+      ];
+      cart = id ? await addCartLines(id, lines) : null;
+      if (!cart) cart = await createCartWithLines(lines);
+    } catch (e) { console.error("[addRing]", e instanceof Error ? e.message : e); return NextResponse.json({ error: "failed" }, { status: 502 }); }
+  } else if (id && body.action === "ringSize" && Array.isArray(body.lineIds) && SIZES.has(String(body.size))) {
+    const cur = await getCart(id); if (!cur) return NextResponse.json({ error: "Cart update failed" }, { status: 502 });
+    const ids = new Set((body.lineIds as unknown[]).map(String));
+    const updates = cur.lines.filter(l => ids.has(l.id)).map(l => ({ id: l.id, quantity: l.quantity, attributes: [...l.attributes.filter(a => a.key !== "Ring size"), { key: "Ring size", value: String(body.size) }] }));
+    cart = updates.length ? await updateLineAttributes(id, updates) : cur;
+  } else if (id && body.action === "removeRing" && Array.isArray(body.lineIds)) {
+    cart = await removeCartLines(id, (body.lineIds as unknown[]).map(String));
   } else if (id && body.action === "update" && typeof body.lineId === "string") {
     cart = await updateCartLine(id, body.lineId, Math.max(0, Math.min(10, +body.quantity || 0)));
   } else if (id && body.action === "remove" && typeof body.lineId === "string") {

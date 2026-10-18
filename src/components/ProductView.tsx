@@ -23,7 +23,7 @@ const TRUST = [
 ];
 
 export default function ProductView({ product: p, siblings, related, ring }: { product: ProductFull; siblings: Sibling[]; related: Related[]; ring?: RingProp }) {
-  const { add, busy } = useCart();
+  const { add, busy, addRing } = useCart();
   const router = useRouter();
   const [rh, setRh] = useState(p.handle);
   const cv = ring?.family.find(v => v.handle === rh) ?? null; // the ring design in the shape and metal chosen on this page
@@ -44,10 +44,16 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
     if (!next) return; setRh(next.handle); setSlide(0); car.current?.scrollTo({ left: 0 });
     window.history.replaceState(null, "", `/products/${next.handle}`);
   };
-  const chooseSetting = () => {
+  const chooseSetting = async () => {
     if (!cv || !ring) return;
-    saveSetting({ ns: ring.ns, handle: cv.handle, variantId: cv.variantId, title: cv.title, shape: cv.shape, metal: cv.metal, price: cv.price, image: cv.images[0] || "" });
-    router.push(loadStone() ? "/build" : diamondsUrl(cv.shape)); // a diamond already chosen: straight to the review
+    const stone = loadStone();
+    // a diamond is already chosen: the ring is that setting in the shape of the diamond, and it goes into the bag
+    let pick = cv;
+    if (stone && stone.shape !== cv.shape) { const alt = ring.family.find(v => v.shape === stone.shape && v.metal === cv.metal); if (alt) pick = alt; else { saveSetting({ ns: ring.ns, handle: cv.handle, variantId: cv.variantId, title: cv.title, shape: cv.shape, metal: cv.metal, price: cv.price, image: cv.images[0] || "" }); router.push("/build"); return; } }
+    saveSetting({ ns: ring.ns, handle: pick.handle, variantId: pick.variantId, title: pick.title, shape: pick.shape, metal: pick.metal, price: pick.price, image: pick.images[0] || "" });
+    if (!stone) { router.push(diamondsUrl(pick.shape)); return; }
+    const r = await addRing(pick.variantId, stone.vendor, stone.stock);
+    if (!r.ok) router.push("/build");
   };
 
   return (

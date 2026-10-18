@@ -1,8 +1,10 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { chooseStone, type Stone } from "@/lib/setting";
+import { useCart } from "./CartProvider";
 
 export default function ChooseStone({ stone }: { stone: Stone }) {
   const router = useRouter();
-  return <button type="button" className="pill dd-choose" onClick={() => chooseStone(stone, u => router.push(u))}>Choose this diamond</button>;
+  const { addRing, busy } = useCart();
+  return <button type="button" className="pill dd-choose" disabled={busy} onClick={() => chooseStone(stone, { push: u => router.push(u), addRing })}>Choose this diamond</button>;
 }

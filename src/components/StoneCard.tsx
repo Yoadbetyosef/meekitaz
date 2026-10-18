@@ -3,6 +3,7 @@ import { useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { chooseStone } from "@/lib/setting";
+import { useCart } from "./CartProvider";
 
 export type Item = { fancy: string | null; id: string; vendor: number; stock: string; shape: string; carat: number; color: string | null; clarity: string | null; cut: string | null; lab: string; image: string; embed: string | null; price: number };
 export const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
@@ -10,6 +11,7 @@ const isTouch = () => typeof window !== "undefined" && window.matchMedia("(hover
 
 export default function StoneCard({ d, playing, setPlaying, onOpen }: { d: Item; playing: boolean; setPlaying: (id: string | null) => void; onOpen: () => void }) {
   const router = useRouter();
+  const { addRing } = useCart();
   const t = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stop = () => { if (t.current) clearTimeout(t.current); t.current = null; };
   return (
@@ -28,7 +30,7 @@ export default function StoneCard({ d, playing, setPlaying, onOpen }: { d: Item;
       </div>
       <div className="pcard-txt"><b>{d.carat.toFixed(2)} ct {d.shape}</b><p>{(d.fancy ? [d.fancy, d.clarity, d.lab] : [d.color, d.clarity, d.cut ? d.cut + " cut" : null, d.lab]).filter(Boolean).join(" · ")}</p><span className="price">{usd(d.price)}</span></div>
     </Link>
-    <button type="button" className="dcard-cta" onClick={() => chooseStone({ vendor: d.vendor, stock: d.stock, shape: d.shape, carat: d.carat, color: d.color, clarity: d.clarity, cut: d.cut, lab: d.lab, image: d.image, price: d.price, fancy: d.fancy }, u => router.push(u))}>Choose this diamond</button>
+    <button type="button" className="dcard-cta" onClick={() => chooseStone({ vendor: d.vendor, stock: d.stock, shape: d.shape, carat: d.carat, color: d.color, clarity: d.clarity, cut: d.cut, lab: d.lab, image: d.image, price: d.price, fancy: d.fancy }, { push: u => router.push(u), addRing })}>Choose this diamond</button>
     </div>
   );
 }

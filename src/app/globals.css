@@ -460,3 +460,15 @@ button.sp{background:none;border:0;padding:0;font:inherit;cursor:pointer}
 .bd-co{width:100%;margin-top:20px}.bd-co:disabled{opacity:.5;cursor:default}.bd-clear{display:block;margin:16px auto 0;background:none;border:0;font:600 11px var(--body);letter-spacing:.12em;text-transform:uppercase;text-decoration:underline;color:var(--ink);opacity:.6;cursor:pointer}
 @media(max-width:767px){.bd{padding:100px 0 60px}.bd .wrap{padding:0 16px}.bd-im{width:68px;height:68px}}
 #results{scroll-margin-top:118px}@media(max-width:767px){#results{scroll-margin-top:92px}}
+
+/* the ring in the bag */
+.cd-ring{border:1px solid rgba(28,26,27,.14);border-radius:20px;padding:14px 14px 4px;margin:0 0 16px;background:#fff}
+.cd-rh{display:flex;justify-content:space-between;align-items:center;padding:0 2px 6px}.cd-rh b{font:700 10px var(--body);letter-spacing:.22em;text-transform:uppercase;color:var(--red)}
+.cd-ring .cd-li{border-bottom:1px solid rgba(28,26,27,.1);padding:12px 0}.cd-gem{display:flex;align-items:center;justify-content:center;background:var(--blue)}.cd-gem svg{width:38px;height:38px;opacity:.5}
+.cd-chg{background:none;border:0;padding:0;font:600 11px var(--body);letter-spacing:.06em;text-decoration:underline;color:var(--ink);opacity:.7;cursor:pointer;margin-top:6px}
+.cd-size{padding:14px 0 10px}.cd-size label{display:block;font:700 10px var(--body);letter-spacing:.22em;text-transform:uppercase;margin-bottom:8px}
+.cd-size select{width:100%;font:400 15px var(--body);padding:13px;border-radius:12px;border:1px solid rgba(28,26,27,.2);background:#fff}.cd-size.need select{border-color:var(--red);box-shadow:0 0 0 3px rgba(126,5,8,.12)}
+.cd-size a{display:block;margin-top:8px;font:300 12px var(--body);text-decoration:underline;color:var(--ink);opacity:.7}
+.cd-rt{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0 12px;border-top:1px solid rgba(28,26,27,.14)}.cd-rt span{font:300 13px var(--body)}.cd-rt b{font:400 20px var(--display)}
+.cd-co:disabled{opacity:.55;cursor:default}
+button.cd-co{border:0;font-family:inherit;cursor:pointer}

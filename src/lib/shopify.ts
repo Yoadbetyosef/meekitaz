@@ -9,6 +9,7 @@ export type CartLine = {
   variantTitle: string;
   handle: string;
   price: number;      // per unit
+  attributes: { key: string; value: string }[];
   compareAt: number;  // per unit, 0 when there is no compare-at price
   image?: { url: string; alt: string };
 };
@@ -48,7 +49,7 @@ const CART_FIELDS = `
   id checkoutUrl totalQuantity
   cost { subtotalAmount { amount currencyCode } }
   lines(first: 100) { edges { node {
-    id quantity
+    id quantity attributes { key value }
     merchandise { ... on ProductVariant {
       title price { amount } compareAtPrice { amount }
       image { url altText }
@@ -59,7 +60,7 @@ const CART_FIELDS = `
 type RawCart = {
   id: string; checkoutUrl: string; totalQuantity: number;
   cost: { subtotalAmount: { amount: string; currencyCode: string } };
-  lines: { edges: { node: { id: string; quantity: number; merchandise: {
+  lines: { edges: { node: { id: string; quantity: number; attributes?: { key: string; value: string }[]; merchandise: {
     title: string; price: { amount: string }; compareAtPrice?: { amount: string } | null;
     image?: { url: string; altText?: string } | null;
     product: { title: string; handle: string; featuredImage?: { url: string; altText?: string } | null };
@@ -71,7 +72,7 @@ function shapeCart(c: RawCart): Cart {
     const m = node.merchandise; const img = m.image || m.product.featuredImage;
     const price = +m.price.amount; const cmp = m.compareAtPrice ? +m.compareAtPrice.amount : 0;
     return {
-      id: node.id, quantity: node.quantity, title: m.product.title,
+      id: node.id, quantity: node.quantity, title: m.product.title, attributes: node.attributes || [],
       variantTitle: m.title === "Default Title" ? "" : m.title, handle: m.product.handle,
       price, compareAt: cmp > price ? cmp : 0,
       image: img ? { url: img.url, alt: img.altText || m.product.title } : undefined,
@@ -218,4 +219,27 @@ export async function getRingFamily(code: string): Promise<RingVariant[]> {
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
     images: n.images.edges.map(i => i.node.url), variantId: n.variants.edges[0]?.node.id || "",
   })).filter(v => v.shape && v.metal);
+}
+
+/* ---------------- Cart: several lines at once, with line attributes (a ring = setting + diamond) ---------------- */
+export type NewLine = { merchandiseId: string; quantity: number; attributes?: { key: string; value: string }[] };
+export async function createCartWithLines(lines: NewLine[]): Promise<Cart | null> {
+  const d = await sf<{ cartCreate: CartPayload }>(
+    `mutation($lines:[CartLineInput!]!){ cartCreate(input:{lines:$lines}){ cart{ ${CART_FIELDS} } userErrors{ message } } }`, { lines }, { fresh: true });
+  return d?.cartCreate.cart ? shapeCart(d.cartCreate.cart) : null;
+}
+export async function addCartLines(cartId: string, lines: NewLine[]): Promise<Cart | null> {
+  const d = await sf<{ cartLinesAdd: CartPayload }>(
+    `mutation($cartId:ID!,$lines:[CartLineInput!]!){ cartLinesAdd(cartId:$cartId,lines:$lines){ cart{ ${CART_FIELDS} } userErrors{ message } } }`, { cartId, lines }, { fresh: true });
+  return d?.cartLinesAdd.cart ? shapeCart(d.cartLinesAdd.cart) : null;
+}
+export async function updateLineAttributes(cartId: string, updates: { id: string; quantity: number; attributes: { key: string; value: string }[] }[]): Promise<Cart | null> {
+  const d = await sf<{ cartLinesUpdate: CartPayload }>(
+    `mutation($cartId:ID!,$lines:[CartLineUpdateInput!]!){ cartLinesUpdate(cartId:$cartId,lines:$lines){ cart{ ${CART_FIELDS} } userErrors{ message } } }`, { cartId, lines: updates }, { fresh: true });
+  return d?.cartLinesUpdate.cart ? shapeCart(d.cartLinesUpdate.cart) : null;
+}
+export async function removeCartLines(cartId: string, lineIds: string[]): Promise<Cart | null> {
+  const d = await sf<{ cartLinesRemove: CartPayload }>(
+    `mutation($cartId:ID!,$lineIds:[ID!]!){ cartLinesRemove(cartId:$cartId,lineIds:$lineIds){ cart{ ${CART_FIELDS} } userErrors{ message } } }`, { cartId, lineIds }, { fresh: true });
+  return d?.cartLinesRemove.cart ? shapeCart(d.cartLinesRemove.cart) : null;
 }
