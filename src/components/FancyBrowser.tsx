@@ -18,12 +18,12 @@ const pair = (v: string | null, lo: number, hi: number, def: [number, number], i
 };
 const same = (a: [number, number], b: [number, number]) => a[0] === b[0] && a[1] === b[1];
 
-export default function FancyBrowser() {
+export default function FancyBrowser({ embedded = false }: { embedded?: boolean } = {}) {
   const sp = useSearchParams(), router = useRouter(), path = usePathname();
   const color = TINT[sp.get("color") || ""] ? (sp.get("color") as string) : "";
   const [f, setF] = useState<F>(() => ({
     carat: pair(sp.get("c"), 0.5, 20, DEF.carat), price: pair(sp.get("p"), 100, 50000, DEF.price), inten: pair(sp.get("int"), 0, 5, DEF.inten, true),
-    shapes: (sp.get("sh") || "").split(",").filter(x => SHAPES.includes(x)),
+    shapes: (sp.get("sh") || sp.get("style") || "").split(",").filter(x => SHAPES.includes(x)),
   }));
   const [sort, setSort] = useState(() => (["price_asc", "price_desc", "carat_desc", "intensity_desc"].includes(sp.get("sort") || "") ? (sp.get("sort") as string) : "price_asc"));
   const [items, setItems] = useState<Item[]>([]);
@@ -102,7 +102,7 @@ export default function FancyBrowser() {
 
   return (
     <>
-      <section className="shapes" aria-label="Shop by color">
+      {!embedded && <section className="shapes" aria-label="Shop by color">
         <div className="wrap">
           <div className="sp-head"><small className="eyebrow">Shop by color</small><h2>Pick your color</h2></div>
           <div className={`sp-row${color ? " has-sel" : ""}`}>
@@ -114,7 +114,7 @@ export default function FancyBrowser() {
             ))}
           </div>
         </div>
-      </section>
+      </section>}
 
       <section className="filters" aria-label="Filter fancy colors">
         <div className="wrap">

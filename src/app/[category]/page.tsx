@@ -4,9 +4,9 @@ import { notFound } from "next/navigation";
 import { categories } from "@/lib/data";
 import ProductGrid from "@/components/ProductGrid";
 import { Suspense } from "react";
-import DiamondsBrowser from "@/components/DiamondsBrowser";
 import ShapeRow from "@/components/ShapeRow";
-import FancyBrowser from "@/components/FancyBrowser";
+import StoneBrowser from "@/components/StoneBrowser";
+import FancyColorRow from "@/components/FancyColorRow";
 import RingsSection from "@/components/RingsSection";
 import SettingBar from "@/components/SettingBar";
 import JumpToResults from "@/components/JumpToResults";
@@ -53,7 +53,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
             </div>
           </section>
         )}
-        {p.special === "fancy" ? <><Suspense fallback={null}><RingsSection fancy={one("color") || "all"} /></Suspense><Suspense fallback={null}><FancyBrowser /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><DiamondsBrowser /></Suspense> : <ProductGrid page={p} />}
+        {p.special === "fancy" ? <><FancyColorRow color={one("color")} /><Suspense fallback={null}><RingsSection fancy={one("color") || "all"} /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><StoneBrowser /></Suspense> : <ProductGrid page={p} />}
       </div>
     </main>
   );

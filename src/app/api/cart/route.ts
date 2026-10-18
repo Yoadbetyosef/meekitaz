@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       }
       cart = id ? await addCartLines(id, lines) : null;
       if (!cart) cart = await createCartWithLines(lines);
-    } catch (e) { console.error("[ringsCheckout]", e instanceof Error ? e.message : e); return NextResponse.json({ error: "failed" }, { status: 502 }); }
+    } catch (e) { const m = e instanceof Error ? e.message : String(e); console.error("[ringsCheckout]", m); return NextResponse.json({ error: "failed", detail: m.slice(0, 200) }, { status: 502 }); }
   } else if (id && body.action === "ringSize" && Array.isArray(body.lineIds) && SIZES.has(String(body.size))) {
     const cur = await getCart(id); if (!cur) return NextResponse.json({ error: "Cart update failed" }, { status: 502 });
     const ids = new Set((body.lineIds as unknown[]).map(String));

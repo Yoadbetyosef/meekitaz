@@ -518,3 +518,4 @@ button.cd-co{border:0;font-family:inherit;cursor:pointer}
 .fp-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 .fp-none{font:italic 16px var(--sub);opacity:.75;margin:0 0 10px}
 .rp-colors{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:16px}.rp-colors .rp-mt:disabled{opacity:.3;cursor:default}
+.sc{padding-bottom:0}.sc-row{gap:18px}

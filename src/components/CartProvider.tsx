@@ -24,11 +24,11 @@ type Ctx = {
 const CartCtx = createContext<Ctx | null>(null);
 export const useCart = () => { const c = useContext(CartCtx); if (!c) throw new Error("useCart outside CartProvider"); return c; };
 
-async function call(body: unknown): Promise<{ cart: Cart | null; error?: string }> {
+async function call(body: unknown): Promise<{ cart: Cart | null; error?: string; detail?: string }> {
   try {
     const r = await fetch("/api/cart", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     const j = await r.json().catch(() => ({}));
-    if (!r.ok) return { cart: null, error: j.error || "failed" };
+    if (!r.ok) return { cart: null, error: j.error || "failed", detail: j.detail };
     return { cart: j.cart as Cart };
   } catch { return { cart: null, error: "failed" }; }
 }
@@ -62,7 +62,7 @@ export default function CartProvider({ children }: { children: React.ReactNode }
     if (r.cart) { clearLocalRings(); setCart(r.cart); window.location.href = r.cart.checkoutUrl; return; }
     setBusy(false);
     setRingError(r.error === "not_configured" ? "Checkout for custom rings is being connected. Please book an appointment and we will complete your order with you."
-      : r.error === "gone" ? "One of the diamonds is no longer available. Please choose another." : "We could not start your checkout. Please try again, or book an appointment.");
+      : r.error === "gone" ? "One of the diamonds is no longer available. Please choose another." : `We could not start your checkout. Please try again, or book an appointment.${r.detail ? ` (${r.detail})` : ""}`);
   }, []);
 
   const value = useMemo<Ctx>(() => ({

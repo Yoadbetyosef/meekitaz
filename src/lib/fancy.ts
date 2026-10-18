@@ -16,6 +16,6 @@ export function fancyColorOfStone(fancy: string | null): FancyColor | "" {
 /** Shopify product search for every catalogue piece set with a coloured diamond. */
 export const FANCY_QUERY = [...FANCY_COLORS.map(c => `title:'${c} Diamond'`), ...FANCY_COLORS.map(c => `title:'Fancy ${c}'`), "title:canary"].join(" OR ");
 /** Where "Choose this setting" leads for a fancy-colour setting: the fancy stones, in that colour and shape. */
-export const fancyStonesUrl = (color: string, shape: string) => `/fancy-colors?color=${encodeURIComponent(color)}&sh=${encodeURIComponent(shape)}&build=1`;
+export const fancyStonesUrl = (color: string, shape: string) => `/diamonds?color=${encodeURIComponent(color)}&sh=${encodeURIComponent(shape)}&build=1`;
 /** Where "Choose this diamond" leads for a fancy stone with no setting yet: the fancy settings, in that colour and shape. */
 export const fancySettingsUrl = (color: string, shape: string) => `/fancy-colors?color=${encodeURIComponent(color)}&style=${encodeURIComponent(shape)}&build=1&to=settings`;
