@@ -1,12 +1,30 @@
-// Server-only. Creates the product for a chosen diamond (diamonds come from our supplier, not from Shopify) and a cart holding ring + diamond.
 import { karatStep } from "./karat";
-const domain = process.env.SHOPIFY_STORE_DOMAIN, adminToken = process.env.SHOPIFY_ADMIN_TOKEN, sfToken = process.env.SHOPIFY_STOREFRONT_TOKEN;
+// Server-only. Creates the product for a chosen diamond (diamonds come from our supplier, not from Shopify) and a cart holding ring + diamond.
+const domain = process.env.SHOPIFY_STORE_DOMAIN, sfToken = process.env.SHOPIFY_STOREFRONT_TOKEN;
+// Admin access: either a fixed token (SHOPIFY_ADMIN_TOKEN, from a legacy custom app) or the Client ID + Client secret of a Dev Dashboard app, which are exchanged for a token that lasts 24 hours.
+const staticToken = process.env.SHOPIFY_ADMIN_TOKEN, clientId = process.env.SHOPIFY_CLIENT_ID, clientSecret = process.env.SHOPIFY_CLIENT_SECRET;
 const adminBase = process.env.SHOPIFY_ADMIN_API_BASE || `https://${domain}`;
 const sfBase = process.env.SHOPIFY_API_BASE || `https://${domain}`;
-export const adminConfigured = Boolean(domain && adminToken && sfToken);
+export const adminConfigured = Boolean(domain && sfToken && (staticToken || (clientId && clientSecret)));
 
-async function admin<T>(query: string, variables: Record<string, unknown> = {}): Promise<T> {
-  const r = await fetch(`${adminBase}/admin/api/2025-07/graphql.json`, { method: "POST", headers: { "Content-Type": "application/json", "X-Shopify-Access-Token": adminToken! }, body: JSON.stringify({ query, variables }), cache: "no-store" });
+let cached: { token: string; exp: number } | null = null;
+let inflight: Promise<string> | null = null;
+async function adminToken(force = false): Promise<string> {
+  if (staticToken) return staticToken;
+  if (!force && cached && cached.exp - Date.now() > 5 * 60_000) return cached.token; // refreshed five minutes before it expires
+  if (!inflight) inflight = (async () => {
+    const r = await fetch(`${adminBase}/admin/oauth/access_token`, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ grant_type: "client_credentials", client_id: clientId!, client_secret: clientSecret! }), cache: "no-store" });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || !j.access_token) throw new Error("admin token: " + (j.error_description || j.error || r.status));
+    cached = { token: j.access_token as string, exp: Date.now() + (Number(j.expires_in) || 86399) * 1000 };
+    return cached.token;
+  })().finally(() => { inflight = null; });
+  return inflight;
+}
+
+async function admin<T>(query: string, variables: Record<string, unknown> = {}, retry = true): Promise<T> {
+  const r = await fetch(`${adminBase}/admin/api/2025-07/graphql.json`, { method: "POST", headers: { "Content-Type": "application/json", "X-Shopify-Access-Token": await adminToken() }, body: JSON.stringify({ query, variables }), cache: "no-store" });
+  if (r.status === 401 && retry && !staticToken) { cached = null; await adminToken(true); return admin<T>(query, variables, false); } // the token was revoked or rotated: get a new one once
   const j = await r.json();
   if (!r.ok || j.errors) throw new Error("admin: " + JSON.stringify(j.errors || r.status).slice(0, 300));
   return j.data as T;
