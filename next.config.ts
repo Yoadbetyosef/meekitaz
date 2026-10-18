@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "cdn.shopify.com" },
     ],
     formats: ["image/avif", "image/webp"],
+        qualities: [70, 75, 78],
     deviceSizes: [390, 430, 640, 768, 1024, 1280, 1536, 1920, 2560],
   },
 };
