@@ -35,9 +35,9 @@ export function findEngraving(gray: Float32Array, W: number, H: number, mean: (x
   }
   const rows = new Int32Array(h);
   for (let y = 0; y < h; y++) { let s = 0; for (let x = 0; x < w; x++) s += dark[y * w + x]; rows[y] = s; }
-  const hb = Math.max(8, Math.round(15 * sc));
+  const hbs = [...new Set([12, 15, 19, 24].map(v => Math.max(6, Math.round(v * sc))))]; // text height varies with the render
   let best: { x: number; y: number; w: number; h: number; dice: number; v: V; dx: number; dy: number } | null = null;
-  for (let y = 0; y + hb < h; y += 2) {
+  for (const hb of hbs) for (let y = 0; y + hb < h; y += 2) {
     let s = 0; for (let k = 0; k < hb; k++) s += rows[y + k];
     if (s < 22 * sc * sc) continue;
     // columns with dark pixels in this band, grouped across small gaps (letters), keep the group with most ink
@@ -52,7 +52,7 @@ export function findEngraving(gray: Float32Array, W: number, H: number, mean: (x
     const bw = g[1] - g[0] + 1; let y0 = -1, y1 = -1;
     for (let yy = y; yy < y + hb; yy++) { let hit = 0; for (let x = g[0]; x <= g[1]; x++) hit |= dark[yy * w + x]; if (hit) { if (y0 < 0) y0 = yy; y1 = yy + 1; } }
     const bh = y1 - y0;
-    if (bh < 4 || bw < 0.07 * W || bw / bh < 5 || bw / bh > 9.5) continue;
+    if (bh < 4 || bw < 0.07 * W || bw / bh < 5 || bw / bh > 10.5) continue;
     for (const v of ["up", "rot", "flipv"] as V[]) {
       const tpl = VARIANTS[v];
       for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
