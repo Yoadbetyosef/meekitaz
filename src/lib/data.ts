@@ -617,8 +617,8 @@ categories.push({
   "nav": "Gemstones",
   "title": "Gemstones.",
   "small": "Color, worn lightly.",
-  "desktop": "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/46ffdbf9-2b79-464a-b045-41824c7d0aac.jpg",
-  "mobile": "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/14c68a3e-cb6d-4058-970d-2d430decbe93.jpg",
+  "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_181946_67884f88-762f-464d-8374-b54f0c9a4131.png",
+  "mobile": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_181947_34c4e6aa-53fd-4414-8749-5d07a72b246c.png",
   "styleHead": [
     "Shop by stone",
     "Pick your color"
