@@ -122,8 +122,8 @@ const rawFancy = (d: Record<string, unknown>) => !!(d.fancy_color_dominant_color
 const CARAT_BANDS: [number, number][] = [[0.3, 0.5], [0.5, 0.7], [0.7, 1], [1, 1.5], [1.5, 2], [2, 3], [3, 5], [5, 30]];
 const SHARD_SHAPES = [...SHAPES, "Elongated Cushion"];
 const shardQs = (shape: string, lo: number, hi: number) => `${FANCY_QS.replace("size_from=0.3", `size_from=${lo}&size_to=${hi}`)}&shapes[]=${enc(shape)}`;
-async function harvestShard(shape: string, lo: number, hi: number, out: Map<string, Diamond>) {
-  const base = shardQs(shape, lo, hi);
+async function harvestShard(shape: string, lo: number, hi: number): Promise<Diamond[]> {
+  const base = shardQs(shape, lo, hi), out = new Map<string, Diamond>();
   const head = await vdb(`${base}&page_number=1`, 3600);
   const last = Math.max(1, Math.ceil((head.total_diamonds_found || 0) / 50));
   for (let n = last; n >= 1; n--) {
@@ -132,32 +132,33 @@ async function harvestShard(shape: string, lo: number, hi: number, out: Map<stri
     page.diamonds.forEach(x => { if (!rawFancy(x)) return; hit++; const d = norm(x); if (d) out.set(`${d.vendor}-${d.stock}`, d); });
     if (hit === 0) break;
   }
+  return [...out.values()];
 }
-async function harvestFancy(): Promise<Diamond[]> {
-  const out = new Map<string, Diamond>();
-  const jobs: [string, number, number][] = [];
-  for (const sh of SHARD_SHAPES) for (const [lo, hi] of CARAT_BANDS) jobs.push([sh, lo, hi]);
+// Every shard is its own entry in Vercel's shared data cache (small, well under the 2 MB limit), refreshed in the background every
+// 30 minutes with the stale copy served meanwhile. A request that runs out of time keeps the shards it finished, so the next request
+// only has the rest to do; the cron in vercel.json keeps everything warm. The harvest never tries to do it all in one go.
+const SHARDS: [string, number, number][] = [];
+for (const sh of SHARD_SHAPES) for (const [lo, hi] of CARAT_BANDS) SHARDS.push([sh, lo, hi]);
+const cachedShard = (sh: string, lo: number, hi: number) => unstable_cache(() => harvestShard(sh, lo, hi), ["vdb-fancy-v5", sh, String(lo), String(hi)], { revalidate: 1800 })();
+async function harvestFancy(budgetMs = 45_000): Promise<Diamond[]> {
+  const t0 = Date.now(), out = new Map<string, Diamond>();
   let i = 0;
-  const worker = async () => { while (i < jobs.length) { const [sh, lo, hi] = jobs[i++]; try { await harvestShard(sh, lo, hi, out); } catch { /* one shard failing must not lose the rest */ } } };
+  const worker = async () => {
+    while (i < SHARDS.length && Date.now() - t0 < budgetMs) {
+      const [sh, lo, hi] = SHARDS[i++];
+      try { (await cachedShard(sh, lo, hi)).forEach(d => out.set(`${d.vendor}-${d.stock}`, d)); } catch { /* one shard failing must not lose the rest */ }
+    }
+  };
   await Promise.all(Array.from({ length: 20 }, worker));
   return [...out.values()];
 }
 
-// The harvested list is kept in Vercel's shared data cache, one entry per colour (an entry must stay under 2 MB; ~5,000 stones
-// in one entry would not), refreshed in the background every 30 minutes with the stale copy served meanwhile, and also in memory
-// on this instance. The cron in vercel.json keeps it warm. One harvest feeds every colour entry within the same request.
-const GROUPS = ["Pink", "Blue", "Yellow", "Green", "Other"];
-const groupOf = (d: Diamond) => (GROUPS.includes(d.fancyColor || "") ? d.fancyColor! : "Other");
-let harvesting: Promise<Diamond[]> | null = null;
-const harvestOnce = () => { if (!harvesting) harvesting = harvestFancy().finally(() => { setTimeout(() => { harvesting = null; }, 5000); }); return harvesting; };
-const cachedGroup = (g: string) => unstable_cache(async () => (await harvestOnce()).filter(d => groupOf(d) === g), ["vdb-fancy-v4", g], { revalidate: 1800 })();
-const harvestCached = async () => (await Promise.all(GROUPS.map(cachedGroup))).flat();
 let fancyCache: { at: number; items: Diamond[] } | null = null;
 let fancyBusy: Promise<Diamond[]> | null = null;
 export async function getFancy(): Promise<Diamond[]> {
   const fresh = fancyCache && Date.now() - fancyCache.at < 10 * 60 * 1000;
   if (fresh) return fancyCache!.items;
-  if (!fancyBusy) fancyBusy = harvestCached().then(items => { if (items.length || !fancyCache) fancyCache = { at: Date.now(), items }; return fancyCache!.items; })
+  if (!fancyBusy) fancyBusy = harvestFancy().then(items => { if (items.length >= (fancyCache?.items.length || 0) * 0.9 || !fancyCache) fancyCache = { at: Date.now(), items }; return fancyCache!.items; })
     .catch(e => { if (fancyCache) return fancyCache.items; throw e; }).finally(() => { fancyBusy = null; });
   return fancyCache ? fancyCache.items : fancyBusy; // stale list is served while the refresh runs
 }
