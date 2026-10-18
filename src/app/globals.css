@@ -528,3 +528,4 @@ button.cd-co{border:0;font-family:inherit;cursor:pointer}
 .cd-wallets i{display:inline-flex;align-items:center;justify-content:center;gap:3px;height:28px;padding:0 9px;border-radius:6px;font:700 11.5px var(--body);font-style:normal;color:#fff}
 .cd-wallets svg{width:11px;height:13px}
 .w-apple,.w-gpay{background:#000}.w-shop{background:#5a31f4}.w-pp{background:#ffc439;color:#003087!important;font-style:italic!important}.w-card{background:transparent;color:var(--ink)!important;border:1px solid rgba(28,26,27,.18);font-weight:600!important}
+.cd-wallets{position:relative}.cd-wgo{position:absolute;inset:0;background:none;border:0;cursor:pointer;border-radius:10px}.cd-wgo:disabled{cursor:default}.cd-wallets:hover i{filter:brightness(1.08)}

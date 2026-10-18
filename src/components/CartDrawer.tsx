@@ -140,8 +140,10 @@ export default function CartDrawer() {
               : rings.length > 0 ? <button className="cd-co" disabled={busy} onClick={checkout}>{busy ? "One moment…" : "Checkout"}</button>
               : <a className="cd-co" href={cart!.checkoutUrl}>Checkout</a>}
             {installments(subtotal) && <p className="cd-inst">{installments(subtotal)}</p>}
-            <div className="cd-wallets" aria-label="Ways to pay">
+            <div className="cd-wallets" aria-label="Ways to pay" role="group">
               <small>Pay with</small>
+              {/* the wallets themselves run inside Shopify's checkout; each icon takes the customer straight there */}
+              <button type="button" className="cd-wgo" disabled={busy || needSize} onClick={() => (rings.length > 0 ? checkout() : (window.location.href = cart!.checkoutUrl))} aria-label="Go to checkout to pay with a wallet"></button>
               <i className="w-apple" title="Apple Pay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.5 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9s-1.9-.9-3.2-.8c-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.3 1.2 9.7.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.6-1-2.6-3.9zM14 5.6c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.2-.6 2.8-1.4z"/></svg>Pay</i>
               <i className="w-gpay" title="Google Pay">G Pay</i>
               <i className="w-shop" title="Shop Pay">shop</i>
