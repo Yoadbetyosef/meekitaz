@@ -204,7 +204,7 @@ export const faces = [
 
 export const showroomImage = "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_001140_1f7e875f-d6d9-4189-b6c6-3678c3cc5849.png";
 
-export type CategoryPage = { slug:string; nav:string; title:string; small:string; desktop:string; mobile:string; styleHead: string[] | null; styles:{img:string;label:string}[]; items:{name:string;meta:string}[]; filters:boolean; special?: string };
+export type CategoryPage = { slug:string; nav:string; title:string; small:string; desktop:string; mobile:string; styleHead: string[] | null; styles:{img:string;label:string}[]; items:{name:string;meta:string}[]; filters:boolean; special?: string; heroPos?: string; heroZoom?: number };
 export const categories: CategoryPage[] = [
   {
     "slug": "engagement-rings",
@@ -712,6 +712,6 @@ categories.push({
 menuTiles.push({ href: "/gemstones", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_182737_dcd137b9-02c9-49e0-be7e-c15c1942bf06.png", label: "Gemstones", sub: "Color, worn lightly.", pos: "50% 50%", posM: "60% 50%" });
 categoryTiles.push({ href: "/gemstones", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_073814_37a49ab3-667e-4b6b-bf39-ad1eb63f2e24.png", n: "07", title: "Gemstones", sub: "Color, worn lightly." });
 
-categories.push({ slug: "fancy-colors", nav: "Fancy Colors", title: "Fancy Colors.", small: "Pink, blue, yellow, green. Made, not mined.", desktop: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_183229_bc44444a-3812-4069-96a7-21ba5e5f5758.png", mobile: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_183945_0bec5d8a-57e2-43d7-b0e3-a9f653d48a26.png", styleHead: null, styles: [], items: [], filters: false, special: "fancy" });
+categories.push({ slug: "fancy-colors", nav: "Fancy Colors", title: "Fancy Colors.", small: "Pink, blue, yellow, green. Made, not mined.", desktop: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_184425_4cac47d4-2317-47c9-a2fc-fe95dd49bcaa.png", heroPos: "50% 28%", heroZoom: 1.12, mobile: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_183945_0bec5d8a-57e2-43d7-b0e3-a9f653d48a26.png", styleHead: null, styles: [], items: [], filters: false, special: "fancy" });
 menuTiles.push({ href: "/fancy-colors", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_183229_bc44444a-3812-4069-96a7-21ba5e5f5758.png", label: "Fancy Colors", sub: "Pink, blue, yellow, green.", pos: "50% 40%", posM: "55% 40%" });
 categoryTiles.push({ href: "/fancy-colors", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_123005_25e23f4c-46fa-4d8b-97fd-629bc435c121.png", n: "08", title: "Fancy Colors", sub: "Pink, blue, yellow, green." });
