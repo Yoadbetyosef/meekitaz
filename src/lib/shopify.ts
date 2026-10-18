@@ -20,7 +20,7 @@ export const shopifyConfigured = Boolean(domain && token);
 
 async function sf<T>(query: string, variables: Record<string, unknown> = {}, opts: { fresh?: boolean } = {}): Promise<T | null> {
   if (!shopifyConfigured) return null;
-  const r = await fetch(`https://${domain}/api/2025-07/graphql.json`, {
+  const r = await fetch(`${process.env.SHOPIFY_API_BASE || `https://${domain}`}/api/2025-07/graphql.json`, {
     method: "POST",
     headers: { "Content-Type": "application/json", "X-Shopify-Storefront-Access-Token": token! },
     body: JSON.stringify({ query, variables }),
@@ -114,4 +114,52 @@ export async function removeCartLine(cartId: string, lineId: string): Promise<Ca
     `mutation($cartId:ID!,$lineIds:[ID!]!){ cartLinesRemove(cartId:$cartId,lineIds:$lineIds){ cart{ ${CART_FIELDS} } userErrors{ message } } }`,
     { cartId, lineIds: [lineId] }, { fresh: true });
   return d?.cartLinesRemove.cart ? shapeCart(d.cartLinesRemove.cart) : null;
+}
+
+/* ---------------- Product page ---------------- */
+export type ProductVariant = { id: string; title: string; available: boolean; price: number; compareAt: number; selected: { name: string; value: string }[]; imageUrl?: string };
+export type ProductFull = {
+  id: string; handle: string; title: string; description: string; descriptionHtml: string; productType: string; tags: string[];
+  options: { name: string; values: string[] }[]; images: { url: string; alt: string; width: number; height: number }[]; variants: ProductVariant[]; currency: string; seoTitle?: string; seoDescription?: string;
+};
+export type Sibling = { handle: string; title: string; metal: string; image?: string };
+export type Related = { handle: string; title: string; price: number; compareAt: number; image?: string };
+
+export const METALS = ["Rose Gold", "Yellow Gold", "White Gold", "Platinum", "Silver"];
+export const metalOf = (tags: string[]) => METALS.find(m => tags.some(t => t.toLowerCase() === m.toLowerCase())) || "";
+export const designCode = (tags: string[]) => tags.find(t => /^NS-\d+$/i.test(t)) || "";
+
+export async function getProductByHandle(handle: string): Promise<ProductFull | null> {
+  const d = await sf<{ product: null | { id: string; handle: string; title: string; description: string; descriptionHtml: string; productType: string; tags: string[];
+    seo: { title?: string; description?: string }; options: { name: string; values: string[] }[];
+    images: { edges: { node: { url: string; altText?: string; width: number; height: number } }[] };
+    variants: { edges: { node: { id: string; title: string; availableForSale: boolean; price: { amount: string; currencyCode: string }; compareAtPrice?: { amount: string } | null; selectedOptions: { name: string; value: string }[]; image?: { url: string } | null } }[] } } }>(
+    `query($handle:String!){ product(handle:$handle){ id handle title description descriptionHtml productType tags seo{ title description } options{ name values }
+      images(first:20){ edges{ node{ url altText width height } } }
+      variants(first:60){ edges{ node{ id title availableForSale price{ amount currencyCode } compareAtPrice{ amount } selectedOptions{ name value } image{ url } } } } } }`, { handle });
+  const p = d?.product; if (!p) return null;
+  const vs = p.variants.edges.map(({ node: v }) => ({ id: v.id, title: v.title, available: v.availableForSale, price: +v.price.amount, compareAt: v.compareAtPrice && +v.compareAtPrice.amount > +v.price.amount ? +v.compareAtPrice.amount : 0, selected: v.selectedOptions, imageUrl: v.image?.url }));
+  return {
+    id: p.id, handle: p.handle, title: p.title, description: p.description, descriptionHtml: p.descriptionHtml, productType: p.productType, tags: p.tags,
+    options: p.options, images: p.images.edges.map(({ node: i }) => ({ url: i.url, alt: i.altText || p.title, width: i.width, height: i.height })), variants: vs,
+    currency: p.variants.edges[0]?.node.price.currencyCode || "USD", seoTitle: p.seo?.title || undefined, seoDescription: p.seo?.description || undefined,
+  };
+}
+
+/** The same design in other metals (Shopify holds each metal as its own product, linked by the NS design code tag). */
+export async function getSiblings(code: string, exceptHandle: string): Promise<Sibling[]> {
+  if (!code) return [];
+  const d = await sf<{ products: { edges: { node: { handle: string; title: string; tags: string[]; featuredImage?: { url: string } | null } }[] } }>(
+    `query($q:String!){ products(first:12, query:$q){ edges{ node{ handle title tags featuredImage{ url } } } } }`, { q: `tag:${code}` });
+  return (d?.products.edges || []).map(({ node }) => ({ handle: node.handle, title: node.title, metal: metalOf(node.tags), image: node.featuredImage?.url }))
+    .filter(x => x.metal || x.handle === exceptHandle);
+}
+
+export async function getRelated(productType: string, exceptHandle: string, first = 4): Promise<Related[]> {
+  if (!productType) return [];
+  const d = await sf<{ products: { edges: { node: { handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string } | null } }[] } }>(
+    `query($q:String!,$n:Int!){ products(first:$n, query:$q, sortKey:BEST_SELLING){ edges{ node{ handle title tags priceRange{ minVariantPrice{ amount } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url } } } } }`,
+    { q: `product_type:"${productType.replace(/"/g, "")}"`, n: first + 6 });
+  return (d?.products.edges || []).map(e => e.node).filter(n => n.handle !== exceptHandle && !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026"))
+    .slice(0, first).map(n => ({ handle: n.handle, title: n.title, price: +n.priceRange.minVariantPrice.amount, compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0, image: n.featuredImage?.url }));
 }
