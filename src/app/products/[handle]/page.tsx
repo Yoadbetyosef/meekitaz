@@ -2,6 +2,7 @@ import { notFound, permanentRedirect } from "next/navigation";
 import { getProductByHandle, getSiblings, getRelated, getRingFamily, designCode, shopifyConfigured, findByOldHandle } from "@/lib/shopify";
 import { categories } from "@/lib/data";
 import { brandify, isBlocked } from "@/lib/text";
+import { fancyColorOf } from "@/lib/fancy";
 import ProductView from "@/components/ProductView";
 
 export const revalidate = 300;
@@ -27,7 +28,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
     notFound();
   }
   const code = designCode(p.tags), isRing = p.tags.includes("Engagement Ring");
-  const [siblings, related, family] = await Promise.all([isRing ? Promise.resolve([]) : getSiblings(code, p.handle), getRelated(p.productType, p.handle), isRing ? getRingFamily(code) : Promise.resolve([])]);
+  const [siblings, related, family] = await Promise.all([isRing ? Promise.resolve([]) : getSiblings(code, p.handle), getRelated(p.productType, p.handle), isRing ? getRingFamily(code, fancyColorOf(p.title)) : Promise.resolve([])]);
   const shapes = categories.find(c => c.slug === "engagement-rings")?.styles ?? [];
   // Shopify's search index can lag behind a handle rename, so this page is matched into its family by product id and always listed under its current handle.
   const fam = family.map(v => (v.id === p.id ? { ...v, handle: p.handle } : v));

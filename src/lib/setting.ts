@@ -28,7 +28,7 @@ export async function chooseStone(s: Stone, deps: { push: (url: string) => void;
   if (!setting) { const c = fancyColorOfStone(s.fancy); deps.push(c ? fancySettingsUrl(c, s.shape) : `/engagement-rings?style=${encodeURIComponent(s.shape)}&build=1`); return; }
   if (setting.shape !== s.shape) { // the setting follows the shape of the diamond
     let item = null;
-    try { item = (await (await fetch(`/api/setting?${new URLSearchParams({ ns: setting.ns, shape: s.shape, metal: setting.metal })}`)).json()).item; } catch { /* handled below */ }
+    try { item = (await (await fetch(`/api/setting?${new URLSearchParams({ ns: setting.ns, shape: s.shape, metal: setting.metal, color: setting.color || "" })}`)).json()).item; } catch { /* handled below */ }
     if (!item) { deps.notify(`That setting is not made in ${s.shape.toLowerCase()}. Choose a setting for your ${s.shape.toLowerCase()} diamond.`); deps.push(`/engagement-rings?style=${encodeURIComponent(s.shape)}&build=1`); return; }
     setting = settingFrom(setting, item);
     saveSetting(setting);
