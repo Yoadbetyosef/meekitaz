@@ -709,7 +709,7 @@ categories.push({
   ],
   "filters": false
 });
-menuTiles.push({ href: "/gemstones", img: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/46ffdbf9-2b79-464a-b045-41824c7d0aac.jpg", label: "Gemstones", sub: "Color, worn lightly.", pos: "62% 38%", posM: "78% 40%" });
+menuTiles.push({ href: "/gemstones", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_182737_dcd137b9-02c9-49e0-be7e-c15c1942bf06.png", label: "Gemstones", sub: "Color, worn lightly.", pos: "50% 50%", posM: "60% 50%" });
 categoryTiles.push({ href: "/gemstones", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_073814_37a49ab3-667e-4b6b-bf39-ad1eb63f2e24.png", n: "07", title: "Gemstones", sub: "Color, worn lightly." });
 
 categories.push({ slug: "fancy-colors", nav: "Fancy Colors", title: "Fancy Colors.", small: "Pink, blue, yellow, green. Made, not mined.", desktop: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_072549_f0edc0d7-01b8-47c6-87dd-9d484c1e3e6d.png", mobile: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_072552_90ee75cd-c0a8-4505-99a1-fcd36c41d091.png", styleHead: null, styles: [], items: [], filters: false, special: "fancy" });
