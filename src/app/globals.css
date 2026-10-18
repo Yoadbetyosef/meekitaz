@@ -406,3 +406,5 @@ button.sp{background:none;border:0;padding:0;font:inherit;cursor:pointer}
   .pp-sbar{display:flex;position:sticky;bottom:12px;z-index:30;margin:18px 12px 0;background:#fff;border:1px solid rgba(28,26,27,.14);border-radius:999px;padding:8px 8px 8px 20px;align-items:center;justify-content:space-between;box-shadow:0 10px 30px rgba(0,0,0,.14)}
   .pp-sbar b{font:400 20px var(--display)}.pp-sbar s{opacity:.5;font-size:13px;margin-left:8px}.pp-sbar .pp-add{padding:14px 22px}
 }
+
+.pcard-txt .was{opacity:.5;margin-left:8px;font-weight:400}

@@ -1,6 +1,6 @@
 // Shopify Storefront API client (server only).
 // Set SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_TOKEN in .env.local / Vercel.
-export type Product = { id: string; handle: string; title: string; price: string; currency: string; image?: { url: string; alt: string } };
+export type Product = { id: string; handle: string; title: string; price: string; currency: string; compareAt?: number; image?: { url: string; alt: string } };
 
 export type CartLine = {
   id: string;
@@ -162,4 +162,25 @@ export async function getRelated(productType: string, exceptHandle: string, firs
     { q: `product_type:"${productType.replace(/"/g, "")}"`, n: first + 6 });
   return (d?.products.edges || []).map(e => e.node).filter(n => n.handle !== exceptHandle && !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026"))
     .slice(0, first).map(n => ({ handle: n.handle, title: n.title, price: +n.priceRange.minVariantPrice.amount, compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0, image: n.featuredImage?.url }));
+}
+
+/* ---------------- Category listing with paging and sorting ---------------- */
+export const SORTS: Record<string, { key: string; reverse: boolean }> = {
+  best: { key: "BEST_SELLING", reverse: false }, new: { key: "CREATED", reverse: true },
+  price_asc: { key: "PRICE", reverse: false }, price_desc: { key: "PRICE", reverse: true },
+};
+export async function getCollectionPage(handle: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
+  const so = SORTS[opts.sort || "best"] || SORTS.best;
+  const d = await sf<{ collection: null | { products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null } }[] } } }>(
+    `query($handle:String!,$first:Int!,$after:String,$key:ProductCollectionSortKeys!,$rev:Boolean!){ collection(handle:$handle){ products(first:$first, after:$after, sortKey:$key, reverse:$rev){
+      pageInfo{ hasNextPage endCursor }
+      edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } } } } } }`,
+    { handle, first: opts.first || 24, after: opts.after || null, key: so.key, rev: so.reverse });
+  const c = d?.collection?.products; if (!c) return null;
+  const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
+    id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
+    compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
+    image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title } : undefined,
+  }));
+  return { products, hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
 }
