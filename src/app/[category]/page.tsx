@@ -5,6 +5,7 @@ import { categories } from "@/lib/data";
 import ProductGrid from "@/components/ProductGrid";
 import { Suspense } from "react";
 import DiamondsBrowser from "@/components/DiamondsBrowser";
+import ShapeRow from "@/components/ShapeRow";
 
 export function generateStaticParams() { return categories.map(c => ({ category: c.slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
@@ -31,13 +32,14 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           <section className="shapes" aria-label={p.styleHead[0]}>
             <div className="wrap">
               <div className="sp-head"><small className="eyebrow">{p.styleHead[0]}</small><h2>{p.styleHead[1]}</h2></div>
+              {p.filters ? <Suspense fallback={null}><ShapeRow styles={p.styles} className={`sp-row${n > 7 ? " scroll" : ""}`} /></Suspense> : (
               <div className={`sp-row${n === 6 ? " n6" : n === 4 ? " n4" : n > 7 ? " scroll" : ""}`}>
                 {p.styles.map(s => (
                   <Link key={s.label} href={`/${p.slug}?style=${encodeURIComponent(s.label)}`} className="sp">
                     <span className="sp-img"><Image src={s.img} alt={s.label} fill sizes="160px" quality={70} /></span><b>{s.label}</b>
                   </Link>
                 ))}
-              </div>
+              </div>)}
             </div>
           </section>
         )}

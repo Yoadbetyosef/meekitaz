@@ -17,7 +17,7 @@ export type DiamondQuery = {
 export type Diamond = {
   id: string; vendor: number; stock: string; shape: string; carat: number; color: string | null; clarity: string | null;
   cut: string | null; polish: string | null; symmetry: string | null; fluor: string | null; lab: string; cert: string; certUrl: string;
-  image: string; video: string | null; price: number; ratio: string | null; depth: string | null; table: string | null; measurements: string | null; country: string | null;
+  image: string; video: string | null; embed: string | null; price: number; ratio: string | null; depth: string | null; table: string | null; measurements: string | null; country: string | null;
 };
 
 const enc = encodeURIComponent;
@@ -50,6 +50,21 @@ async function vdb(qs: string) {
   return r.body as { diamonds: Record<string, unknown>[]; total_diamonds_found: number };
 }
 
+
+// 360 viewers we know how to embed without their buttons/arrows (same Vision360 engine accepts btn=0, sv=0, z=0).
+function embedUrl(raw: string | null): string | null {
+  if (!raw) return null;
+  try {
+    const u = new URL(raw);
+    if (u.protocol !== "https:") return null; // http would be blocked as mixed content
+    const h = u.hostname, p = u.pathname;
+    const known = h === "v360.diamonds" || h === "v360.in" || (h === "labgrowns3.s3.ap-southeast-1.amazonaws.com" && p.endsWith("/stoneimages360.html")) || (h === "ssdweb.co" && p.endsWith("/Vision360.html")) || (h === "videos.gem360.in" && p.endsWith("/Vision360.html"));
+    if (!known) return null;
+    for (const [k, v] of [["btn", "0"], ["sv", "0"], ["z", "0"]]) if (!u.searchParams.has(k)) u.searchParams.set(k, v);
+    return u.toString();
+  } catch { return null; }
+}
+
 const s = (v: unknown) => (v === null || v === undefined || v === "" ? null : String(v));
 function norm(d: Record<string, unknown>): Diamond | null {
   const raw = Number(d.total_sales_price), carat = Number(d.size);
@@ -60,7 +75,7 @@ function norm(d: Record<string, unknown>): Diamond | null {
   return {
     id: String(d.id), vendor: Number(d.vendor_id), stock: String(d.stock_num), shape: String(d.shape), carat,
     color: s(d.color), clarity: s(d.clarity), cut: s(d.cut), polish: s(d.polish), symmetry: s(d.symmetry), fluor: s(d.fluor_intensity),
-    lab: String(d.lab), cert: String(d.cert_num), certUrl, image: String(d.image_url), video: s(d.video_url),
+    lab: String(d.lab), cert: String(d.cert_num), certUrl, image: String(d.image_url), video: s(d.video_url), embed: embedUrl(s(d.video_url)),
     price: Math.round(raw * MARKUP), ratio: s(d.meas_ratio), depth: s(d.depth_percent), table: s(d.table_percent),
     measurements: L && W && D ? `${L} x ${W} x ${D} mm` : null, country: s(d.country),
   };
