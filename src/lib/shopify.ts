@@ -243,3 +243,10 @@ export async function removeCartLines(cartId: string, lineIds: string[]): Promis
     `mutation($cartId:ID!,$lineIds:[ID!]!){ cartLinesRemove(cartId:$cartId,lineIds:$lineIds){ cart{ ${CART_FIELDS} } userErrors{ message } } }`, { cartId, lineIds }, { fresh: true });
   return d?.cartLinesRemove.cart ? shapeCart(d.cartLinesRemove.cart) : null;
 }
+
+/** The current handle of a product that used to have this one (kept as an "oldhandle-" tag when links were renamed to titles). */
+export async function findByOldHandle(old: string): Promise<string | null> {
+  if (!/^[a-z0-9-]{1,255}$/.test(old)) return null;
+  const d = await sf<{ products: { edges: { node: { handle: string } }[] } }>(`query($q:String!){ products(first:1, query:$q){ edges{ node{ handle } } } }`, { q: `tag:oldhandle-${old}` });
+  return d?.products.edges[0]?.node.handle ?? null;
+}

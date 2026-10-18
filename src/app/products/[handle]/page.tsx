@@ -1,5 +1,5 @@
-import { notFound } from "next/navigation";
-import { getProductByHandle, getSiblings, getRelated, getRingFamily, designCode, shopifyConfigured } from "@/lib/shopify";
+import { notFound, permanentRedirect } from "next/navigation";
+import { getProductByHandle, getSiblings, getRelated, getRingFamily, designCode, shopifyConfigured, findByOldHandle } from "@/lib/shopify";
 import { categories } from "@/lib/data";
 import { brandify, isBlocked } from "@/lib/text";
 import ProductView from "@/components/ProductView";
@@ -15,12 +15,17 @@ export async function generateMetadata({ params }: { params: Promise<{ handle: s
   const p = await load((await params).handle);
   if (!p) return { title: "MEEKITAZ" };
   const desc = brandify(p.seoDescription || p.description).replace(/\s+/g, " ").slice(0, 160);
-  return { title: `${brandify(p.seoTitle || p.title)} — MEEKITAZ`, description: desc, openGraph: { title: brandify(p.title), description: desc, images: p.images[0] ? [p.images[0].url] : [] } };
+  return { title: `${brandify(p.seoTitle || p.title)} — MEEKITAZ`, description: desc, alternates: { canonical: `https://www.meekitaz.com/products/${p.handle}` }, openGraph: { title: brandify(p.title), description: desc, images: p.images[0] ? [p.images[0].url] : [] } };
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
-  const p = await load((await params).handle);
-  if (!p) notFound();
+  const handle = decodeURIComponent((await params).handle);
+  const p = await load(handle);
+  if (!p) {
+    const now = shopifyConfigured ? await findByOldHandle(handle) : null; // a link from before handles were renamed to titles
+    if (now) permanentRedirect(`/products/${now}`);
+    notFound();
+  }
   const code = designCode(p.tags), isRing = p.tags.includes("Engagement Ring");
   const [siblings, related, family] = await Promise.all([isRing ? Promise.resolve([]) : getSiblings(code, p.handle), getRelated(p.productType, p.handle), isRing ? getRingFamily(code) : Promise.resolve([])]);
   const shapes = categories.find(c => c.slug === "engagement-rings")?.styles ?? [];

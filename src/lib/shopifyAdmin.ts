@@ -22,6 +22,8 @@ async function adminToken(force = false): Promise<string> {
   return inflight;
 }
 
+/** Admin GraphQL, for one-off site tasks. */
+export const adminGraphql = <T,>(query: string, variables: Record<string, unknown> = {}) => admin<T>(query, variables);
 async function admin<T>(query: string, variables: Record<string, unknown> = {}, retry = true): Promise<T> {
   const r = await fetch(`${adminBase}/admin/api/2025-07/graphql.json`, { method: "POST", headers: { "Content-Type": "application/json", "X-Shopify-Access-Token": await adminToken() }, body: JSON.stringify({ query, variables }), cache: "no-store" });
   if (r.status === 401 && retry && !staticToken) { cached = null; await adminToken(true); return admin<T>(query, variables, false); } // the token was revoked or rotated: get a new one once
