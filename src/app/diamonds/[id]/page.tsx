@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import StoneMedia from "@/components/StoneMedia";
+import ChooseStone from "@/components/ChooseStone";
 import { getDiamond, vdbConfigured } from "@/lib/vdb";
 
 export const revalidate = 300;
@@ -36,6 +37,7 @@ export default async function DiamondPage({ params }: { params: Promise<{ id: st
           <p className="dd-sub">{[d.fancy ? d.fancy : d.color && `${d.color} color`, d.clarity && `${d.clarity} clarity`, d.cut && `${d.cut} cut`].filter(Boolean).join(" · ")}</p>
           <div className="dd-price">{usd(d.price)}</div>
           <div className="dd-cta">
+            <ChooseStone stone={{ vendor: d.vendor, stock: d.stock, shape: d.shape, carat: d.carat, color: d.color, clarity: d.clarity, cut: d.cut, lab: d.lab, image: d.image, price: d.price, fancy: d.fancy }} />
             <Link href="/#contact" className="pill">Book a private appointment</Link>
             {d.video && !d.embed && <a href={d.video} target="_blank" rel="noopener noreferrer" className="dd-ghost">360° view</a>}
             <a href={d.certUrl} target="_blank" rel="noopener noreferrer" className="dd-ghost">View certificate</a>

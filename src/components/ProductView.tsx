@@ -7,7 +7,7 @@ import { useCart } from "./CartProvider";
 import type { ProductFull, Related, Sibling } from "@/lib/shopify";
 import { metalOf } from "@/lib/shopify";
 import type { RingVariant } from "@/lib/shopify";
-import { saveSetting, diamondsUrl } from "@/lib/setting";
+import { saveSetting, diamondsUrl, loadStone } from "@/lib/setting";
 import { photoSrc, isCleaned } from "@/lib/img";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
@@ -47,7 +47,7 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
   const chooseSetting = () => {
     if (!cv || !ring) return;
     saveSetting({ ns: ring.ns, handle: cv.handle, variantId: cv.variantId, title: cv.title, shape: cv.shape, metal: cv.metal, price: cv.price, image: cv.images[0] || "" });
-    router.push(diamondsUrl(cv.shape));
+    router.push(loadStone() ? "/build" : diamondsUrl(cv.shape)); // a diamond already chosen: straight to the review
   };
 
   return (
