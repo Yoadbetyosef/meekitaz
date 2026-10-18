@@ -204,6 +204,8 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 .sp-row.n6 .sp{width:calc((100% - 5*18px)/6);min-width:150px}
 .sp-row.n4 .sp{width:calc((100% - 3*22px)/4);min-width:150px;max-width:230px}
 @media(max-width:767px){.sp,.sp-row.n6 .sp,.sp-row.n4 .sp{width:150px;min-width:150px}}
+/* rows with more than 7 items bleed to the screen edge so the last circle is cut: a scroll hint */
+@media(min-width:768px){.shapes{overflow-x:clip}.sp-row.scroll{--lo:calc((100vw - min(100vw,1180px))/2 + 24px);margin-right:calc(-1*var(--lo));padding-right:var(--lo)}.sp-row.scroll .sp{width:min(180px,calc((100vw - var(--lo) - 6*18px)/6.4));min-width:140px}}
 
 /* filters (diamonds) */
 .filters{padding:clamp(28px,4vw,56px) 0 0}

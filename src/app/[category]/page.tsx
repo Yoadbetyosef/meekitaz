@@ -30,7 +30,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           <section className="shapes" aria-label={p.styleHead[0]}>
             <div className="wrap">
               <div className="sp-head"><small className="eyebrow">{p.styleHead[0]}</small><h2>{p.styleHead[1]}</h2></div>
-              <div className={`sp-row${n === 6 ? " n6" : n === 4 ? " n4" : ""}`}>
+              <div className={`sp-row${n === 6 ? " n6" : n === 4 ? " n4" : n > 7 ? " scroll" : ""}`}>
                 {p.styles.map(s => (
                   <Link key={s.label} href={`/${p.slug}?style=${encodeURIComponent(s.label)}`} className="sp">
                     <span className="sp-img"><Image src={s.img} alt={s.label} fill sizes="160px" quality={70} /></span><b>{s.label}</b>
