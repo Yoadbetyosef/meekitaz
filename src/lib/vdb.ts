@@ -116,28 +116,36 @@ const FANCY_QS = "type=Lab_grown_Diamond&markup_mode=true&with_images=true&total
 const fancyPage = (n: number) => vdb(`${FANCY_QS}&page_number=${n}`, 3600);
 const rawFancy = (d: Record<string, unknown>) => !!(d.fancy_color_dominant_color || d.fancy_color_intensity);
 
-async function harvestFancy(): Promise<Diamond[]> {
-  // The colour-ASC order puts the stones without a letter colour (the fancy ones) at the very end. Find where they start with a
-  // binary search over page numbers (~11 requests), then read from there to the end in parallel batches.
-  const head = await fancyPage(1);
+// VDB offers no fancy-colour filter and deep pages (offset 100,000) take 10–20 s each. So the feed is split into small shards
+// (shape × carat band, a few thousand stones each): in every shard the stones without a letter colour (the fancy ones) sit on the
+// last pages, which are shallow and fast. Each shard is read from its last page backwards until the fancy stones stop.
+const CARAT_BANDS: [number, number][] = [[0.3, 0.5], [0.5, 0.7], [0.7, 1], [1, 1.5], [1.5, 2], [2, 3], [3, 5], [5, 30]];
+const SHARD_SHAPES = [...SHAPES, "Elongated Cushion"];
+const shardQs = (shape: string, lo: number, hi: number) => `${FANCY_QS.replace("size_from=0.3", `size_from=${lo}&size_to=${hi}`)}&shapes[]=${enc(shape)}`;
+async function harvestShard(shape: string, lo: number, hi: number, out: Map<string, Diamond>) {
+  const base = shardQs(shape, lo, hi);
+  const head = await vdb(`${base}&page_number=1`, 3600);
   const last = Math.max(1, Math.ceil((head.total_diamonds_found || 0) / 50));
-  const pageHasFancy = async (n: number) => (await fancyPage(n)).diamonds.some(rawFancy);
-  if (!(await pageHasFancy(last))) return []; // nothing fancy in the feed at all
-  let lo = 1, hi = last; // invariant: page hi has fancy stones; page lo may not
-  while (hi - lo > 1) { const mid = Math.floor((lo + hi) / 2); if (await pageHasFancy(mid)) hi = mid; else lo = mid; }
-  const first = Math.max(1, hi - 2); // a little overlap in case the boundary page is mixed
-  const out = new Map<string, Diamond>();
-  for (let n = first; n <= last; n += 20) {
-    const nums = Array.from({ length: Math.min(20, last - n + 1) }, (_, i) => n + i);
-    const pages = await Promise.all(nums.map(k => fancyPage(k)));
-    pages.forEach(pg => pg.diamonds.forEach(x => { if (!rawFancy(x)) return; const d = norm(x); if (d) out.set(`${d.vendor}-${d.stock}`, d); }));
+  for (let n = last; n >= 1; n--) {
+    const page = n === 1 ? head : await vdb(`${base}&page_number=${n}`, 3600);
+    let hit = 0;
+    page.diamonds.forEach(x => { if (!rawFancy(x)) return; hit++; const d = norm(x); if (d) out.set(`${d.vendor}-${d.stock}`, d); });
+    if (hit === 0) break;
   }
+}
+async function harvestFancy(): Promise<Diamond[]> {
+  const out = new Map<string, Diamond>();
+  const jobs: [string, number, number][] = [];
+  for (const sh of SHARD_SHAPES) for (const [lo, hi] of CARAT_BANDS) jobs.push([sh, lo, hi]);
+  let i = 0;
+  const worker = async () => { while (i < jobs.length) { const [sh, lo, hi] = jobs[i++]; try { await harvestShard(sh, lo, hi, out); } catch { /* one shard failing must not lose the rest */ } } };
+  await Promise.all(Array.from({ length: 12 }, worker));
   return [...out.values()];
 }
 
 // The harvested list is kept in Vercel's shared data cache (one copy for every server instance, refreshed in the background every
 // 30 minutes, stale copy served meanwhile) and also in memory on this instance. The cron in vercel.json keeps it warm.
-const harvestCached = unstable_cache(async () => { const items = await harvestFancy(); return items.map(d => ({ ...d })); }, ["vdb-fancy-v2"], { revalidate: 1800 });
+const harvestCached = unstable_cache(async () => { const items = await harvestFancy(); return items.map(d => ({ ...d })); }, ["vdb-fancy-v3"], { revalidate: 1800 });
 let fancyCache: { at: number; items: Diamond[] } | null = null;
 let fancyBusy: Promise<Diamond[]> | null = null;
 export async function getFancy(): Promise<Diamond[]> {
