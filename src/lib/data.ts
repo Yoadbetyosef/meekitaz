@@ -204,7 +204,7 @@ export const faces = [
 
 export const showroomImage = "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_001140_1f7e875f-d6d9-4189-b6c6-3678c3cc5849.png";
 
-export type CategoryPage = { slug:string; nav:string; title:string; small:string; desktop:string; mobile:string; styleHead: string[] | null; styles:{img:string;label:string}[]; items:{name:string;meta:string}[]; filters:boolean };
+export type CategoryPage = { slug:string; nav:string; title:string; small:string; desktop:string; mobile:string; styleHead: string[] | null; styles:{img:string;label:string}[]; items:{name:string;meta:string}[]; filters:boolean; special?: string };
 export const categories: CategoryPage[] = [
   {
     "slug": "engagement-rings",
@@ -710,3 +710,7 @@ categories.push({
 });
 menuTiles.push({ href: "/gemstones", img: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/46ffdbf9-2b79-464a-b045-41824c7d0aac.jpg", label: "Gemstones", sub: "Color, worn lightly.", pos: "50% 38%", posM: "78% 40%" });
 categoryTiles.push({ href: "/gemstones", img: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/14c68a3e-cb6d-4058-970d-2d430decbe93.jpg", n: "07", title: "Gemstones", sub: "Color, worn lightly." });
+
+categories.push({ slug: "fancy-colors", nav: "Fancy Colors", title: "Fancy Colors.", small: "Pink, blue, yellow, green. Made, not mined.", desktop: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_064809_37b26a92-4cab-4318-a7b9-d8b8feb16936.png", mobile: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_064811_acea4686-2386-4143-8047-e692e6b7e26b.png", styleHead: null, styles: [], items: [], filters: false, special: "fancy" });
+menuTiles.push({ href: "/fancy-colors", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_064809_37b26a92-4cab-4318-a7b9-d8b8feb16936.png", label: "Fancy Colors", sub: "Pink, blue, yellow, green.", pos: "50% 32%", posM: "50% 22%" });
+categoryTiles.push({ href: "/fancy-colors", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_064811_acea4686-2386-4143-8047-e692e6b7e26b.png", n: "08", title: "Fancy Colors", sub: "Pink, blue, yellow, green." });

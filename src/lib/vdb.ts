@@ -17,7 +17,7 @@ export type DiamondQuery = {
 export type Diamond = {
   id: string; vendor: number; stock: string; shape: string; carat: number; color: string | null; clarity: string | null;
   cut: string | null; polish: string | null; symmetry: string | null; fluor: string | null; lab: string; cert: string; certUrl: string;
-  image: string; video: string | null; embed: string | null; price: number; ratio: string | null; depth: string | null; table: string | null; measurements: string | null; country: string | null;
+  image: string; video: string | null; embed: string | null; price: number; fancy: string | null; fancyColor: string | null; intensity: number | null; ratio: string | null; depth: string | null; table: string | null; measurements: string | null; country: string | null;
 };
 
 const enc = encodeURIComponent;
@@ -38,10 +38,10 @@ function build(q: DiamondQuery) {
   return p.join("&");
 }
 
-async function vdb(qs: string) {
+async function vdb(qs: string, revalidate = 300) {
   const res = await fetch(`${BASE}/v2/diamonds?${qs}`, {
     headers: { Authorization: `Token token=${process.env.VDB_ACCESS_TOKEN}, api_key=${process.env.VDB_API_KEY}` },
-    next: { revalidate: 300 },
+    next: { revalidate },
   });
   if (!res.ok) throw new Error(`VDB http ${res.status}`);
   const r = (await res.json())?.response;
@@ -65,6 +65,19 @@ function embedUrl(raw: string | null): string | null {
   } catch { return null; }
 }
 
+// Fancy-colour grades, light to rich. Indexes are what the filter scale uses.
+export const INTENSITIES = ["Light", "Fancy Light", "Fancy", "Intense", "Vivid", "Deep"];
+export const FANCY_COLORS = ["Pink", "Blue", "Yellow", "Green", "Orange", "Brown"];
+function intensityIdx(v: string | null): number {
+  const t = (v || "").toLowerCase();
+  if (t.includes("deep") || t.includes("dark")) return 5;
+  if (t.includes("vivid")) return 4;
+  if (t.includes("intense")) return 3;
+  if (t.includes("fancy light")) return 1;
+  if (t === "fancy") return 2;
+  if (t.includes("light")) return 0;
+  return 2;
+}
 const s = (v: unknown) => (v === null || v === undefined || v === "" ? null : String(v));
 function norm(d: Record<string, unknown>): Diamond | null {
   const raw = Number(d.total_sales_price), carat = Number(d.size);
@@ -72,7 +85,9 @@ function norm(d: Record<string, unknown>): Diamond | null {
   // Quality gate: only available stones with a price, photo, lab, certificate number and a working certificate link.
   if (!d.available || !(raw > 0) || !(carat > 0) || !d.image_url || !d.cert_num || !d.lab || !certUrl || certUrl.includes("/.pdf")) return null;
   const L = s(d.meas_length), W = s(d.meas_width), D = s(d.meas_depth);
+  const fc = s(d.fancy_color_dominant_color), fi = s(d.fancy_color_intensity), fo = s(d.fancy_color_overtone), isFancy = !!(fc || fi);
   return {
+    fancy: isFancy ? [fi || "Fancy", fo, fc].filter(Boolean).join(" ") : null, fancyColor: isFancy ? fc || "Other" : null, intensity: isFancy ? intensityIdx(fi) : null,
     id: String(d.id), vendor: Number(d.vendor_id), stock: String(d.stock_num), shape: String(d.shape), carat,
     color: s(d.color), clarity: s(d.clarity), cut: s(d.cut), polish: s(d.polish), symmetry: s(d.symmetry), fluor: s(d.fluor_intensity),
     lab: String(d.lab), cert: String(d.cert_num), certUrl, image: String(d.image_url), video: s(d.video_url), embed: embedUrl(s(d.video_url)),
@@ -90,4 +105,62 @@ export async function getDiamond(vendor: number, stock: string) {
   const b = await vdb(`type=Lab_grown_Diamond&markup_mode=true&stock_num=${enc(stock)}`);
   const hit = b.diamonds.find(d => Number(d.vendor_id) === vendor);
   return hit ? norm(hit) : null;
+}
+
+// ---------- Fancy colours ----------
+// VDB's own fancy-colour filter does not work for lab-grown stones, and these stones carry no letter colour, so
+// they sit at the very end of a colour-sorted list. We read that tail, keep what is fancy, and cache it.
+const FANCY_QS = "type=Lab_grown_Diamond&markup_mode=true&with_images=true&total_or_price_per_carat=total_sales_price&price_total_from=1&labs[]=IGI&labs[]=GIA&size_from=0.3&preference[]=color%20ASC&page_size=50";
+const fancyPage = (n: number) => vdb(`${FANCY_QS}&page_number=${n}`, 3600);
+const rawFancy = (d: Record<string, unknown>) => !!(d.fancy_color_dominant_color || d.fancy_color_intensity);
+
+async function harvestFancy(): Promise<Diamond[]> {
+  const head = await fancyPage(1);
+  const last = Math.ceil((head.total_diamonds_found || 0) / 50);
+  const out = new Map<string, Diamond>();
+  for (let hi = last, round = 0; hi >= 1 && round < 20; hi -= 10, round++) {
+    const nums = Array.from({ length: Math.min(10, hi) }, (_, i) => hi - i);
+    const pages = await Promise.all(nums.map(n => fancyPage(n)));
+    let tail = 0;
+    pages.forEach((p, i) => p.diamonds.forEach(x => {
+      if (!rawFancy(x)) return;
+      if (i >= pages.length - 3) tail++;
+      const d = norm(x); if (d) out.set(`${d.vendor}-${d.stock}`, d);
+    }));
+    if (tail === 0) break; // the last pages of this round had nothing fancy: we are past the block
+  }
+  return [...out.values()];
+}
+
+let fancyCache: { at: number; items: Diamond[] } | null = null;
+let fancyBusy: Promise<Diamond[]> | null = null;
+export async function getFancy(): Promise<Diamond[]> {
+  const fresh = fancyCache && Date.now() - fancyCache.at < 30 * 60 * 1000;
+  if (fresh) return fancyCache!.items;
+  if (!fancyBusy) fancyBusy = harvestFancy().then(items => { fancyCache = { at: Date.now(), items }; return items; }).finally(() => { fancyBusy = null; });
+  return fancyCache ? fancyCache.items : fancyBusy; // stale list is served while the refresh runs
+}
+
+export type FancyQuery = { color?: string; intFrom?: number; intTo?: number; caratFrom?: number; caratTo?: number; priceFrom?: number; priceTo?: number; shapes?: string[]; sort?: string; page?: number };
+export async function searchFancy(q: FancyQuery) {
+  const all = await getFancy();
+  const shapes = (q.shapes || []).flatMap(x => (x === "Cushion" ? ["Cushion", "Elongated Cushion"] : [x]));
+  const base = all.filter(d =>
+    (q.intFrom == null || d.intensity! >= q.intFrom) && (q.intTo == null || d.intensity! <= q.intTo) &&
+    (q.caratFrom == null || d.carat >= q.caratFrom) && (q.caratTo == null || d.carat <= q.caratTo) &&
+    (q.priceFrom == null || d.price >= q.priceFrom) && (q.priceTo == null || d.price <= q.priceTo) &&
+    (!shapes.length || shapes.includes(d.shape)));
+  const pick = (c: string) => {
+    const pool = all.filter(d => d.fancyColor === c && d.intensity === 4 && ["Oval", "Round", "Cushion", "Pear", "Radiant"].includes(d.shape));
+    return (pool.length ? pool : all.filter(d => d.fancyColor === c)).sort((a, b) => Math.abs(a.carat - 1.5) - Math.abs(b.carat - 1.5))[0]?.image || null;
+  };
+  const facets = FANCY_COLORS.map(c => ({ color: c, count: base.filter(d => d.fancyColor === c).length, image: pick(c) })).filter(f => f.image);
+  const r = (q.color ? base.filter(d => d.fancyColor === q.color) : base).slice();
+  const by: Record<string, (a: Diamond, b: Diamond) => number> = {
+    price_asc: (a, b) => a.price - b.price, price_desc: (a, b) => b.price - a.price,
+    carat_desc: (a, b) => b.carat - a.carat, intensity_desc: (a, b) => (b.intensity! - a.intensity!) || a.price - b.price,
+  };
+  r.sort(by[q.sort || "price_asc"] || by.price_asc);
+  const page = Math.max(1, q.page || 1);
+  return { total: r.length, items: r.slice((page - 1) * 24, page * 24), facets };
 }

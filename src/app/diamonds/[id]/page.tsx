@@ -21,7 +21,7 @@ export default async function DiamondPage({ params }: { params: Promise<{ id: st
   const d = await load((await params).id);
   if (!d) notFound();
   const rows: [string, string | null][] = [
-    ["Shape", d.shape], ["Carat", d.carat.toFixed(2)], ["Color", d.color], ["Clarity", d.clarity], ["Cut", d.cut], ["Polish", d.polish],
+    ["Shape", d.shape], ["Carat", d.carat.toFixed(2)], [d.fancy ? "Fancy color" : "Color", d.fancy || d.color], ["Clarity", d.clarity], ["Cut", d.cut], ["Polish", d.polish],
     ["Symmetry", d.symmetry], ["Fluorescence", d.fluor], ["Measurements", d.measurements], ["Table", d.table ? d.table + "%" : null],
     ["Depth", d.depth ? d.depth + "%" : null], ["Ratio", d.ratio], ["Certificate", `${d.lab} ${d.cert}`],
   ];
@@ -30,10 +30,10 @@ export default async function DiamondPage({ params }: { params: Promise<{ id: st
       <div className="wrap dd-grid">
         <StoneMedia image={d.image} embed={d.embed} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />
         <div className="dd-info">
-          <Link href="/diamonds" className="dd-back">← All diamonds</Link>
-          <small className="eyebrow">Lab-grown · {d.lab} certified</small>
+          <Link href={d.fancy ? "/fancy-colors" : "/diamonds"} className="dd-back">{d.fancy ? "← All fancy colors" : "← All diamonds"}</Link>
+          <small className="eyebrow">{d.fancy ? "Fancy color" : "Lab-grown"} · {d.lab} certified</small>
           <h1>{d.carat.toFixed(2)} ct {d.shape}</h1>
-          <p className="dd-sub">{[d.color && `${d.color} color`, d.clarity && `${d.clarity} clarity`, d.cut && `${d.cut} cut`].filter(Boolean).join(" · ")}</p>
+          <p className="dd-sub">{[d.fancy ? d.fancy : d.color && `${d.color} color`, d.clarity && `${d.clarity} clarity`, d.cut && `${d.cut} cut`].filter(Boolean).join(" · ")}</p>
           <div className="dd-price">{usd(d.price)}</div>
           <div className="dd-cta">
             <Link href="/#contact" className="pill">Book a private appointment</Link>

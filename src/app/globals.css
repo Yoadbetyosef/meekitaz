@@ -277,10 +277,10 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 /* seventh menu tile (Gemstones): wide banner using the landscape photo */
 .mgrid a img{object-position:var(--pos,50% 50%)}
 .mgrid a span small{display:block;font:500 clamp(15px,1.5vw,22px) var(--sub);font-style:italic;text-transform:none;letter-spacing:0;color:var(--blue);margin-bottom:6px}
-.mgrid a:nth-child(7){grid-column:1/-1;aspect-ratio:3/1;padding:26px 30px}
-.mgrid a:nth-child(7)::before{background:linear-gradient(90deg,rgba(50,8,18,.62),rgba(50,8,18,0) 58%)}
-.mgrid a:nth-child(7) span{font-size:clamp(26px,3vw,46px)}
-@media(max-width:767px){.mgrid a img{object-position:var(--pos-m,var(--pos,50% 50%))}.mgrid a:nth-child(7){aspect-ratio:2/1;padding:14px}.mgrid a:nth-child(7) span{font-size:22px}}
+.mgrid a:nth-child(n+7){grid-column:1/-1;aspect-ratio:3/1;padding:26px 30px}
+.mgrid a:nth-child(n+7)::before{background:linear-gradient(90deg,rgba(50,8,18,.62),rgba(50,8,18,0) 58%)}
+.mgrid a:nth-child(n+7) span{font-size:clamp(26px,3vw,46px)}
+@media(max-width:767px){.mgrid a img{object-position:var(--pos-m,var(--pos,50% 50%))}.mgrid a:nth-child(n+7){aspect-ratio:2/1;padding:14px}.mgrid a:nth-child(n+7) span{font-size:22px}}
 
 /* live diamonds (VDB) */
 .dres{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
@@ -346,3 +346,15 @@ button.sp{background:none;border:0;padding:0;font:inherit;cursor:pointer}
 .dd-tabs button{border:0;background:none;font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;padding:10px 18px;border-radius:999px;color:var(--ink);cursor:pointer}
 .dd-tabs button.on{background:var(--ink);color:var(--ivory)}
 @media(hover:none){.dcard .b360{display:none}}
+
+/* fancy colours */
+.sp small.sp-n{font:400 11px var(--body);letter-spacing:.06em;opacity:.6;margin-top:-6px}
+.dfp-bar.int button{background:color-mix(in srgb,var(--tint,#c94f8b) calc(8% + var(--i) * 17%),#fff)}
+.dfp-bar.int button:nth-child(n+5){color:#fff}
+.dfp-bar.int button.on{background:var(--ink)!important;color:var(--ivory)}
+.dfp-pills{display:flex;flex-wrap:wrap;gap:6px}
+.dfp-pills button{font:600 11px var(--body);letter-spacing:.06em;padding:10px 14px;border-radius:999px;border:1px solid rgba(28,26,27,.14);background:#fff;color:var(--ink);cursor:pointer;transition:.2s}
+.dfp-pills button:hover{border-color:var(--ink)}
+.dfp-pills button.on{background:var(--red);border-color:var(--red);color:var(--ivory)}
+.dchip{border:0;cursor:pointer}
+.dfp-blk:last-child{grid-column:1/-1}

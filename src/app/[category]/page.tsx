@@ -6,6 +6,7 @@ import ProductGrid from "@/components/ProductGrid";
 import { Suspense } from "react";
 import DiamondsBrowser from "@/components/DiamondsBrowser";
 import ShapeRow from "@/components/ShapeRow";
+import FancyBrowser from "@/components/FancyBrowser";
 
 export function generateStaticParams() { return categories.map(c => ({ category: c.slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
@@ -23,7 +24,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
       <section className="cat-hero" aria-label={p.nav}>
         <picture>
           <source media="(max-width:767px)" srcSet={p.mobile} />
-          <Image src={p.desktop} alt="" fill priority sizes="100vw" quality={78} />
+          <Image src={p.desktop} alt="" fill priority sizes="100vw" quality={78} style={p.special === "fancy" ? { objectPosition: "50% 5%" } : undefined} />
         </picture>
         <div className="wrap"><h1><small>{p.small}</small>{p.title}</h1></div>
       </section>
@@ -43,7 +44,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             </div>
           </section>
         )}
-        {p.filters ? <Suspense fallback={null}><DiamondsBrowser /></Suspense> : <ProductGrid page={p} />}
+        {p.special === "fancy" ? <Suspense fallback={null}><FancyBrowser /></Suspense> : p.filters ? <Suspense fallback={null}><DiamondsBrowser /></Suspense> : <ProductGrid page={p} />}
       </div>
     </main>
   );

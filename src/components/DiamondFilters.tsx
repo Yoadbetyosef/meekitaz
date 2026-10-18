@@ -5,7 +5,7 @@ export const COLORS = ["D", "E", "F", "G", "H", "I"];
 export const CLARITIES = ["FL", "IF", "VVS1", "VVS2", "VS1", "VS2"];
 export const DEFAULT_FILTERS: DFilters = { carat: [1, 3], price: [100, 50000], color: [0, 5], clarity: [0, 5] };
 
-function Dual({ label, min, max, step, lo, hi, fmt, onChange }: { label: string; min: number; max: number; step: number; lo: number; hi: number; fmt: (v: number) => string; onChange: (lo: number, hi: number) => void }) {
+export function Dual({ label, min, max, step, lo, hi, fmt, onChange }: { label: string; min: number; max: number; step: number; lo: number; hi: number; fmt: (v: number) => string; onChange: (lo: number, hi: number) => void }) {
   const a = Math.min(lo, hi), b = Math.max(lo, hi);
   const L = ((a - min) / (max - min)) * 100, R = 100 - ((b - min) / (max - min)) * 100;
   return (
@@ -20,14 +20,14 @@ function Dual({ label, min, max, step, lo, hi, fmt, onChange }: { label: string;
   );
 }
 
-function Scale({ label, kind, items, notes, hint, value, onChange }: { label: string; kind: string; items: string[]; notes: string[]; hint: string; value: [number, number]; onChange: (v: [number, number]) => void }) {
+export function Scale({ label, kind, items, notes, hint, value, onChange }: { label: string; kind: string; items: string[]; notes: string[]; hint: string; value: [number, number]; onChange: (v: [number, number]) => void }) {
   const last = items.length - 1, [a, b] = value, any = a === 0 && b === last;
   // first tap sets one grade, a second tap on another grade makes a range, tapping the only selected grade clears it
   const pick = (i: number) => onChange(any ? [i, i] : a === b ? (i === a ? [0, last] : [Math.min(a, i), Math.max(a, i)]) : [i, i]);
   return (
     <div className="dfp-blk"><span className="dfp-lbl">{label}</span>
       <div className={`dfp-bar ${kind}${any ? " any" : ""}`}>
-        {items.map((x, i) => <button key={x} type="button" className={!any && (i === a || i === b) ? "on" : !any && i > a && i < b ? "in" : ""} onClick={() => pick(i)}>{x}<small>{notes[i] || "\u00a0"}</small></button>)}
+        {items.map((x, i) => <button key={x} type="button" style={{ "--i": i } as React.CSSProperties} className={!any && (i === a || i === b) ? "on" : !any && i > a && i < b ? "in" : ""} onClick={() => pick(i)}>{x}<small>{notes[i] || "\u00a0"}</small></button>)}
       </div>
       <div className="dfp-hint">{hint}</div>
     </div>

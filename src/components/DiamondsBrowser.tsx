@@ -2,9 +2,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import StoneCard, { type Item as CardItem } from "./StoneCard";
 import DiamondFilters, { COLORS, CLARITIES, DEFAULT_FILTERS, type DFilters } from "./DiamondFilters";
 
-type Item = { id: string; vendor: number; stock: string; shape: string; carat: number; color: string | null; clarity: string | null; cut: string | null; lab: string; image: string; embed: string | null; price: number };
+type Item = CardItem;
 const DEF = DEFAULT_FILTERS;
 const pair = (v: string | null, lo: number, hi: number, def: [number, number], int = false): [number, number] => {
   const m = v?.match(/^(-?[\d.]+)-(-?[\d.]+)$/); if (!m) return def;
@@ -17,28 +18,6 @@ const parseF = (sp: URLSearchParams): DFilters => ({
 });
 const same = (a: [number, number], b: [number, number]) => a[0] === b[0] && a[1] === b[1];
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
-const isTouch = () => typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
-
-function Card({ d, playing, setPlaying, onOpen }: { d: Item; playing: boolean; setPlaying: (id: string | null) => void; onOpen: () => void }) {
-  const t = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const stop = () => { if (t.current) clearTimeout(t.current); t.current = null; };
-  return (
-    <Link href={`/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}`} className={`pcard dcard${playing ? " playing" : ""}`} onClick={e => { if (!e.defaultPrevented) onOpen(); }}>
-      <div
-        className="pcard-img"
-        // desktop: hover plays the 360 video in place. On phones the video lives on the stone page.
-        onMouseEnter={() => { if (d.embed && !isTouch()) { stop(); t.current = setTimeout(() => setPlaying(d.id), 220); } }}
-        onMouseLeave={() => { if (!isTouch()) { stop(); setPlaying(null); } }}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={d.image} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} loading="lazy" referrerPolicy="no-referrer" />
-        {d.embed && !playing && <span className="b360">360°</span>}
-        {playing && d.embed && <div className="vw"><iframe src={d.embed} title={`360° view of ${d.carat.toFixed(2)} carat ${d.shape}`} scrolling="no" allow="autoplay" /></div>}
-      </div>
-      <div className="pcard-txt"><b>{d.carat.toFixed(2)} ct {d.shape}</b><p>{[d.color, d.clarity, d.cut ? d.cut + " cut" : null, d.lab].filter(Boolean).join(" · ")}</p><span className="price">{usd(d.price)}</span></div>
-    </Link>
-  );
-}
 
 export default function DiamondsBrowser() {
   const sp = useSearchParams();
@@ -132,7 +111,7 @@ export default function DiamondsBrowser() {
           {state === "empty" && <p className="dmsg">No diamonds match these filters. Try widening carat, price, color or clarity.</p>}
           {state === "ready" && (
             <>
-              <div className="pgrid">{items.map(d => <Card key={d.id} d={d} playing={playing === d.id} setPlaying={setPlaying} onOpen={remember} />)}</div>
+              <div className="pgrid">{items.map(d => <StoneCard key={d.id} d={d} playing={playing === d.id} setPlaying={setPlaying} onOpen={remember} />)}</div>
               {page * 24 < total && <div className="dmore"><button type="button" onClick={more} disabled={busy}>{busy ? "Loading…" : "Show more"}</button></div>}
             </>
           )}
