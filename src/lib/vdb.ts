@@ -139,13 +139,19 @@ async function harvestFancy(): Promise<Diamond[]> {
   for (const sh of SHARD_SHAPES) for (const [lo, hi] of CARAT_BANDS) jobs.push([sh, lo, hi]);
   let i = 0;
   const worker = async () => { while (i < jobs.length) { const [sh, lo, hi] = jobs[i++]; try { await harvestShard(sh, lo, hi, out); } catch { /* one shard failing must not lose the rest */ } } };
-  await Promise.all(Array.from({ length: 12 }, worker));
+  await Promise.all(Array.from({ length: 20 }, worker));
   return [...out.values()];
 }
 
-// The harvested list is kept in Vercel's shared data cache (one copy for every server instance, refreshed in the background every
-// 30 minutes, stale copy served meanwhile) and also in memory on this instance. The cron in vercel.json keeps it warm.
-const harvestCached = unstable_cache(async () => { const items = await harvestFancy(); return items.map(d => ({ ...d })); }, ["vdb-fancy-v3"], { revalidate: 1800 });
+// The harvested list is kept in Vercel's shared data cache, one entry per colour (an entry must stay under 2 MB; ~5,000 stones
+// in one entry would not), refreshed in the background every 30 minutes with the stale copy served meanwhile, and also in memory
+// on this instance. The cron in vercel.json keeps it warm. One harvest feeds every colour entry within the same request.
+const GROUPS = ["Pink", "Blue", "Yellow", "Green", "Other"];
+const groupOf = (d: Diamond) => (GROUPS.includes(d.fancyColor || "") ? d.fancyColor! : "Other");
+let harvesting: Promise<Diamond[]> | null = null;
+const harvestOnce = () => { if (!harvesting) harvesting = harvestFancy().finally(() => { setTimeout(() => { harvesting = null; }, 5000); }); return harvesting; };
+const cachedGroup = (g: string) => unstable_cache(async () => (await harvestOnce()).filter(d => groupOf(d) === g), ["vdb-fancy-v4", g], { revalidate: 1800 })();
+const harvestCached = async () => (await Promise.all(GROUPS.map(cachedGroup))).flat();
 let fancyCache: { at: number; items: Diamond[] } | null = null;
 let fancyBusy: Promise<Diamond[]> | null = null;
 export async function getFancy(): Promise<Diamond[]> {
