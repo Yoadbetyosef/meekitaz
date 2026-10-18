@@ -3,6 +3,7 @@ import { getProductByHandle, getSiblings, getRelated, getRingFamily, designCode,
 import { categories } from "@/lib/data";
 import { brandify, isBlocked } from "@/lib/text";
 import { fancyColorOf, FANCY_COLORS } from "@/lib/fancy";
+import { fancySwatches, vdbConfigured } from "@/lib/vdb";
 import ProductView from "@/components/ProductView";
 
 export const revalidate = 300;
@@ -38,7 +39,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   const shapes = categories.find(c => c.slug === "engagement-rings")?.styles ?? [];
   // Shopify's search index can lag behind a handle rename, so this page is matched into its family by product id and always listed under its current handle.
   const fam = family.map(v => (v.id === p.id ? { ...v, handle: p.handle } : v));
-  const ring = isRing && fam.some(v => v.id === p.id) && fam.length > 1 ? { family: fam.map(v => ({ ...v, title: brandify(v.title) })), shapes, ns: code, color: myColor, palette } : undefined;
+  const ring = isRing && fam.some(v => v.id === p.id) && fam.length > 1 ? { family: fam.map(v => ({ ...v, title: brandify(v.title) })), shapes, ns: code, color: myColor, palette, swatches: palette.length && vdbConfigured ? await fancySwatches() : {} } : undefined;
   const v = p.variants[0];
   const ld = {
     "@context": "https://schema.org", "@type": "Product", name: brandify(p.title), image: p.images.map(i => i.url), description: brandify(p.description).slice(0, 500),

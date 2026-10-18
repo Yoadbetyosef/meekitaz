@@ -186,3 +186,17 @@ export async function searchFancy(q: FancyQuery) {
   const page = Math.max(1, q.page || 1);
   return { total: r.length, items: r.slice((page - 1) * 24, page * 24), facets };
 }
+
+/** One representative photo per fancy colour (a vivid stone near 1.5 ct), for the small colour circles across the site. */
+export async function fancySwatches(): Promise<Record<string, string>> {
+  try {
+    const all = await getFancy();
+    const out: Record<string, string> = {};
+    for (const c of ["Yellow", "Pink", "Blue", "Green"]) {
+      const pool = all.filter(d => d.fancyColor === c && d.intensity === 4 && ["Round", "Oval", "Cushion", "Radiant"].includes(d.shape));
+      const img = (pool.length ? pool : all.filter(d => d.fancyColor === c)).sort((a, b) => Math.abs(a.carat - 1.5) - Math.abs(b.carat - 1.5))[0]?.image;
+      if (img) out[c] = img;
+    }
+    return out;
+  } catch { return {}; }
+}

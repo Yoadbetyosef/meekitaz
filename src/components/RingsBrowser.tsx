@@ -6,14 +6,15 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { Product } from "@/lib/shopify";
 import { photoSrc, isCleaned } from "@/lib/img";
 import { RING_METALS, RING_PRICE, RING_SHAPES, RING_STYLES } from "@/lib/ringfilters";
+import StoneSwatch from "./StoneSwatch";
 
 const usd = (n: number | string, cur = "USD") => new Intl.NumberFormat("en-US", { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(+n);
 const csv = (v: string | null) => (v ? v.split(",").filter(Boolean) : []);
 const Gem = () => <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M12 8h24l8 12-20 22L4 20z" /><path d="M4 20h40M12 8l12 34M36 8L24 42M18 20l6-12 6 12" /></svg>;
 type Pop = "metal" | "shape" | "style" | "price" | "color" | null;
-const STONE_COLORS = [{ label: "Yellow", color: "#e9c84a" }, { label: "Pink", color: "#ef8fb0" }, { label: "Blue", color: "#6fa3e6" }, { label: "Green", color: "#8fcf9a" }];
+const STONE_COLORS = ["Yellow", "Pink", "Blue", "Green"];
 
-export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle = "engagement-rings", fancy }: { initial: Product[]; hasNext: boolean; cursor: string | null; handle?: string; fancy?: string }) {
+export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle = "engagement-rings", fancy, swatches = {} }: { initial: Product[]; hasNext: boolean; cursor: string | null; handle?: string; fancy?: string; swatches?: Record<string, string> }) {
   const router = useRouter(), path = usePathname(), sp = useSearchParams();
   const shapes = csv(sp.get("style")), metals = csv(sp.get("metal")), styles = csv(sp.get("look"));
   const sort = sp.get("sort") || "best";
@@ -84,8 +85,8 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
       <div className="wrap" ref={wrap}>
         <div className="rf-bar">
           {fancy && chip("color", "Stone", sp.get("color") || "Any", <div className="rf-sws">{STONE_COLORS.map(c => (
-            <button key={c.label} type="button" className="rf-swl" aria-pressed={sp.get("color") === c.label} onClick={() => set({ color: sp.get("color") === c.label ? null : c.label })}>
-              <span className={`rf-sw${sp.get("color") === c.label ? " on" : ""}`}><i style={{ background: c.color }} /></span>{c.label}</button>))}</div>)}
+            <button key={c} type="button" className="rf-swl" aria-pressed={sp.get("color") === c} onClick={() => set({ color: sp.get("color") === c ? null : c })}>
+              <span className={`rf-sw${sp.get("color") === c ? " on" : ""}`}>{swatches[c] ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={swatches[c]} alt="" referrerPolicy="no-referrer" className="rp-sw-img" /> : <i />}</span>{c}</button>))}</div>)}
           {chip("metal", "Metal", lab(metals), <div className="rf-sws">{RING_METALS.map(m => (
             <button key={m.label} type="button" className="rf-swl" aria-pressed={metals.includes(m.label)} onClick={() => toggle("metal", metals, m.label)}>
               <span className={`rf-sw${metals.includes(m.label) ? " on" : ""}`}><i style={{ background: m.color }} /></span>{m.label.replace(" gold", "")}</button>))}</div>)}
