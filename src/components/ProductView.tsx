@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCart } from "./CartProvider";
 import type { ProductFull, Related, Sibling } from "@/lib/shopify";
 import { metalOf } from "@/lib/shopify";
+import { photoSrc, isCleaned } from "@/lib/img";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 const SW: Record<string, string> = { "Rose Gold": "#E3AE98", "Yellow Gold": "#E6C56B", "White Gold": "#E8E8EA", Platinum: "#DADCE2", Silver: "#D3D5DB" };
@@ -37,14 +38,14 @@ export default function ProductView({ product: p, siblings, related }: { product
           <div className="pp-gal">
             {imgs.map((im, i) => (
               <figure key={im.url} className={i === 0 ? "first" : ""}>
-                <Image src={im.url} alt={im.alt} fill sizes="(max-width:1100px) 50vw, 620px" quality={78} priority={i === 0} />
+                <Image src={photoSrc(im.url, 1100, p.title, i)} alt={im.alt} fill sizes="(max-width:1100px) 50vw, 620px" quality={78} priority={i === 0} unoptimized={isCleaned(photoSrc(im.url, 1100, p.title, i))} />
               </figure>
             ))}
           </div>
           {/* phone: swipe */}
           <div className="pp-carw">
             <div className="pp-car" ref={car} onScroll={() => car.current && setSlide(Math.round(car.current.scrollLeft / car.current.clientWidth))}>
-              {imgs.map((im, i) => <figure key={im.url}><Image src={im.url} alt={im.alt} fill sizes="100vw" quality={75} priority={i === 0} /></figure>)}
+              {imgs.map((im, i) => <figure key={im.url}><Image src={photoSrc(im.url, 900, p.title, i)} alt={im.alt} fill sizes="100vw" quality={75} priority={i === 0} unoptimized={isCleaned(photoSrc(im.url, 900, p.title, i))} /></figure>)}
             </div>
             {imgs.length > 1 && <span className="pp-cnt">{slide + 1} / {imgs.length}</span>}
           </div>
@@ -94,7 +95,7 @@ export default function ProductView({ product: p, siblings, related }: { product
             <div className="pp-lk">
               {related.map(r => (
                 <Link key={r.handle} href={`/products/${r.handle}`}>
-                  <div className="im">{r.image && <Image src={r.image} alt={r.title} fill sizes="(max-width:767px) 50vw, 280px" quality={70} />}</div>
+                  <div className="im">{r.image && <Image src={photoSrc(r.image, 500, r.title)} alt={r.title} fill sizes="(max-width:767px) 50vw, 280px" quality={70} unoptimized={isCleaned(photoSrc(r.image, 500, r.title))} />}</div>
                   <b>{r.title.length > 52 ? r.title.slice(0, 50) + "…" : r.title}</b>
                   <span>{usd(r.price)}{r.compareAt > 0 && <s>{usd(r.compareAt)}</s>}</span>
                 </Link>

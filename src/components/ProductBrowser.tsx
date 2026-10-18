@@ -3,6 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/shopify";
+import { photoSrc, isCleaned } from "@/lib/img";
 
 const Gem = () => <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M12 8h24l8 12-20 22L4 20z" /><path d="M4 20h40M12 8l12 34M36 8L24 42M18 20l6-12 6 12" /></svg>;
 const usd = (n: number | string, cur = "USD") => new Intl.NumberFormat("en-US", { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(+n);
@@ -37,7 +38,7 @@ export default function ProductBrowser({ handle, initial, hasNext: h0, cursor: c
         <div className="pgrid">
           {items.map(p => (
             <Link key={p.id} href={`/products/${p.handle}`} className="pcard">
-              <div className="pcard-img">{p.image ? <Image src={p.image.url} alt={p.image.alt} width={800} height={800} sizes="(max-width:767px) 50vw, 380px" quality={75} /> : <Gem />}</div>
+              <div className="pcard-img">{p.image ? <Image src={photoSrc(p.image.url, 700, p.title)} alt={p.image.alt} width={800} height={800} sizes="(max-width:767px) 50vw, 380px" quality={75} unoptimized={isCleaned(photoSrc(p.image.url, 700, p.title))} /> : <Gem />}</div>
               <div className="pcard-txt"><b>{p.title}</b><span className="price">{usd(p.price, p.currency)}{p.compareAt ? <s className="was">{usd(p.compareAt, p.currency)}</s> : null}</span></div>
             </Link>
           ))}
