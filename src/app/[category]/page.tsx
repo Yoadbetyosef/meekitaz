@@ -24,7 +24,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
       <section className="cat-hero" aria-label={p.nav}>
         <picture>
           <source media="(max-width:767px)" srcSet={p.mobile} />
-          <Image src={p.desktop} alt="" fill priority sizes="100vw" quality={78} style={p.special === "fancy" ? { objectPosition: "50% 5%" } : undefined} />
+          <Image src={p.desktop} alt="" fill priority sizes="100vw" quality={78} />
         </picture>
         <div className="wrap"><h1><small>{p.small}</small>{p.title}</h1></div>
       </section>
