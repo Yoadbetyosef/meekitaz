@@ -184,3 +184,21 @@ export async function getCollectionPage(handle: string, opts: { first?: number; 
   }));
   return { products, hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
 }
+
+/** Cards for a Shopify product search (used by the filtered category pages). */
+const PSORT: Record<string, { key: string; rev: boolean }> = { best: { key: "BEST_SELLING", rev: false }, new: { key: "CREATED_AT", rev: true }, price_asc: { key: "PRICE", rev: false }, price_desc: { key: "PRICE", rev: true } };
+export async function getProductsByQuery(query: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
+  const so = PSORT[opts.sort || "best"] || PSORT.best;
+  const d = await sf<{ products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null } }[] } }>(
+    `query($q:String!,$first:Int!,$after:String,$key:ProductSortKeys,$rev:Boolean){ products(first:$first, after:$after, query:$q, sortKey:$key, reverse:$rev){
+      pageInfo{ hasNextPage endCursor }
+      edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } } } } }`,
+    { q: query, first: opts.first || 24, after: opts.after || null, key: so.key, rev: so.rev });
+  const c = d?.products; if (!c) return null;
+  const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
+    id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
+    compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
+    image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title } : undefined,
+  }));
+  return { products, hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
+}

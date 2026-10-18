@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import DiamondsBrowser from "@/components/DiamondsBrowser";
 import ShapeRow from "@/components/ShapeRow";
 import FancyBrowser from "@/components/FancyBrowser";
+import RingsSection from "@/components/RingsSection";
 
 export function generateStaticParams() { return categories.map(c => ({ category: c.slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
@@ -33,7 +34,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
           <section className="shapes" aria-label={p.styleHead[0]}>
             <div className="wrap">
               <div className="sp-head"><small className="eyebrow">{p.styleHead[0]}</small><h2>{p.styleHead[1]}</h2></div>
-              {p.filters ? <Suspense fallback={null}><ShapeRow styles={p.styles} className={`sp-row${n > 7 ? " scroll" : ""}`} /></Suspense> : (
+              {p.filters || p.special === "rings" ? <Suspense fallback={null}><ShapeRow styles={p.styles} className={`sp-row${n > 7 ? " scroll" : ""}`} /></Suspense> : (
               <div className={`sp-row${n === 6 ? " n6" : n === 4 ? " n4" : n > 7 ? " scroll" : ""}`}>
                 {p.styles.map(s => (
                   <Link key={s.label} href={`/${p.slug}?style=${encodeURIComponent(s.label)}`} className="sp">
@@ -44,7 +45,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             </div>
           </section>
         )}
-        {p.special === "fancy" ? <Suspense fallback={null}><FancyBrowser /></Suspense> : p.filters ? <Suspense fallback={null}><DiamondsBrowser /></Suspense> : <ProductGrid page={p} />}
+        {p.special === "fancy" ? <Suspense fallback={null}><FancyBrowser /></Suspense> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><DiamondsBrowser /></Suspense> : <ProductGrid page={p} />}
       </div>
     </main>
   );
