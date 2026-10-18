@@ -8,6 +8,7 @@ import { ringMetalOf, type ProductFull, type Related, type Sibling } from "@/lib
 import { metalOf } from "@/lib/shopify";
 import type { RingVariant } from "@/lib/shopify";
 import { saveSetting, diamondsUrl, loadStone } from "@/lib/setting";
+import { fancyColorOf } from "@/lib/fancy";
 import { GOLD_COLORS, hasKarat, isGoldMetal, karatsFor, karatStep } from "@/lib/karat";
 import { toast } from "./Toast";
 import { photoSrc, isCleaned } from "@/lib/img";
@@ -99,9 +100,10 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
       pick = alt;
     }
     const pk = karatOn && isGoldMetal(pick.metal) ? karat : "";
-    const setting = { ns: ring.ns, handle: pick.handle, variantId: pick.variantId, title: pick.title, shape: pick.shape, metal: pick.metal, price: pick.price + (pk ? karatStep(ring.ns, pk) : 0), image: pick.images[0] || "", karat: pk || undefined };
+    const fc = fancyColorOf(pick.title) || undefined;
+    const setting = { ns: ring.ns, handle: pick.handle, variantId: pick.variantId, title: pick.title, shape: pick.shape, metal: pick.metal, price: pick.price + (pk ? karatStep(ring.ns, pk) : 0), image: pick.images[0] || "", karat: pk || undefined, color: fc };
     saveSetting(setting);
-    if (!stone) { router.push(diamondsUrl(pick.shape)); return; }
+    if (!stone) { router.push(diamondsUrl(pick.shape, fc)); return; }
     addRing(setting, stone);
   };
 

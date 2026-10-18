@@ -11,6 +11,7 @@ import RingsSection from "@/components/RingsSection";
 import SettingBar from "@/components/SettingBar";
 import JumpToResults from "@/components/JumpToResults";
 import StoneBar from "@/components/StoneBar";
+import FancyPieces from "@/components/FancyPieces";
 
 export function generateStaticParams() { return categories.map(c => ({ category: c.slug })); }
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
@@ -18,8 +19,10 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
   return { title: p ? `${p.nav} — MEEKITAZ` : "MEEKITAZ" };
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+export default async function CategoryPage({ params, searchParams }: { params: Promise<{ category: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const { category } = await params;
+  const sp = await searchParams;
+  const one = (k: string) => { const v = sp[k]; return typeof v === "string" ? v : ""; };
   const p = categories.find(c => c.slug === category);
   if (!p) notFound();
   const n = p.styles.length;
@@ -51,7 +54,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             </div>
           </section>
         )}
-        {p.special === "fancy" ? <Suspense fallback={null}><FancyBrowser /></Suspense> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><DiamondsBrowser /></Suspense> : <ProductGrid page={p} />}
+        {p.special === "fancy" ? <><FancyPieces color={one("color")} style={one("style")} /><Suspense fallback={null}><FancyBrowser /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><DiamondsBrowser /></Suspense> : <ProductGrid page={p} />}
       </div>
     </main>
   );

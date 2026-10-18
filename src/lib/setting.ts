@@ -1,9 +1,10 @@
 // The ring setting the customer is building a ring around. Kept in the browser so it follows them to the diamonds.
 import { isGoldMetal, karatStep } from "./karat";
-export type Setting = { ns: string; handle: string; variantId: string; title: string; shape: string; metal: string; price: number; image: string; karat?: string };
+import { fancyColorOf, fancyColorOfStone, fancySettingsUrl, fancyStonesUrl } from "./fancy";
+export type Setting = { ns: string; handle: string; variantId: string; title: string; shape: string; metal: string; price: number; image: string; karat?: string; color?: string };
 /** The same design in another shape or colour, keeping the chosen karat and its price step on top of the 10K list price. */
 export const settingFrom = (prev: Setting, item: { handle: string; variantId: string; title: string; shape: string; metal: string; price: number; images: string[] }): Setting => ({
-  ns: prev.ns, handle: item.handle, variantId: item.variantId, title: item.title, shape: item.shape, metal: item.metal, karat: prev.karat,
+  ns: prev.ns, handle: item.handle, variantId: item.variantId, title: item.title, shape: item.shape, metal: item.metal, karat: prev.karat, color: fancyColorOf(item.title) || prev.color,
   price: item.price + (prev.karat && isGoldMetal(item.metal) ? karatStep(prev.ns, prev.karat) : 0), image: item.images[0] || "",
 });
 const KEY = "mk_setting";
@@ -11,7 +12,7 @@ export const loadSetting = (): Setting | null => { try { const v = JSON.parse(lo
 export const saveSetting = (s: Setting) => { try { localStorage.setItem(KEY, JSON.stringify(s)); window.dispatchEvent(new Event("mk-setting")); } catch { /* ignore */ } };
 export const clearSetting = () => { try { localStorage.removeItem(KEY); window.dispatchEvent(new Event("mk-setting")); } catch { /* ignore */ } };
 /** Where "Choose this setting" leads: the diamonds, already on the stone shape of the setting and from 2 carats up. */
-export const diamondsUrl = (shape: string) => `/diamonds?style=${encodeURIComponent(shape)}&c=2-20&build=1`;
+export const diamondsUrl = (shape: string, color?: string) => (color ? fancyStonesUrl(color, shape) : `/diamonds?style=${encodeURIComponent(shape)}&c=2-20&build=1`);
 
 /** The diamond the customer picked. */
 export type Stone = { vendor: number; stock: string; shape: string; carat: number; color: string | null; clarity: string | null; cut: string | null; lab: string; image: string; price: number; fancy: string | null };
@@ -24,7 +25,7 @@ export const stoneLabel = (s: Stone) => `${s.carat.toFixed(2)} ct ${s.shape}`;
 export async function chooseStone(s: Stone, deps: { push: (url: string) => void; addRing: (setting: Setting, stone: Stone) => void; notify: (msg: string) => void }) {
   saveStone(s);
   let setting = loadSetting();
-  if (!setting) { deps.push(`/engagement-rings?style=${encodeURIComponent(s.shape)}&build=1`); return; }
+  if (!setting) { const c = fancyColorOfStone(s.fancy); deps.push(c ? fancySettingsUrl(c, s.shape) : `/engagement-rings?style=${encodeURIComponent(s.shape)}&build=1`); return; }
   if (setting.shape !== s.shape) { // the setting follows the shape of the diamond
     let item = null;
     try { item = (await (await fetch(`/api/setting?${new URLSearchParams({ ns: setting.ns, shape: s.shape, metal: setting.metal })}`)).json()).item; } catch { /* handled below */ }

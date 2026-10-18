@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { clearSetting, clearStone, loadSetting, loadStone, saveSetting, saveStone, stoneLabel, type Setting, type Stone } from "@/lib/setting";
+import { diamondsUrl } from "@/lib/setting";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 const SIZES = Array.from({ length: 21 }, (_, i) => 3 + i * 0.5);
@@ -59,7 +60,7 @@ export default function BuildView() {
         <h1>Your ring</h1>
         {!ready ? <p className="bd-msg">Loading…</p> : !setting || !stone ? (
           <div className="bd-msg"><p>{!setting && !stone ? "You have not chosen a setting or a diamond yet." : !setting ? "You have a diamond. Now choose a setting for it." : "You have a setting. Now choose a diamond for it."}</p>
-            <div className="bd-go">{!setting && <Link href={stone ? `/engagement-rings?style=${encodeURIComponent(stone.shape)}&build=1` : "/engagement-rings"} className="pp-add">Choose a setting</Link>}{!stone && <Link href={setting ? `/diamonds?style=${encodeURIComponent(setting.shape)}&c=2-20&build=1` : "/diamonds"} className="pp-add">Choose a diamond</Link>}</div></div>
+            <div className="bd-go">{!setting && <Link href={stone ? `/engagement-rings?style=${encodeURIComponent(stone.shape)}&build=1` : "/engagement-rings"} className="pp-add">Choose a setting</Link>}{!stone && <Link href={setting ? diamondsUrl(setting.shape, setting.color) : "/diamonds"} className="pp-add">Choose a diamond</Link>}</div></div>
         ) : (
           <div className="bd-card">
             <div className="bd-ln"><div className="bd-im">{setting.image && /* eslint-disable-next-line @next/next/no-img-element */ <img src={`${setting.image}${setting.image.includes("?") ? "&" : "?"}width=240`} alt="" />}</div>
