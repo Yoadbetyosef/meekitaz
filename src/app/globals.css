@@ -13,12 +13,6 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 .h2{font-size:clamp(30px,4vw,54px);line-height:1;letter-spacing:.01em}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
-/* ===== TICKER ===== */
-.tstrip{position:fixed;top:0;left:0;right:0;z-index:61;overflow:hidden;white-space:nowrap;background:var(--red);color:#fff;font:700 8.5px/1 var(--body);letter-spacing:.18em;height:18px;padding-top:5px;border-bottom:1px solid rgba(255,255,255,.14)}
-.tstrip-track{display:inline-block;animation:tick 48s linear infinite;will-change:transform}
-.tstrip-track i{font-style:normal;color:var(--blue);padding:0 8px}
-@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
 /* ===== NAV ===== */
 .nav{position:fixed;top:30px;left:50%;transform:translateX(calc(-50% - 37px));z-index:60;width:680px;max-width:calc(100% - 110px);background:#fff;border-radius:999px;display:flex;align-items:center;justify-content:space-between;padding:28px 28px 28px 40px;box-shadow:0 18px 50px -20px rgba(0,0,0,.45)}
 .nav .brand{font:700 15px var(--body);letter-spacing:.22em;text-decoration:none}

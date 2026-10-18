@@ -15,9 +15,6 @@ export default function Nav() {
   useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open]);
   return (
     <>
-      <div className="tstrip" aria-hidden="true"><div className="tstrip-track">{[0, 1].map(k => (
-        <span key={k}>MADE WITH LAB-GROWN DIAMONDS <i>✦</i> IGI / GIA CERTIFIED <i>✦</i> 30-DAY FREE RETURNS <i>✦</i> LIFETIME WARRANTY <i>✦</i> FREE INSURED SHIPPING <i>✦</i> SERIOUS DIAMONDS, WORN LIGHTLY <i>✦</i>&nbsp;</span>
-      ))}</div></div>
       <nav className="nav" aria-label="Main">
         <Link href="/" className="brand">MEEKITAZ<i>©</i></Link>
         <button className="burger" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="menu" onClick={() => setOpen(o => !o)}><i /><i /><i /></button>
