@@ -45,7 +45,7 @@ export async function POST(req: Request) {
         const title = `${d.carat.toFixed(2)} ct ${d.shape} lab-grown diamond`;
         const note = [title, [d.fancy || d.color, d.clarity, d.cut && `${d.cut} cut`].filter(Boolean).join(" "), `${d.lab} ${d.cert}`].filter(Boolean).join(" · ");
         const html = `<ul><li>${title}</li><li>Colour: ${d.fancy || d.color || "—"}</li><li>Clarity: ${d.clarity || "—"}</li><li>Cut: ${d.cut || "—"}</li><li>Certificate: ${d.lab} ${d.cert}</li></ul>`;
-        const stoneVariant = await ensureStoneVariant({ vendor: d.vendor, stock: d.stock, title: `${title} (${d.lab} ${d.cert})`, price: d.price, html, sku: `${d.lab}-${d.cert}` });
+        const stoneVariant = await ensureStoneVariant({ vendor: d.vendor, stock: d.stock, title: `${title} (${d.lab} ${d.cert})`, price: d.price, html, sku: `${d.lab}-${d.cert}`, image: d.image });
         const karat = ["", "10K", "14K", "18K"].includes(String(r.karat || "")) ? String(r.karat || "") : "";
         const settingVariant = await ensureKaratVariant(variantId, karat);
         const build = crypto.randomUUID().slice(0, 8);

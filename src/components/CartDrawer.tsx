@@ -96,7 +96,7 @@ export default function CartDrawer() {
                   <div><h4>{r.setting.title}</h4><div className="cd-meta">Setting</div></div><div className="cd-pr">{money(r.setting.price, cur)}</div>
                 </div>
                 <div className="cd-li">
-                  <div className="cd-im cd-gem"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M12 8h24l8 12-20 22L4 20z" /><path d="M4 20h40M12 8l12 34M36 8L24 42M18 20l6-12 6 12" /></svg></div>
+                  <div className={`cd-im ${r.stone.image ? "cd-st" : "cd-gem"}`}>{r.stone.image ? <Image src={r.stone.image.url} alt={r.stone.image.alt} fill sizes="92px" /> : <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M12 8h24l8 12-20 22L4 20z" /><path d="M4 20h40M12 8l12 34M36 8L24 42M18 20l6-12 6 12" /></svg>}</div>
                   <div><h4>{r.stone.title.replace(/ \(.*\)$/, "")}</h4><div className="cd-meta">{attr(r.setting, "Diamond")?.split(" · ").slice(1).join(" · ")}</div></div><div className="cd-pr">{money(r.stone.price, cur)}</div>
                 </div>
                 {sizeBox(r.build, r.size, v => setCartRingSize([r.setting.id, r.stone.id], v))}

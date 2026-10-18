@@ -36,7 +36,7 @@ async function storefront<T>(query: string, variables: Record<string, unknown> =
   return j.data as T;
 }
 
-export type StoneInfo = { vendor: number; stock: string; title: string; price: number; html: string; sku: string };
+export type StoneInfo = { vendor: number; stock: string; title: string; price: number; html: string; sku: string; image?: string };
 export const stoneHandle = (vendor: number, stock: string) => `diamond-${vendor}-${stock}`.toLowerCase().replace(/[^a-z0-9-]/g, "-");
 
 let pubId: string | null = process.env.SHOPIFY_HEADLESS_PUBLICATION_ID || null;
@@ -57,16 +57,23 @@ export async function ensureStoneVariant(s: StoneInfo): Promise<string> {
   if (v && Math.abs(+v.price.amount - s.price) < 0.5) return v.id;
 
   // a product exists but at an old price, or not at all
-  const found = await admin<{ productByHandle: { id: string; variants: { nodes: { id: string }[] } } | null }>(`query($h:String!){ productByHandle(handle:$h){ id variants(first:1){ nodes{ id } } } }`, { h: handle });
+  const found = await admin<{ productByHandle: { id: string; variants: { nodes: { id: string }[] }; media: { nodes: { id: string }[] } } | null }>(`query($h:String!){ productByHandle(handle:$h){ id variants(first:1){ nodes{ id } } media(first:1){ nodes{ id } } } }`, { h: handle });
   let productId = found.productByHandle?.id, variantId = found.productByHandle?.variants.nodes[0]?.id;
+  // the stone's own photo from the supplier, so the bag and the Shopify checkout show the diamond the client chose
+  const media = s.image && /^https:\/\//.test(s.image) ? [{ originalSource: s.image, mediaContentType: "IMAGE" as const, alt: s.title }] : [];
   if (!productId) {
-    const c = await admin<{ productCreate: { product: { id: string; variants: { nodes: { id: string }[] } } | null; userErrors: { message: string }[] } }>(
-      `mutation($product: ProductCreateInput!){ productCreate(product: $product){ product{ id variants(first:1){ nodes{ id } } } userErrors{ field message } } }`,
-      { product: { title: s.title, handle, status: "ACTIVE", vendor: "Meekitaz", productType: "Diamond", tags: ["Diamond", "Built ring"], descriptionHtml: s.html } });
+    const input = { title: s.title, handle, status: "ACTIVE", vendor: "Meekitaz", productType: "Diamond", tags: ["Diamond", "Built ring"], descriptionHtml: s.html };
+    const create = (m: typeof media) => admin<{ productCreate: { product: { id: string; variants: { nodes: { id: string }[] } } | null; userErrors: { message: string }[] } }>(
+      `mutation($product: ProductCreateInput!, $media: [CreateMediaInput!]){ productCreate(product: $product, media: $media){ product{ id variants(first:1){ nodes{ id } } } userErrors{ field message } } }`, { product: input, media: m });
+    let c = await create(media);
+    if ((c.productCreate.userErrors.length || !c.productCreate.product) && media.length) c = await create([]); // never lose a sale over a picture
     if (c.productCreate.userErrors.length || !c.productCreate.product) throw new Error("productCreate: " + JSON.stringify(c.productCreate.userErrors));
     productId = c.productCreate.product.id; variantId = c.productCreate.product.variants.nodes[0]?.id;
     const p = await admin<{ publishablePublish: { userErrors: { message: string }[] } }>(`mutation($id:ID!,$input:[PublicationInput!]!){ publishablePublish(id:$id,input:$input){ userErrors{ field message } } }`, { id: productId, input: [{ publicationId: await headlessPublication() }] });
     if (p.publishablePublish.userErrors.length) throw new Error("publish: " + JSON.stringify(p.publishablePublish.userErrors));
+  } else if (media.length && found.productByHandle && found.productByHandle.media.nodes.length === 0) {
+    // created before photos were attached: add the stone's photo now, quietly
+    await admin(`mutation($productId:ID!,$media:[CreateMediaInput!]!){ productCreateMedia(productId:$productId,media:$media){ mediaUserErrors{ message } } }`, { productId, media }).catch(() => {});
   }
   if (!productId || !variantId) throw new Error("no variant");
   const u = await admin<{ productVariantsBulkUpdate: { userErrors: { message: string }[] } }>(
