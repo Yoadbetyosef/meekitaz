@@ -1,4 +1,5 @@
 // Server-only. Creates the product for a chosen diamond (diamonds come from our supplier, not from Shopify) and a cart holding ring + diamond.
+import { karatStep } from "./karat";
 const domain = process.env.SHOPIFY_STORE_DOMAIN, adminToken = process.env.SHOPIFY_ADMIN_TOKEN, sfToken = process.env.SHOPIFY_STOREFRONT_TOKEN;
 const adminBase = process.env.SHOPIFY_ADMIN_API_BASE || `https://${domain}`;
 const sfBase = process.env.SHOPIFY_API_BASE || `https://${domain}`;
@@ -74,4 +75,49 @@ export async function createRingCart(settingVariantId: string, stoneVariantId: s
     ], attributes: [{ key: "Ring size", value: size }] } });
   if (d.cartCreate.userErrors.length || !d.cartCreate.cart) throw new Error("cart: " + JSON.stringify(d.cartCreate.userErrors));
   return d.cartCreate.cart.checkoutUrl;
+}
+
+/**
+ * The Shopify variant for a design at 14K or 18K. Listed prices are the 10K prices, so 10K is the product itself; 14K and 18K are the same design
+ * with the price step from our price list, created (and published to the site) the first time somebody buys it and reused after that.
+ */
+export async function ensureKaratVariant(variantId: string, karat: string): Promise<string> {
+  if (!karat || karat === "10K") return variantId;
+  if (karat !== "14K" && karat !== "18K") throw new Error("unknown karat");
+  const q = await storefront<{ node: { price: { amount: string }; compareAtPrice: { amount: string } | null; product: { handle: string; title: string; productType: string; descriptionHtml: string; tags: string[]; images: { edges: { node: { url: string } }[] } } } | null }>(
+    `query($id:ID!){ node(id:$id){ ... on ProductVariant { price{ amount } compareAtPrice{ amount } product{ handle title productType descriptionHtml tags images(first:3){ edges{ node{ url } } } } } } }`, { id: variantId });
+  const v = q.node; if (!v) throw new Error("setting variant not found");
+  const ns = v.product.tags.find(t => /^NS-\d+$/.test(t)) || "";
+  const step = karatStep(ns, karat); if (!step) throw new Error(`${karat} is not offered for ${ns || "this design"}`);
+  const price = +v.price.amount + step, compare = v.compareAtPrice ? +v.compareAtPrice.amount + 2 * step : 0;
+  const handle = `${v.product.handle}-${karat.toLowerCase()}`.slice(0, 250);
+  const lookup = () => storefront<{ product: { variants: { edges: { node: { id: string; price: { amount: string } } }[] } } | null }>(`query($h:String!){ product(handle:$h){ variants(first:1){ edges{ node{ id price{ amount } } } } } }`, { h: handle });
+  const have = (await lookup()).product?.variants.edges[0]?.node;
+  if (have && Math.abs(+have.price.amount - price) < 0.5) return have.id;
+
+  const found = await admin<{ productByHandle: { id: string; variants: { nodes: { id: string }[] } } | null }>(`query($h:String!){ productByHandle(handle:$h){ id variants(first:1){ nodes{ id } } } }`, { h: handle });
+  let productId = found.productByHandle?.id, variantGid = found.productByHandle?.variants.nodes[0]?.id;
+  if (!productId) {
+    const input = { title: `${v.product.title} (${karat})`, handle, status: "ACTIVE", vendor: "Meekitaz", productType: v.product.productType || "Ring", tags: ["Karat variant", karat, ...v.product.tags.filter(t => /^NS-\d+$/.test(t))], descriptionHtml: v.product.descriptionHtml };
+    const create = (media: { originalSource: string; mediaContentType: "IMAGE" }[]) => admin<{ productCreate: { product: { id: string; variants: { nodes: { id: string }[] } } | null; userErrors: { message: string }[] } }>(
+      `mutation($product: ProductCreateInput!, $media: [CreateMediaInput!]){ productCreate(product: $product, media: $media){ product{ id variants(first:1){ nodes{ id } } } userErrors{ field message } } }`, { product: input, media });
+    const images = v.product.images.edges.slice(0, 1).map(e => ({ originalSource: e.node.url, mediaContentType: "IMAGE" as const }));
+    let c = await create(images);
+    if ((c.productCreate.userErrors.length || !c.productCreate.product) && images.length) c = await create([]); // never lose a sale over a picture
+    if (c.productCreate.userErrors.length || !c.productCreate.product) throw new Error("productCreate: " + JSON.stringify(c.productCreate.userErrors));
+    productId = c.productCreate.product.id; variantGid = c.productCreate.product.variants.nodes[0]?.id;
+    const p = await admin<{ publishablePublish: { userErrors: { message: string }[] } }>(`mutation($id:ID!,$input:[PublicationInput!]!){ publishablePublish(id:$id,input:$input){ userErrors{ field message } } }`, { id: productId, input: [{ publicationId: await headlessPublication() }] });
+    if (p.publishablePublish.userErrors.length) throw new Error("publish: " + JSON.stringify(p.publishablePublish.userErrors));
+  }
+  if (!productId || !variantGid) throw new Error("no variant");
+  const u = await admin<{ productVariantsBulkUpdate: { userErrors: { message: string }[] } }>(
+    `mutation($productId:ID!,$variants:[ProductVariantsBulkInput!]!){ productVariantsBulkUpdate(productId:$productId,variants:$variants){ productVariants{ id price } userErrors{ field message } } }`,
+    { productId, variants: [{ id: variantGid, price: price.toFixed(2), compareAtPrice: compare ? compare.toFixed(2) : null, inventoryItem: { tracked: false } }] });
+  if (u.productVariantsBulkUpdate.userErrors.length) throw new Error("price: " + JSON.stringify(u.productVariantsBulkUpdate.userErrors));
+  for (let i = 0; i < 8; i++) { // the Storefront API can take a moment to see a new or re-priced product
+    const n = (await lookup()).product?.variants.edges[0]?.node;
+    if (n && Math.abs(+n.price.amount - price) < 0.5) return n.id;
+    await new Promise(r => setTimeout(r, 700));
+  }
+  return variantGid;
 }

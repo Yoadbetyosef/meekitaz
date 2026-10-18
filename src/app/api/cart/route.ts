@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { addCartLines, addToCart, createCart, createCartWithLines, getCart, removeCartLine, removeCartLines, shopifyConfigured, updateCartLine, updateLineAttributes, type Cart } from "@/lib/shopify";
 import { getDiamond, vdbConfigured } from "@/lib/vdb";
-import { adminConfigured, ensureStoneVariant } from "@/lib/shopifyAdmin";
+import { adminConfigured, ensureKaratVariant, ensureStoneVariant } from "@/lib/shopifyAdmin";
 
 const SIZES = new Set(Array.from({ length: 21 }, (_, i) => String(3 + i * 0.5)));
 
@@ -25,14 +25,19 @@ export async function POST(req: Request) {
 
   if (body.action === "add" && typeof body.variantId === "string") {
     const qty = Math.max(1, Math.min(10, +body.quantity || 1));
-    cart = id ? await addToCart(id, body.variantId, qty) : null;
-    if (!cart) cart = await createCart(body.variantId, qty); // no cart yet, or the old one expired
+    let variantId: string = body.variantId;
+    if (body.karat === "14K" || body.karat === "18K") { // the 14K and 18K versions of a design are created in Shopify the first time they are bought
+      if (!adminConfigured) return NextResponse.json({ error: "not_configured" }, { status: 503 });
+      try { variantId = await ensureKaratVariant(variantId, body.karat); } catch (e) { console.error("[karat]", e instanceof Error ? e.message : e); return NextResponse.json({ error: "failed" }, { status: 502 }); }
+    }
+    cart = id ? await addToCart(id, variantId, qty) : null;
+    if (!cart) cart = await createCart(variantId, qty); // no cart yet, or the old one expired
   } else if (body.action === "ringsCheckout" && Array.isArray(body.rings) && body.rings.length > 0 && body.rings.length <= 5) {
     // rings waiting in the bag become real cart lines now: the setting, and a Shopify product for the chosen diamond
     if (!adminConfigured || !vdbConfigured) return NextResponse.json({ error: "not_configured" }, { status: 503 });
     try {
       const lines: { merchandiseId: string; quantity: number; attributes: { key: string; value: string }[] }[] = [];
-      for (const r of body.rings as { variantId?: string; vendor?: number; stock?: string; size?: string }[]) {
+      for (const r of body.rings as { variantId?: string; vendor?: number; stock?: string; size?: string; karat?: string }[]) {
         const vendor = Number(r.vendor), stock = String(r.stock || ""), variantId = String(r.variantId || ""), size = String(r.size || "");
         if (!isFinite(vendor) || !stock || !SIZES.has(size) || !variantId.startsWith("gid://shopify/ProductVariant/")) return NextResponse.json({ error: "bad_request" }, { status: 400 });
         const d = await getDiamond(vendor, stock); // the price always comes from our supplier feed
@@ -41,8 +46,10 @@ export async function POST(req: Request) {
         const note = [title, [d.fancy || d.color, d.clarity, d.cut && `${d.cut} cut`].filter(Boolean).join(" "), `${d.lab} ${d.cert}`].filter(Boolean).join(" · ");
         const html = `<ul><li>${title}</li><li>Colour: ${d.fancy || d.color || "—"}</li><li>Clarity: ${d.clarity || "—"}</li><li>Cut: ${d.cut || "—"}</li><li>Certificate: ${d.lab} ${d.cert}</li></ul>`;
         const stoneVariant = await ensureStoneVariant({ vendor: d.vendor, stock: d.stock, title: `${title} (${d.lab} ${d.cert})`, price: d.price, html, sku: `${d.lab}-${d.cert}` });
+        const karat = ["", "10K", "14K", "18K"].includes(String(r.karat || "")) ? String(r.karat || "") : "";
+        const settingVariant = await ensureKaratVariant(variantId, karat);
         const build = crypto.randomUUID().slice(0, 8);
-        lines.push({ merchandiseId: variantId, quantity: 1, attributes: [{ key: "Build", value: build }, { key: "Diamond", value: note }, { key: "Ring size", value: size }] });
+        lines.push({ merchandiseId: settingVariant, quantity: 1, attributes: [{ key: "Build", value: build }, { key: "Diamond", value: note }, { key: "Ring size", value: size }, ...(karat ? [{ key: "Gold", value: karat }] : [])] });
         lines.push({ merchandiseId: stoneVariant, quantity: 1, attributes: [{ key: "Build", value: build }, { key: "Ring size", value: size }] });
       }
       cart = id ? await addCartLines(id, lines) : null;

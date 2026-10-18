@@ -74,7 +74,7 @@ export default function CartDrawer() {
                 <div className="cd-rh"><b>Your ring</b><button className="cd-rm" onClick={() => { removeRing(r.id); }} disabled={busy}>Remove ring</button></div>
                 <div className="cd-li">
                   <Link href={`/products/${r.setting.handle}`} className="cd-im" onClick={() => setOpen(false)}>{r.setting.image && /* eslint-disable-next-line @next/next/no-img-element */ <img src={`${r.setting.image}${r.setting.image.includes("?") ? "&" : "?"}width=200`} alt="" />}</Link>
-                  <div><h4>{r.setting.title}</h4><div className="cd-meta">Setting · {r.setting.metal}</div>
+                  <div><h4>{r.setting.title}</h4><div className="cd-meta">Setting · {r.setting.karat ? `${r.setting.karat} ` : ""}{r.setting.metal}</div>
                     <button className="cd-chg" onClick={() => { removeRing(r.id); saveStone(r.stone); clearSetting(); leave(`/engagement-rings?style=${encodeURIComponent(r.stone.shape)}&build=1`); }}>Change setting</button></div>
                   <div className="cd-pr">{money(r.setting.price, cur)}</div>
                 </div>

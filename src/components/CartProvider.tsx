@@ -8,7 +8,7 @@ type Ctx = {
   cart: Cart | null; open: boolean; busy: boolean; configured: boolean;
   rings: LocalRing[]; ringError: string; bagCount: number;
   setOpen: (v: boolean) => void;
-  add: (variantId: string, quantity?: number) => Promise<void>;
+  add: (variantId: string, quantity?: number, karat?: string) => Promise<{ ok: boolean; error?: string }>;
   setQty: (lineId: string, quantity: number) => Promise<void>;
   remove: (lineId: string) => Promise<void>;
   /** A ring (setting + diamond) goes into the bag. It stays in the browser until checkout. */
@@ -58,7 +58,7 @@ export default function CartProvider({ children }: { children: React.ReactNode }
     const list = loadRings();
     if (!list.length || list.some(r => !r.size)) return;
     setRingError(""); setBusy(true);
-    const r = await call({ action: "ringsCheckout", rings: list.map(x => ({ variantId: x.setting.variantId, vendor: x.stone.vendor, stock: x.stone.stock, size: x.size })) });
+    const r = await call({ action: "ringsCheckout", rings: list.map(x => ({ variantId: x.setting.variantId, vendor: x.stone.vendor, stock: x.stone.stock, size: x.size, karat: x.setting.karat || "" })) });
     if (r.cart) { clearLocalRings(); setCart(r.cart); window.location.href = r.cart.checkoutUrl; return; }
     setBusy(false);
     setRingError(r.error === "not_configured" ? "Checkout for custom rings is being connected. Please book an appointment and we will complete your order with you."
@@ -72,7 +72,7 @@ export default function CartProvider({ children }: { children: React.ReactNode }
       (cart?.lines ?? []).forEach(l => { const b = l.attributes?.find(a => a.key === "Build")?.value; if (b) builds.add(b); else plain += l.quantity; });
       return plain + builds.size + rings.length;
     })(),
-    add: (variantId, quantity = 1) => run({ action: "add", variantId, quantity }, true).then(() => undefined),
+    add: async (variantId, quantity = 1, karat) => { const r = await run({ action: "add", variantId, quantity, karat: karat || "" }, true); return { ok: !!r.cart, error: r.error }; },
     setQty: (lineId, quantity) => run({ action: "update", lineId, quantity }).then(() => undefined),
     remove: lineId => { run({ action: "remove", lineId }); return Promise.resolve(); },
     addRing: (setting, stone) => { setRingError(""); addLocalRing(setting, stone); setOpen(true); },

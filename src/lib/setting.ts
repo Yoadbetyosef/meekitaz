@@ -1,5 +1,11 @@
 // The ring setting the customer is building a ring around. Kept in the browser so it follows them to the diamonds.
-export type Setting = { ns: string; handle: string; variantId: string; title: string; shape: string; metal: string; price: number; image: string };
+import { isGoldMetal, karatStep } from "./karat";
+export type Setting = { ns: string; handle: string; variantId: string; title: string; shape: string; metal: string; price: number; image: string; karat?: string };
+/** The same design in another shape or colour, keeping the chosen karat and its price step on top of the 10K list price. */
+export const settingFrom = (prev: Setting, item: { handle: string; variantId: string; title: string; shape: string; metal: string; price: number; images: string[] }): Setting => ({
+  ns: prev.ns, handle: item.handle, variantId: item.variantId, title: item.title, shape: item.shape, metal: item.metal, karat: prev.karat,
+  price: item.price + (prev.karat && isGoldMetal(item.metal) ? karatStep(prev.ns, prev.karat) : 0), image: item.images[0] || "",
+});
 const KEY = "mk_setting";
 export const loadSetting = (): Setting | null => { try { const v = JSON.parse(localStorage.getItem(KEY) || "null"); return v && v.handle ? v : null; } catch { return null; } };
 export const saveSetting = (s: Setting) => { try { localStorage.setItem(KEY, JSON.stringify(s)); window.dispatchEvent(new Event("mk-setting")); } catch { /* ignore */ } };
@@ -23,7 +29,7 @@ export async function chooseStone(s: Stone, deps: { push: (url: string) => void;
     let item = null;
     try { item = (await (await fetch(`/api/setting?${new URLSearchParams({ ns: setting.ns, shape: s.shape, metal: setting.metal })}`)).json()).item; } catch { /* handled below */ }
     if (!item) { deps.notify(`That setting is not made in ${s.shape.toLowerCase()}. Choose a setting for your ${s.shape.toLowerCase()} diamond.`); deps.push(`/engagement-rings?style=${encodeURIComponent(s.shape)}&build=1`); return; }
-    setting = { ns: setting.ns, handle: item.handle, variantId: item.variantId, title: item.title, shape: item.shape, metal: item.metal, price: item.price, image: item.images[0] || "" };
+    setting = settingFrom(setting, item);
     saveSetting(setting);
   }
   deps.addRing(setting, s);

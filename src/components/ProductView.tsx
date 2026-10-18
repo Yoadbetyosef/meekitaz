@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,12 +8,37 @@ import type { ProductFull, Related, Sibling } from "@/lib/shopify";
 import { metalOf } from "@/lib/shopify";
 import type { RingVariant } from "@/lib/shopify";
 import { saveSetting, diamondsUrl, loadStone } from "@/lib/setting";
+import { GOLD_COLORS, hasKarat, isGoldMetal, karatsFor, karatStep } from "@/lib/karat";
 import { toast } from "./Toast";
 import { photoSrc, isCleaned } from "@/lib/img";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 const SW: Record<string, string> = { "Rose Gold": "#E3AE98", "Yellow Gold": "#E6C56B", "White Gold": "#E8E8EA", Platinum: "#DADCE2", Silver: "#D3D5DB", "Rose gold": "#E3AE98", "Yellow gold": "#E6C56B", "White gold": "#E8E8EA" };
 const RING_METALS = ["Silver", "Platinum", "White gold", "Yellow gold", "Rose gold"];
+const nm = (m: string) => { const l = m.toLowerCase(); return l.startsWith("rose") ? "Rose gold" : l.startsWith("yellow") ? "Yellow gold" : l.startsWith("white") ? "White gold" : l.startsWith("plat") ? "Platinum" : l.startsWith("silver") ? "Silver" : m; };
+const KSW = "#E6C56B";
+/** Silver · 10K · 14K · 18K · Platinum, and for gold the colour. The karat prices come from our price list. */
+function Material({ ns, metals, metal, karat, onMetal, onKarat }: { ns: string; metals: string[]; metal: string; karat: string; onMetal: (m: string) => void; onKarat: (k: string) => void }) {
+  const golds = GOLD_COLORS.filter(g => metals.includes(g)), ks = golds.length ? karatsFor(ns) : [];
+  const gold = isGoldMetal(metal);
+  const items: { id: string; sw: string; on: boolean; go: () => void }[] = [
+    ...(metals.includes("Silver") ? [{ id: "Silver", sw: SW.Silver, on: metal === "Silver", go: () => onMetal("Silver") }] : []),
+    ...ks.map(k => ({ id: k, sw: KSW, on: gold && karat === k, go: () => onKarat(k) })),
+    ...(metals.includes("Platinum") ? [{ id: "Platinum", sw: SW.Platinum, on: metal === "Platinum", go: () => onMetal("Platinum") }] : []),
+  ];
+  return (
+    <>
+      <span className="pp-lbl">Metal · {gold ? `${karat} ${metal}` : metal}</span>
+      <div className="rp-metals">{items.map(i => (
+        <button key={i.id} type="button" className={`rp-mt${i.on ? " on" : ""}`} aria-pressed={i.on} onClick={i.go}><span className="rp-sw"><i style={{ background: i.sw }} /></span>{i.id}</button>))}</div>
+      {gold && golds.length > 1 && (<>
+        <span className="pp-lbl">Colour · {metal.replace(" gold", "")}</span>
+        <div className="rp-metals">{golds.map(g => (
+          <button key={g} type="button" className={`rp-mt${metal === g ? " on" : ""}`} aria-pressed={metal === g} onClick={() => onMetal(g)}><span className="rp-sw"><i style={{ background: SW[g] }} /></span>{g.replace(" gold", "")}</button>))}</div>
+      </>)}
+    </>
+  );
+}
 export type RingProp = { family: RingVariant[]; shapes: { img: string; label: string }[]; ns: string };
 const Ic = ({ d }: { d: string }) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>;
 const TRUST = [
@@ -27,6 +52,11 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
   const { add, busy, addRing } = useCart();
   const router = useRouter();
   const [rh, setRh] = useState(p.handle);
+  const ns = ring?.ns || p.tags.find(t => /^NS-\d+$/.test(t)) || "";
+  const karatOn = hasKarat(ns);
+  const [karatPick, setKarat] = useState("10K");
+  useEffect(() => { try { const k = sessionStorage.getItem("mk_karat"); if (k === "14K" || k === "18K") setKarat(k); } catch { /* ignore */ } }, []);
+  const pickKarat = (k: string) => { setKarat(k); try { sessionStorage.setItem("mk_karat", k); } catch { /* ignore */ } };
   const cv = ring?.family.find(v => v.handle === rh) ?? null; // the ring design in the shape and metal chosen on this page
   const real = p.options.filter(o => !(o.values.length === 1 && o.values[0] === "Default Title") && o.name !== "Title");
   const [sel, setSel] = useState<Record<string, string>>(() => Object.fromEntries((p.variants[0]?.selected || []).map(s => [s.name, s.value])));
@@ -37,7 +67,12 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
   const save = variant.compareAt ? variant.compareAt - variant.price : 0;
   const details = p.tags.filter(t => !/gold|silver|platinum|rose|yellow|white|^NS-|^CBR$|express|normal_side|^RJ-/i.test(t)).slice(0, 4);
   const imgs = cv ? cv.images.map(u => ({ url: u, alt: cv.title, width: 1000, height: 1000 })) : p.images;
-  const title = cv ? cv.title : p.title, price = cv ? cv.price : variant.price, compareAt = cv ? cv.compareAt : variant.compareAt;
+  const metalNow = nm(cv ? cv.metal : metal || "");
+  const karat = karatsFor(ns).includes(karatPick as "10K") ? karatPick : "10K"; // a design only offers the karats of its price list
+  const step = karatOn && isGoldMetal(metalNow) ? karatStep(ns, karat) : 0;
+  const kLabel = karatOn && isGoldMetal(metalNow) ? karat : "";
+  const baseP = cv ? cv.price : variant.price, baseC = cv ? cv.compareAt : variant.compareAt;
+  const title = cv ? cv.title : p.title, price = baseP + step, compareAt = baseC > 0 ? baseC + 2 * step : 0;
   const shapesHere = ring ? ring.shapes.filter(s => ring.family.some(v => v.shape === s.label)) : [];
   const metalsHere = cv && ring ? RING_METALS.filter(m => ring.family.some(v => v.shape === cv.shape && v.metal === m)) : [];
   const pickRing = (shape: string, metal: string) => {
@@ -55,7 +90,8 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
       if (!alt) { toast(`This setting is not made in ${stone.shape.toLowerCase()}. Pick another setting for your ${stone.shape.toLowerCase()} diamond.`); return; }
       pick = alt;
     }
-    const setting = { ns: ring.ns, handle: pick.handle, variantId: pick.variantId, title: pick.title, shape: pick.shape, metal: pick.metal, price: pick.price, image: pick.images[0] || "" };
+    const pk = karatOn && isGoldMetal(pick.metal) ? karat : "";
+    const setting = { ns: ring.ns, handle: pick.handle, variantId: pick.variantId, title: pick.title, shape: pick.shape, metal: pick.metal, price: pick.price + (pk ? karatStep(ring.ns, pk) : 0), image: pick.images[0] || "", karat: pk || undefined };
     saveSetting(setting);
     if (!stone) { router.push(diamondsUrl(pick.shape)); return; }
     addRing(setting, stone);
@@ -84,7 +120,7 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
 
           <div className="pp-info">
             <small className="eyebrow">Lab-grown · IGI certified</small>
-            <h1>{title}</h1>
+            <h1>{title}{kLabel ? <em className="pp-k"> · {kLabel}</em> : null}</h1>
             <div className="pp-price"><b>{usd(price)}</b>{compareAt > 0 && <><s>{usd(compareAt)}</s><i>{ring ? "Setting only" : `Save ${usd(compareAt - price)}`}</i></>}</div>
             <p className="pp-sub">{ring ? "Choose the setting first. Next, pick your diamond." : "Serious diamonds, worn lightly."}</p>
 
@@ -94,14 +130,24 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
                 <div className="rp-shapes">{shapesHere.map(sh => (
                   <button key={sh.label} type="button" className={`rp-sh${cv.shape === sh.label ? " on" : ""}`} aria-pressed={cv.shape === sh.label} onClick={() => pickRing(sh.label, cv.metal)}>
                     <i><Image src={sh.img} alt="" fill sizes="64px" quality={60} /></i><b>{sh.label}</b></button>))}</div>
-                <span className="pp-lbl">Metal · {cv.metal}</span>
-                <div className="rp-metals">{metalsHere.map(m => (
-                  <button key={m} type="button" className={`rp-mt${cv.metal === m ? " on" : ""}`} aria-pressed={cv.metal === m} onClick={() => pickRing(cv.shape, m)}>
-                    <span className="rp-sw"><i style={{ background: SW[m] || "#ddd" }} /></span>{m.replace(" gold", "")}</button>))}</div>
+                {karatOn ? (
+                  <Material ns={ns} metals={metalsHere} metal={cv.metal} karat={karat} onMetal={m => pickRing(cv.shape, m)}
+                    onKarat={k => { pickKarat(k); if (!isGoldMetal(cv.metal)) pickRing(cv.shape, GOLD_COLORS.find(g => metalsHere.includes(g)) || cv.metal); }} />
+                ) : (<>
+                  <span className="pp-lbl">Metal · {cv.metal}</span>
+                  <div className="rp-metals">{metalsHere.map(m => (
+                    <button key={m} type="button" className={`rp-mt${cv.metal === m ? " on" : ""}`} aria-pressed={cv.metal === m} onClick={() => pickRing(cv.shape, m)}>
+                      <span className="rp-sw"><i style={{ background: SW[m] || "#ddd" }} /></span>{m.replace(" gold", "")}</button>))}</div>
+                </>)}
               </>
             )}
 
-            {!ring && siblings.length > 1 && (
+            {!ring && karatOn && siblings.length > 0 && (
+              <Material ns={ns} metals={siblings.map(s => nm(s.metal))} metal={metalNow} karat={karat}
+                onMetal={m => { const t = siblings.find(s => nm(s.metal) === m); if (t && t.handle !== p.handle) router.replace(`/products/${t.handle}`, { scroll: false }); }}
+                onKarat={k => { pickKarat(k); if (!isGoldMetal(metalNow)) { const t = siblings.find(s => isGoldMetal(nm(s.metal))); if (t) router.replace(`/products/${t.handle}`, { scroll: false }); } }} />
+            )}
+            {!ring && !karatOn && siblings.length > 1 && (
               <>
                 <span className="pp-lbl">Metal{metal ? ` · ${metal}` : ""}</span>
                 <div className="pp-sw">
@@ -123,7 +169,7 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
               {ring && cv ? (
                 <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting<small>Next: pick your {cv.shape.toLowerCase()} diamond</small></button>
               ) : (
-                <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={() => add(variant.id)}>{!variant.available ? "Sold out" : busy ? "Adding…" : `Add to bag · ${usd(variant.price)}`}</button>
+                <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={async () => { const r = await add(variant.id, 1, step ? karat : ""); if (!r.ok) toast(r.error === "not_configured" ? "This gold option is being connected for checkout. Please book an appointment and we will complete it with you." : "We could not add this to your bag. Please try again."); }}>{!variant.available ? "Sold out" : busy ? "Adding…" : `Add to bag · ${usd(price)}`}</button>
               )}
               <Link href="/#contact" className="pp-appt">Book a private appointment</Link>
             </div>
