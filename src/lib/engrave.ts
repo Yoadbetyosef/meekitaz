@@ -1,71 +1,69 @@
-// Some supplier renders carry a brand engraving inside the ring band. We look for it by its shape, flat on in the main
-// photo and tilted in the angled photos, and paint it out. Server-only (uses sharp).
+// Some supplier renders carry a brand engraving inside the ring band. Two styles exist: a serif one (bands, mostly) and a bold
+// capital-letter one (solitaire rings). We look for each by its shape, flat on in the main photo and tilted in the angled photos,
+// and paint it out. Server-only (uses sharp).
 
-const MW = 107, MH = 15;
-const MASK_HEX = "00000000000001f000000000001e1800000000003f800000381c03e300300000000c3000000703807c600600000001c0040000e0700fcc79f773f3e03e0fc7cfdcce21bd9b38ee7eec03f1dddcfb99cfb3b36319ce1dc03f31931c7019b63e0c6338c3b011e630630e8367c3c58c631870020cc66c61f86ff879b18ce70e006198d98e3b0d83077f79fce1f80fe3bbb9c773b9706fe71f9c1e0178743778ef73ee000000000000000c0000000638000000000000000180000000000000000000000000780000000000";
+type V = "up" | "rot" | "flipv";
+type Mask = { w: number; h: number; v: Record<V, Uint8Array> };
+function makeMask(hex: string, w: number, h: number): Mask {
+  const bytes = Buffer.from(hex, "hex"), base = new Uint8Array(w * h);
+  for (let i = 0; i < w * h; i++) base[i] = (bytes[i >> 3] >> (7 - (i & 7))) & 1;
+  const flip = (rot: boolean, vflip: boolean) => { const m = new Uint8Array(w * h); for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) m[y * w + x] = base[(rot || vflip ? h - 1 - y : y) * w + (rot ? w - 1 - x : x)]; return m; };
+  return { w, h, v: { up: base, rot: flip(true, false), flipv: flip(false, true) } };
+}
+const SERIF = makeMask("00000000000001f000000000001e1800000000003f800000381c03e300300000000c3000000703807c600600000001c0040000e0700fcc79f773f3e03e0fc7cfdcce21bd9b38ee7eec03f1dddcfb99cfb3b36319ce1dc03f31931c7019b63e0c6338c3b011e630630e8367c3c58c631870020cc66c61f86ff879b18ce70e006198d98e3b0d83077f79fce1f80fe3bbb9c773b9706fe71f9c1e0178743778ef73ee000000000000000c0000000638000000000000000180000000000000000000000000780000000000", 107, 15);
+const CAPS = makeMask("f0e0000000000000003000000009c3fbe3838ff10000000000c0007c18e70e0f8e1e3fee1df87f03e7e1c3fc631c383f386c1fb867f1fc3f9fef0e319870f6eee1b070e198e7b0e661bc38c641c3fb9b8ce1c386639807018698e31e070e0e7e61870e198c7e0f061a63b8781c3838f9fe1c3067e1f81e1dd9cfe1f070e3e3effc70c19f87201e7cff39c6e1ffff87b871c38e67180039c3fee799c7ffe00ec0e70ffb8e7018e71c3b8e639c000000039c1fce39fc7f9c707e19800000000000001c1877f0fc6180800000000000000000000000000180000000000000", 126, 14);
+
+type Cfg = { mask: Mask; variants: V[]; minW: number; aspect: [number, number]; hbs: number[]; gap: number; minInk: number; dice: number; dark: number };
 const FLAT_ANCHOR = [0.30, 0.28, 0.70, 0.60];   // x0, y0, x1, y1 as fractions of the picture
 const TILT_ANCHOR = [0.20, 0.45, 0.95, 0.97];
-const FLAT = { dice: 0.55, dark: 55 };          // real engravings score ~0.7+ / ~70; look-alikes (gem edges) stay under ~0.63 / ~46
-const TILT = { dice: 0.56, dark: 40 };          // tilted text is slightly distorted, so the shape match is allowed to be looser (real ~0.6-0.7, look-alikes <= 0.52)
-const ANGLES = [-20, -10, 0, 10, 20, 30];          // the angled renders tilt the text about 20 degrees
+const CAPS_ANCHOR = [0.12, 0.28, 0.88, 0.97];
+const SERIF_FLAT: Cfg = { mask: SERIF, variants: ["up", "rot", "flipv"], minW: 0.07, aspect: [5, 10.5], hbs: [12, 15, 19, 24], gap: 16, minInk: 22, dice: 0.55, dark: 55 }; // real ~0.7 / ~70; look-alikes <= 0.63 / ~46
+const SERIF_TILT: Cfg = { ...SERIF_FLAT, minW: 0.06, dice: 0.56, dark: 40 };                                                                         // tilted text is a bit distorted
+const CAPS_CFG: Cfg = { mask: CAPS, variants: ["up", "rot"], minW: 0.10, aspect: [5.5, 12], hbs: [22, 28, 34, 42], gap: 22, minInk: 30, dice: 0.57, dark: 42 }; // real ~0.6-0.76 / 45-70
+const SERIF_ANGLES = [-20, -10, 0, 10, 20, 30];  // the angled renders tilt the text about 20 degrees
+const CAPS_ANGLES = [0, 10, 20, 30];
 
-function baseMask() {
-  const bytes = Buffer.from(MASK_HEX, "hex"), m = new Uint8Array(MW * MH);
-  for (let i = 0; i < MW * MH; i++) m[i] = (bytes[i >> 3] >> (7 - (i & 7))) & 1;
-  return m;
-}
-const BASE = baseMask();
-type V = "up" | "rot" | "flipv";
-function variant(v: V) {
-  const m = new Uint8Array(MW * MH);
-  for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) {
-    const sx = v === "rot" ? MW - 1 - x : x, sy = v === "rot" || v === "flipv" ? MH - 1 - y : y;
-    m[y * MW + x] = BASE[sy * MW + sx];
-  }
-  return m;
-}
-const VARIANTS: Record<V, Uint8Array> = { up: variant("up"), rot: variant("rot"), flipv: variant("flipv") };
-type Found = { x: number; y: number; w: number; h: number; dice: number };
+type Found = { x: number; y: number; w: number; h: number; dice: number; v: V };
 
 /** Looks for one line of engraved text inside a region (dark = text-like pixels, dev = how much darker than the surroundings). */
-function searchBands(dark: Uint8Array, dev: Float32Array, w: number, h: number, sc: number, minW: number, th: { dice: number; dark: number }): Found | null {
-  const rows = new Int32Array(h);
+function searchBands(dark: Uint8Array, dev: Float32Array, w: number, h: number, sc: number, c: Cfg): Found | null {
+  const { mask } = c, rows = new Int32Array(h);
   for (let y = 0; y < h; y++) { let s = 0; for (let x = 0; x < w; x++) s += dark[y * w + x]; rows[y] = s; }
-  const hbs = [...new Set([12, 15, 19, 24].map(v => Math.max(6, Math.round(v * sc))))];
+  const hbs = [...new Set(c.hbs.map(v => Math.max(6, Math.round(v * sc))))];
   let best: Found | null = null;
   for (const hb of hbs) for (let y = 0; y + hb < h; y += 2) {
     let s = 0; for (let k = 0; k < hb; k++) s += rows[y + k];
-    if (s < 22 * sc * sc) continue;
+    if (s < c.minInk * sc * sc) continue;
     const col = new Uint8Array(w); let any = 0;
     for (let x = 0; x < w; x++) { for (let k = 0; k < hb; k++) if (dark[(y + k) * w + x]) { col[x] = 1; any++; break; } }
     if (any < 10) continue;
     const groups: [number, number][] = []; let st = -1, prev = -1;
-    for (let x = 0; x < w; x++) if (col[x]) { if (st < 0) st = prev = x; else if (x - prev > 16 * sc) { groups.push([st, prev]); st = x; } prev = x; }
+    for (let x = 0; x < w; x++) if (col[x]) { if (st < 0) st = prev = x; else if (x - prev > c.gap * sc) { groups.push([st, prev]); st = x; } prev = x; }
     if (st >= 0) groups.push([st, prev]);
     let g = groups[0], gm = -1;
     for (const gr of groups) { let ink = 0; for (let yy = y; yy < y + hb; yy++) for (let x = gr[0]; x <= gr[1]; x++) ink += dark[yy * w + x]; if (ink > gm) { gm = ink; g = gr; } }
     const bw = g[1] - g[0] + 1; let y0 = -1, y1 = -1;
     for (let yy = y; yy < y + hb; yy++) { let hit = 0; for (let x = g[0]; x <= g[1]; x++) hit |= dark[yy * w + x]; if (hit) { if (y0 < 0) y0 = yy; y1 = yy + 1; } }
     const bh = y1 - y0;
-    if (bh < 4 || bw < minW || bw / bh < 5 || bw / bh > 10.5) continue;
-    for (const v of ["up", "rot", "flipv"] as V[]) {
-      const tpl = VARIANTS[v];
+    if (bh < 4 || bw < c.minW * 1000 * sc || bw / bh < c.aspect[0] || bw / bh > c.aspect[1]) continue;
+    for (const v of c.variants) {
+      const tpl = mask.v[v];
       for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
         const ox = g[0] + dx, oy = y0 + dy;
         if (ox < 0 || oy < 0 || ox + bw > w || oy + bh > h) continue;
         let inter = 0, a = 0, b = 0;
         for (let yy = 0; yy < bh; yy++) for (let xx = 0; xx < bw; xx++) {
-          const t = tpl[Math.min(MH - 1, Math.floor((yy * MH) / bh)) * MW + Math.min(MW - 1, Math.floor((xx * MW) / bw))], d = dark[(oy + yy) * w + ox + xx];
+          const t = tpl[Math.min(mask.h - 1, Math.floor((yy * mask.h) / bh)) * mask.w + Math.min(mask.w - 1, Math.floor((xx * mask.w) / bw))], d = dark[(oy + yy) * w + ox + xx];
           a += d; b += t; inter += d & t;
         }
         const dice = a + b ? (2 * inter) / (a + b) : 0;
-        if (dice >= th.dice && (!best || dice > best.dice)) {
+        if (dice >= c.dice && (!best || dice > best.dice)) {
           let dsum = 0, n = 0;
           for (let yy = 0; yy < bh; yy++) for (let xx = 0; xx < bw; xx++) {
-            const t = tpl[Math.min(MH - 1, Math.floor((yy * MH) / bh)) * MW + Math.min(MW - 1, Math.floor((xx * MW) / bw))];
+            const t = tpl[Math.min(mask.h - 1, Math.floor((yy * mask.h) / bh)) * mask.w + Math.min(mask.w - 1, Math.floor((xx * mask.w) / bw))];
             if (t) { dsum += dev[(oy + yy) * w + ox + xx]; n++; }
           }
-          if (n && dsum / n >= th.dark) best = { x: ox, y: oy, w: bw, h: bh, dice };
+          if (n && dsum / n >= c.dark) best = { x: ox, y: oy, w: bw, h: bh, dice, v };
         }
       }
     }
@@ -73,14 +71,8 @@ function searchBands(dark: Uint8Array, dev: Float32Array, w: number, h: number, 
   return best;
 }
 
-/** Returns a cleaned JPEG, or null when the picture has no engraving. */
-export async function cleanImage(input: Buffer): Promise<Buffer | null> {
-  const sharp = (await import("sharp").catch(() => null))?.default;
-  if (!sharp) return null; // never break the picture: no cleaner available means the original is shown
-  const { data, info } = await sharp(input).removeAlpha().raw().toBuffer({ resolveWithObject: true });
-  const W = info.width, H = info.height, sc = W / 1000;
-  const gray = new Float32Array(W * H);
-  for (let i = 0; i < W * H; i++) gray[i] = 0.299 * data[i * 3] + 0.587 * data[i * 3 + 1] + 0.114 * data[i * 3 + 2];
+/** Per-picture maps: brightness, how much darker than the surroundings, and a dark mask. */
+function maps(gray: Float32Array, W: number, H: number, k: number, thr: number) {
   const I = new Float64Array((W + 1) * (H + 1));
   for (let y = 0; y < H; y++) { let row = 0; for (let x = 0; x < W; x++) { row += gray[y * W + x]; I[(y + 1) * (W + 1) + x + 1] = I[y * (W + 1) + x + 1] + row; } }
   const mean = (x0: number, y0: number, x1: number, y1: number) => {
@@ -88,38 +80,55 @@ export async function cleanImage(input: Buffer): Promise<Buffer | null> {
     const n = (x1 - x0) * (y1 - y0); if (n <= 0) return 255;
     return (I[y1 * (W + 1) + x1] - I[y0 * (W + 1) + x1] - I[y1 * (W + 1) + x0] + I[y0 * (W + 1) + x0]) / n;
   };
-  const dev = new Float32Array(W * H), dark = new Uint8Array(W * H);
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const d = mean(x - 7, y - 7, x + 8, y + 8) - gray[y * W + x]; dev[y * W + x] = d; dark[y * W + x] = d > 25 ? 1 : 0; }
+  const dev = new Float32Array(W * H), dark = new Uint8Array(W * H), r = k >> 1;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const d = mean(x - r, y - r, x + r + 1, y + r + 1) - gray[y * W + x]; dev[y * W + x] = d; dark[y * W + x] = d > thr ? 1 : 0; }
+  return { dev, dark, mean };
+}
 
-  // 1) flat text in the main photo
-  let box: { x: number; y: number; w: number; h: number } | null = null, ang = 0;
-  {
-    const ax0 = Math.round(FLAT_ANCHOR[0] * W), ay0 = Math.round(FLAT_ANCHOR[1] * H), aw = Math.round(FLAT_ANCHOR[2] * W) - ax0, ah = Math.round(FLAT_ANCHOR[3] * H) - ay0;
-    const rd = new Uint8Array(aw * ah), rv = new Float32Array(aw * ah);
-    for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) { rd[y * aw + x] = dark[(ay0 + y) * W + ax0 + x]; rv[y * aw + x] = dev[(ay0 + y) * W + ax0 + x]; }
-    const f = searchBands(rd, rv, aw, ah, sc, 0.07 * W, FLAT);
-    if (f) box = { x: ax0 + f.x, y: ay0 + f.y, w: f.w, h: f.h };
+/** Turns the picture by `ang` degrees around its centre and samples a region of it (the text then lies flat). */
+function sample(dark: Uint8Array, dev: Float32Array, W: number, H: number, ang: number, anchor: number[]) {
+  const a = (ang * Math.PI) / 180, al = Math.cos(a), be = Math.sin(a), cx = W / 2, cy = H / 2;
+  const ax0 = Math.round(anchor[0] * W), ay0 = Math.round(anchor[1] * H), aw = Math.round(anchor[2] * W) - ax0, ah = Math.round(anchor[3] * H) - ay0;
+  const rd = new Uint8Array(aw * ah), rv = new Float32Array(aw * ah);
+  for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
+    const dx = ax0 + x, dy = ay0 + y, sx = Math.round(cx + al * (dx - cx) - be * (dy - cy)), sy = Math.round(cy + be * (dx - cx) + al * (dy - cy));
+    if (sx >= 0 && sy >= 0 && sx < W && sy < H) { rd[y * aw + x] = dark[sy * W + sx]; rv[y * aw + x] = dev[sy * W + sx]; }
   }
-  // 2) tilted text in the angled photos: turn the picture until the text lies flat
-  const cx = W / 2, cy = H / 2;
+  return { rd, rv, aw, ah, ax0, ay0 };
+}
+
+/** Returns a cleaned JPEG, or null when the picture has no engraving. `slot` is the photo's place in the gallery (0 = main). */
+export async function cleanImage(input: Buffer, slot = 0): Promise<Buffer | null> {
+  const sharp = (await import("sharp").catch(() => null))?.default;
+  if (!sharp) return null; // never break the picture: no cleaner available means the original is shown
+  const { data, info } = await sharp(input).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+  const W = info.width, H = info.height, sc = W / 1000, cx = W / 2, cy = H / 2;
+  const gray = new Float32Array(W * H);
+  for (let i = 0; i < W * H; i++) gray[i] = 0.299 * data[i * 3] + 0.587 * data[i * 3 + 1] + 0.114 * data[i * 3 + 2];
+  const { dev, dark, mean } = maps(gray, W, H, 15, 25);
+
+  let box: { x: number; y: number; w: number; h: number } | null = null, ang = 0, guide: { mask: Mask; v: V } | null = null;
+  // 1) serif text, flat, in the main photo
+  { const s = sample(dark, dev, W, H, 0, FLAT_ANCHOR), f = searchBands(s.rd, s.rv, s.aw, s.ah, sc, SERIF_FLAT); if (f) box = { x: s.ax0 + f.x, y: s.ay0 + f.y, w: f.w, h: f.h }; }
+  // 2) serif text, tilted, in the angled photos
   if (!box) {
-    const ax0 = Math.round(TILT_ANCHOR[0] * W), ay0 = Math.round(TILT_ANCHOR[1] * H), aw = Math.round(TILT_ANCHOR[2] * W) - ax0, ah = Math.round(TILT_ANCHOR[3] * H) - ay0;
-    let bestF: Found | null = null, bestA = 0;
-    for (const th of ANGLES) {
-      const a = (th * Math.PI) / 180, al = Math.cos(a), be = Math.sin(a);
-      const rd = new Uint8Array(aw * ah), rv = new Float32Array(aw * ah);
-      for (let y = 0; y < ah; y++) for (let x = 0; x < aw; x++) {
-        const dx = ax0 + x, dy = ay0 + y, sx = Math.round(cx + al * (dx - cx) - be * (dy - cy)), sy = Math.round(cy + be * (dx - cx) + al * (dy - cy));
-        if (sx >= 0 && sy >= 0 && sx < W && sy < H) { rd[y * aw + x] = dark[sy * W + sx]; rv[y * aw + x] = dev[sy * W + sx]; }
-      }
-      const f = searchBands(rd, rv, aw, ah, sc, 0.06 * W, TILT);
-      if (f && (!bestF || f.dice > bestF.dice)) { bestF = { ...f, x: ax0 + f.x, y: ay0 + f.y }; bestA = th; }
-    }
-    if (bestF) { box = { x: bestF.x, y: bestF.y, w: bestF.w, h: bestF.h }; ang = bestA; }
+    let bf: Found | null = null, ba = 0, bo = [0, 0];
+    for (const th of SERIF_ANGLES) { const s = sample(dark, dev, W, H, th, TILT_ANCHOR), f = searchBands(s.rd, s.rv, s.aw, s.ah, sc, SERIF_TILT); if (f && (!bf || f.dice > bf.dice)) { bf = f; ba = th; bo = [s.ax0, s.ay0]; } }
+    if (bf) { box = { x: bo[0] + bf.x, y: bo[1] + bf.y, w: bf.w, h: bf.h }; ang = ba; }
+  }
+  // 3) capital-letter text of the solitaire rings (main photo and the first angled photo), searched on a smaller copy for speed
+  if (!box && slot <= 1) {
+    const sw = 500, sh = Math.max(1, Math.round((H * sw) / W)), f0 = W / sw;
+    const small = await sharp(input).removeAlpha().greyscale().resize(sw, sh, { fit: "fill" }).raw().toBuffer();
+    const g2 = new Float32Array(sw * sh); for (let i = 0; i < sw * sh; i++) g2[i] = small[i];
+    const m2 = maps(g2, sw, sh, 11, 40);
+    let bf: Found | null = null, ba = 0, bo = [0, 0];
+    for (const th of CAPS_ANGLES) { const s = sample(m2.dark, m2.dev, sw, sh, th, CAPS_ANCHOR), f = searchBands(s.rd, s.rv, s.aw, s.ah, sw / 1000, CAPS_CFG); if (f && (!bf || f.dice > bf.dice)) { bf = f; ba = th; bo = [s.ax0, s.ay0]; } }
+    if (bf) { box = { x: (bo[0] + bf.x) * f0, y: (bo[1] + bf.y) * (H / sh), w: bf.w * f0, h: bf.h * (H / sh) }; ang = ba; guide = { mask: CAPS, v: bf.v }; }
   }
   if (!box) return null;
 
-  // erase mask: thin dark strokes (the letters) inside the turned box. Wide dark areas (shadow stripes) and deep shadows are left alone.
+  // erase mask: thin dark strokes (the letters) inside the turned box; wide dark areas and deep shadows are left alone
   const a = (ang * Math.PI) / 180, al = Math.cos(a), be = Math.sin(a), pad = 4;
   const corners = [[box.x - pad, box.y - pad], [box.x + box.w + pad, box.y - pad], [box.x - pad, box.y + box.h + pad], [box.x + box.w + pad, box.y + box.h + pad]]
     .map(([dx, dy]) => [cx + al * (dx - cx) - be * (dy - cy), cy + be * (dx - cx) + al * (dy - cy)]);
@@ -131,18 +140,27 @@ export async function cleanImage(input: Buffer): Promise<Buffer | null> {
   const k = Math.max(3, Math.round(5 * sc)) | 1, hk = k >> 1;
   const morph = (src: Uint8Array, erode: boolean) => {
     const tmp = new Uint8Array(rw * rh), dst = new Uint8Array(rw * rh);
-    for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) { let v = erode ? 1 : 0; for (let i = -hk; i <= hk; i++) { const q = x + i; const b = q < 0 || q >= rw ? (erode ? 0 : 0) : src[y * rw + q]; if (erode) v &= b; else v |= b; } tmp[y * rw + x] = v; }
+    for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) { let v = erode ? 1 : 0; for (let i = -hk; i <= hk; i++) { const q = x + i; const b = q < 0 || q >= rw ? 0 : src[y * rw + q]; if (erode) v &= b; else v |= b; } tmp[y * rw + x] = v; }
     for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) { let v = erode ? 1 : 0; for (let j = -hk; j <= hk; j++) { const q = y + j; const b = q < 0 || q >= rh ? 0 : tmp[q * rw + x]; if (erode) v &= b; else v |= b; } dst[y * rw + x] = v; }
     return dst;
   };
   const blob = morph(morph(dk, true), false);
   const er = new Uint8Array(rw * rh);
   for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) {
-    if (!dk[y * rw + x] || blob[y * rw + x]) continue;
+    if (!dk[y * rw + x] || (!guide && blob[y * rw + x])) continue; // plain mode: thin strokes only; guided mode: the template decides
     const px = rx + x, py = ry + y;
     if (mean(px - 7, py - 7, px + 8, py + 8) <= 100) continue; // deep shadow: leave it
     const dx = cx + al * (px - cx) + be * (py - cy), dy = cy - be * (px - cx) + al * (py - cy);
-    if (dx >= box.x - pad && dx < box.x + box.w + pad && dy >= box.y - pad && dy < box.y + box.h + pad) er[y * rw + x] = 1;
+    if (!(dx >= box.x - pad && dx < box.x + box.w + pad && dy >= box.y - pad && dy < box.y + box.h + pad)) continue;
+    if (guide) { // capital text can sit against gems: only paint where a letter of the template is (a little grown)
+      let near = 0;
+      for (let j = -3; j <= 3 && !near; j += 3) for (let i = -3; i <= 3 && !near; i += 3) {
+        const ux = Math.floor(((dx + i - box.x) / box.w) * guide.mask.w), uy = Math.floor(((dy + j - box.y) / box.h) * guide.mask.h);
+        if (ux >= 0 && uy >= 0 && ux < guide.mask.w && uy < guide.mask.h && guide.mask.v[guide.v][uy * guide.mask.w + ux]) near = 1;
+      }
+      if (!near) continue;
+    }
+    er[y * rw + x] = 1;
   }
   const er2 = new Uint8Array(rw * rh);
   for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) if (er[y * rw + x]) for (let j = -2; j <= 2; j++) for (let i = -2; i <= 2; i++) {

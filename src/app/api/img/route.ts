@@ -13,7 +13,8 @@ export async function GET(req: NextRequest) {
     const r = await fetch(src, { headers: { Accept: "image/webp,image/jpeg" }, next: { revalidate: 86400 } });
     if (!r.ok) return NextResponse.redirect(src, 302);
     const buf = Buffer.from(await r.arrayBuffer());
-    const cleaned = await cleanImage(buf).catch(() => null);
+    const slot = Math.max(0, Math.min(9, Number(req.nextUrl.searchParams.get("s")) || 0));
+    const cleaned = await cleanImage(buf, slot).catch(() => null);
     const headers = { "Cache-Control": "public, max-age=31536000, s-maxage=31536000, immutable" };
     if (cleaned) return new NextResponse(new Uint8Array(cleaned), { headers: { ...headers, "Content-Type": "image/jpeg" } });
     return new NextResponse(new Uint8Array(buf), { headers: { ...headers, "Content-Type": r.headers.get("content-type") || "image/webp" } });

@@ -250,6 +250,10 @@ export const categories: CategoryPage[] = [
         "label": "Marquise"
       },
       {
+        "img": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_010158_3db43619-8be8-481f-bb26-770de75f8188.png",
+        "label": "Asscher"
+      },
+      {
         "img": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_010327_dc94d6a7-d9a3-453f-9786-940950025ecc.png",
         "label": "Heart"
       }

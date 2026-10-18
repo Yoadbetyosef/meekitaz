@@ -1,5 +1,5 @@
 // Engagement-ring filters. Shape and style come from the tags in Shopify; metal is read from the title (the tags are not reliable for it).
-export const RING_SHAPES = ["Round", "Oval", "Cushion", "Emerald", "Pear", "Princess", "Radiant", "Marquise", "Heart"];
+export const RING_SHAPES = ["Round", "Oval", "Cushion", "Emerald", "Pear", "Princess", "Radiant", "Marquise", "Asscher", "Heart"];
 export const RING_METALS: { label: string; phrase: string; color: string }[] = [
   { label: "Rose gold", phrase: "'Rose gold'", color: "#E3AE98" },
   { label: "Yellow gold", phrase: "'Yellow gold'", color: "#E6C56B" },
