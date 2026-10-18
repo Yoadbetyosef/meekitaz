@@ -1,3 +1,4 @@
+import { arrivalLabel } from "@/lib/arrival";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { addCartLines, addToCart, createCart, createCartWithLines, getCart, removeCartLine, removeCartLines, shopifyConfigured, updateCartLine, updateLineAttributes, type Cart } from "@/lib/shopify";
@@ -49,8 +50,9 @@ export async function POST(req: Request) {
         const karat = ["", "10K", "14K", "18K"].includes(String(r.karat || "")) ? String(r.karat || "") : "";
         const settingVariant = await ensureKaratVariant(variantId, karat);
         const build = crypto.randomUUID().slice(0, 8);
-        lines.push({ merchandiseId: settingVariant, quantity: 1, attributes: [{ key: "Build", value: build }, { key: "Diamond", value: note }, { key: "Ring size", value: size }, ...(karat ? [{ key: "Gold", value: karat }] : [])] });
-        lines.push({ merchandiseId: stoneVariant, quantity: 1, attributes: [{ key: "Build", value: build }, { key: "Ring size", value: size }] });
+        const arrives = { key: "Arrives by", value: arrivalLabel() };
+        lines.push({ merchandiseId: settingVariant, quantity: 1, attributes: [{ key: "Build", value: build }, { key: "Diamond", value: note }, { key: "Ring size", value: size }, ...(karat ? [{ key: "Gold", value: karat }] : []), arrives] });
+        lines.push({ merchandiseId: stoneVariant, quantity: 1, attributes: [{ key: "Build", value: build }, { key: "Ring size", value: size }, arrives] });
       }
       cart = id ? await addCartLines(id, lines) : null;
       if (!cart) cart = await createCartWithLines(lines);

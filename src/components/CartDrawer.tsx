@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import type { CartLine } from "@/lib/shopify";
 import { clearSetting, clearStone, saveSetting, saveStone } from "@/lib/setting";
 import { useCart } from "./CartProvider";
+import { arrivalLabel, installments } from "@/lib/arrival";
 
 const SIZES = Array.from({ length: 21 }, (_, i) => 3 + i * 0.5);
 const attr = (l: CartLine, k: string) => l.attributes.find(a => a.key === k)?.value;
@@ -130,6 +131,7 @@ export default function CartDrawer() {
               <div><span>Subtotal</span><span>{money(subtotal, cur)}</span></div>
               {(cart?.savings ?? 0) > 0 && <div className="save"><span>You save</span><span>−{money(cart!.savings, cur)}</span></div>}
               <div><span>Shipping</span><span>Free · insured</span></div>
+              <div className="cd-arr"><span>Arrives by</span><span>{arrivalLabel()}</span></div>
               <div><small>Taxes calculated at checkout</small></div>
               <div className="t"><span>Total</span><span>{money(subtotal, cur)}</span></div>
             </div>
@@ -137,7 +139,15 @@ export default function CartDrawer() {
             {needSize ? <button className="cd-co" disabled>Select your ring size to continue</button>
               : rings.length > 0 ? <button className="cd-co" disabled={busy} onClick={checkout}>{busy ? "One moment…" : "Checkout"}</button>
               : <a className="cd-co" href={cart!.checkoutUrl}>Checkout</a>}
-            <p className="cd-pay">Secure checkout with Shop Pay, Apple Pay and cards</p>
+            {installments(subtotal) && <p className="cd-inst">{installments(subtotal)}</p>}
+            <div className="cd-wallets" aria-label="Ways to pay">
+              <small>Pay with</small>
+              <i className="w-apple" title="Apple Pay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.5 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9s-1.9-.9-3.2-.8c-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.3 1.2 9.7.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.6-1-2.6-3.9zM14 5.6c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.2-.6 2.8-1.4z"/></svg>Pay</i>
+              <i className="w-gpay" title="Google Pay">G Pay</i>
+              <i className="w-shop" title="Shop Pay">shop</i>
+              <i className="w-pp" title="PayPal">PayPal</i>
+              <i className="w-card" title="Cards">Visa · MC · Amex</i>
+            </div>
             <Trust />
           </div>
         )}
