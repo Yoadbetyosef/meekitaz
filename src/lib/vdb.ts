@@ -39,6 +39,7 @@ function build(q: DiamondQuery) {
   return p.join("&");
 }
 
+export async function vdbRaw(qs: string) { return vdb(qs, 0); }
 async function vdb(qs: string, revalidate = 300) {
   const res = await fetch(`${BASE}/v2/diamonds?${qs}`, {
     headers: { Authorization: `Token token=${process.env.VDB_ACCESS_TOKEN}, api_key=${process.env.VDB_API_KEY}` },
@@ -115,7 +116,23 @@ const FANCY_QS = "type=Lab_grown_Diamond&markup_mode=true&with_images=true&total
 const fancyPage = (n: number) => vdb(`${FANCY_QS}&page_number=${n}`, 3600);
 const rawFancy = (d: Record<string, unknown>) => !!(d.fancy_color_dominant_color || d.fancy_color_intensity);
 
+const FANCY_QS_DESC = FANCY_QS.replace("preference[]=color%20ASC", "preference[]=color%20DESC");
 async function harvestFancy(): Promise<Diamond[]> {
+  // Fast path: with colour sorted descending the stones without a letter colour (the fancy ones) may come first; read forward until they stop.
+  try {
+    const first = await vdb(`${FANCY_QS_DESC}&page_number=1`, 3600);
+    if (first.diamonds.some(rawFancy)) {
+      const out = new Map<string, Diamond>();
+      let n = 1, page = first;
+      for (; n <= 60; n++) {
+        if (n > 1) page = await vdb(`${FANCY_QS_DESC}&page_number=${n}`, 3600);
+        let hit = 0;
+        page.diamonds.forEach(x => { if (!rawFancy(x)) return; hit++; const d = norm(x); if (d) out.set(`${d.vendor}-${d.stock}`, d); });
+        if (hit === 0 || page.diamonds.length < 50) break;
+      }
+      if (out.size) return [...out.values()];
+    }
+  } catch { /* fall back to the tail scan */ }
   const head = await fancyPage(1);
   const last = Math.ceil((head.total_diamonds_found || 0) / 50);
   const out = new Map<string, Diamond>();

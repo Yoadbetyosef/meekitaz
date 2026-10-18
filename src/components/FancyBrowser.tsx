@@ -64,13 +64,14 @@ export default function FancyBrowser({ embedded = false }: { embedded?: boolean 
     return q.toString();
   }, [f, sort, color]);
 
+  const [tries, setTries] = useState(0);
   useEffect(() => {
     const ac = new AbortController();
     const t = setTimeout(async () => {
       try {
         const r = await fetch(`/api/fancy?${qs(1)}`, { signal: ac.signal });
         const j = await r.json();
-        if (!r.ok) throw new Error("x");
+        if (!r.ok) { if (tries < 4) { setTimeout(() => setTries(x => x + 1), 6000); return; } throw new Error("x"); }
         if (j.configured === false) { setState("off"); return; }
         let all: Item[] = j.items, pg = 1;
         const rs = restore.current; restore.current = null;
@@ -83,7 +84,7 @@ export default function FancyBrowser({ embedded = false }: { embedded?: boolean 
       } catch (e) { if ((e as Error)?.name !== "AbortError") setState("error"); }
     }, 350);
     return () => { clearTimeout(t); ac.abort(); };
-  }, [qs]);
+  }, [qs, tries]);
 
   async function more() {
     setBusy(true);
@@ -142,7 +143,7 @@ export default function FancyBrowser({ embedded = false }: { embedded?: boolean 
               </select>
             </label>
           </div>
-          {state === "loading" && <p className="dmsg">Finding colors… the first visit can take a few seconds.</p>}
+          {state === "loading" && <p className="dmsg">{tries ? "Still gathering the coloured stones — this can take a minute the first time. Hang on…" : "Finding colors… the first visit can take a few seconds."}</p>}
           {state === "off" && <p className="dmsg">Our diamond inventory is connecting. Please check back shortly.</p>}
           {state === "error" && <p className="dmsg">We couldn&apos;t load fancy colors just now. Please refresh in a moment.</p>}
           {state === "empty" && <p className="dmsg">No diamonds match these filters. Try widening carat, price or intensity.</p>}
