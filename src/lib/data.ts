@@ -715,3 +715,6 @@ categoryTiles.push({ href: "/gemstones", img: "https://d8j0ntlcm91z4.cloudfront.
 categories.push({ slug: "fancy-colors", nav: "Fancy Colors", title: "Fancy Colors.", small: "Pink, blue, yellow, green. Made, not mined.", desktop: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_195539_283b18e9-c24f-4489-8c0e-78029bc70640.png", heroPos: "50% 42%", mobile: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_185809_3b6569bf-ee2a-4de2-9f11-a3ac8dbe48d9.png", styleHead: null, styles: [], items: [], filters: false, special: "fancy" });
 menuTiles.push({ href: "/fancy-colors", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_183229_bc44444a-3812-4069-96a7-21ba5e5f5758.png", label: "Fancy Colors", sub: "Pink, blue, yellow, green.", pos: "50% 40%", posM: "55% 40%" });
 categoryTiles.push({ href: "/fancy-colors", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_123005_25e23f4c-46fa-4d8b-97fd-629bc435c121.png", n: "08", title: "Fancy Colors", sub: "Pink, blue, yellow, green." });
+
+// Home: the "NEW · Fancy colors" block (portrait on the page blue).
+export const newFancy = { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_203726_cd9b4bcd-179d-48aa-a9ed-e1c59851c9bb.png" };

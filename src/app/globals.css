@@ -497,3 +497,16 @@ button.cd-co{border:0;font-family:inherit;cursor:pointer}
 .mk-col.on span{border-color:var(--ink);box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--ink)}
 .mk-col.off{opacity:.3;pointer-events:none}
 .mk-hint{font:300 12px/1.5 var(--body);opacity:.6;margin:10px 0 0}
+/* ---- Home: NEW · Fancy colors ---- */
+.nf{padding-top:0;--butter:#F7E9A8}
+.nf-card{position:relative;background:var(--butter);border-radius:32px;display:grid;grid-template-columns:1fr 1fr;align-items:stretch}
+.nf-txt{padding:clamp(28px,4.5vw,72px)}
+.nf-h{font:400 clamp(48px,7vw,112px)/0.95 var(--display);text-transform:uppercase;margin:0 0 18px}
+.nf-sub{font:italic 400 clamp(17px,1.5vw,22px)/1.4 var(--sub);opacity:.85;margin:0 0 26px;max-width:36ch}
+.nf-cta{background:var(--red);color:#fff}
+.nf-img{position:relative;min-height:100%;overflow:hidden;border-radius:0 32px 32px 0}
+.nf-img img{object-fit:cover;object-position:50% 30%}
+.nf-bug{position:absolute;z-index:3;top:-30px;right:-22px;width:96px;height:96px;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--ink);border-radius:50%;box-shadow:0 10px 30px rgba(0,0,0,.12);font:800 15px var(--body);letter-spacing:.2em;animation:nf-bob 3.2s ease-in-out infinite}
+@keyframes nf-bob{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-8px) rotate(2deg)}}
+@media(prefers-reduced-motion:reduce){.nf-bug{animation:none}}
+@media(max-width:767px){.nf-card{grid-template-columns:1fr;border-radius:22px}.nf-txt{text-align:center;order:2;padding:24px 18px 30px}.nf-h{font-size:52px}.nf-sub{margin:0 auto 20px}.nf-img{aspect-ratio:4/5;min-height:0;border-radius:22px 22px 0 0}.nf-bug{top:-18px;right:-10px;width:74px;height:74px;font-size:12px}}
