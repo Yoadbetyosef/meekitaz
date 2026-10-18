@@ -49,6 +49,7 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 .hs.on{opacity:1}
 .hs img{width:100%;height:100%;object-fit:cover}
 .heroc{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:0 5vw;color:#fff}
+@media(min-width:768px){.heroc{justify-content:flex-end;padding-bottom:7vh}.heroc h1{min-height:2.35em;display:flex;flex-direction:column;justify-content:flex-end}}
 .heroc h1{font-size:min(7vw,11vh);line-height:.95;text-transform:uppercase;text-shadow:0 2px 24px rgba(0,0,0,.35)}
 .heroc h1 small{display:block;font:500 .42em var(--sub);font-style:italic;text-transform:none;color:var(--blue);margin-bottom:.2em}
 .heroc a{text-decoration:none;color:inherit}
