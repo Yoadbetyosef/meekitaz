@@ -5,20 +5,23 @@ export const slides = [
     "big": "Necklaces.",
     "href": "/necklaces",
     "desktop": "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/082bf441-b04d-45cc-a1ac-761c438d956a.jpg",
+    "pos": "50% 50%",
     "mobile": "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/2021ee66-0723-44fe-8e3a-1481a4879706.jpg"
   },
   {
     "small": "Stacked for breakfast.",
     "big": "The Tennis.",
     "href": "/bracelets",
-    "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_182450_0e886ba9-0999-4e85-a109-a1b538095f0f.png",
+    "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_043931_218479e4-4e43-42c6-9725-c85863ab6bd7.png",
+    "pos": "50% 0%",
     "mobile": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_182456_89c5d9cf-3e76-454f-b1b6-eb9651974034.png"
   },
   {
     "small": "A ball cap. Two carats.",
     "big": "The Studs.",
     "href": "/earrings",
-    "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_174420_afd58ba5-49a1-4c9a-9f84-584a028d3547.png",
+    "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_043934_423de0fb-fadc-40fa-9bf5-35f1862d99a7.png",
+    "pos": "50% 8%",
     "mobile": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_174423_f888444f-2c09-427a-ab8c-df7423be2d03.png"
   },
   {
@@ -26,11 +29,12 @@ export const slides = [
     "big": "Engagement rings.",
     "href": "/engagement-rings",
     "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_181453_34510dca-30a9-44f1-baaa-4a5e64d42d3f.png",
+    "pos": "50% 50%",
     "mobile": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_182308_e428b82a-9ee0-4ac7-b21f-f8ddd7a7f75b.png"
   }
 ] as const;
 
-export const menuTiles: { href: string; img: string; label: string; pos?: string }[] = [
+export const menuTiles: { href: string; img: string; label: string; pos?: string; posM?: string; sub?: string }[] = [
   {
     "href": "/engagement-rings",
     "img": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_224958_f9640324-0cb1-4393-b5a6-2bf07b91b7a1.png",
@@ -704,5 +708,5 @@ categories.push({
   ],
   "filters": false
 });
-menuTiles.push({ href: "/gemstones", img: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/14c68a3e-cb6d-4058-970d-2d430decbe93.jpg", label: "Gemstones", pos: "50% 30%" });
+menuTiles.push({ href: "/gemstones", img: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/46ffdbf9-2b79-464a-b045-41824c7d0aac.jpg", label: "Gemstones", sub: "Color, worn lightly.", pos: "50% 38%", posM: "78% 40%" });
 categoryTiles.push({ href: "/gemstones", img: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/14c68a3e-cb6d-4058-970d-2d430decbe93.jpg", n: "07", title: "Gemstones", sub: "Color, worn lightly." });

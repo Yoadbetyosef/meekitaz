@@ -151,7 +151,7 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 
 /* private clients */
 .pc-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
-.pc-img{aspect-ratio:4/5;border-radius:22px;overflow:hidden;background:#3a0a0c}
+.pc-img{position:relative;aspect-ratio:4/5;border-radius:22px;overflow:hidden;background:#3a0a0c}
 .pc-img img{width:100%;height:100%;object-fit:cover}
 .pc-body h2{font-size:clamp(30px,3.6vw,48px);line-height:1.05;margin:0 0 14px}
 .pc-body>p{font:300 16px/1.65 var(--body);opacity:.88;margin:0 0 22px;max-width:460px}
@@ -272,6 +272,10 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 .trust{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;text-align:center}
 .trust div{font:600 9px/1.4 var(--body);letter-spacing:.14em;text-transform:uppercase;opacity:.75}.trust svg{display:block;margin:0 auto 6px;width:18px;height:18px}
 
-/* seventh menu tile (Gemstones) as a full-width banner */
-.mgrid a:nth-child(7){grid-column:1/-1;aspect-ratio:4/1}
-@media(max-width:767px){.mgrid a:nth-child(7){aspect-ratio:2/1}}
+/* seventh menu tile (Gemstones): wide banner using the landscape photo */
+.mgrid a img{object-position:var(--pos,50% 50%)}
+.mgrid a span small{display:block;font:500 clamp(15px,1.5vw,22px) var(--sub);font-style:italic;text-transform:none;letter-spacing:0;color:var(--blue);margin-bottom:6px}
+.mgrid a:nth-child(7){grid-column:1/-1;aspect-ratio:3/1;padding:26px 30px}
+.mgrid a:nth-child(7)::before{background:linear-gradient(90deg,rgba(50,8,18,.62),rgba(50,8,18,0) 58%)}
+.mgrid a:nth-child(7) span{font-size:clamp(26px,3vw,46px)}
+@media(max-width:767px){.mgrid a img{object-position:var(--pos-m,var(--pos,50% 50%))}.mgrid a:nth-child(7){aspect-ratio:2/1;padding:14px}.mgrid a:nth-child(7) span{font-size:22px}}

@@ -30,9 +30,9 @@ export default function Nav() {
         <div className="menu-in">
           <div className="mgrid">
             {menuTiles.map((t, i) => (
-              <Link key={t.href} href={t.href} style={{ transitionDelay: `${80 + i * 60}ms` }}>
-                {open && <Image src={t.img} alt="" fill sizes="(max-width:767px) 50vw, 33vw" style={t.pos ? { objectPosition: t.pos } : undefined} />}
-                <span>{t.label}</span>
+              <Link key={t.href} href={t.href} style={{ transitionDelay: `${80 + i * 60}ms`, "--pos": t.pos, "--pos-m": t.posM } as React.CSSProperties}>
+                {open && <Image src={t.img} alt="" fill sizes="(max-width:767px) 50vw, 33vw" />}
+                <span>{t.sub && <small>{t.sub}</small>}{t.label}</span>
               </Link>
             ))}
           </div>

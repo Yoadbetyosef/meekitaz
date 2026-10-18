@@ -30,7 +30,7 @@ export default function Hero() {
         <div key={k} className={`hs${k === i ? " on" : ""}`}>
           <picture>
             <source media="(max-width:767px)" srcSet={sl.mobile} />
-            <Image src={sl.desktop} alt="" fill priority={k === 0} sizes="100vw" quality={78} style={{ objectFit: "cover" }} />
+            <Image src={sl.desktop} alt="" fill priority={k === 0} sizes="100vw" quality={78} style={{ objectFit: "cover", objectPosition: sl.pos }} />
           </picture>
         </div>
       ))}
