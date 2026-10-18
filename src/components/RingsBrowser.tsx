@@ -10,7 +10,8 @@ import { RING_METALS, RING_PRICE, RING_SHAPES, RING_STYLES } from "@/lib/ringfil
 const usd = (n: number | string, cur = "USD") => new Intl.NumberFormat("en-US", { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(+n);
 const csv = (v: string | null) => (v ? v.split(",").filter(Boolean) : []);
 const Gem = () => <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M12 8h24l8 12-20 22L4 20z" /><path d="M4 20h40M12 8l12 34M36 8L24 42M18 20l6-12 6 12" /></svg>;
-type Pop = "metal" | "shape" | "style" | "price" | null;
+type Pop = "metal" | "shape" | "style" | "price" | "color" | null;
+const STONE_COLORS = [{ label: "Yellow", color: "#e9c84a" }, { label: "Pink", color: "#ef8fb0" }, { label: "Blue", color: "#6fa3e6" }, { label: "Green", color: "#8fcf9a" }];
 
 export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle = "engagement-rings", fancy }: { initial: Product[]; hasNext: boolean; cursor: string | null; handle?: string; fancy?: string }) {
   const router = useRouter(), path = usePathname(), sp = useSearchParams();
@@ -82,6 +83,9 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
     <section className="grid-wrap" id={fancy ? "settings" : "results"} aria-label="The collection">
       <div className="wrap" ref={wrap}>
         <div className="rf-bar">
+          {fancy && chip("color", "Stone", sp.get("color") || "Any", <div className="rf-sws">{STONE_COLORS.map(c => (
+            <button key={c.label} type="button" className="rf-swl" aria-pressed={sp.get("color") === c.label} onClick={() => set({ color: sp.get("color") === c.label ? null : c.label })}>
+              <span className={`rf-sw${sp.get("color") === c.label ? " on" : ""}`}><i style={{ background: c.color }} /></span>{c.label}</button>))}</div>)}
           {chip("metal", "Metal", lab(metals), <div className="rf-sws">{RING_METALS.map(m => (
             <button key={m.label} type="button" className="rf-swl" aria-pressed={metals.includes(m.label)} onClick={() => toggle("metal", metals, m.label)}>
               <span className={`rf-sw${metals.includes(m.label) ? " on" : ""}`}><i style={{ background: m.color }} /></span>{m.label.replace(" gold", "")}</button>))}</div>)}

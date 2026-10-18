@@ -48,7 +48,8 @@ function Material({ ns, metals, metal, karat, onMetal, onKarat }: { ns: string; 
     </>
   );
 }
-export type RingProp = { family: RingVariant[]; shapes: { img: string; label: string }[]; ns: string };
+export type RingProp = { family: RingVariant[]; shapes: { img: string; label: string }[]; ns: string; color?: string; palette?: { color: string; items: { handle: string; shape: string; metal: string }[] }[] };
+const STONE: Record<string, string> = { "": "#f3f3f1", Yellow: "#e9c84a", Pink: "#ef8fb0", Blue: "#6fa3e6", Green: "#8fcf9a" };
 const Ic = ({ d }: { d: string }) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>;
 const TRUST = [
   ["M12 3l8 4v5c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V7zM8.5 12l2.5 2.5L15.5 10", "IGI / GIA certified diamonds"],
@@ -136,6 +137,18 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
 
             {ring && cv && (
               <>
+                {(ring.palette?.length ?? 0) > 0 && (<>
+                  <span className="pp-lbl">Stone colour · {ring.color || "White"}</span>
+                  <div className="rp-colors">
+                    {[{ color: ring.color || "", items: [] as { handle: string; shape: string; metal: string }[] }, ...(ring.palette || [])].map(pc => {
+                      const on = pc.color === (ring.color || "");
+                      const hit = on ? null : pc.items.find(v => v.shape === cv.shape && v.metal === cv.metal) || pc.items.find(v => v.shape === cv.shape) || pc.items[0];
+                      return (
+                        <button key={pc.color || "white"} type="button" className={`rp-mt${on ? " on" : ""}`} aria-pressed={on} disabled={!on && !hit} onClick={() => hit && router.push(`/products/${hit.handle}`)}>
+                          <span className="rp-sw"><i style={{ background: STONE[pc.color] }} /></span>{pc.color || "White"}</button>);
+                    })}
+                  </div>
+                </>)}
                 <span className="pp-lbl">Shape · {cv.shape}</span>
                 <div className="rp-shapes">{shapesHere.map(sh => (
                   <button key={sh.label} type="button" className={`rp-sh${cv.shape === sh.label ? " on" : ""}`} aria-pressed={cv.shape === sh.label} onClick={() => pickRing(sh.label, cv.metal)}>
