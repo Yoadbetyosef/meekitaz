@@ -7,11 +7,12 @@ const METAL_ORDER = ["White gold", "Yellow gold", "Rose gold", "Platinum", "Silv
 export function collapseDesigns(list: Product[]): Product[] {
   const out: Product[] = [], byCode = new Map<string, Product>();
   for (const p of list) {
-    const key = p.code || p.id;
+    // rings: the same design is sold in every shape, and a shape is its own card
+    const key = p.code ? `${p.code}|${p.shape || ""}` : p.id;
     const have = byCode.get(key);
     const v = { metal: p.metal || "", handle: p.handle };
-    if (!have) { const card = { ...p, variants: [v, ...(p.variants || []).filter(x => x.handle !== p.handle)] }; byCode.set(key, card); out.push(card); continue; }
-    for (const x of [v, ...(p.variants || [])]) if (!have.variants!.some(y => y.handle === x.handle)) have.variants!.push(x);
+    if (!have) { const card = { ...p, variants: [v, ...(p.variants || []).filter(x => x.metal !== v.metal)] }; byCode.set(key, card); out.push(card); continue; }
+    for (const x of [v, ...(p.variants || [])]) if (x.metal && !have.variants!.some(y => y.metal === x.metal)) have.variants!.push(x);
   }
   for (const c of out) c.variants!.sort((a, b) => METAL_ORDER.indexOf(a.metal) - METAL_ORDER.indexOf(b.metal));
   return out;
