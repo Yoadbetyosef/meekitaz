@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async headers() {
+    // our own files (video, poster, logo shapes): the browser may keep them for a day and refresh in the background
+    const c = [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }];
+    return [{ source: "/media/:path*", headers: c }, { source: "/press/:path*", headers: c }];
+  },
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "d8j0ntlcm91z4.cloudfront.net" },

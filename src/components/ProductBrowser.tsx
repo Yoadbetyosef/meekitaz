@@ -1,5 +1,5 @@
 "use client";
-import { collapseDesigns } from "@/lib/designs";
+import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
 import { useState } from "react";
 import type { Product } from "@/lib/shopify";
@@ -15,9 +15,9 @@ export default function ProductBrowser({ handle, style = "", initial, hasNext: h
   async function load(reset: boolean, s = sort) {
     setBusy(true);
     try {
-      const q = new URLSearchParams({ handle, sort: s }); if (style) q.set("style", style); if (!reset && cursor) q.set("after", cursor);
-      const r = await fetch(`/api/products?${q}`); const j = await r.json();
-      if (r.ok) { setItems(x => collapseDesigns(reset ? j.products : x.concat(j.products))); setHasNext(j.hasNext); setCursor(j.cursor); }
+      const page = (after: string | null) => { const q = new URLSearchParams({ handle, sort: s }); if (style) q.set("style", style); if (after) q.set("after", after); return fetch(`/api/products?${q}`).then(r => (r.ok ? r.json() : null)); };
+      const r = await fillPage(reset ? [] : items, reset ? { cursor: null, hasNext: true } : { cursor, hasNext }, page);
+      if (!(reset && r.failed && !r.items.length)) { setItems(r.items); setCursor(r.cursor); setHasNext(r.hasNext); }
     } finally { setBusy(false); }
   }
   return (

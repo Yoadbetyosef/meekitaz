@@ -7,7 +7,7 @@ export default function Film() {
   const [sound, setSound] = useState(false);
   useEffect(() => {
     const el = v.current; if (!el) return;
-    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) el.play().catch(() => {}); else el.pause(); }), { threshold: .25 });
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) el.play().catch(() => {}); else el.pause(); }), { threshold: 0.25, rootMargin: "300px 0px" }); // the video is fetched only when the section is near the screen
     io.observe(el); return () => io.disconnect();
   }, []);
   return (
@@ -19,7 +19,7 @@ export default function Film() {
           <Link href="/engagement-rings" className="pill">Shop engagement rings</Link>
         </div>
         <div className="mkfilm-vid">
-        <video ref={v} playsInline muted loop autoPlay preload="none" poster="/media/meekitaz-film-poster.jpg" onClick={() => { const el = v.current!; el.paused ? el.play() : el.pause(); }}>
+        <video ref={v} playsInline muted loop preload="none" poster="/media/meekitaz-film-poster.jpg" onClick={() => { const el = v.current!; el.paused ? el.play() : el.pause(); }}>
           <source src="/media/meekitaz-film.mp4" type="video/mp4" />
         </video>
         <div className="mkctl">

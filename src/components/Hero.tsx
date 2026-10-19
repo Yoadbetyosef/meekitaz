@@ -1,12 +1,24 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { slides, faces } from "@/lib/data";
 import Stars from "./Stars";
 
+// The mobile photo goes through the same image optimiser as the desktop one (a plain <source> would download the original multi-megabyte file on a phone).
+const optimised = (src: string) => getImageProps({ src, alt: "", fill: true, sizes: "100vw", quality: 78 }).props;
+
 export default function Hero() {
   const [i, setI] = useState(0);
+  // Only the first slide is loaded with the page; the next one follows a moment after it has painted, then each slide one step ahead of the carousel.
+  const [seen, setSeen] = useState(0);
+  useEffect(() => {
+    const go = () => setTimeout(() => setSeen(x => Math.max(x, 1)), 700);
+    if (document.readyState === "complete") { const t = go(); return () => clearTimeout(t); }
+    let t: ReturnType<typeof setTimeout>; const on = () => { t = go(); }; window.addEventListener("load", on);
+    return () => { window.removeEventListener("load", on); clearTimeout(t); };
+  }, []);
+  useEffect(() => { if (i > 0) setSeen(x => Math.max(x, Math.min(slides.length - 1, i + 1))); }, [i]);
   const wordRef = useRef<HTMLSpanElement>(null);
   const secRef = useRef<HTMLElement>(null), blockRef = useRef<HTMLDivElement>(null);
   // On phones the photo fills whatever is left above the text block, so the block's height is measured into a CSS variable.
@@ -33,12 +45,17 @@ export default function Hero() {
   const s = slides[i];
   return (
     <section className="hero" id="hero" aria-label="Hero" ref={secRef}>
+      {/* the first photo is fetched first and only the one for this screen size */}
+      <link rel="preload" as="image" href={optimised(slides[0].mobile).src} imageSrcSet={optimised(slides[0].mobile).srcSet} imageSizes="100vw" media="(max-width:767px)" fetchPriority="high" />
+      <link rel="preload" as="image" href={optimised(slides[0].desktop).src} imageSrcSet={optimised(slides[0].desktop).srcSet} imageSizes="100vw" media="(min-width:768px)" fetchPriority="high" />
       {slides.map((sl, k) => (
         <div key={k} className={`hs${k === i ? " on" : ""}`} style={{ "--pos-m": (sl as { posM?: string }).posM || sl.pos, "--zoom-m": (sl as { zoomM?: number }).zoomM || 1 } as React.CSSProperties}>
-          <picture>
-            <source media="(max-width:767px)" srcSet={sl.mobile} />
-            <Image src={sl.desktop} alt="" fill priority={k === 0} sizes="100vw" quality={78} style={{ objectFit: "cover", objectPosition: sl.pos }} />
-          </picture>
+          {k <= seen && (
+            <picture>
+              <source media="(max-width:767px)" srcSet={optimised(sl.mobile).srcSet} sizes="100vw" />
+              <Image src={sl.desktop} alt="" fill loading={k === 0 ? "eager" : "lazy"} fetchPriority={k === 0 ? "high" : "auto"} sizes="100vw" quality={78} style={{ objectFit: "cover", objectPosition: sl.pos }} />
+            </picture>
+          )}
         </div>
       ))}
       <div className="heroc">

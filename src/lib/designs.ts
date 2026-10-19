@@ -24,3 +24,19 @@ export function collapseDesigns(list: Product[]): Product[] {
   return out;
 }
 export const shownMetals = (p: Product) => (p.variants || []).filter(v => GOLD_SHOWN.includes(v.metal));
+
+/** "Show more" must add a full page of NEW designs. A fetch returns ~96 products, but most of them are other metals of designs already on screen
+ *  and fold into their cards, so one fetch could add only 2-3 new cards. Keep fetching until enough new designs have arrived (or the list ends). */
+export type ApiPage = { products?: Product[]; hasNext?: boolean; cursor?: string | null } | null;
+export async function fillPage(base: Product[], start: { cursor: string | null; hasNext: boolean }, fetchPage: (after: string | null) => Promise<ApiPage>, want = 24, maxFetches = 8) {
+  let items = base, cursor = start.cursor, hasNext = start.hasNext, n = 0, failed = false;
+  while (hasNext && items.length - base.length < want && n < maxFetches) {
+    n++;
+    let j: ApiPage = null;
+    try { j = await fetchPage(cursor); } catch { j = null; }
+    if (!j || !j.products) { failed = true; break; }
+    items = collapseDesigns(items.concat(j.products)); cursor = j.cursor ?? null; hasNext = !!j.hasNext;
+  }
+  return { items, cursor, hasNext, failed };
+}
+

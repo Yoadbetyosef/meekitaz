@@ -32,8 +32,9 @@ export default function NewFancy() {
       });
       d1.current?.classList.toggle("on", idx === 0); d2.current?.classList.toggle("on", idx === 1); d3.current?.classList.toggle("on", idx === 2);
     };
-    tick(); window.addEventListener("scroll", tick, { passive: true }); window.addEventListener("resize", tick);
-    return () => { window.removeEventListener("scroll", tick); window.removeEventListener("resize", tick); };
+    let raf = 0; const onFrame = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; tick(); }); }; // at most one update per frame while scrolling
+    tick(); window.addEventListener("scroll", onFrame, { passive: true }); window.addEventListener("resize", onFrame);
+    return () => { window.removeEventListener("scroll", onFrame); window.removeEventListener("resize", onFrame); if (raf) cancelAnimationFrame(raf); };
   }, []);
   return (
     <section className="sec nf" id="new" aria-label="New: Fancy colors">

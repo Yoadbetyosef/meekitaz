@@ -1,5 +1,5 @@
 "use client";
-import { collapseDesigns } from "@/lib/designs";
+import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -41,7 +41,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
     if (first.current) { first.current = false; if (isDefault) return; }
     if (isDefault) { setItems(initial); setHasNext(h0); setCursor(c0); return; }
     let live = true; setBusy(true);
-    api(null).then(j => { if (live && j.products) { setItems(j.products); setHasNext(j.hasNext); setCursor(j.cursor); } }).finally(() => live && setBusy(false));
+    fillPage([], { cursor: null, hasNext: true }, api).then(r => { if (live && !(r.failed && !r.items.length)) { setItems(r.items); setHasNext(r.hasNext); setCursor(r.cursor); } }).finally(() => live && setBusy(false));
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
@@ -63,7 +63,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
 
   async function more() {
     if (!cursor || busy) return; setBusy(true);
-    try { const j = await api(cursor); if (j.products) { setItems(x => collapseDesigns(x.concat(j.products))); setHasNext(j.hasNext); setCursor(j.cursor); } } finally { setBusy(false); }
+    try { const r = await fillPage(items, { cursor, hasNext }, api); setItems(r.items); setHasNext(r.hasNext); setCursor(r.cursor); } finally { setBusy(false); }
   }
   const priceOn = pmin > RING_PRICE.min || pmax < RING_PRICE.max;
   const tags = useMemo(() => [
