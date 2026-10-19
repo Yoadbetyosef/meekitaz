@@ -718,3 +718,5 @@ categoryTiles.push({ href: "/fancy-colors", img: "https://d8j0ntlcm91z4.cloudfro
 
 // Home: the "NEW · Fancy colors" block (portrait on the page blue).
 export const newFancy = { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_203726_cd9b4bcd-179d-48aa-a9ed-e1c59851c9bb.png" };
+// Home: the pink layer of the NEW block.
+export const newPink = { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_145308_af0df699-e4eb-4ae5-a8d4-4440c1c2448f.png" };
