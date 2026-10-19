@@ -8,7 +8,7 @@ const INTENSITIES = ["Light", "Fancy Light", "Fancy", "Intense", "Vivid", "Deep"
 const SHAPES = ["Round", "Oval", "Cushion", "Pear", "Radiant", "Emerald", "Princess", "Marquise", "Asscher", "Heart"];
 const TINT: Record<string, string> = { Pink: "#e8527f", Blue: "#2f6fdb", Yellow: "#e9b911", Green: "#2fa26a", Orange: "#f08a24", Brown: "#8a5a3b" };
 type F = { carat: [number, number]; price: [number, number]; inten: [number, number]; shapes: string[] };
-const DEF: F = { carat: [0.5, 20], price: [100, 50000], inten: [0, 5], shapes: [] };
+const DEF: F = { carat: [2, 20], price: [100, 50000], inten: [0, 5], shapes: [] }; // from 2 carats up, like the white diamonds
 type Facet = { color: string; count: number; image: string };
 
 const pair = (v: string | null, lo: number, hi: number, def: [number, number], int = false): [number, number] => {
@@ -146,7 +146,7 @@ export default function FancyBrowser({ embedded = false }: { embedded?: boolean 
           {state === "loading" && <p className="dmsg">{tries ? "Still gathering the coloured stones — this can take a minute the first time. Hang on…" : "Finding colors… the first visit can take a few seconds."}</p>}
           {state === "off" && <p className="dmsg">Our diamond inventory is connecting. Please check back shortly.</p>}
           {state === "error" && <p className="dmsg">We couldn&apos;t load fancy colors just now. Please refresh in a moment.</p>}
-          {state === "empty" && <p className="dmsg">No diamonds match these filters. Try widening carat, price or intensity.</p>}
+          {state === "empty" && <><p className="dmsg">No diamonds match these filters. Try widening carat, price or intensity.</p>{f.carat[0] > 0.5 && <div className="dmore"><button type="button" onClick={() => setF({ ...f, carat: [0.5, f.carat[1]] })}>Show all sizes</button></div>}</>}
           {state === "ready" && (
             <>
               <div className="pgrid">{items.map(d => <StoneCard key={d.id} d={d} playing={playing === d.id} setPlaying={setPlaying} onOpen={remember} />)}</div>

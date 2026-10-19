@@ -3,7 +3,8 @@
 export type DFilters = { carat: [number, number]; price: [number, number]; color: [number, number]; clarity: [number, number] };
 export const COLORS = ["D", "E", "F", "G", "H", "I"];
 export const CLARITIES = ["FL", "IF", "VVS1", "VVS2", "VS1", "VS2"];
-export const DEFAULT_FILTERS: DFilters = { carat: [1, 3], price: [100, 50000], color: [0, 5], clarity: [0, 5] };
+export const DEFAULT_CARAT: [number, number] = [2, 20]; // the diamonds open from 2 carats up; the slider still goes down to 0.5
+export const DEFAULT_FILTERS: DFilters = { carat: DEFAULT_CARAT, price: [100, 50000], color: [0, 5], clarity: [0, 5] };
 
 export function Dual({ label, min, max, step, lo, hi, fmt, onChange }: { label: string; min: number; max: number; step: number; lo: number; hi: number; fmt: (v: number) => string; onChange: (lo: number, hi: number) => void }) {
   const a = Math.min(lo, hi), b = Math.max(lo, hi);

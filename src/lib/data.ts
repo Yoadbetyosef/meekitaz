@@ -733,3 +733,16 @@ export const shopLook = {
     { k: "rings", label: "Rings", href: "/engagement-rings", p: [47, 32] as [number, number] },
   ],
 };
+// Home: the "As seen in" row. Single-colour logo shapes live in /public/press/<k>.png and are tinted with CSS (--pr-color).
+// Only list outlets that really featured Meekitaz; to remove the row, delete <PressRow /> from the home page.
+export const pressLogos = [
+  { k: "people", name: "People", w: 160, h: 66 },
+  { k: "e-news", name: "E! News", w: 141, h: 85 },
+  { k: "us-weekly", name: "Us Weekly", w: 82, h: 65 },
+  { k: "daily-mail", name: "Daily Mail", w: 194, h: 65 },
+  { k: "yahoo-entertainment", name: "Yahoo Entertainment", w: 244, h: 69 },
+  { k: "brides", name: "Brides", w: 196, h: 50 },
+  { k: "instyle", name: "InStyle", w: 209, h: 53 },
+];
+// Footer: the "Shhh." card (pink backdrop photo, quiet flex). Change the link or the button text here.
+export const hushCard = { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_194914_469381c0-892c-4a9f-a68e-87acf8101d3a.png", href: "/engagement-rings", cta: "Shop the collection" };
