@@ -2,21 +2,26 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { newFancy, newPink } from "@/lib/data";
+import { newFancy, newPink, newGreen } from "@/lib/data";
 
 /** "NEW" statement block between the categories and House codes. The card pins in the viewport while the page scrolls past it,
  *  and the yellow (fancy colours) content gives way to the pink (pink stones) content as a scroll-driven crossfade. */
 export default function NewFancy() {
-  const pin = useRef<HTMLDivElement>(null), y = useRef<HTMLDivElement>(null), p = useRef<HTMLDivElement>(null), d1 = useRef<HTMLElement>(null), d2 = useRef<HTMLElement>(null);
+  const pin = useRef<HTMLDivElement>(null), y = useRef<HTMLDivElement>(null), p = useRef<HTMLDivElement>(null), g = useRef<HTMLDivElement>(null), d1 = useRef<HTMLElement>(null), d2 = useRef<HTMLElement>(null), d3 = useRef<HTMLElement>(null);
   useEffect(() => {
     const el = pin.current; if (!el) return;
     const tick = () => {
       const r = el.getBoundingClientRect(), total = Math.max(1, el.offsetHeight - window.innerHeight);
       const prog = Math.min(1, Math.max(0, -r.top / total));
-      const t = Math.min(1, Math.max(0, (prog - 0.3) / 0.4)), e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // the swap happens in the middle of the pinned scroll
-      if (y.current) { y.current.style.opacity = String(1 - e); y.current.style.transform = `translateY(${-24 * e}px)`; }
-      if (p.current) { p.current.style.opacity = String(e); p.current.style.transform = `translateY(${24 * (1 - e)}px)`; }
-      d1.current?.classList.toggle("on", e < 0.5); d2.current?.classList.toggle("on", e >= 0.5);
+      // three layers; each swap happens over a short window of the pinned scroll: yellow → pink at ~35%, pink → green at ~70%
+      const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+      const e1 = ease(Math.min(1, Math.max(0, (prog - 0.22) / 0.26))), e2 = ease(Math.min(1, Math.max(0, (prog - 0.57) / 0.26)));
+      const set = (el: HTMLDivElement | null, o: number, dy: number) => { if (el) { el.style.opacity = String(o); el.style.transform = `translateY(${dy}px)`; } };
+      set(y.current, 1 - e1, -24 * e1);
+      set(p.current, e1 * (1 - e2), 24 * (1 - e1) - 24 * e2);
+      set(g.current, e2, 24 * (1 - e2));
+      const idx = e2 >= 0.5 ? 2 : e1 >= 0.5 ? 1 : 0;
+      d1.current?.classList.toggle("on", idx === 0); d2.current?.classList.toggle("on", idx === 1); d3.current?.classList.toggle("on", idx === 2);
     };
     tick(); window.addEventListener("scroll", tick, { passive: true }); window.addEventListener("resize", tick);
     return () => { window.removeEventListener("scroll", tick); window.removeEventListener("resize", tick); };
@@ -42,7 +47,15 @@ export default function NewFancy() {
             </div>
             <div className="nf-img"><Image src={newPink.img} alt="Pink diamond stud earring" fill sizes="(max-width:767px) 92vw, 50vw" quality={82} /></div>
           </div>
-          <div className="nf-dots" aria-hidden="true"><i className="on" ref={d1} /><i ref={d2} /></div>
+          <div className="nf-layer nf-g" ref={g}>
+            <div className="nf-txt">
+              <h2 className="nf-h">Green<br />with envy.</h2>
+              <p className="nf-sub">Emeralds, sapphires and the colours in between. Worn lightly, meant seriously.</p>
+              <Link href="/gemstones" className="pill nf-cta">Shop gemstones</Link>
+            </div>
+            <div className="nf-img"><Image src={newGreen.img} alt="Emerald stud earring and ring" fill sizes="(max-width:767px) 92vw, 50vw" quality={82} /></div>
+          </div>
+          <div className="nf-dots" aria-hidden="true"><i className="on" ref={d1} /><i ref={d2} /><i ref={d3} /></div>
         </div>
       </div></div></div>
     </section>
