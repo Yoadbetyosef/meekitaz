@@ -35,6 +35,7 @@ export default function ShopLook() {
             {shopLook.items.map(i => <button key={i.k} type="button" className={open === i.k ? "on" : ""} aria-pressed={open === i.k} onClick={() => setOpen(open === i.k ? null : i.k)}>{i.label}</button>)}
           </div>
         </div>
+        <div className="sl-cta"><Link href="/looks" className="pill sl-all">See all looks &rarr;</Link></div>
       </div>
     </section>
   );

@@ -586,3 +586,7 @@ a.rp-mt{text-decoration:none}
   .sl-head{flex-direction:column;align-items:flex-start;gap:8px}.sl-stage{aspect-ratio:4/5;border-radius:24px}
   .sl-chips{bottom:12px;overflow-x:auto;scrollbar-width:none}.sl-chips::-webkit-scrollbar{display:none}.sl-chips button{padding:10px 13px;font-size:10.5px}
 }
+.sl-cta{display:flex;justify-content:center;margin-top:22px}
+.sl-all{background:var(--red);color:#fff;padding:17px 30px;font:700 12px var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;border-radius:999px;display:inline-flex}
+.looks-empty{padding-top:clamp(120px,16vw,180px);min-height:60vh}.looks-empty h1{margin:6px 0 12px}
+.looks-lead{font:italic 400 clamp(17px,1.5vw,21px)/1.4 var(--sub);opacity:.75;margin:0}
