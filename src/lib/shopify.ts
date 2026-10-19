@@ -1,7 +1,8 @@
 // Shopify Storefront API client (server only).
+import { collapseDesigns } from "./designs";
 import { fancyColorOf } from "./fancy";
 // Set SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_TOKEN in .env.local / Vercel.
-export type Product = { id: string; handle: string; title: string; price: string; currency: string; compareAt?: number; image?: { url: string; alt: string } };
+export type Product = { id: string; handle: string; title: string; price: string; currency: string; compareAt?: number; image?: { url: string; alt: string }; code?: string; metal?: string; variants?: { metal: string; handle: string }[] };
 
 export type CartLine = {
   id: string;
@@ -181,14 +182,15 @@ export async function getCollectionPage(handle: string, opts: { first?: number; 
     `query($handle:String!,$first:Int!,$after:String,$key:ProductCollectionSortKeys!,$rev:Boolean!){ collection(handle:$handle){ products(first:$first, after:$after, sortKey:$key, reverse:$rev){
       pageInfo{ hasNextPage endCursor }
       edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } } } } } }`,
-    { handle, first: opts.first || 24, after: opts.after || null, key: so.key, rev: so.reverse });
+    { handle, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.reverse });
   const c = d?.collection?.products; if (!c) return null;
   const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
     image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title } : undefined,
+    code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title),
   }));
-  return { products, hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
+  return { products: collapseDesigns(products), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
 }
 
 /** Cards for a Shopify product search (used by the filtered category pages). */
@@ -199,14 +201,15 @@ export async function getProductsByQuery(query: string, opts: { first?: number; 
     `query($q:String!,$first:Int!,$after:String,$key:ProductSortKeys,$rev:Boolean){ products(first:$first, after:$after, query:$q, sortKey:$key, reverse:$rev){
       pageInfo{ hasNextPage endCursor }
       edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } } } } }`,
-    { q: query, first: opts.first || 24, after: opts.after || null, key: so.key, rev: so.rev });
+    { q: query, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.rev });
   const c = d?.products; if (!c) return null;
   const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
     image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title } : undefined,
+    code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title),
   }));
-  return { products, hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
+  return { products: collapseDesigns(products), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
 }
 
 /* ---------------- Engagement-ring settings: one design in every shape and metal ---------------- */

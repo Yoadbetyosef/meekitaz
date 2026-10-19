@@ -1,4 +1,5 @@
 "use client";
+import { collapseDesigns, METAL_SWATCH } from "@/lib/designs";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -65,7 +66,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
 
   async function more() {
     if (!cursor || busy) return; setBusy(true);
-    try { const j = await api(cursor); if (j.products) { setItems(x => x.concat(j.products)); setHasNext(j.hasNext); setCursor(j.cursor); } } finally { setBusy(false); }
+    try { const j = await api(cursor); if (j.products) { setItems(x => collapseDesigns(x.concat(j.products))); setHasNext(j.hasNext); setCursor(j.cursor); } } finally { setBusy(false); }
   }
   const priceOn = pmin > RING_PRICE.min || pmax < RING_PRICE.max;
   const tags = useMemo(() => [
@@ -117,7 +118,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
           {items.map(p => (
             <Link key={p.id} href={`/products/${p.handle}`} className="pcard">
               <div className="pcard-img">{p.image ? <Image src={photoSrc(p.image.url, 700, p.title)} alt={p.image.alt} width={800} height={800} sizes="(max-width:767px) 50vw, 380px" quality={75} unoptimized={isCleaned(photoSrc(p.image.url, 700, p.title))} /> : <Gem />}</div>
-              <div className="pcard-txt"><b>{p.title}</b><span className="price">{usd(p.price, p.currency)}{p.compareAt ? <s className="was">{usd(p.compareAt, p.currency)}</s> : null}</span></div>
+              <div className="pcard-txt"><b>{p.variants && p.variants.length > 1 ? p.title.replace(/^(Rose gold|Yellow gold|White gold|Platinum|Silver) /i, "") : p.title}</b>{p.variants && p.variants.length > 1 && <span className="pc-metals" aria-label={`${p.variants.length} metals`}>{p.variants.map(v => <i key={v.handle} style={{ background: METAL_SWATCH[v.metal] || "#ddd" }} title={v.metal} />)}</span>}<span className="price">{usd(p.price, p.currency)}{p.compareAt ? <s className="was">{usd(p.compareAt, p.currency)}</s> : null}</span></div>
             </Link>
           ))}
         </div>

@@ -1,4 +1,5 @@
 "use client";
+import { collapseDesigns, METAL_SWATCH } from "@/lib/designs";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,7 +21,7 @@ export default function ProductBrowser({ handle, style = "", initial, hasNext: h
     try {
       const q = new URLSearchParams({ handle, sort: s }); if (style) q.set("style", style); if (!reset && cursor) q.set("after", cursor);
       const r = await fetch(`/api/products?${q}`); const j = await r.json();
-      if (r.ok) { setItems(x => (reset ? j.products : x.concat(j.products))); setHasNext(j.hasNext); setCursor(j.cursor); }
+      if (r.ok) { setItems(x => collapseDesigns(reset ? j.products : x.concat(j.products))); setHasNext(j.hasNext); setCursor(j.cursor); }
     } finally { setBusy(false); }
   }
   return (
@@ -39,7 +40,7 @@ export default function ProductBrowser({ handle, style = "", initial, hasNext: h
           {items.map(p => (
             <Link key={p.id} href={`/products/${p.handle}`} className="pcard">
               <div className="pcard-img">{p.image ? <Image src={photoSrc(p.image.url, 700, p.title)} alt={p.image.alt} width={800} height={800} sizes="(max-width:767px) 50vw, 380px" quality={75} unoptimized={isCleaned(photoSrc(p.image.url, 700, p.title))} /> : <Gem />}</div>
-              <div className="pcard-txt"><b>{p.title}</b><span className="price">{usd(p.price, p.currency)}{p.compareAt ? <s className="was">{usd(p.compareAt, p.currency)}</s> : null}</span></div>
+              <div className="pcard-txt"><b>{p.variants && p.variants.length > 1 ? p.title.replace(/^(Rose gold|Yellow gold|White gold|Platinum|Silver) /i, "") : p.title}</b>{p.variants && p.variants.length > 1 && <span className="pc-metals" aria-label={`${p.variants.length} metals`}>{p.variants.map(v => <i key={v.handle} style={{ background: METAL_SWATCH[v.metal] || "#ddd" }} title={v.metal} />)}</span>}<span className="price">{usd(p.price, p.currency)}{p.compareAt ? <s className="was">{usd(p.compareAt, p.currency)}</s> : null}</span></div>
             </Link>
           ))}
         </div>

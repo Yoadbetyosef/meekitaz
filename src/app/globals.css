@@ -555,3 +555,5 @@ a.rp-mt{text-decoration:none}
 .po-v.on{background:var(--ink);color:#fff;border-color:var(--ink)}.po-v.on small{opacity:.8}
 .rp-metals{margin-bottom:16px}
 .mk-seg button small{display:block;font:400 10px var(--body);opacity:.55;letter-spacing:0;margin-top:2px}.mk-seg button.on small{opacity:.8}
+/* catalogue cards: the design's metals */
+.pc-metals{display:flex;gap:5px;margin:6px 0 4px}.pc-metals i{width:12px;height:12px;border-radius:50%;border:1px solid rgba(28,26,27,.15);display:block}
