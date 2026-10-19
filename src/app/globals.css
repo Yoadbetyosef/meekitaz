@@ -499,7 +499,7 @@ button.cd-co{border:0;font-family:inherit;cursor:pointer}
 .mk-col.off{opacity:.3;pointer-events:none}
 .mk-hint{font:300 12px/1.5 var(--body);opacity:.6;margin:10px 0 0}
 /* ---- Home: NEW · Fancy colors → Pink (pinned, scroll-driven crossfade) ---- */
-.nf{padding-top:0;--butter:#F7E9A8;--babypink:#F7D3DA;--sagecard:#D6E4C8}
+.nf{padding-top:0;--butter:#F7E9A8;--babypink:#F7D3DA;--sagecard:#CFDCBE} /* matched to the gemstone portrait backdrop */
 .nf-pin{height:300vh;position:relative}
 .nf-hold{position:sticky;top:15vh;height:70vh}
 .nf-card{position:relative;height:100%;border-radius:32px;overflow:hidden;box-shadow:0 20px 60px rgba(28,26,27,.08)}
