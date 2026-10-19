@@ -60,8 +60,8 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 .proof b{display:flex;align-items:center;gap:6px;font:700 20px var(--body)}
 .proof small{display:block;font:400 10px var(--body);letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-top:2px}
 .stars{display:inline-flex;gap:2px}.stars svg{width:14px;height:14px;fill:var(--star)}
-.pill,.heroc .pill{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:17px 30px;font:700 12px var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;background:var(--blue);color:var(--ink);transition:background .25s,transform .25s;white-space:nowrap}
-.pill:hover{background:var(--pink);transform:translateY(-2px)}
+.pill,.heroc .pill{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:17px 30px;font:700 12px var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;background:var(--red);color:var(--ivory);transition:filter .25s,transform .25s;white-space:nowrap}
+.pill:hover{filter:brightness(1.15);transform:translateY(-2px)} /* every CTA is our red */
 .claims{display:flex;flex-wrap:wrap;gap:0;margin-top:22px}
 .claims div{display:flex;align-items:center;gap:10px;margin-right:34px;font-family:var(--display);font-size:14.5px;color:rgba(255,255,255,.92);text-shadow:0 1px 10px rgba(0,0,0,.35)}
 .claims div::before{content:'';width:18px;height:18px;border-radius:50%;border:1px solid rgba(196,222,238,.9);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.3 2.3 4.7-4.9' fill='none' stroke='%23C4DEEE' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center/11px no-repeat}
@@ -178,7 +178,7 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
   .pc-body{border-radius:26px;padding:16px;margin-top:10px}.pc-body h2{font-size:24px}
   .pc-prog{display:flex;gap:6px;margin:0 0 4px}.pc-prog i{flex:1;height:3px;border-radius:2px;background:rgba(28,26,27,.14)}.pc-prog i.on{background:var(--red)}
   .pc-ways{grid-template-columns:1fr;gap:8px;margin-bottom:6px}.pc-way span{border-radius:16px;background:#F4F7FA;border-color:transparent}.pc-way span em{display:block}.pc-way input:checked+span{background:#fff;color:var(--ink);border-color:var(--ink)}
-  .pc-next{display:flex;justify-content:center;align-items:center;height:48px;border-radius:999px;border:0;background:var(--ink);color:#fff;font:700 11px var(--body);letter-spacing:.15em;text-transform:uppercase;cursor:pointer}
+  .pc-next{display:flex;justify-content:center;align-items:center;height:48px;border-radius:999px;border:0;background:var(--red);color:var(--ivory);font:700 11px var(--body);letter-spacing:.15em;text-transform:uppercase;cursor:pointer}
   .pc-back{display:block;justify-self:start;background:none;border:0;padding:2px 0 4px;font:600 12px var(--body);color:var(--ink);opacity:.7;cursor:pointer}
   .pc-fields{display:none;gap:10px}
   .pc-step2 .pc-ways,.pc-step2 .pc-next,.pc-step2 .pc-prog{display:none}.pc-step2 .pc-fields{display:grid}.pc-step2 .pc-prog{display:flex}
@@ -280,7 +280,7 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 .cd-qty button{width:30px;height:30px;border:0;background:none;font-size:16px;cursor:pointer}.cd-qty span{min-width:22px;text-align:center;font:600 12px var(--body)}
 .cd-rm{display:block;margin-top:8px;background:none;border:0;padding:0;font:300 11.5px var(--body);text-decoration:underline;opacity:.55;cursor:pointer}
 .cd-empty{text-align:center;padding:60px 20px}.cd-empty p{font:500 22px var(--sub);font-style:italic;margin:0 0 18px}
-.cd-empty a{display:inline-block;padding:15px 26px;border-radius:999px;background:var(--blue);font:700 11px var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;color:var(--ink)}
+.cd-empty a{display:inline-block;padding:15px 26px;border-radius:999px;background:var(--red);font:700 11px var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;color:var(--ivory)}
 .cd-foot{margin:4px -28px 0;padding:18px 28px calc(26px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(28,26,27,.14);background:#fff}
 .cd-sum{font:400 14px var(--body)}.cd-sum>div{display:flex;justify-content:space-between;padding:5px 0}
 .cd-sum .t{border-top:1px solid rgba(28,26,27,.18);margin-top:8px;padding-top:12px;font:400 20px var(--display)}
