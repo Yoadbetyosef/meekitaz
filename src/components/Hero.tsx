@@ -8,6 +8,13 @@ import Stars from "./Stars";
 export default function Hero() {
   const [i, setI] = useState(0);
   const wordRef = useRef<HTMLSpanElement>(null);
+  const secRef = useRef<HTMLElement>(null), blockRef = useRef<HTMLDivElement>(null);
+  // On phones the photo fills whatever is left above the text block, so the block's height is measured into a CSS variable.
+  useEffect(() => {
+    const sec = secRef.current, el = blockRef.current; if (!sec || !el) return;
+    const set = () => sec.style.setProperty("--hc", `${el.offsetHeight}px`);
+    set(); const ro = new ResizeObserver(set); ro.observe(el); return () => ro.disconnect();
+  }, []);
   useEffect(() => { const t = setInterval(() => setI(x => (x + 1) % slides.length), 5000); return () => clearInterval(t); }, []);
   // mobile: shrink long headlines to one line
   useEffect(() => {
@@ -25,7 +32,7 @@ export default function Hero() {
   }, [i]);
   const s = slides[i];
   return (
-    <section className="hero" id="hero" aria-label="Hero">
+    <section className="hero" id="hero" aria-label="Hero" ref={secRef}>
       {slides.map((sl, k) => (
         <div key={k} className={`hs${k === i ? " on" : ""}`}>
           <picture>
@@ -35,7 +42,7 @@ export default function Hero() {
         </div>
       ))}
       <div className="heroc">
-        <div>
+        <div ref={blockRef}>
           <Link href={s.href}><h1><small>{s.small}</small><span className="word" ref={wordRef}>{s.big}</span></h1></Link>
           <div className="brcard">
             <div className="proof">
