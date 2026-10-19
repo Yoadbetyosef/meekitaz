@@ -62,6 +62,7 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 .stars{display:inline-flex;gap:2px}.stars svg{width:14px;height:14px;fill:var(--star)}
 .pill,.heroc .pill{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:17px 30px;font:700 12px var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none;background:var(--red);color:var(--ivory);transition:filter .25s,transform .25s;white-space:nowrap}
 .pill:hover{filter:brightness(1.15);transform:translateY(-2px)} /* every CTA is our red */
+@media(min-width:768px){.heroc .pill{background:var(--blue);color:var(--ink);transition:background .25s,transform .25s}.heroc .pill:hover{background:var(--pink);filter:none}} /* the one exception: the desktop hero button stays our light blue */
 .claims{display:flex;flex-wrap:wrap;gap:0;margin-top:22px}
 .claims div{display:flex;align-items:center;gap:10px;margin-right:34px;font-family:var(--display);font-size:14.5px;color:rgba(255,255,255,.92);text-shadow:0 1px 10px rgba(0,0,0,.35)}
 .claims div::before{content:'';width:18px;height:18px;border-radius:50%;border:1px solid rgba(196,222,238,.9);background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.3 2.3 4.7-4.9' fill='none' stroke='%23C4DEEE' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") center/11px no-repeat}
@@ -519,7 +520,7 @@ button.cd-co{border:0;font-family:inherit;cursor:pointer}
 .nf-hold{position:sticky;top:15vh;height:70vh}
 .nf-card{position:relative;height:100%;border-radius:32px;overflow:hidden;box-shadow:0 20px 60px rgba(28,26,27,.08)}
 .nf-layer{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;align-items:stretch;will-change:opacity,transform}
-.nf-y{background:var(--butter)}.nf-p{background:var(--babypink);opacity:0}.nf-g{background:var(--sagecard);opacity:0}
+.nf-y{background:var(--butter)}.nf-p{background:var(--babypink);opacity:0;visibility:hidden;pointer-events:none}.nf-g{background:var(--sagecard);opacity:0;visibility:hidden;pointer-events:none}
 .nf-g .nf-img img{object-position:55% 30%}
 .nf-txt{padding:clamp(28px,4.5vw,72px);display:flex;flex-direction:column;justify-content:center}
 .nf-h{font:400 clamp(44px,6.5vw,104px)/0.95 var(--display);text-transform:uppercase;margin:0 0 18px}

@@ -16,11 +16,20 @@ export default function NewFancy() {
       // three layers; each swap happens over a short window of the pinned scroll: yellow → pink at ~35%, pink → green at ~70%
       const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
       const e1 = ease(Math.min(1, Math.max(0, (prog - 0.22) / 0.26))), e2 = ease(Math.min(1, Math.max(0, (prog - 0.57) / 0.26)));
-      const set = (el: HTMLDivElement | null, o: number, dy: number) => { if (el) { el.style.opacity = String(o); el.style.transform = `translateY(${dy}px)`; } };
-      set(y.current, 1 - e1, -24 * e1);
-      set(p.current, e1 * (1 - e2), 24 * (1 - e1) - 24 * e2);
-      set(g.current, e2, 24 * (1 - e2));
+      // Each layer fades in over the previous one, which stays solid underneath until it is fully covered (no see-through, no ghost text).
       const idx = e2 >= 0.5 ? 2 : e1 >= 0.5 ? 1 : 0;
+      const layers = [y.current, p.current, g.current];
+      const opacity = [e1 >= 1 ? 0 : 1, e2 >= 1 ? 0 : e1, e2];
+      const shift = [0, 24 * (1 - e1), 24 * (1 - e2)];
+      layers.forEach((el, k) => {
+        if (!el) return;
+        el.style.opacity = String(opacity[k]);
+        el.style.transform = `translateY(${shift[k]}px)`;
+        el.style.visibility = opacity[k] > 0.001 ? "visible" : "hidden";
+        // only the layer you are looking at can be clicked, tabbed to or read out: the layers stacked on top of it never steal the tap
+        el.style.pointerEvents = k === idx ? "auto" : "none";
+        (el as HTMLElement & { inert: boolean }).inert = k !== idx;
+      });
       d1.current?.classList.toggle("on", idx === 0); d2.current?.classList.toggle("on", idx === 1); d3.current?.classList.toggle("on", idx === 2);
     };
     tick(); window.addEventListener("scroll", tick, { passive: true }); window.addEventListener("resize", tick);
