@@ -722,3 +722,14 @@ export const newFancy = { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63
 export const newPink = { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_145308_af0df699-e4eb-4ae5-a8d4-4440c1c2448f.png" };
 // Home: the green (gemstones) layer of the NEW block.
 export const newGreen = { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_153432_cc1b2573-961c-4961-820c-2174a7d92ad1.png" };
+// Home: "Shop the look". `p` = [x%, y%] of each piece on the 16:9 photo; `focusX` keeps the woman in frame when the photo is cropped on phones.
+export const shopLook = {
+  img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_174210_63f45246-d404-4a68-bc35-29be47d8a34b.png",
+  aspect: 16 / 9, focusX: 0.34,
+  items: [
+    { k: "earrings", label: "Earrings", href: "/earrings", p: [32, 38] as [number, number] },
+    { k: "necklaces", label: "Necklaces", href: "/necklaces", p: [36, 70] as [number, number] },
+    { k: "bracelets", label: "Bracelets", href: "/bracelets", p: [50, 40] as [number, number] },
+    { k: "rings", label: "Rings", href: "/engagement-rings", p: [47, 32] as [number, number] },
+  ],
+};

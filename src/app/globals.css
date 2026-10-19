@@ -571,3 +571,18 @@ a.rp-mt{text-decoration:none}
 .mk-seg button small{display:block;font:400 10px var(--body);opacity:.55;letter-spacing:0;margin-top:2px}.mk-seg button.on small{opacity:.8}
 /* catalogue cards: the design's metals */
 .pcard{min-width:0}.pc-metals{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 4px}.pc-metals i{width:14px;height:14px;border-radius:50%;border:1px solid rgba(28,26,27,.15);display:block;cursor:pointer;box-sizing:border-box}.pc-metals i.on{box-shadow:0 0 0 1.5px #fff,0 0 0 2.5px var(--ink)}
+/* ---- Home: Shop the look ---- */
+.sl-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:18px}
+.sl-sub{font:italic 400 clamp(16px,1.4vw,20px)/1.4 var(--sub);opacity:.75;max-width:32ch;margin:0}
+.sl-stage{position:relative;border-radius:34px;overflow:hidden;aspect-ratio:16/9;background:#2a2326;isolation:isolate}
+.sl-dim{position:absolute;inset:0;z-index:2;pointer-events:none;background:rgba(18,12,14,0);transition:background .45s}
+.sl-dim.on{background:radial-gradient(circle at var(--x) var(--y),rgba(18,12,14,0) 0,rgba(18,12,14,0) 7%,rgba(18,12,14,.62) 20%)}
+.sl-go{position:absolute;z-index:5;transform:translate(-50%,0);margin-top:36px;background:var(--red);color:#fff;border-radius:999px;padding:11px 18px;font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;white-space:nowrap;animation:sl-in .3s ease both}
+@keyframes sl-in{from{opacity:0;transform:translate(-50%,6px)}to{opacity:1;transform:translate(-50%,0)}}
+.sl-chips{position:absolute;z-index:6;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:6px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-radius:999px;padding:6px;max-width:calc(100% - 24px)}
+.sl-chips button{border:0;background:none;border-radius:999px;padding:11px 16px;font:700 11px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);cursor:pointer;white-space:nowrap;transition:.2s}
+.sl-chips button.on{background:var(--ink);color:#fff}
+@media(max-width:767px){
+  .sl-head{flex-direction:column;align-items:flex-start;gap:8px}.sl-stage{aspect-ratio:4/5;border-radius:24px}
+  .sl-chips{bottom:12px;overflow-x:auto;scrollbar-width:none}.sl-chips::-webkit-scrollbar{display:none}.sl-chips button{padding:10px 13px;font-size:10.5px}
+}
