@@ -58,8 +58,10 @@ const PAGE = `<!doctype html><meta charset="utf-8"><title>Meekitaz · SEO handle
 <script>
 const key=new URLSearchParams(location.search).get('key');let tot={renamed:0,same:0,skipped:0};
 document.getElementById('go').onclick=async()=>{document.getElementById('go').disabled=true;let after='';
-for(let i=0;i<2000;i++){const r=await fetch('/api/admin/handles?run=1&key='+key+(after?'&after='+encodeURIComponent(after):''));const j=await r.json();
-if(j.error){st.textContent='Error: '+j.error;return}for(const k in tot)tot[k]+=j[k];
-st.textContent='renamed '+tot.renamed+' · unchanged '+tot.same+' · skipped '+tot.skipped;if(j.log.length)log.textContent+=j.log.join('\\n')+'\\n';
+for(let i=0;i<2000;i++){let j=null;
+for(let a=0;a<5&&!j;a++){try{const r=await fetch('/api/admin/handles?run=1&key='+key+(after?'&after='+encodeURIComponent(after):''));const x=await r.json();if(x.error)throw new Error(x.error);j=x}catch(e){st.textContent='retrying batch '+(i+1)+' ('+(a+1)+'/5)… '+e.message;await new Promise(r=>setTimeout(r,3000*(a+1)))}}
+if(!j){st.textContent='Stopped after 5 failed tries on batch '+(i+1)+' — refresh and press Start again.';return}
+for(const k in tot)tot[k]+=j[k];
+st.textContent='batch '+(i+1)+' · renamed '+tot.renamed+' · unchanged '+tot.same+' · skipped '+tot.skipped;if(j.log.length)log.textContent+=j.log.join('\\n')+'\\n';
 if(!j.next){st.textContent+=' · DONE';return}after=j.next}};
 </script>`;
