@@ -186,8 +186,9 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 
 /* footer */
 .mkfoot{position:relative;z-index:6;background:var(--blue-light);color:var(--ink);padding:clamp(48px,6vw,80px) 0 32px;overflow:hidden}
-.foot-giant{font-family:var(--display);color:var(--ink);font-size:clamp(64px,17.5vw,300px);line-height:.85;letter-spacing:-.01em;text-align:center;white-space:nowrap;margin:0 0 clamp(24px,4vw,56px);user-select:none}
-@media(max-width:767px){.foot-giant{font-size:14vw;letter-spacing:0}}
+.foot-giant{font-family:var(--display);color:var(--ink);font-size:clamp(64px,17vw,296px);line-height:.85;letter-spacing:-.01em;text-align:center;white-space:nowrap;margin:0 0 clamp(24px,4vw,56px);user-select:none}
+.foot-giant i{font:400 .14em/1 var(--body);font-style:normal;opacity:.45;margin-left:.25em;position:relative;top:-4.2em} /* the small (c) of the logo */
+@media(max-width:767px){.foot-giant{font-size:17vw}} /* ~95% of a phone's width, with the (c) */
 .foot-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;margin-bottom:44px}
 .foot-logo{font-family:var(--display);font-size:26px;letter-spacing:.14em}
 .foot-logo span{color:var(--gold)}
@@ -526,7 +527,7 @@ button.cd-co{border:0;font-family:inherit;cursor:pointer}
 .nf-cta{background:var(--red);color:#fff;width:max-content}
 .nf-img{position:relative;overflow:hidden}
 .nf-img img{object-fit:cover;object-position:50% 32%}
-.nf-p .nf-img img{object-position:62% 42%;transform:scale(1.18);transform-origin:62% 42%} /* framed like the yellow portrait: face filling the column */
+.nf-p .nf-img img{object-position:4% 40%;transform:scale(var(--nf-zoom,1.08));transform-origin:0% 40%} /* zoom from the left edge so the sunglasses are never cropped; --nf-zoom = how close she is */ /* framed like the yellow portrait: face filling the column */
 .nf-bug{position:absolute;z-index:3;top:-30px;right:-22px;width:96px;height:96px;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--ink);border-radius:50%;box-shadow:0 10px 30px rgba(0,0,0,.12);font:800 15px var(--body);letter-spacing:.2em;animation:nf-bob 3.2s ease-in-out infinite}
 @keyframes nf-bob{0%,100%{transform:translateY(0) rotate(-6deg)}50%{transform:translateY(-8px) rotate(2deg)}}
 .nf-dots{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;gap:6px;z-index:3}.nf-dots i{width:22px;height:2px;background:rgba(28,26,27,.2)}.nf-dots i.on{background:var(--ink)}

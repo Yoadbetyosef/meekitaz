@@ -5,7 +5,7 @@ import { categories, hushCard } from "@/lib/data";
 export default function Footer() {
   return (
     <footer className="mkfoot" id="mkfoot">
-      <div className="foot-giant" aria-hidden="true">MEEKITAZ</div>
+      <div className="foot-giant" aria-hidden="true">MEEKITAZ<i>©</i></div>
       <section className="hush" aria-label="Quiet flex">
         <div className="hush-ph"><Image src={hushCard.img} alt="A woman with a finger to her lips, wearing yellow cushion diamond studs, a tennis necklace and an oval diamond ring" fill sizes="(max-width:767px) 100vw, 40vw" quality={80} /></div>
         <div className="hush-tx">
