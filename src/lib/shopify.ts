@@ -3,7 +3,7 @@ import { collapseDesigns } from "./designs";
 import { RING_SHAPES } from "./ringfilters";
 import { fancyColorOf } from "./fancy";
 // Set SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_TOKEN in .env.local / Vercel.
-export type Product = { id: string; handle: string; title: string; price: string; currency: string; compareAt?: number; image?: { url: string; alt: string }; code?: string; metal?: string; shape?: string; variants?: { metal: string; handle: string }[] };
+export type Product = { id: string; handle: string; title: string; price: string; currency: string; compareAt?: number; image?: { url: string; alt: string }; code?: string; metal?: string; shape?: string; variants?: { metal: string; handle: string; title: string; image?: { url: string; alt: string }; price: string; compareAt?: number }[] };
 
 export type CartLine = {
   id: string;

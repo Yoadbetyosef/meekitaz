@@ -1,17 +1,14 @@
 "use client";
-import { collapseDesigns, METAL_SWATCH } from "@/lib/designs";
+import { collapseDesigns } from "@/lib/designs";
+import DesignCard from "./DesignCard";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { Product } from "@/lib/shopify";
-import { photoSrc, isCleaned } from "@/lib/img";
 import { RING_METALS, RING_PRICE, RING_SHAPES, RING_STYLES } from "@/lib/ringfilters";
 import StoneSwatch from "./StoneSwatch";
 
 const usd = (n: number | string, cur = "USD") => new Intl.NumberFormat("en-US", { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(+n);
 const csv = (v: string | null) => (v ? v.split(",").filter(Boolean) : []);
-const Gem = () => <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M12 8h24l8 12-20 22L4 20z" /><path d="M4 20h40M12 8l12 34M36 8L24 42M18 20l6-12 6 12" /></svg>;
 type Pop = "metal" | "shape" | "style" | "price" | "color" | null;
 const STONE_COLORS = ["Yellow", "Pink", "Blue", "Green"];
 
@@ -116,10 +113,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
 
         <div className={`pgrid${busy ? " rf-busy" : ""}`} style={{ marginTop: 20 }}>
           {items.map(p => (
-            <Link key={p.id} href={`/products/${p.handle}`} className="pcard">
-              <div className="pcard-img">{p.image ? <Image src={photoSrc(p.image.url, 700, p.title)} alt={p.image.alt} width={800} height={800} sizes="(max-width:767px) 50vw, 380px" quality={75} unoptimized={isCleaned(photoSrc(p.image.url, 700, p.title))} /> : <Gem />}</div>
-              <div className="pcard-txt"><b>{p.variants && p.variants.length > 1 ? p.title.replace(/^(Rose gold|Yellow gold|White gold|Platinum|Silver) /i, "") : p.title}</b>{p.variants && p.variants.length > 1 && <span className="pc-metals" aria-label={`${p.variants.length} metals`}>{p.variants.map(v => <i key={v.handle} style={{ background: METAL_SWATCH[v.metal] || "#ddd" }} title={v.metal} />)}</span>}<span className="price">{usd(p.price, p.currency)}{p.compareAt ? <s className="was">{usd(p.compareAt, p.currency)}</s> : null}</span></div>
-            </Link>
+            <DesignCard key={p.id} p={p} />
           ))}
         </div>
         {!items.length && !busy && <p className="rf-empty">No rings match these filters. Try removing one.</p>}
