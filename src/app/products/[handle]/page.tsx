@@ -56,6 +56,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         siblings={siblings.map(s => ({ ...s, title: brandify(s.title) }))}
         related={related.map(r => ({ ...r, title: brandify(r.title) }))}
         ring={ring}
+        options={options}
       />
     </>
   );
