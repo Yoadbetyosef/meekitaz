@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "./CartProvider";
 import { ringMetalOf, type ProductFull, type Related, type Sibling } from "@/lib/shopify";
 import { metalOf } from "@/lib/shopify";
@@ -62,7 +62,8 @@ const TRUST = [
 export default function ProductView({ product: p, siblings, related, ring, options }: { product: ProductFull; siblings: Sibling[]; related: Related[]; ring?: RingProp; options?: ProductOptions | null }) {
   const { add, busy, addRing, addConfigured } = useCart();
   // pieces with an option tree (weight / colour / clarity / purity / extras): the picks, with defaults filled in
-  const [rawSel, setRawSel] = useState<Sel>({});
+  const qp = useSearchParams();
+  const [rawSel, setRawSel] = useState<Sel>(() => { const k = qp.get("k"); const init: Sel = {}; if (k) init["Gold Purity"] = k; return init; });
   const osel = useMemo(() => (options ? completeSel(options, rawSel) : {}), [options, rawSel]);
   const rows = useMemo(() => (options ? optionRows(options, osel) : []), [options, osel]);
   const addon = options ? addonFor(options, osel) : 0;
@@ -182,9 +183,11 @@ export default function ProductView({ product: p, siblings, related, ring, optio
               const steps = Object.fromEntries((gp?.values || []).map(v => [v.label, v.price]));
               const metalsHere = [...new Set(siblings.map(s => ringMetalOf(s.title) || nm(s.metal)).filter(Boolean))];
               const mine = ringMetalOf(p.title) || nm(metal);
-              const goTo = (m: string) => { const t = siblings.find(s => (ringMetalOf(s.title) || nm(s.metal)) === m); if (t && t.handle !== p.handle) router.replace(`/products/${t.handle}`, { scroll: false }); };
-              return <Material ns={ns} metals={metalsHere} metal={mine} karat={osel["Gold Purity"] || gp?.values[0]?.label || ""} karats={gp ? gp.values.map(v => v.label) : []} steps={steps}
-                onMetal={goTo} onKarat={k => { setRawSel(x => ({ ...x, "Gold Purity": k })); if (!isGoldMetal(mine)) { const g = GOLD_COLORS.find(c => metalsHere.includes(c)); if (g) goTo(g); } }} />;
+              const goTo = (m: string, k?: string) => { const t = siblings.find(s => (ringMetalOf(s.title) || nm(s.metal)) === m); if (t && t.handle !== p.handle) router.replace(`/products/${t.handle}${k ? `?k=${encodeURIComponent(k)}` : ""}`, { scroll: false }); };
+              // on a silver or platinum page the gold karats are still offered (prices come once a gold colour is chosen)
+              const karats = gp ? gp.values.map(v => v.label) : (GOLD_COLORS.some(c => metalsHere.includes(c)) ? ["10K", "14K", "18K"] : []);
+              return <Material ns={ns} metals={metalsHere} metal={mine} karat={osel["Gold Purity"] || gp?.values[0]?.label || ""} karats={karats} steps={steps}
+                onMetal={goTo} onKarat={k => { setRawSel(x => ({ ...x, "Gold Purity": k })); if (!isGoldMetal(mine)) { const g = GOLD_COLORS.find(c => metalsHere.includes(c)); if (g) goTo(g, k); } }} />;
             })()}
             {!ring && !karatOn && !hasOpts && siblings.length > 1 && (
               <>
