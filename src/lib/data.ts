@@ -12,16 +12,16 @@ export const slides = [
     "small": "Stacked for breakfast.",
     "big": "The Tennis.",
     "href": "/bracelets",
-    "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_043931_218479e4-4e43-42c6-9725-c85863ab6bd7.png",
-    "pos": "50% 0%",
+    "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_203645_0354ff6c-12f4-4fb5-9690-4d6d26b8a8ec.png",
+    "pos": "50% 40%",
     "mobile": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_024828_c7f5e352-cb14-4d30-ae23-e7a19ea500a8.png", "posM": "50% 50%"
   },
   {
     "small": "A ball cap. Two carats.",
     "big": "The Studs.",
     "href": "/earrings",
-    "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_043934_423de0fb-fadc-40fa-9bf5-35f1862d99a7.png",
-    "pos": "50% 8%",
+    "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_202431_3c1ef1d0-1b33-46e4-8c3e-e06be191f4ef.png",
+    "pos": "50% 40%",
     "mobile": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_174423_f888444f-2c09-427a-ab8c-df7423be2d03.png", "zoomM": 1.5, "posM": "50% 40%"
   },
   {
