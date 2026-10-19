@@ -33,18 +33,28 @@ export function ringQuery(sel: RingSel): string {
   return parts.join(" AND ");
 }
 
-/** Category pages without the ring filters (earrings, necklaces, bracelets, bands, gemstones): a style tile narrows the collection
- *  by title words, e.g. "Climber" on /earrings → products titled "… Climber … Earrings". Product types and tags in the catalogue are
- *  inconsistent ("earrings" / "barrings", style tags only on some designs), so titles are the reliable signal. */
-const NOUN: Record<string, string[]> = { earrings: ["Earring"], necklaces: ["Necklace", "Pendant"], bracelets: ["Bracelet"], bands: ["Band"], gemstones: [] };
-const ascii = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-const anyOf = (field: string, words: string[]) => { const u = [...new Set(words.filter(Boolean))]; return u.length === 1 ? `${field}:'${u[0]}'` : `(${u.map(w => `${field}:'${w}'`).join(" OR ")})`; };
+/** Category pages without the ring filters (earrings, necklaces, bracelets, bands, gemstones). Every product carries its category
+ *  tag (Earrings / Necklace / Bracelets / Wedding Bands), and most designs carry a style tag; the style match is "its tag OR the word
+ *  in the title", so a tile never leaks into another category and never depends on one tag being present. */
+const CAT_TAG: Record<string, string> = { earrings: "Earrings", necklaces: "Necklace", bracelets: "Bracelets", bands: "Wedding Bands" };
+// style label → { tags that mean it, title words that mean it }
+const STYLE: Record<string, { tags?: string[]; words?: string[] }> = {
+  "Diamond Studs": { words: ["Stud", "Studs"] }, Hoop: { words: ["Hoop", "Hoops", "Huggie"] }, Climber: { tags: ["Climbers"], words: ["Climber"] },
+  Cluster: { words: ["Cluster"] }, "Three Stone": { words: ["Three Stone", "Three-Stone"] }, Drop: { words: ["Drop", "Dangle"] },
+  Pendants: { tags: ["pendant"], words: ["Pendant"] }, "Tennis Necklace": { tags: ["Tennis Necklace"], words: ["Tennis"] },
+  "Lariat Necklace": { words: ["Lariat"] }, "Station Necklace": { words: ["Station"] },
+  "Bar Set": { tags: ["Bar Set"], words: ["Bar Set"] }, "Bezel Set": { tags: ["Bezel set"], words: ["Bezel"] }, "Channel Set": { words: ["Channel"] },
+  Chevron: { tags: ["Chevron Bands"], words: ["Chevron"] }, Curved: { tags: ["Curved Bands"], words: ["Curved"] },
+  "Nature Inspired": { tags: ["Floral Inspired", "Nature Inspired"], words: ["Floral", "Leaf", "Vine", "Nature"] },
+  "Pav\u00e9": { tags: ["Pave"], words: ["Pav\u00e9", "Pave"] }, Stackable: { tags: ["Stacking", "Stackable"], words: ["Stackable", "Stacking"] },
+  Twisted: { words: ["Twisted", "Twist"] }, Eternity: { tags: ["Eternity Band"], words: ["Eternity"] },
+};
+const anyOf = (parts: string[]) => (parts.length === 1 ? parts[0] : `(${parts.join(" OR ")})`);
 export function styleQuery(slug: string, style: string): string {
-  const term = style.replace(/^Diamond /i, "").replace(/ (Bracelets?|Necklaces?|Earrings?|Bands?|Rings?)$/i, "").replace(/'/g, "").trim();
-  const sing = term.replace(/s$/i, ""); // "Studs" / "Stud", "Pendants" / "Pendant": both spellings are searched
-  const parts = [anyOf("title", [term, sing, ascii(term), ascii(sing)])];
-  const nouns = NOUN[slug] || [];
-  if (nouns.length) parts.push(anyOf("title", nouns.flatMap(n => [n, `${n}s`])));
+  const def = STYLE[style] || { words: [style.replace(/^Diamond /i, "")] };
+  const or = [...(def.tags || []).map(t => `tag:'${t.replace(/'/g, "")}'`), ...(def.words || []).map(w => `title:'${w.replace(/'/g, "")}'`)];
+  const parts = [anyOf(or)];
+  const cat = CAT_TAG[slug]; if (cat) parts.push(`tag:'${cat}'`);
   parts.push("-tag:'Configured'", "-tag:'Karat variant'", "-tag:'Diamond'");
   return parts.join(" AND ");
 }

@@ -49,7 +49,13 @@ export function completeSel(o: ProductOptions, sel: Sel): Sel {
   for (let i = 0; i < 6; i++) { // rows depend on earlier picks, so settle in a few passes
     const rows = optionRows(o, { ...sel, ...out });
     let changed = false;
-    for (const r of rows) { const v = r.values.some(x => x.label === (sel[r.name] ?? out[r.name])) ? (sel[r.name] ?? out[r.name]) : r.values[0].label; if (out[r.name] !== v) { out[r.name] = v; changed = true; } }
+    for (const r of rows) {
+      const want = sel[r.name] ?? out[r.name];
+      // default = the combination the product's base price describes: the cheapest value of each row (first one on a tie)
+      const cheapest = r.values.reduce((a, b) => (b.price < a.price ? b : a), r.values[0]).label;
+      const v = r.values.some(x => x.label === want) ? want : cheapest;
+      if (out[r.name] !== v) { out[r.name] = v; changed = true; }
+    }
     if (!changed) break;
   }
   return out;
