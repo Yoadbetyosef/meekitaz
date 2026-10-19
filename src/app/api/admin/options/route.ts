@@ -24,16 +24,22 @@ export async function GET(req: NextRequest) {
     for (const p of d.products.nodes) {
       if (p.metafield && !force) { skipped++; continue; }
       if (p.tags.some(t => ["Diamond", "Karat variant"].includes(t))) { skipped++; continue; }
-      const old = p.tags.find(t => t.startsWith(OLD_HANDLE_TAG))?.slice(OLD_HANDLE_TAG.length) || p.handle;
-      const url = `https://naturesparkle.com/products/${old}`;
-      // Nature Sparkle rate-limits bursts (429): one request at a time, a short pause between them, and a patient retry
-      let r: Response | null = null;
-      for (let a = 0; a < 4; a++) {
-        r = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (Meekitaz catalogue sync)" }, cache: "no-store" });
-        if (r.status !== 429) break;
-        await new Promise(res => setTimeout(res, 2500 * (a + 1)));
+      // the Nature Sparkle page is usually at the handle we imported under (kept as a tag); for products renamed twice the
+      // current handle is the original one, so both are tried
+      const old = p.tags.find(t => t.startsWith(OLD_HANDLE_TAG))?.slice(OLD_HANDLE_TAG.length);
+      const candidates = [...new Set([old, p.handle].filter((x): x is string => !!x))];
+      let r: Response | null = null, url = "";
+      for (const h of candidates) {
+        url = `https://naturesparkle.com/products/${h}`;
+        // Nature Sparkle rate-limits bursts (429): one request at a time, a short pause between them, and a patient retry
+        for (let a = 0; a < 4; a++) {
+          r = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (Meekitaz catalogue sync)" }, cache: "no-store" });
+          if (r.status !== 429 && r.status !== 503) break;
+          await new Promise(res => setTimeout(res, 2500 * (a + 1)));
+        }
+        await new Promise(res => setTimeout(res, 700));
+        if (r?.ok) break;
       }
-      await new Promise(res => setTimeout(res, 700));
       if (!r || !r.ok) { missing++; log.push(`${p.handle}: ${r?.status} at ${url}`); continue; }
       const opts = parseNsOptions(await r.text(), url);
       if (!opts) { missing++; log.push(`${p.handle}: no options on the Nature Sparkle page`); continue; }
