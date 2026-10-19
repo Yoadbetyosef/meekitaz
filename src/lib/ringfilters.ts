@@ -34,12 +34,17 @@ export function ringQuery(sel: RingSel): string {
 }
 
 /** Category pages without the ring filters (earrings, necklaces, bracelets, bands, gemstones): a style tile narrows the collection
- *  by title words, e.g. "Climber" on /earrings → products titled "… Climber … Earrings". */
-const NOUN: Record<string, string> = { earrings: "Earrings", necklaces: "Necklace", bracelets: "Bracelet", "wedding-bands": "Band", gemstones: "" };
+ *  by title words, e.g. "Climber" on /earrings → products titled "… Climber … Earrings". Product types and tags in the catalogue are
+ *  inconsistent ("earrings" / "barrings", style tags only on some designs), so titles are the reliable signal. */
+const NOUN: Record<string, string[]> = { earrings: ["Earring"], necklaces: ["Necklace", "Pendant"], bracelets: ["Bracelet"], bands: ["Band"], gemstones: [] };
+const ascii = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+const anyOf = (field: string, words: string[]) => { const u = [...new Set(words.filter(Boolean))]; return u.length === 1 ? `${field}:'${u[0]}'` : `(${u.map(w => `${field}:'${w}'`).join(" OR ")})`; };
 export function styleQuery(slug: string, style: string): string {
-  const term = style.replace(/^Diamond /i, "").replace(/ (Bracelets?|Necklaces?|Earrings?|Bands?|Rings?)$/i, "").replace(/'/g, "");
-  const noun = NOUN[slug] ?? "";
-  const parts = [`title:'${term}'`]; if (noun) parts.push(`title:'${noun}'`);
+  const term = style.replace(/^Diamond /i, "").replace(/ (Bracelets?|Necklaces?|Earrings?|Bands?|Rings?)$/i, "").replace(/'/g, "").trim();
+  const sing = term.replace(/s$/i, ""); // "Studs" / "Stud", "Pendants" / "Pendant": both spellings are searched
+  const parts = [anyOf("title", [term, sing, ascii(term), ascii(sing)])];
+  const nouns = NOUN[slug] || [];
+  if (nouns.length) parts.push(anyOf("title", nouns.flatMap(n => [n, `${n}s`])));
   parts.push("-tag:'Configured'", "-tag:'Karat variant'", "-tag:'Diamond'");
   return parts.join(" AND ");
 }
