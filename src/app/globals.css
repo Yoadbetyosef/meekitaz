@@ -640,10 +640,10 @@ a.rp-mt{text-decoration:none}
 @keyframes pr-scroll{to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.pr-track{animation:none}}
 /* ---- Footer: the "Shhh." card ---- */
-.hush{margin:0 clamp(14px,4vw,60px) clamp(36px,5vw,72px);background:var(--pink);border-radius:clamp(24px,3vw,40px);display:grid;grid-template-columns:.85fr 1.15fr;align-items:center;overflow:hidden}
-.hush-ph{position:relative;aspect-ratio:4/5}.hush-ph img{object-fit:cover}
+.hush{--hush-bg:#EFC5CA;margin:0 clamp(14px,4vw,60px) clamp(36px,5vw,72px);background:var(--hush-bg);border-radius:clamp(24px,3vw,40px);display:grid;grid-template-columns:.85fr 1.15fr;align-items:center;overflow:hidden}
+.hush-ph{position:relative;aspect-ratio:4/5;-webkit-mask-image:linear-gradient(90deg,#000 90%,transparent);mask-image:linear-gradient(90deg,#000 90%,transparent)}.hush-ph img{object-fit:cover}
 .hush-tx{padding:clamp(24px,4vw,70px)}
 .hush-tx h2{font:400 clamp(64px,10vw,170px)/.85 var(--display);margin:0 0 14px}
 .hush-tx p{font:500 clamp(18px,2vw,28px)/1.25 var(--sub);font-style:italic;margin:0 0 26px;opacity:.8;max-width:26ch}
 .hush-cta{display:inline-flex;background:var(--red);color:#fff;border-radius:999px;padding:17px 30px;font:700 12px var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
-@media(max-width:767px){.hush{grid-template-columns:1fr}.hush-tx h2{font-size:22vw}.foot-cols{display:grid;grid-template-columns:1fr 1fr;gap:26px 20px}.foot-cols>div:first-child{grid-column:1/-1}.foot-cols>div:first-child a{display:inline-block;width:49%}}
+@media(max-width:767px){.hush-ph{-webkit-mask-image:linear-gradient(180deg,#000 90%,transparent);mask-image:linear-gradient(180deg,#000 90%,transparent)}.hush{grid-template-columns:1fr}.hush-tx h2{font-size:22vw}.foot-cols{display:grid;grid-template-columns:1fr 1fr;gap:26px 20px}.foot-cols>div:first-child{grid-column:1/-1}.foot-cols>div:first-child a{display:inline-block;width:49%}}
