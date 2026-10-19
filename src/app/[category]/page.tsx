@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { categories } from "@/lib/data";
 import ProductGrid from "@/components/ProductGrid";
@@ -45,18 +44,11 @@ export default async function CategoryPage({ params, searchParams }: { params: P
           <section className="shapes" aria-label={p.styleHead[0]}>
             <div className="wrap">
               <div className="sp-head"><small className="eyebrow">{p.styleHead[0]}</small><h2>{p.styleHead[1]}</h2></div>
-              {p.filters || p.special === "rings" ? <Suspense fallback={null}><ShapeRow styles={p.styles} className={`sp-row${n > 7 ? " scroll" : ""}`} /></Suspense> : (
-              <div className={`sp-row${n === 6 ? " n6" : n === 4 ? " n4" : n > 7 ? " scroll" : ""}`}>
-                {p.styles.map(s => (
-                  <Link key={s.label} href={`/${p.slug}?style=${encodeURIComponent(s.label)}`} className="sp">
-                    <span className="sp-img"><Image src={s.img} alt={s.label} fill sizes="160px" quality={70} /></span><b>{s.label}</b>
-                  </Link>
-                ))}
-              </div>)}
+              <Suspense fallback={null}><ShapeRow styles={p.styles} className={`sp-row${n === 6 ? " n6" : n === 4 ? " n4" : n > 7 ? " scroll" : ""}`} /></Suspense>
             </div>
           </section>
         )}
-        {p.special === "fancy" ? <><FancyColorRow color={one("color")} /><Suspense fallback={null}><RingsSection fancy={one("color") || "all"} /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><StoneBrowser swatches={vdbConfigured ? await fancySwatches() : {}} /></Suspense> : <ProductGrid page={p} />}
+        {p.special === "fancy" ? <><FancyColorRow color={one("color")} /><Suspense fallback={null}><RingsSection fancy={one("color") || "all"} /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><StoneBrowser swatches={vdbConfigured ? await fancySwatches() : {}} /></Suspense> : <ProductGrid page={p} style={one("style")} />}
       </div>
     </main>
   );

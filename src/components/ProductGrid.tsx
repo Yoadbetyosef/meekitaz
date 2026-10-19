@@ -1,12 +1,13 @@
 import type { CategoryPage } from "@/lib/data";
-import { getCollectionPage, shopifyConfigured } from "@/lib/shopify";
+import { getCollectionPage, getProductsByQuery, shopifyConfigured } from "@/lib/shopify";
+import { styleQuery } from "@/lib/ringfilters";
 import ProductBrowser from "./ProductBrowser";
 
 const Gem = () => <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M12 8h24l8 12-20 22L4 20z" /><path d="M4 20h40M12 8l12 34M36 8L24 42M18 20l6-12 6 12" /></svg>;
 
-export default async function ProductGrid({ page }: { page: CategoryPage }) {
-  const r = shopifyConfigured ? await getCollectionPage(page.slug, { first: 24 }) : null;
-  if (r && r.products.length > 0) return <ProductBrowser handle={page.slug} initial={r.products} hasNext={r.hasNext} cursor={r.cursor} />;
+export default async function ProductGrid({ page, style = "" }: { page: CategoryPage; style?: string }) {
+  const r = shopifyConfigured ? (style ? await getProductsByQuery(styleQuery(page.slug, style), { first: 24 }) : await getCollectionPage(page.slug, { first: 24 })) : null;
+  if (r && (r.products.length > 0 || style)) return <ProductBrowser key={style} handle={page.slug} style={style} initial={r.products} hasNext={r.hasNext} cursor={r.cursor} />;
   return (
     <section className="grid-wrap" aria-label="The collection">
       <div className="wrap">

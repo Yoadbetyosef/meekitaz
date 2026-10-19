@@ -32,3 +32,14 @@ export function ringQuery(sel: RingSel): string {
   if (sel.max && sel.max < RING_PRICE.max) parts.push(`variants.price:<=${Math.round(sel.max)}`);
   return parts.join(" AND ");
 }
+
+/** Category pages without the ring filters (earrings, necklaces, bracelets, bands, gemstones): a style tile narrows the collection
+ *  by title words, e.g. "Climber" on /earrings → products titled "… Climber … Earrings". */
+const NOUN: Record<string, string> = { earrings: "Earrings", necklaces: "Necklace", bracelets: "Bracelet", "wedding-bands": "Band", gemstones: "" };
+export function styleQuery(slug: string, style: string): string {
+  const term = style.replace(/^Diamond /i, "").replace(/ (Bracelets?|Necklaces?|Earrings?|Bands?|Rings?)$/i, "").replace(/'/g, "");
+  const noun = NOUN[slug] ?? "";
+  const parts = [`title:'${term}'`]; if (noun) parts.push(`title:'${noun}'`);
+  parts.push("-tag:'Configured'", "-tag:'Karat variant'", "-tag:'Diamond'");
+  return parts.join(" AND ");
+}

@@ -8,7 +8,7 @@ import { photoSrc, isCleaned } from "@/lib/img";
 const Gem = () => <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M12 8h24l8 12-20 22L4 20z" /><path d="M4 20h40M12 8l12 34M36 8L24 42M18 20l6-12 6 12" /></svg>;
 const usd = (n: number | string, cur = "USD") => new Intl.NumberFormat("en-US", { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(+n);
 
-export default function ProductBrowser({ handle, initial, hasNext: h0, cursor: c0 }: { handle: string; initial: Product[]; hasNext: boolean; cursor: string | null }) {
+export default function ProductBrowser({ handle, style = "", initial, hasNext: h0, cursor: c0 }: { handle: string; style?: string; initial: Product[]; hasNext: boolean; cursor: string | null }) {
   const [items, setItems] = useState<Product[]>(initial);
   const [hasNext, setHasNext] = useState(h0);
   const [cursor, setCursor] = useState<string | null>(c0);
@@ -18,16 +18,16 @@ export default function ProductBrowser({ handle, initial, hasNext: h0, cursor: c
   async function load(reset: boolean, s = sort) {
     setBusy(true);
     try {
-      const q = new URLSearchParams({ handle, sort: s }); if (!reset && cursor) q.set("after", cursor);
+      const q = new URLSearchParams({ handle, sort: s }); if (style) q.set("style", style); if (!reset && cursor) q.set("after", cursor);
       const r = await fetch(`/api/products?${q}`); const j = await r.json();
       if (r.ok) { setItems(x => (reset ? j.products : x.concat(j.products))); setHasNext(j.hasNext); setCursor(j.cursor); }
     } finally { setBusy(false); }
   }
   return (
-    <section className="grid-wrap" aria-label="The collection">
+    <section className="grid-wrap" id="results" aria-label="The collection">
       <div className="wrap">
         <div className="dres">
-          <h2>The collection</h2>
+          <h2>{style ? style : "The collection"}</h2>
           <label className="dsort">Sort
             <select value={sort} onChange={e => { setSort(e.target.value); load(true, e.target.value); }}>
               <option value="best">Best selling</option><option value="new">Newest</option>
