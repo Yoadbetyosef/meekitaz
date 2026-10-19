@@ -190,7 +190,10 @@ export async function searchFancy(q: FancyQuery) {
 /** One representative photo per fancy colour (a vivid stone near 1.5 ct), for the small colour circles across the site. */
 export async function fancySwatches(): Promise<Record<string, string>> {
   try {
-    const all = await getFancy();
+    // never hold a page for the harvest: if the list is not ready within a moment, the circles fall back to plain tints
+    // (the harvest keeps running in the background and the next visit gets the photos)
+    const all = await Promise.race([getFancy(), new Promise<Diamond[]>(res => setTimeout(() => res([]), 1500))]);
+    if (!all.length) return {};
     const out: Record<string, string> = {};
     for (const c of ["Yellow", "Pink", "Blue", "Green"]) {
       const pool = all.filter(d => d.fancyColor === c && d.intensity === 4 && ["Round", "Oval", "Cushion", "Radiant"].includes(d.shape));
