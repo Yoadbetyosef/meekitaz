@@ -152,9 +152,13 @@ export async function getProductByHandle(handle: string): Promise<ProductFull | 
 export async function getSiblings(code: string, exceptHandle: string): Promise<Sibling[]> {
   if (!code) return [];
   const d = await sf<{ products: { edges: { node: { handle: string; title: string; tags: string[]; featuredImage?: { url: string } | null } }[] } }>(
-    `query($q:String!){ products(first:12, query:$q){ edges{ node{ handle title tags featuredImage{ url } } } } }`, { q: `tag:${code}` });
-  return (d?.products.edges || []).map(({ node }) => ({ handle: node.handle, title: node.title, metal: metalOf(node.tags), image: node.featuredImage?.url }))
-    .filter(x => x.metal || x.handle === exceptHandle);
+    `query($q:String!){ products(first:40, query:$q){ edges{ node{ handle title tags featuredImage{ url } } } } }`, { q: `tag:${code}` });
+  // metal from the tag when it is a full name, otherwise from the title ("White gold …", "Platinum …"), so no metal of the design is dropped;
+  // configured / karat / stone products created at checkout are not siblings
+  const seen = new Set<string>();
+  return (d?.products.edges || []).filter(({ node }) => !node.tags.some(t => ["Configured", "Karat variant", "Diamond"].includes(t)))
+    .map(({ node }) => ({ handle: node.handle, title: node.title, metal: metalOf(node.tags) || ringMetalOf(node.title), image: node.featuredImage?.url }))
+    .filter(x => { if (!x.metal && x.handle !== exceptHandle) return false; const k = x.metal || x.handle; if (seen.has(k) && x.handle !== exceptHandle) return false; seen.add(k); return true; });
 }
 
 export async function getRelated(productType: string, exceptHandle: string, first = 4): Promise<Related[]> {
