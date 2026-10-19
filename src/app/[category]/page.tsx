@@ -14,6 +14,8 @@ import JumpToResults from "@/components/JumpToResults";
 import StoneBar from "@/components/StoneBar";
 
 export function generateStaticParams() { return categories.map(c => ({ category: c.slug })); }
+// Always rendered fresh: the page reads its filters from the address bar, and a cached copy from an older build must never be served.
+export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params; const p = categories.find(c => c.slug === category);
   return { title: p ? `${p.nav} — MEEKITAZ` : "MEEKITAZ" };
