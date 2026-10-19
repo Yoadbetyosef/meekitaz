@@ -25,7 +25,10 @@ export const stoneLabel = (s: Stone) => `${s.carat.toFixed(2)} ct ${s.shape}`;
 export async function chooseStone(s: Stone, deps: { push: (url: string) => void; addRing: (setting: Setting, stone: Stone) => void; notify: (msg: string) => void }) {
   saveStone(s);
   let setting = loadSetting();
-  if (!setting) { const c = fancyColorOfStone(s.fancy); deps.push(c ? fancySettingsUrl(c, s.shape) : `/engagement-rings?style=${encodeURIComponent(s.shape)}&build=1`); return; }
+  if (!setting) { // no setting yet: the settings, already filtered to this stone's shape (and colour)
+    const shape = s.shape === "Elongated Cushion" ? "Cushion" : s.shape, c = fancyColorOfStone(s.fancy);
+    deps.push(c ? fancySettingsUrl(c, shape) : `/engagement-rings?style=${encodeURIComponent(shape)}&build=1`); return;
+  }
   if (setting.shape !== s.shape) { // the setting follows the shape of the diamond
     let item = null;
     try { item = (await (await fetch(`/api/setting?${new URLSearchParams({ ns: setting.ns, shape: s.shape, metal: setting.metal, color: setting.color || "" })}`)).json()).item; } catch { /* handled below */ }

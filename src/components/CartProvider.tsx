@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { Cart } from "@/lib/shopify";
 import type { Setting, Stone } from "@/lib/setting";
 import { addLocalRing, clearLocalRings, loadRings, removeLocalRing, setLocalRingSize, type LocalRing } from "@/lib/rings";
+import { clearSetting, clearStone } from "@/lib/setting";
 
 type Ctx = {
   cart: Cart | null; open: boolean; busy: boolean; configured: boolean;
@@ -75,7 +76,8 @@ export default function CartProvider({ children }: { children: React.ReactNode }
     add: async (variantId, quantity = 1, karat) => { const r = await run({ action: "add", variantId, quantity, karat: karat || "" }, true); return { ok: !!r.cart, error: r.error }; },
     setQty: (lineId, quantity) => run({ action: "update", lineId, quantity }).then(() => undefined),
     remove: lineId => { run({ action: "remove", lineId }); return Promise.resolve(); },
-    addRing: (setting, stone) => { setRingError(""); addLocalRing(setting, stone); setOpen(true); },
+    // the ring is in the bag: the "setting in progress" and "stone in progress" are done, so the next diamond starts a fresh build
+    addRing: (setting, stone) => { setRingError(""); addLocalRing(setting, stone); clearSetting(); clearStone(); setOpen(true); },
     setRingSize: (id, size) => { setRingError(""); setLocalRingSize(id, size); },
     removeRing: id => { removeLocalRing(id); },
     setCartRingSize: async (lineIds, size) => { await run({ action: "ringSize", lineIds, size }); },
