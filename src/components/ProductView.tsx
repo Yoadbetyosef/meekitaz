@@ -28,8 +28,8 @@ const FACTS: Record<string, string> = {
 };
 const COLG: Record<string, string> = { "White gold": "linear-gradient(135deg,#F4F4F6,#C9CBD2)", "Yellow gold": "linear-gradient(135deg,#F3DC8B,#D9A93C)", "Rose gold": "linear-gradient(135deg,#F2C3B2,#CF8F78)" };
 /** The approved two-step picker: Silver · 10K · 14K · 18K · Platinum, then the colour (dimmed for silver and platinum). The karat prices come from our price list. */
-function Material({ ns, metals, metal, karat, onMetal, onKarat }: { ns: string; metals: string[]; metal: string; karat: string; onMetal: (m: string) => void; onKarat: (k: string) => void }) {
-  const golds = GOLD_COLORS.filter(g => metals.includes(g)), ks = golds.length ? karatsFor(ns) : [];
+function Material({ ns, metals, metal, karat, onMetal, onKarat, karats, steps }: { ns: string; metals: string[]; metal: string; karat: string; onMetal: (m: string) => void; onKarat: (k: string) => void; karats?: string[]; steps?: Record<string, number> }) {
+  const golds = GOLD_COLORS.filter(g => metals.includes(g)), ks = golds.length ? (karats || karatsFor(ns)) : [];
   const gold = isGoldMetal(metal);
   const items: { id: string; on: boolean; go: () => void }[] = [
     ...(metals.includes("Silver") ? [{ id: "Silver", on: metal === "Silver", go: () => onMetal("Silver") }] : []),
@@ -41,7 +41,7 @@ function Material({ ns, metals, metal, karat, onMetal, onKarat }: { ns: string; 
     <>
       <div className="mk-lbl">Metal <em>{gold ? `${karat} ${metal}` : metal}</em></div>
       <div className="mk-seg" style={{ gridTemplateColumns: `repeat(${items.length},1fr)` }}>{items.map(i => (
-        <button key={i.id} type="button" className={i.on ? "on" : ""} aria-pressed={i.on} onClick={i.go}>{i.id}</button>))}</div>
+        <button key={i.id} type="button" className={i.on ? "on" : ""} aria-pressed={i.on} onClick={i.go}>{i.id}{steps && steps[i.id] ? <small>+{usd(steps[i.id])}</small> : null}</button>))}</div>
       <div className="mk-lbl">Colour <em>{gold ? metal : "Natural white"}</em></div>
       <div className="mk-cols">{golds.map(g => (
         <button key={g} type="button" className={`mk-col${gold && metal === g ? " on" : ""}${gold ? "" : " off"}`} aria-pressed={gold && metal === g} disabled={!gold} onClick={() => onMetal(g)}>
@@ -177,7 +177,16 @@ export default function ProductView({ product: p, siblings, related, ring, optio
                 onMetal={m => { const t = siblings.find(s => nm(s.metal) === m); if (t && t.handle !== p.handle) router.replace(`/products/${t.handle}`, { scroll: false }); }}
                 onKarat={k => { pickKarat(k); if (!isGoldMetal(metalNow)) { const t = siblings.find(s => isGoldMetal(nm(s.metal))); if (t) router.replace(`/products/${t.handle}`, { scroll: false }); } }} />
             )}
-            {!ring && !karatOn && siblings.length > 1 && (
+            {!ring && hasOpts && siblings.length > 0 && (() => {
+              const gp = rows.find(r => r.name === "Gold Purity");
+              const steps = Object.fromEntries((gp?.values || []).map(v => [v.label, v.price]));
+              const metalsHere = [...new Set(siblings.map(s => ringMetalOf(s.title) || nm(s.metal)).filter(Boolean))];
+              const mine = ringMetalOf(p.title) || nm(metal);
+              const goTo = (m: string) => { const t = siblings.find(s => (ringMetalOf(s.title) || nm(s.metal)) === m); if (t && t.handle !== p.handle) router.replace(`/products/${t.handle}`, { scroll: false }); };
+              return <Material ns={ns} metals={metalsHere} metal={mine} karat={osel["Gold Purity"] || gp?.values[0]?.label || ""} karats={gp ? gp.values.map(v => v.label) : []} steps={steps}
+                onMetal={goTo} onKarat={k => { setRawSel(x => ({ ...x, "Gold Purity": k })); if (!isGoldMetal(mine)) { const g = GOLD_COLORS.find(c => metalsHere.includes(c)); if (g) goTo(g); } }} />;
+            })()}
+            {!ring && !karatOn && !hasOpts && siblings.length > 1 && (
               <>
                 <span className="pp-lbl">Metal · <em>{nm(metal || p.title)}</em></span>
                 <div className="rp-metals">
@@ -188,7 +197,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
               </>
             )}
 
-            {hasOpts && rows.map(r => (
+            {hasOpts && rows.filter(r => r.name !== "Gold Purity").map(r => (
               <div key={r.name} className="po-row">
                 <span className="pp-lbl">{r.name} · <em>{osel[r.name]}</em></span>
                 <div className="po-vals">{r.values.map(v => {
