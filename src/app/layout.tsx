@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import Toast from "@/components/Toast";
 import CartProvider from "@/components/CartProvider";
 import CartDrawer from "@/components/CartDrawer";
+import HeroWarm from "@/components/HeroWarm";
+import { categories } from "@/lib/data";
 
 const prata = Prata({ weight: "400", subsets: ["latin"], variable: "--f-display", display: "swap" });
 const cormorant = Cormorant_Garamond({ weight: ["500"], style: ["italic"], subsets: ["latin"], variable: "--f-sub", display: "swap" });
@@ -23,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <CartProvider>
           <Nav />
+          <HeroWarm map={Object.fromEntries(categories.map(c => [c.slug, { d: c.desktop, m: c.mobile }]))} />
           {children}
           <Footer />
           <Toast />
