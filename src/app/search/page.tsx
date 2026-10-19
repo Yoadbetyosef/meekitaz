@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { searchProducts, shopifyConfigured } from "@/lib/shopify";
+import { shopifyConfigured } from "@/lib/shopify";
 import { POPULAR, parseIntent } from "@/lib/search";
+import { runSearch } from "@/lib/searchRun";
 import DesignCard from "@/components/DesignCard";
 
 export const metadata: Metadata = { title: "Search", robots: { index: false, follow: true } };
@@ -13,8 +14,10 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   const maxParam = typeof sp.max === "string" ? Number(sp.max) : undefined;
   const intent = q ? parseIntent(q) : null;
   const max = maxParam && Number.isFinite(maxParam) ? maxParam : intent?.max;
-  const found = q && shopifyConfigured ? await searchProducts(intent?.terms || (max ? "diamond" : q), { first: 120, maxPrice: max }) : null;
+  const run = q && shopifyConfigured ? await runSearch(maxParam && Number.isFinite(maxParam) ? `${q} under ${maxParam}` : q, 120) : null;
+  const found = run ? run.designs : null;
   const list = found || [];
+  const unavailable = !!q && found === null;
   return (
     <main>
       <section className="sec srch" aria-label="Search results">
@@ -28,13 +31,13 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
           {intent && intent.go.length > 0 && (
             <div className="srch-go">{intent.go.map(g => <Link key={g.href} href={g.href} className="srch-gopill"><b>{g.label}</b><small>{g.hint}</small></Link>)}</div>
           )}
-          {q && <p className="srch-n">{list.length ? `${list.length} design${list.length === 1 ? "" : "s"}${max ? ` under $${max.toLocaleString("en-US")}` : ""}` : ""}</p>}
+          {q && <p className="srch-n">{list.length ? `${list.length} design${list.length === 1 ? "" : "s"}${max ? ` under $${max.toLocaleString("en-US")}` : ""}${run?.corrected ? ` · showing results for “${run.corrected}”` : ""}` : ""}</p>}
           {list.length > 0 ? (
             <div className="pgrid">{list.map(p => <DesignCard key={p.id} p={p} />)}</div>
           ) : (
             <div className="srch-empty">
-              <p>{q ? `Nothing matched “${q}”. Try fewer words, a shape (oval, cushion), or a category.` : "Try one of these."}</p>
-              <div className="srch-chips">{POPULAR.map(p => <Link key={p} href={`/search?q=${encodeURIComponent(p)}`} className="sp-chip">{p}</Link>)}</div>
+              <p>{unavailable ? "Search is unavailable for a moment. Please try again, or browse the collections." : q ? `Nothing matched “${q}”. Try fewer words, a shape (oval, cushion), or a category.` : "Try one of these."}</p>
+              <div className="srch-chips">{POPULAR.map(p => <Link key={p} href={`/search?q=${encodeURIComponent(p)}`} className="sq-chip">{p}</Link>)}</div>
             </div>
           )}
         </div>

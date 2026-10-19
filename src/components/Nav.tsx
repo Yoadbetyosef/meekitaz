@@ -16,16 +16,16 @@ export default function Nav() {
   useEffect(() => { setOpen(false); setSearching(false); }, [pathname]);
   // ⌘K / Ctrl+K opens search from anywhere
   useEffect(() => {
-    const k = (e: KeyboardEvent) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setOpen(false); setSearching(s => !s); } };
+    const k = (e: KeyboardEvent) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setOpen(false); openCart(false); setSearching(s => !s); } };
     window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k);
-  }, []);
-  useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open]);
+  }, [openCart]);
+  useEffect(() => { document.body.style.overflow = open || searching ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open, searching]);
   return (
     <>
       <nav className="nav" aria-label="Main">
         <Link href="/" className="brand">MEEKITAZ<i>©</i></Link>
         <div className="nav-r">
-          <button className="nav-search" aria-label="Search" onClick={() => { setOpen(false); setSearching(true); }}>
+          <button className="nav-search" aria-label="Search" onClick={() => { setOpen(false); openCart(false); setSearching(true); }}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" /></svg>
           </button>
           <button className="burger" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="menu" onClick={() => setOpen(o => !o)}><i /><i /><i /></button>
