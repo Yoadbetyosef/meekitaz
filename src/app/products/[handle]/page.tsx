@@ -4,6 +4,7 @@ import { categories } from "@/lib/data";
 import { brandify, isBlocked } from "@/lib/text";
 import { fancyColorOf, FANCY_COLORS } from "@/lib/fancy";
 import { fancySwatches, vdbConfigured } from "@/lib/vdb";
+import { adminConfigured, getProductOptions } from "@/lib/shopifyAdmin";
 import ProductView from "@/components/ProductView";
 
 export const revalidate = 300;
@@ -30,6 +31,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   }
   const code = designCode(p.tags), isRing = p.tags.includes("Engagement Ring");
   const myColor = fancyColorOf(p.title);
+  const options = !isRing && adminConfigured ? await getProductOptions(p.handle) : null; // weight / colour / clarity / purity tree for pieces that have one
   const [siblings, related, family, ...others] = await Promise.all([
     isRing ? Promise.resolve([]) : getSiblings(code, p.handle), getRelated(p.productType, p.handle), isRing ? getRingFamily(code, myColor) : Promise.resolve([]),
     ...(isRing ? ["", ...FANCY_COLORS].filter(c => c !== myColor).map(c => getRingFamily(code, c)) : []),

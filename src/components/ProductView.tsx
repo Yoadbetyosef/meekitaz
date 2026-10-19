@@ -9,6 +9,7 @@ import { metalOf } from "@/lib/shopify";
 import type { RingVariant } from "@/lib/shopify";
 import { saveSetting, diamondsUrl, loadStone } from "@/lib/setting";
 import { fancyColorOf } from "@/lib/fancy";
+import { addonFor, completeSel, optionRows, type ProductOptions, type Sel } from "@/lib/options";
 import StoneSwatch from "./StoneSwatch";
 import { GOLD_COLORS, hasKarat, isGoldMetal, karatsFor, karatStep } from "@/lib/karat";
 import { toast } from "./Toast";
@@ -58,12 +59,18 @@ const TRUST = [
   ["M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 17.5h.01M17 17.5h.01", "Free insured shipping"],
 ];
 
-export default function ProductView({ product: p, siblings, related, ring }: { product: ProductFull; siblings: Sibling[]; related: Related[]; ring?: RingProp }) {
-  const { add, busy, addRing } = useCart();
+export default function ProductView({ product: p, siblings, related, ring, options }: { product: ProductFull; siblings: Sibling[]; related: Related[]; ring?: RingProp; options?: ProductOptions | null }) {
+  const { add, busy, addRing, addConfigured } = useCart();
+  // pieces with an option tree (weight / colour / clarity / purity / extras): the picks, with defaults filled in
+  const [rawSel, setRawSel] = useState<Sel>({});
+  const osel = useMemo(() => (options ? completeSel(options, rawSel) : {}), [options, rawSel]);
+  const rows = useMemo(() => (options ? optionRows(options, osel) : []), [options, osel]);
+  const addon = options ? addonFor(options, osel) : 0;
+  const hasOpts = rows.length > 0;
   const router = useRouter();
   const [rh, setRh] = useState(p.handle);
   const ns = ring?.ns || p.tags.find(t => /^NS-\d+$/.test(t)) || "";
-  const karatOn = hasKarat(ns);
+  const karatOn = hasKarat(ns) && !hasOpts; // the option tree carries its own Gold Purity prices
   const [karatPick, setKarat] = useState("10K");
   useEffect(() => { try { const k = sessionStorage.getItem("mk_karat"); if (k === "14K" || k === "18K") setKarat(k); } catch { /* ignore */ } }, []);
   const pickKarat = (k: string) => { setKarat(k); try { sessionStorage.setItem("mk_karat", k); } catch { /* ignore */ } };
@@ -82,7 +89,7 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
   const step = karatOn && isGoldMetal(metalNow) ? karatStep(ns, karat) : 0;
   const kLabel = karatOn && isGoldMetal(metalNow) ? karat : "";
   const baseP = cv ? cv.price : variant.price, baseC = cv ? cv.compareAt : variant.compareAt;
-  const title = cv ? cv.title : p.title, price = baseP + step, compareAt = baseC > 0 ? baseC + 2 * step : 0;
+  const title = cv ? cv.title : p.title, price = baseP + step + addon, compareAt = baseC > 0 ? baseC + 2 * step + 2 * addon : 0;
   const shapesHere = ring ? ring.shapes.filter(s => ring.family.some(v => v.shape === s.label)) : [];
   const metalsHere = cv && ring ? RING_METALS.filter(m => ring.family.some(v => v.shape === cv.shape && v.metal === m)) : [];
   const pickRing = (shape: string, metal: string) => {
@@ -181,6 +188,16 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
               </>
             )}
 
+            {hasOpts && rows.map(r => (
+              <div key={r.name} className="po-row">
+                <span className="pp-lbl">{r.name} · <em>{osel[r.name]}</em></span>
+                <div className="po-vals">{r.values.map(v => {
+                  const on = osel[r.name] === v.label;
+                  const diff = v.price - (r.values.find(x => x.label === osel[r.name])?.price || 0);
+                  return <button key={v.label} type="button" className={`po-v${on ? " on" : ""}`} aria-pressed={on} onClick={() => setRawSel(x => ({ ...x, [r.name]: v.label }))}>{v.label.replace(/ Carat$/i, " ct")}{!on && diff !== 0 && <small>{diff > 0 ? "+" : "−"}{usd(Math.abs(diff))}</small>}</button>;
+                })}</div>
+              </div>
+            ))}
             {real.map(o => (
               <div key={o.name}>
                 <span className="pp-lbl">{o.name} · {sel[o.name]}</span>
@@ -192,7 +209,7 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
               {ring && cv ? (
                 <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting<small>Next: pick your {cv.shape.toLowerCase()} diamond</small></button>
               ) : (
-                <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={async () => { const r = await add(variant.id, 1, step ? karat : ""); if (!r.ok) toast(r.error === "not_configured" ? "This gold option is being connected for checkout. Please book an appointment and we will complete it with you." : "We could not add this to your bag. Please try again."); }}>{!variant.available ? "Sold out" : busy ? "Adding…" : `Add to bag · ${usd(price)}`}</button>
+                <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={async () => { const r = hasOpts ? await addConfigured(variant.id, p.handle, osel) : await add(variant.id, 1, step ? karat : ""); if (!r.ok) toast(r.error === "not_configured" ? "This option is being connected for checkout. Please book an appointment and we will complete it with you." : "We could not add this to your bag. Please try again."); }}>{!variant.available ? "Sold out" : busy ? "Adding…" : `Add to bag · ${usd(price)}`}</button>
               )}
               <Link href="/#contact" className="pp-appt">Book a private appointment</Link>
             </div>
@@ -225,7 +242,7 @@ export default function ProductView({ product: p, siblings, related, ring }: { p
 
       <div className="pp-sbar">
         <div><b>{usd(price)}</b>{compareAt > 0 && <s>{usd(compareAt)}</s>}</div>
-        {ring && cv ? <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting</button> : <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={() => add(variant.id)}>{variant.available ? "Add to bag" : "Sold out"}</button>}
+        {ring && cv ? <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting</button> : <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={() => (hasOpts ? addConfigured(variant.id, p.handle, osel) : add(variant.id))}>{variant.available ? `Add to bag · ${usd(price)}` : "Sold out"}</button>}
       </div>
     </main>
   );

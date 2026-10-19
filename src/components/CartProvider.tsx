@@ -10,6 +10,7 @@ type Ctx = {
   rings: LocalRing[]; ringError: string; bagCount: number;
   setOpen: (v: boolean) => void;
   add: (variantId: string, quantity?: number, karat?: string) => Promise<{ ok: boolean; error?: string }>;
+  addConfigured: (variantId: string, handle: string, sel: Record<string, string>) => Promise<{ ok: boolean; error?: string }>;
   setQty: (lineId: string, quantity: number) => Promise<void>;
   remove: (lineId: string) => Promise<void>;
   /** A ring (setting + diamond) goes into the bag. It stays in the browser until checkout. */
@@ -74,6 +75,7 @@ export default function CartProvider({ children }: { children: React.ReactNode }
       return plain + builds.size + rings.length;
     })(),
     add: async (variantId, quantity = 1, karat) => { const r = await run({ action: "add", variantId, quantity, karat: karat || "" }, true); return { ok: !!r.cart, error: r.error }; },
+    addConfigured: async (variantId, handle, sel) => { const r = await run({ action: "configure", variantId, handle, sel }, true); return { ok: !!r.cart, error: r.error }; },
     setQty: (lineId, quantity) => run({ action: "update", lineId, quantity }).then(() => undefined),
     remove: lineId => { run({ action: "remove", lineId }); return Promise.resolve(); },
     // the ring is in the bag: the "setting in progress" and "stone in progress" are done, so the next diamond starts a fresh build

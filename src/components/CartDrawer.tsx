@@ -71,37 +71,39 @@ export default function CartDrawer() {
             <div className="cd-empty"><p>Your bag is empty. For now.</p><Link href="/engagement-rings" onClick={() => setOpen(false)}>Shop engagement rings</Link></div>
           ) : (<>
             {rings.map(r => (
-              <div className="cd-ring" key={r.id} style={{ opacity: busy ? .6 : 1 }}>
-                <div className="cd-rh"><b>Your ring</b><button className="cd-rm" onClick={() => { removeRing(r.id); }} disabled={busy}>Remove ring</button></div>
+              <div className="cd-ring cd-one" key={r.id} style={{ opacity: busy ? .6 : 1 }}>
                 <div className="cd-li">
-                  <Link href={`/products/${r.setting.handle}`} className="cd-im" onClick={() => setOpen(false)}>{r.setting.image && /* eslint-disable-next-line @next/next/no-img-element */ <img src={`${r.setting.image}${r.setting.image.includes("?") ? "&" : "?"}width=200`} alt="" />}</Link>
-                  <div><h4>{r.setting.title}</h4><div className="cd-meta">Setting · {r.setting.karat ? `${r.setting.karat} ` : ""}{r.setting.metal}</div>
-                    <button className="cd-chg" onClick={() => { removeRing(r.id); saveStone(r.stone); clearSetting(); leave(`/engagement-rings?style=${encodeURIComponent(r.stone.shape)}&build=1`); }}>Change setting</button></div>
-                  <div className="cd-pr">{money(r.setting.price, cur)}</div>
-                </div>
-                <div className="cd-li">
-                  <div className="cd-im cd-st">{r.stone.image && /* eslint-disable-next-line @next/next/no-img-element */ <img src={r.stone.image} alt="" referrerPolicy="no-referrer" />}</div>
-                  <div><h4>{r.stone.carat.toFixed(2)} ct {r.stone.shape} diamond</h4><div className="cd-meta">{[r.stone.fancy || r.stone.color, r.stone.clarity, r.stone.cut && `${r.stone.cut} cut`, `${r.stone.lab} certified`].filter(Boolean).join(" · ")}</div>
-                    <button className="cd-chg" onClick={() => { removeRing(r.id); saveSetting(r.setting); clearStone(); leave(`/diamonds?style=${encodeURIComponent(r.stone.shape)}&c=2-20&build=1`); }}>Change diamond</button></div>
-                  <div className="cd-pr">{money(r.stone.price, cur)}</div>
+                  <Link href={`/products/${r.setting.handle}`} className="cd-im cd-combo" onClick={() => setOpen(false)}>
+                    {r.setting.image && /* eslint-disable-next-line @next/next/no-img-element */ <img src={`${r.setting.image}${r.setting.image.includes("?") ? "&" : "?"}width=240`} alt="" />}
+                    {r.stone.image && /* eslint-disable-next-line @next/next/no-img-element */ <img className="cd-stone-badge" src={r.stone.image} alt="" referrerPolicy="no-referrer" />}
+                  </Link>
+                  <div>
+                    <h4>{r.setting.title}</h4>
+                    <div className="cd-meta">{[r.setting.karat, r.setting.metal, `${r.stone.carat.toFixed(2)} ct ${r.stone.shape}`, r.stone.fancy || r.stone.color, r.stone.clarity, r.stone.lab].filter(Boolean).join(" · ")}</div>
+                    <div className="cd-links">
+                      <button className="cd-chg" onClick={() => { removeRing(r.id); saveSetting(r.setting); clearStone(); leave(`/diamonds?style=${encodeURIComponent(r.stone.shape)}&c=2-20&build=1`); }}>Change diamond</button>
+                      <button className="cd-chg" onClick={() => { removeRing(r.id); saveStone(r.stone); clearSetting(); leave(`/engagement-rings?style=${encodeURIComponent(r.stone.shape)}&build=1`); }}>Change setting</button>
+                    </div>
+                  </div>
+                  <div className="cd-pr">{money(r.setting.price + r.stone.price, cur)}<button className="cd-rm" onClick={() => { removeRing(r.id); }} disabled={busy}>Remove</button></div>
                 </div>
                 {sizeBox(r.id, r.size, v => setRingSize(r.id, v))}
-                <div className="cd-rt"><span>Ring total</span><b>{money(r.setting.price + r.stone.price, cur)}</b></div>
               </div>
             ))}
             {cartRings.map(r => (
-              <div className="cd-ring" key={r.build} style={{ opacity: busy ? .6 : 1 }}>
-                <div className="cd-rh"><b>Your ring</b><button className="cd-rm" onClick={() => { removeCartRing([r.setting.id, r.stone.id]); clearSetting(); clearStone(); }} disabled={busy}>Remove ring</button></div>
+              <div className="cd-ring cd-one" key={r.build} style={{ opacity: busy ? .6 : 1 }}>
                 <div className="cd-li">
-                  <Link href={`/products/${r.setting.handle}`} className="cd-im" onClick={() => setOpen(false)}>{r.setting.image && <Image src={r.setting.image.url} alt={r.setting.image.alt} fill sizes="92px" />}</Link>
-                  <div><h4>{r.setting.title}</h4><div className="cd-meta">Setting</div></div><div className="cd-pr">{money(r.setting.price, cur)}</div>
-                </div>
-                <div className="cd-li">
-                  <div className={`cd-im ${r.stone.image ? "cd-st" : "cd-gem"}`}>{r.stone.image ? <Image src={r.stone.image.url} alt={r.stone.image.alt} fill sizes="92px" /> : <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M12 8h24l8 12-20 22L4 20z" /><path d="M4 20h40M12 8l12 34M36 8L24 42M18 20l6-12 6 12" /></svg>}</div>
-                  <div><h4>{r.stone.title.replace(/ \(.*\)$/, "")}</h4><div className="cd-meta">{attr(r.setting, "Diamond")?.split(" · ").slice(1).join(" · ")}</div></div><div className="cd-pr">{money(r.stone.price, cur)}</div>
+                  <Link href={`/products/${r.setting.handle}`} className="cd-im cd-combo" onClick={() => setOpen(false)}>
+                    {r.setting.image && <Image src={r.setting.image.url} alt={r.setting.image.alt} fill sizes="92px" />}
+                    {r.stone.image && /* eslint-disable-next-line @next/next/no-img-element */ <img className="cd-stone-badge" src={r.stone.image.url} alt="" />}
+                  </Link>
+                  <div>
+                    <h4>{r.setting.title}</h4>
+                    <div className="cd-meta">{[attr(r.setting, "Gold"), attr(r.setting, "Diamond")].filter(Boolean).join(" · ")}</div>
+                  </div>
+                  <div className="cd-pr">{money(r.setting.price + r.stone.price, cur)}<button className="cd-rm" onClick={() => { removeCartRing([r.setting.id, r.stone.id]); clearSetting(); clearStone(); }} disabled={busy}>Remove</button></div>
                 </div>
                 {sizeBox(r.build, r.size, v => setCartRingSize([r.setting.id, r.stone.id], v))}
-                <div className="cd-rt"><span>Ring total</span><b>{money(r.setting.price + r.stone.price, cur)}</b></div>
               </div>
             ))}
             {plain.map(l => (
@@ -110,8 +112,9 @@ export default function CartDrawer() {
                   {l.image && <Image src={l.image.url} alt={l.image.alt} fill sizes="92px" />}
                 </Link>
                 <div>
-                  <h4>{l.title}</h4>
+                  <h4>{l.title.replace(/ \((?:[^()]*)\)$/, "")}</h4>
                   {l.variantTitle && <div className="cd-meta">{l.variantTitle}</div>}
+                  {l.attributes.filter(a => !["Build", "Arrives by"].includes(a.key)).length > 0 && <div className="cd-meta">{l.attributes.filter(a => !["Build", "Arrives by"].includes(a.key)).map(a => a.value.replace(/ Carat$/i, " ct")).join(" · ")}</div>}
                   {l.compareAt > 0 && <span className="cd-tag">50% off · made to order</span>}
                   <div className="cd-qty">
                     <button onClick={() => setQty(l.id, l.quantity - 1)} aria-label="Decrease quantity" disabled={busy}>−</button>
@@ -124,7 +127,6 @@ export default function CartDrawer() {
               </div>
             ))}
           </>)}
-        </div>
         {!empty && (
           <div className="cd-foot">
             <div className="cd-sum">
@@ -153,6 +155,7 @@ export default function CartDrawer() {
             <Trust />
           </div>
         )}
+        </div>
       </aside>
     </>
   );

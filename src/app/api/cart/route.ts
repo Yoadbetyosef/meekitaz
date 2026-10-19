@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { addCartLines, addToCart, createCart, createCartWithLines, getCart, removeCartLine, removeCartLines, shopifyConfigured, updateCartLine, updateLineAttributes, type Cart } from "@/lib/shopify";
 import { getDiamond, vdbConfigured } from "@/lib/vdb";
-import { adminConfigured, ensureKaratVariant, ensureStoneVariant } from "@/lib/shopifyAdmin";
+import { adminConfigured, ensureConfiguredVariant, ensureKaratVariant, ensureStoneVariant, getProductOptions } from "@/lib/shopifyAdmin";
+import { addonFor, completeSel, selLabel } from "@/lib/options";
 
 const SIZES = new Set(Array.from({ length: 21 }, (_, i) => String(3 + i * 0.5)));
 
@@ -33,6 +34,18 @@ export async function POST(req: Request) {
     }
     cart = id ? await addToCart(id, variantId, qty) : null;
     if (!cart) cart = await createCart(variantId, qty); // no cart yet, or the old one expired
+  } else if (body.action === "configure" && typeof body.variantId === "string" && typeof body.handle === "string" && body.sel && typeof body.sel === "object") {
+    // a piece with options (weight, colour, clarity, purity, extras): the price is recomputed here from the stored tree, never trusted from the browser
+    if (!adminConfigured) return NextResponse.json({ error: "not_configured" }, { status: 503 });
+    try {
+      const o = await getProductOptions(body.handle);
+      if (!o) return NextResponse.json({ error: "no_options" }, { status: 400 });
+      const sel = completeSel(o, body.sel as Record<string, string>), addon = addonFor(o, sel), label = selLabel(sel);
+      const variantId = await ensureConfiguredVariant(body.variantId, addon, label);
+      const attributes = Object.entries(sel).map(([key, value]) => ({ key, value }));
+      cart = id ? await addCartLines(id, [{ merchandiseId: variantId, quantity: 1, attributes }]) : null;
+      if (!cart) cart = await createCartWithLines([{ merchandiseId: variantId, quantity: 1, attributes }]);
+    } catch (e) { const m = e instanceof Error ? e.message : String(e); console.error("[configure]", m); return NextResponse.json({ error: "failed", detail: m.slice(0, 200) }, { status: 502 }); }
   } else if (body.action === "ringsCheckout" && Array.isArray(body.rings) && body.rings.length > 0 && body.rings.length <= 5) {
     // rings waiting in the bag become real cart lines now: the setting, and a Shopify product for the chosen diamond
     if (!adminConfigured || !vdbConfigured) return NextResponse.json({ error: "not_configured" }, { status: 503 });

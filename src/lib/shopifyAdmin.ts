@@ -1,4 +1,5 @@
 import { karatStep } from "./karat";
+import { OPTIONS_KEY, OPTIONS_NS, type ProductOptions } from "./options";
 // Server-only. Creates the product for a chosen diamond (diamonds come from our supplier, not from Shopify) and a cart holding ring + diamond.
 const domain = process.env.SHOPIFY_STORE_DOMAIN, sfToken = process.env.SHOPIFY_STOREFRONT_TOKEN;
 // Admin access: either a fixed token (SHOPIFY_ADMIN_TOKEN, from a legacy custom app) or the Client ID + Client secret of a Dev Dashboard app, which are exchanged for a token that lasts 24 hours.
@@ -146,5 +147,46 @@ export async function ensureKaratVariant(variantId: string, karat: string): Prom
     if (n && Math.abs(+n.price.amount - price) < 0.5) return n.id;
     await new Promise(r => setTimeout(r, 700));
   }
+  return variantGid;
+}
+
+/** The option tree stored on a product (null when the product has none). */
+export async function getProductOptions(handle: string): Promise<ProductOptions | null> {
+  try {
+    const r = await admin<{ productByHandle: { metafield: { value: string } | null } | null }>(
+      `query($h:String!){ productByHandle(handle:$h){ metafield(namespace:"${OPTIONS_NS}", key:"${OPTIONS_KEY}"){ value } } }`, { h: handle });
+    const v = r.productByHandle?.metafield?.value; return v ? (JSON.parse(v) as ProductOptions) : null;
+  } catch { return null; }
+}
+/** A sellable variant for one configuration of a piece (weight/colour/clarity/purity/extras): a hidden product at the configured price, made once. */
+export async function ensureConfiguredVariant(variantId: string, addon: number, label: string): Promise<string> {
+  if (!addon && !label) return variantId;
+  const q = await storefront<{ node: { price: { amount: string }; compareAtPrice: { amount: string } | null; product: { handle: string; title: string; productType: string; descriptionHtml: string; tags: string[]; images: { edges: { node: { url: string } }[] } } } | null }>(
+    `query($id:ID!){ node(id:$id){ ... on ProductVariant { price{ amount } compareAtPrice{ amount } product{ handle title productType descriptionHtml tags images(first:3){ edges{ node{ url } } } } } } }`, { id: variantId });
+  const v = q.node; if (!v) throw new Error("variant not found");
+  const price = +v.price.amount + addon, compare = v.compareAtPrice ? +v.compareAtPrice.amount + 2 * addon : 0;
+  const slug = label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
+  const handle = `${v.product.handle}-cfg-${slug}`.slice(0, 250);
+  const have = (await storefront<{ product: { variants: { edges: { node: { id: string; price: { amount: string } } }[] } } | null }>(`query($h:String!){ product(handle:$h){ variants(first:1){ edges{ node{ id price{ amount } } } } } }`, { h: handle })).product?.variants.edges[0]?.node;
+  if (have && Math.abs(+have.price.amount - price) < 0.5) return have.id;
+  const found = await admin<{ productByHandle: { id: string; variants: { nodes: { id: string }[] } } | null }>(`query($h:String!){ productByHandle(handle:$h){ id variants(first:1){ nodes{ id } } } }`, { h: handle });
+  let productId = found.productByHandle?.id, variantGid = found.productByHandle?.variants.nodes[0]?.id;
+  if (!productId) {
+    const input = { title: `${v.product.title} (${label})`, handle, status: "ACTIVE", vendor: "Meekitaz", productType: v.product.productType, tags: ["Configured", ...v.product.tags.filter(t => /^NS-\d+$/.test(t))], descriptionHtml: v.product.descriptionHtml };
+    const create = (media: { originalSource: string; mediaContentType: "IMAGE" }[]) => admin<{ productCreate: { product: { id: string; variants: { nodes: { id: string }[] } } | null; userErrors: { message: string }[] } }>(
+      `mutation($product: ProductCreateInput!, $media: [CreateMediaInput!]){ productCreate(product: $product, media: $media){ product{ id variants(first:1){ nodes{ id } } } userErrors{ field message } } }`, { product: input, media });
+    const images = v.product.images.edges.slice(0, 1).map(e => ({ originalSource: e.node.url, mediaContentType: "IMAGE" as const }));
+    let c = await create(images);
+    if ((c.productCreate.userErrors.length || !c.productCreate.product) && images.length) c = await create([]);
+    if (c.productCreate.userErrors.length || !c.productCreate.product) throw new Error("productCreate: " + JSON.stringify(c.productCreate.userErrors));
+    productId = c.productCreate.product.id; variantGid = c.productCreate.product.variants.nodes[0]?.id;
+    const pub = await admin<{ publishablePublish: { userErrors: { message: string }[] } }>(`mutation($id:ID!,$input:[PublicationInput!]!){ publishablePublish(id:$id,input:$input){ userErrors{ field message } } }`, { id: productId, input: [{ publicationId: await headlessPublication() }] });
+    if (pub.publishablePublish.userErrors.length) throw new Error("publish: " + JSON.stringify(pub.publishablePublish.userErrors));
+  }
+  if (!productId || !variantGid) throw new Error("no variant");
+  const u = await admin<{ productVariantsBulkUpdate: { userErrors: { message: string }[] } }>(
+    `mutation($productId:ID!,$variants:[ProductVariantsBulkInput!]!){ productVariantsBulkUpdate(productId:$productId,variants:$variants){ productVariants{ id price } userErrors{ field message } } }`,
+    { productId, variants: [{ id: variantGid, price: price.toFixed(2), compareAtPrice: compare ? compare.toFixed(2) : null, inventoryItem: { tracked: false } }] });
+  if (u.productVariantsBulkUpdate.userErrors.length) throw new Error("price: " + JSON.stringify(u.productVariantsBulkUpdate.userErrors));
   return variantGid;
 }
