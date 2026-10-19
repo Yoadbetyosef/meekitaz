@@ -71,6 +71,7 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 @media(max-width:767px){
   .hero{background:var(--blue)}
   .hs{inset:96px 14px calc(var(--hc,230px) + 16px + env(safe-area-inset-bottom,0px) + 30px) 14px;height:auto;border-radius:20px;overflow:hidden}
+  .hs img{object-position:var(--pos-m,50% 50%)!important;transform:scale(var(--zoom-m,1));transform-origin:var(--pos-m,50% 50%)}
   .heroc{justify-content:flex-end;padding:0 20px calc(16px + env(safe-area-inset-bottom,0px));gap:10px;color:var(--ink)}
   .heroc h1{font-size:8.4vw;text-shadow:none;color:var(--ink)}
   .heroc h1 small{font:600 3vw var(--body);font-style:normal;letter-spacing:.22em;text-transform:uppercase;color:var(--red);margin-bottom:6px}

@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 // One-time task (re-runnable): for every non-ring piece, read its option tree and prices from the matching Nature Sparkle page and
 // keep it on the product as a metafield. Open /api/admin/options?key=ADMIN_TASK_KEY; the page walks the catalogue in batches.
 const TYPES = ["Earrings", "Necklaces", "Bracelets", "Pendants", "Necklace", "Bracelet", "Earring", "Pendant"];
-const BATCH = 8;
+const BATCH = 5;
 type Node = { id: string; handle: string; title: string; productType: string; tags: string[]; metafield: { value: string } | null };
 
 export async function GET(req: NextRequest) {
@@ -26,8 +26,15 @@ export async function GET(req: NextRequest) {
       if (p.tags.some(t => ["Diamond", "Karat variant"].includes(t))) { skipped++; continue; }
       const old = p.tags.find(t => t.startsWith(OLD_HANDLE_TAG))?.slice(OLD_HANDLE_TAG.length) || p.handle;
       const url = `https://naturesparkle.com/products/${old}`;
-      const r = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (Meekitaz catalogue sync)" }, cache: "no-store" });
-      if (!r.ok) { missing++; log.push(`${p.handle}: ${r.status} at ${url}`); continue; }
+      // Nature Sparkle rate-limits bursts (429): one request at a time, a short pause between them, and a patient retry
+      let r: Response | null = null;
+      for (let a = 0; a < 4; a++) {
+        r = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (Meekitaz catalogue sync)" }, cache: "no-store" });
+        if (r.status !== 429) break;
+        await new Promise(res => setTimeout(res, 2500 * (a + 1)));
+      }
+      await new Promise(res => setTimeout(res, 700));
+      if (!r || !r.ok) { missing++; log.push(`${p.handle}: ${r?.status} at ${url}`); continue; }
       const opts = parseNsOptions(await r.text(), url);
       if (!opts) { missing++; log.push(`${p.handle}: no options on the Nature Sparkle page`); continue; }
       const m = await adminGraphql<{ metafieldsSet: { userErrors: { message: string }[] } }>(

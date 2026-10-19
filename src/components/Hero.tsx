@@ -34,7 +34,7 @@ export default function Hero() {
   return (
     <section className="hero" id="hero" aria-label="Hero" ref={secRef}>
       {slides.map((sl, k) => (
-        <div key={k} className={`hs${k === i ? " on" : ""}`}>
+        <div key={k} className={`hs${k === i ? " on" : ""}`} style={{ "--pos-m": (sl as { posM?: string }).posM || sl.pos, "--zoom-m": (sl as { zoomM?: number }).zoomM || 1 } as React.CSSProperties}>
           <picture>
             <source media="(max-width:767px)" srcSet={sl.mobile} />
             <Image src={sl.desktop} alt="" fill priority={k === 0} sizes="100vw" quality={78} style={{ objectFit: "cover", objectPosition: sl.pos }} />

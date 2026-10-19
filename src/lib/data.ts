@@ -14,7 +14,7 @@ export const slides = [
     "href": "/bracelets",
     "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_043931_218479e4-4e43-42c6-9725-c85863ab6bd7.png",
     "pos": "50% 0%",
-    "mobile": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_182456_89c5d9cf-3e76-454f-b1b6-eb9651974034.png"
+    "mobile": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_024828_c7f5e352-cb14-4d30-ae23-e7a19ea500a8.png", "posM": "50% 50%"
   },
   {
     "small": "A ball cap. Two carats.",
@@ -22,7 +22,7 @@ export const slides = [
     "href": "/earrings",
     "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_043934_423de0fb-fadc-40fa-9bf5-35f1862d99a7.png",
     "pos": "50% 8%",
-    "mobile": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_174423_f888444f-2c09-427a-ab8c-df7423be2d03.png"
+    "mobile": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_174423_f888444f-2c09-427a-ab8c-df7423be2d03.png", "zoomM": 1.5, "posM": "50% 40%"
   },
   {
     "small": "One stone. The whole conversation.",
@@ -30,7 +30,7 @@ export const slides = [
     "href": "/engagement-rings",
     "desktop": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_181453_34510dca-30a9-44f1-baaa-4a5e64d42d3f.png",
     "pos": "50% 50%",
-    "mobile": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_182308_e428b82a-9ee0-4ac7-b21f-f8ddd7a7f75b.png"
+    "mobile": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_023523_716804e4-9da6-4ac6-ba6a-7fca2fa86ff3.png"
   }
 ] as const;
 
