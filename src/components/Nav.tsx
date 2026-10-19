@@ -5,24 +5,37 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { menuTiles } from "@/lib/data";
 import { useCart } from "./CartProvider";
+import SearchPalette from "./SearchPalette";
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [searching, setSearching] = useState(false);
   const pathname = usePathname();
   const { bagCount, setOpen: openCart } = useCart();
   const count = bagCount;
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => { setOpen(false); setSearching(false); }, [pathname]);
+  // ⌘K / Ctrl+K opens search from anywhere
+  useEffect(() => {
+    const k = (e: KeyboardEvent) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setOpen(false); setSearching(s => !s); } };
+    window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k);
+  }, []);
   useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open]);
   return (
     <>
       <nav className="nav" aria-label="Main">
         <Link href="/" className="brand">MEEKITAZ<i>©</i></Link>
-        <button className="burger" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="menu" onClick={() => setOpen(o => !o)}><i /><i /><i /></button>
+        <div className="nav-r">
+          <button className="nav-search" aria-label="Search" onClick={() => { setOpen(false); setSearching(true); }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" /></svg>
+          </button>
+          <button className="burger" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="menu" onClick={() => setOpen(o => !o)}><i /><i /><i /></button>
+        </div>
       </nav>
       <button className="cart" aria-label={`Open bag${count ? `, ${count} items` : ""}`} onClick={() => { setOpen(false); openCart(true); }}>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M5 8h14l-1.2 12H6.2L5 8z" /><path d="M9 8V6a3 3 0 0 1 6 0v2" /></svg>
         {count > 0 && <b>{count}</b>}
       </button>
+      <SearchPalette open={searching} onClose={() => setSearching(false)} />
       <div id="menu" className={`menu${open ? " open" : ""}`} aria-hidden={!open}>
         <div className="menu-in">
           <div className="mgrid">

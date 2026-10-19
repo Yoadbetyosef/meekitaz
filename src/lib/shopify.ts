@@ -213,6 +213,24 @@ export async function getProductsByQuery(query: string, opts: { first?: number; 
   return { products: collapseDesigns(products), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
 }
 
+/** Free-text product search (Storefront `search`: relevance-ranked, tolerant of small typos, the last word matched as a prefix), collapsed to one card per design. */
+export async function searchProducts(query: string, opts: { first?: number; maxPrice?: number } = {}): Promise<Product[] | null> {
+  type N = { id?: string; handle?: string; title?: string; tags?: string[]; priceRange?: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange?: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null };
+  const d = await sf<{ search: { nodes: N[] } }>(
+    `query($q:String!,$first:Int!,$f:[ProductFilter!]){ search(query:$q, first:$first, types:PRODUCT, prefix:LAST, productFilters:$f){ nodes{ ... on Product { id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } } } } }`,
+    { q: query, first: opts.first || 60, f: opts.maxPrice ? [{ price: { max: opts.maxPrice } }] : null });
+  if (!d) return null;
+  const products: Product[] = d.search.nodes
+    .filter((n): n is Required<Pick<N, "id" | "handle" | "title" | "tags" | "priceRange" | "compareAtPriceRange">> & N => !!n.id && !!n.tags && !n.tags.some(t => ["Configured", "Karat variant", "Diamond"].includes(t) || t.toLowerCase() === "fifa world cup 2026"))
+    .map(n => ({
+      id: n.id!, handle: n.handle!, title: n.title!, price: n.priceRange!.minVariantPrice.amount, currency: n.priceRange!.minVariantPrice.currencyCode,
+      compareAt: +n.compareAtPriceRange!.minVariantPrice.amount > +n.priceRange!.minVariantPrice.amount ? +n.compareAtPriceRange!.minVariantPrice.amount : 0,
+      image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title! } : undefined,
+      code: n.tags!.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title!), shape: n.tags!.find(t => RING_SHAPES.includes(t)) || "",
+    }));
+  return collapseDesigns(products);
+}
+
 /* ---------------- Engagement-ring settings: one design in every shape and metal ---------------- */
 export type RingVariant = { id: string; handle: string; title: string; shape: string; metal: string; price: number; compareAt: number; images: string[]; variantId: string };
 const SHAPE_NAMES = ["Round", "Oval", "Cushion", "Emerald", "Pear", "Princess", "Radiant", "Marquise", "Asscher", "Heart"];
