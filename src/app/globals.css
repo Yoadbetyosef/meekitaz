@@ -540,8 +540,10 @@ button.cd-co{border:0;font-family:inherit;cursor:pointer}
 .cd-one .cd-size{padding:4px 0 14px}.cd-one .cd-size label{display:inline-block;margin:0 10px 0 0}.cd-one .cd-size select{width:auto;padding:9px 12px}
 .cd-one .cd-pr .cd-rm{margin-top:8px}
 /* product: option rows (weight / colour / clarity / purity / extras) */
-.po-row{margin-bottom:16px}.po-row .pp-lbl em{font-style:normal;opacity:.6;text-transform:none;letter-spacing:0}
+.po-row{margin-bottom:16px}.po-row .pp-lbl em,.pp-lbl em{font-style:normal;opacity:.6;text-transform:none;letter-spacing:0}
+a.rp-mt{text-decoration:none}
 .po-vals{display:flex;flex-wrap:wrap;gap:8px}
 .po-v{display:inline-flex;align-items:baseline;gap:6px;padding:10px 14px;border-radius:999px;border:1px solid rgba(28,26,27,.18);background:#fff;font:600 12px var(--body);color:var(--ink);cursor:pointer}
 .po-v small{font:400 11px var(--body);opacity:.55}
 .po-v.on{background:var(--ink);color:#fff;border-color:var(--ink)}.po-v.on small{opacity:.8}
+.rp-metals{margin-bottom:16px}

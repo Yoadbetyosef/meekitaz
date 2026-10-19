@@ -179,11 +179,11 @@ export default function ProductView({ product: p, siblings, related, ring, optio
             )}
             {!ring && !karatOn && siblings.length > 1 && (
               <>
-                <span className="pp-lbl">Metal{metal ? ` · ${metal}` : ""}</span>
-                <div className="pp-sw">
-                  {siblings.map(s => (
-                    <Link key={s.handle} href={`/products/${s.handle}`} aria-label={s.metal} className={s.handle === p.handle ? "on" : ""} replace scroll={false}><i style={{ background: SW[s.metal] || "#ddd" }} /></Link>
-                  ))}
+                <span className="pp-lbl">Metal · <em>{nm(metal || p.title)}</em></span>
+                <div className="rp-metals">
+                  {siblings.map(s => { const m = nm(s.metal); const on = s.handle === p.handle; return (
+                    <Link key={s.handle} href={`/products/${s.handle}`} aria-label={m} className={`rp-mt${on ? " on" : ""}`} aria-pressed={on} replace scroll={false}>
+                      <span className="rp-sw"><i style={{ background: SW[m] || "#ddd" }} /></span>{m.replace(" gold", "")}</Link>); })}
                 </div>
               </>
             )}
