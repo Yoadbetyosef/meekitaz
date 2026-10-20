@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import Coords from "./Coords";
 import Link from "next/link";
 import { newFancy, newPink, newGreen } from "@/lib/data";
 
@@ -48,7 +47,7 @@ export default function NewFancy() {
               <p className="nf-sub">One yellow stone. Zero apologies. Pink, blue, yellow and green lab-grown diamonds, IGI certified.</p>
               <Link href="/fancy-colors" className="pill nf-cta">Shop fancy colors</Link>
             </div>
-            <div className="nf-img"><Image src={newFancy.img} alt="Fancy yellow cushion diamond ring" fill sizes="(max-width:767px) 92vw, 50vw" quality={82} /><Coords k="new-yellow" /></div>
+            <div className="nf-img"><Image src={newFancy.img} alt="Fancy yellow cushion diamond ring" fill sizes="(max-width:767px) 92vw, 50vw" quality={82} /></div>
           </div>
           <div className="nf-layer nf-p" ref={p}>
             <div className="nf-txt">
@@ -56,7 +55,7 @@ export default function NewFancy() {
               <p className="nf-sub">Fancy pink lab-grown diamonds, for people who were never going to wear white. IGI certified, naturally.</p>
               <Link href="/fancy-colors?color=Pink" className="pill nf-cta">Shop pink</Link>
             </div>
-            <div className="nf-img"><Image src={newPink.img} alt="Pink diamond stud earring" fill sizes="(max-width:767px) 92vw, 50vw" quality={82} /><Coords k="new-pink" /></div>
+            <div className="nf-img"><Image src={newPink.img} alt="Pink diamond stud earring" fill sizes="(max-width:767px) 92vw, 50vw" quality={82} /></div>
           </div>
           <div className="nf-layer nf-g" ref={g}>
             <div className="nf-txt">
@@ -64,7 +63,7 @@ export default function NewFancy() {
               <p className="nf-sub">Emeralds, sapphires and the colours in between. Worn lightly, meant seriously.</p>
               <Link href="/gemstones" className="pill nf-cta">Shop gemstones</Link>
             </div>
-            <div className="nf-img"><Image src={newGreen.img} alt="Emerald stud earring and ring" fill sizes="(max-width:767px) 92vw, 50vw" quality={82} /><Coords k="new-green" /></div>
+            <div className="nf-img"><Image src={newGreen.img} alt="Emerald stud earring and ring" fill sizes="(max-width:767px) 92vw, 50vw" quality={82} /></div>
           </div>
           <div className="nf-dots" aria-hidden="true"><i className="on" ref={d1} /><i ref={d2} /><i ref={d3} /></div>
         </div>

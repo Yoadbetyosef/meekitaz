@@ -746,22 +746,11 @@ export const pressLogos = [
 ];
 // Footer: the "Shhh." card (pink backdrop photo, quiet flex). Change the link or the button text here.
 export const hushCard = { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_194914_469381c0-892c-4a9f-a68e-87acf8101d3a.png", href: "/engagement-rings", cta: "Shop the collection" };
-// Photo corner brackets on the home-page photos (try-out). Set to "off" to remove them completely, nothing else depends on it.
-export const frameStyle: "coords" | "corners" | "off" = "coords"; // "coords" = corner brackets + a place and coordinates in the four corners; "corners" = brackets only
+// The vintage frame on the home-page hero photo (phones only): corners, ruler ticks, slide number and place. "off" removes it.
+export const frameStyle: "on" | "off" = "on";
 
-// The place printed in the corners of each photo: [top-left, top-right, bottom-left, bottom-right]. Change any line freely.
-export const places: Record<string, [string, string, string, string]> = {
-  "tile-01": ["N 40°46′32″", "W 73°58′17″", "01", "Bow Bridge · NYC"],        // engagement rings: where people say yes
-  "tile-02": ["N 40°45′31″", "W 73°58′52″", "02", "W 47th St · NYC"],         // loose diamonds: the Diamond District
-  "tile-03": ["N 41°04′16″", "W 71°51′25″", "03", "Montauk · NY"],            // wet hair, end of the island
-  "tile-04": ["N 40°45′10″", "W 73°58′38″", "04", "Grand Central"],           // layered, under the clock
-  "tile-05": ["N 48°50′49″", "E 02°14′58″", "05", "Roland-Garros"],           // stacked for breakfast, on clay
-  "tile-06": ["N 40°45′35″", "W 73°58′31″", "06", "Fifth Ave · NYC"],         // the atelier
-  "new-yellow": ["N 40°37′41″", "E 14°29′06″", "01/03", "Positano · IT"],     // yellow stone, open-top car, headscarf
-  "new-pink": ["N 33°49′49″", "W 116°32′43″", "02/03", "Palm Springs · CA"],  // pink, obviously
-  "new-green": ["N 37°47′14″", "E 14°49′57″", "03/03", "Bronte · Sicily"],    // the pistachio capital of the world
-  "film": ["N 40°45′35″", "W 73°58′31″", "Film", "Fifth Ave · NYC"],
-  "look": ["N 36°16′13″", "W 121°48′29″", "Look", "Big Sur · CA"],            // open convertible, Highway 1
-};
+// Mobile hero (home page) — one place per slide, in slide order. Shown as a ruler along the bottom with "01 / 04" and the place.
+export const heroPlaces: string[] = ["Palm Springs · CA", "Monte-Carlo", "Chelsea Market · NYC", "Beverly Hills · CA"]; // pool with pink umbrellas · red clay court · the food market · cream convertible on a palm-lined street
+
 
 

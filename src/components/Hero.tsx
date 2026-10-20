@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image, { getImageProps } from "next/image";
 import Link from "next/link";
-import { slides, faces } from "@/lib/data";
+import { slides, faces, heroPlaces, frameStyle } from "@/lib/data";
 import Stars from "./Stars";
 
 // The mobile photo goes through the same image optimiser as the desktop one (a plain <source> would download the original multi-megabyte file on a phone).
@@ -56,6 +56,7 @@ export default function Hero() {
               <Image src={sl.desktop} alt="" fill loading={k === 0 ? "eager" : "lazy"} fetchPriority={k === 0 ? "high" : "auto"} sizes="100vw" quality={78} style={{ objectFit: "cover", objectPosition: sl.pos }} />
             </picture>
           )}
+          {frameStyle !== "off" && <span className="hf" aria-hidden="true"><i className="hf-k tl" /><i className="hf-k tr" /><i className="hf-k bl" /><i className="hf-k br" /><i className="hf-rl" /><b className="hf-n">{String(k + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}</b><b className="hf-p">{heroPlaces[k] || ""}</b></span>}
         </div>
       ))}
       <div className="heroc">
