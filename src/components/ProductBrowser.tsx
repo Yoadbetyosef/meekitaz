@@ -1,8 +1,14 @@
 "use client";
 import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
-import { useState } from "react";
+import GridMood from "./GridMood";
+import { Fragment, useState } from "react";
 import type { Product } from "@/lib/shopify";
+
+// Mood clips per category (silent, looping). Hosted on the Higgsfield CDN; move to /public/media to self-host.
+const MOOD: Record<string, { src: string; poster: string }> = {
+  earrings: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_153711_913d4495-602d-42c2-bd37-754fcf2c4cb6.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_202431_3c1ef1d0-1b33-46e4-8c3e-e06be191f4ef.png" },
+};
 
 
 export default function ProductBrowser({ handle, style = "", initial, hasNext: h0, cursor: c0 }: { handle: string; style?: string; initial: Product[]; hasNext: boolean; cursor: string | null }) {
@@ -33,8 +39,12 @@ export default function ProductBrowser({ handle, style = "", initial, hasNext: h
           </label>
         </div>
         <div className="pgrid">
-          {items.map(p => (
-            <DesignCard key={p.id} p={p} />
+          {items.map((p, i) => (
+            <Fragment key={p.id}>
+              {/* earrings: the silent mood clip sits after the first two rows (CSS order places it; 6 cards before it on desktop, 4 on phones) */}
+              {handle === "earrings" && i === 4 && items.length > 4 && <GridMood src={MOOD.earrings.src} poster={MOOD.earrings.poster} />}
+              <DesignCard p={p} />
+            </Fragment>
           ))}
         </div>
         {hasNext && <div className="dmore"><button type="button" onClick={() => load(false)} disabled={busy}>{busy ? "Loading…" : "Show more"}</button></div>}
