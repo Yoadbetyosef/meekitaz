@@ -7,7 +7,7 @@ import type { Product } from "@/lib/shopify";
 
 // Mood clips per category (silent, looping). Hosted on the Higgsfield CDN; move to /public/media to self-host.
 const MOOD: Record<string, { src: string; poster: string }> = {
-  earrings: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_153711_913d4495-602d-42c2-bd37-754fcf2c4cb6.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_202431_3c1ef1d0-1b33-46e4-8c3e-e06be191f4ef.png" },
+  earrings: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_155403_077e3a3c-af03-47fe-b905-7f55fefe401b.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_202431_3c1ef1d0-1b33-46e4-8c3e-e06be191f4ef.png" },
 };
 
 
