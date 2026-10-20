@@ -33,7 +33,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   const myColor = fancyColorOf(p.title);
   const options = !isRing && adminConfigured ? await getProductOptions(p.handle) : null; // weight / colour / clarity / purity tree for pieces that have one
   const [siblings, related, family, ...others] = await Promise.all([
-    isRing ? Promise.resolve([]) : getSiblings(code, p.handle), getRelated(p.productType, p.handle), isRing ? getRingFamily(code, myColor) : Promise.resolve([]),
+    isRing ? Promise.resolve([]) : getSiblings(code, p.handle, p.title), getRelated(p.productType, p.handle), isRing ? getRingFamily(code, myColor) : Promise.resolve([]),
     ...(isRing ? ["", ...FANCY_COLORS].filter(c => c !== myColor).map(c => getRingFamily(code, c)) : []),
   ]);
   // the same design with a different stone colour, for the colour picker (white and the fancy colours that exist for this design)

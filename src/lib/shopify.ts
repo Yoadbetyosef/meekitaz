@@ -151,14 +151,20 @@ export async function getProductByHandle(handle: string): Promise<ProductFull | 
 }
 
 /** The same design in other metals (Shopify holds each metal as its own product, linked by the NS design code tag). */
-export async function getSiblings(code: string, exceptHandle: string): Promise<Sibling[]> {
+/** The title with its metal prefix removed: "Yellow gold Sq.Cushion Diamond Solitaire Stud Earrings" → "Sq.Cushion Diamond Solitaire Stud Earrings". Two products are the same design only if this matches. */
+export const designTitle = (title: string) => title.replace(/^(White|Yellow|Rose)\s+gold\s+|^(Platinum|Silver)\s+/i, "").trim().toLowerCase();
+
+export async function getSiblings(code: string, exceptHandle: string, exceptTitle = ""): Promise<Sibling[]> {
   if (!code) return [];
   const d = await sf<{ products: { edges: { node: { handle: string; title: string; tags: string[]; featuredImage?: { url: string } | null } }[] } }>(
     `query($q:String!){ products(first:40, query:$q){ edges{ node{ handle title tags featuredImage{ url } } } } }`, { q: `tag:${code}` });
   // metal from the tag when it is a full name, otherwise from the title ("White gold …", "Platinum …"), so no metal of the design is dropped;
   // configured / karat / stone products created at checkout are not siblings
   const seen = new Set<string>();
+  const mine = exceptTitle ? designTitle(exceptTitle) : "";
   return (d?.products.edges || []).filter(({ node }) => !node.tags.some(t => ["Configured", "Karat variant", "Diamond"].includes(t)))
+    // one design code can cover several shapes (NS-2499 is a stud in eight shapes): only the same shape counts as a sibling
+    .filter(({ node }) => !mine || node.handle === exceptHandle || designTitle(node.title) === mine)
     .map(({ node }) => ({ handle: node.handle, title: node.title, metal: metalOf(node.tags) || ringMetalOf(node.title), image: node.featuredImage?.url }))
     .filter(x => { if (!x.metal && x.handle !== exceptHandle) return false; const k = x.metal || x.handle; if (seen.has(k) && x.handle !== exceptHandle) return false; seen.add(k); return true; });
 }
