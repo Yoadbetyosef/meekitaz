@@ -8,6 +8,7 @@ import type { Product } from "@/lib/shopify";
 // Mood clips per category (silent, looping). Hosted on the Higgsfield CDN; move to /public/media to self-host.
 const MOOD: Record<string, { src: string; poster: string }> = {
   earrings: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_155403_077e3a3c-af03-47fe-b905-7f55fefe401b.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_202431_3c1ef1d0-1b33-46e4-8c3e-e06be191f4ef.png" },
+  necklaces: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_184325_8f247765-c133-4515-bea1-b4ad3a31b567.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_184153_bd7b4d28-c222-4228-bfac-393e766e58f8.png" },
 };
 
 
@@ -42,7 +43,7 @@ export default function ProductBrowser({ handle, style = "", initial, hasNext: h
           {items.map((p, i) => (
             <Fragment key={p.id}>
               {/* earrings: the silent mood clip sits after the first two rows (CSS order places it; 6 cards before it on desktop, 4 on phones) */}
-              {handle === "earrings" && i === 4 && items.length > 4 && <GridMood src={MOOD.earrings.src} poster={MOOD.earrings.poster} />}
+              {MOOD[handle] && i === 4 && items.length > 4 && <GridMood src={MOOD[handle].src} poster={MOOD[handle].poster} />}
               <DesignCard p={p} />
             </Fragment>
           ))}

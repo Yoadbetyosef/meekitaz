@@ -23,12 +23,13 @@ export async function generateMetadata({ params }: { params: Promise<{ handle: s
 
 export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
   const handle = decodeURIComponent((await params).handle);
-  const p = await load(handle);
-  if (!p) {
+  const p0 = await load(handle);
+  if (!p0) {
     const now = shopifyConfigured ? await findByOldHandle(handle) : null; // a link from before handles were renamed to titles
     if (now) permanentRedirect(`/products/${now}`);
     notFound();
   }
+  let p = p0;
   const code = designCode(p.tags), isRing = p.tags.includes("Engagement Ring");
   const myColor = fancyColorOf(p.title);
   const options = !isRing && adminConfigured ? await getProductOptions(p.handle) : null; // weight / colour / clarity / purity tree for pieces that have one
@@ -42,6 +43,8 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   // Shopify's search index can lag behind a handle rename, so this page is matched into its family by product id and always listed under its current handle.
   const fam = family.map(v => (v.id === p.id ? { ...v, handle: p.handle } : v));
   const ring = isRing && fam.some(v => v.id === p.id) && fam.length > 1 ? { family: fam.map(v => ({ ...v, title: brandify(v.title) })), shapes, ns: code, color: myColor, palette, swatches: palette.length && vdbConfigured ? await fancySwatches() : {} } : undefined;
+  // the on-model photo is made once per design (in yellow gold): every metal of the design shows it
+  if (!p.modelImage) { const m = siblings.find(x => x.modelImage)?.modelImage; if (m) p = { ...p, modelImage: m }; }
   const v = p.variants[0];
   const ld = {
     "@context": "https://schema.org", "@type": "Product", name: brandify(p.title), image: p.images.map(i => i.url), description: brandify(p.description).slice(0, 500),

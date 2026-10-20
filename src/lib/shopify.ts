@@ -126,7 +126,7 @@ export type ProductFull = {
   id: string; handle: string; title: string; description: string; descriptionHtml: string; productType: string; tags: string[];
   options: { name: string; values: string[] }[]; images: { url: string; alt: string; width: number; height: number }[]; modelImage?: string; variants: ProductVariant[]; currency: string; seoTitle?: string; seoDescription?: string;
 };
-export type Sibling = { handle: string; title: string; metal: string; image?: string };
+export type Sibling = { handle: string; title: string; metal: string; image?: string; modelImage?: string };
 export type Related = { handle: string; title: string; price: number; compareAt: number; image?: string };
 
 export const METALS = ["Rose Gold", "Yellow Gold", "White Gold", "Platinum", "Silver"];
@@ -156,8 +156,8 @@ export const designTitle = (title: string) => title.replace(/^(White|Yellow|Rose
 
 export async function getSiblings(code: string, exceptHandle: string, exceptTitle = ""): Promise<Sibling[]> {
   if (!code) return [];
-  const d = await sf<{ products: { edges: { node: { handle: string; title: string; tags: string[]; featuredImage?: { url: string } | null } }[] } }>(
-    `query($q:String!){ products(first:40, query:$q){ edges{ node{ handle title tags featuredImage{ url } } } } }`, { q: `tag:${code}` });
+  const d = await sf<{ products: { edges: { node: { handle: string; title: string; tags: string[]; featuredImage?: { url: string } | null; model?: { value: string } | null } }[] } }>(
+    `query($q:String!){ products(first:40, query:$q){ edges{ node{ handle title tags featuredImage{ url } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } }`, { q: `tag:${code}` });
   // metal from the tag when it is a full name, otherwise from the title ("White gold …", "Platinum …"), so no metal of the design is dropped;
   // configured / karat / stone products created at checkout are not siblings
   const seen = new Set<string>();
@@ -165,7 +165,7 @@ export async function getSiblings(code: string, exceptHandle: string, exceptTitl
   return (d?.products.edges || []).filter(({ node }) => !node.tags.some(t => ["Configured", "Karat variant", "Diamond"].includes(t)))
     // one design code can cover several shapes (NS-2499 is a stud in eight shapes): only the same shape counts as a sibling
     .filter(({ node }) => !mine || node.handle === exceptHandle || designTitle(node.title) === mine)
-    .map(({ node }) => ({ handle: node.handle, title: node.title, metal: metalOf(node.tags) || ringMetalOf(node.title), image: node.featuredImage?.url }))
+    .map(({ node }) => ({ handle: node.handle, title: node.title, metal: metalOf(node.tags) || ringMetalOf(node.title), image: node.featuredImage?.url, modelImage: node.model?.value || undefined }))
     .filter(x => { if (!x.metal && x.handle !== exceptHandle) return false; const k = x.metal || x.handle; if (seen.has(k) && x.handle !== exceptHandle) return false; seen.add(k); return true; });
 }
 
