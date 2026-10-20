@@ -746,11 +746,6 @@ export const pressLogos = [
 ];
 // Footer: the "Shhh." card (pink backdrop photo, quiet flex). Change the link or the button text here.
 export const hushCard = { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_194914_469381c0-892c-4a9f-a68e-87acf8101d3a.png", href: "/engagement-rings", cta: "Shop the collection" };
-// The vintage frame on the home-page hero photo (phones only): corners, ruler ticks, slide number and place. "off" removes it.
-export const frameStyle: "on" | "off" = "on";
-
-// Mobile hero (home page) — one place per slide, in slide order. Shown as a ruler along the bottom with "01 / 04" and the place.
-export const heroPlaces: string[] = ["Palm Springs · CA", "Monte-Carlo", "Chelsea Market · NYC", "Beverly Hills · CA"]; // pool with pink umbrellas · red clay court · the food market · cream convertible on a palm-lined street
 
 
 

@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   if (!shopifyConfigured || !categories.some(c => c.slug === handle)) return NextResponse.json({ products: [], hasNext: false, cursor: null });
   const opts = { first: 24, after: sp.get("after"), sort: sp.get("sort") || "best" };
   const r = handle === "engagement-rings" || handle === "fancy-colors"
-    ? await getProductsByQuery(ringQuery({ shapes: list(sp.get("shape")), metals: list(sp.get("metal")), styles: list(sp.get("look")), min: num(sp.get("min")), max: num(sp.get("max")), fancy: handle === "fancy-colors" ? (sp.get("fancy") || "all") : undefined }), opts)
+    ? await getProductsByQuery(ringQuery({ shapes: list(sp.get("shape")), metals: list(sp.get("metal")), styles: list(sp.get("look")), min: num(sp.get("min")), max: num(sp.get("max")), fancy: handle === "fancy-colors" ? (sp.get("fancy") || "all") : undefined, type: handle === "fancy-colors" ? sp.get("type") || undefined : undefined }), opts)
     : sp.get("style") ? await getProductsByQuery(styleQuery(handle, sp.get("style") || ""), opts)
     : await getCollectionPage(handle, opts);
   if (!r) return NextResponse.json({ error: "unavailable" }, { status: 502 });

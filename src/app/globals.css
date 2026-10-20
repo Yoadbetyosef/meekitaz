@@ -649,12 +649,11 @@ a.rp-mt{text-decoration:none}
 .hush-tx p{font:500 clamp(18px,2vw,28px)/1.25 var(--sub);font-style:italic;margin:0 0 26px;opacity:.8;max-width:26ch}
 .hush-cta{display:inline-flex;background:var(--red);color:#fff;border-radius:999px;padding:17px 30px;font:700 12px var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
 @media(max-width:767px){.hush-ph{-webkit-mask-image:linear-gradient(180deg,#000 90%,transparent);mask-image:linear-gradient(180deg,#000 90%,transparent)}.hush{grid-template-columns:1fr}.hush-tx h2{font-size:22vw}.foot-cols{display:grid;grid-template-columns:1fr 1fr;gap:26px 20px}.foot-cols>div:first-child{grid-column:1/-1}.foot-cols>div:first-child a{display:inline-block;width:49%}}
-/* ---- Mobile hero frame (home page only): white corners, a ruler of ticks along the bottom, slide number and place. Phones only; off with frameStyle = "off" ---- */
-.hf{display:none}
-@media(max-width:767px){
-  .hf{display:block;position:absolute;inset:0;z-index:3;pointer-events:none}
-  .hf-k{position:absolute;width:22px;height:22px;border:2px solid #fff;filter:drop-shadow(0 1px 3px rgba(0,0,0,.3))}.hf-k.tl{left:12px;top:12px;border-right:0;border-bottom:0}.hf-k.tr{right:12px;top:12px;border-left:0;border-bottom:0}.hf-k.bl{left:12px;bottom:12px;border-right:0;border-top:0}.hf-k.br{right:12px;bottom:12px;border-left:0;border-top:0}
-  .hf-rl{position:absolute;left:14px;right:14px;bottom:14px;height:10px;opacity:.9;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4));background:repeating-linear-gradient(90deg,#fff 0 1px,transparent 1px 11px) left bottom/100% 5px no-repeat,repeating-linear-gradient(90deg,#fff 0 1px,transparent 1px 55px) left bottom/100% 10px no-repeat}
-  .hf-n,.hf-p{position:absolute;bottom:30px;font:700 8.5px ui-monospace,"SF Mono",Menlo,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.55);white-space:nowrap}.hf-n{left:20px}.hf-p{right:20px}
-}
+/* ---- Rings grid: silent mood video as a full-row tile after the first two rows ---- */
+.gmood{grid-column:1/-1;border-radius:22px;overflow:hidden;background:var(--ink);aspect-ratio:16/9;order:2}
+.gmood video{width:100%;height:100%;object-fit:cover;display:block}
+/* ordering: desktop puts 6 cards before it, phones 4 (the element is rendered after card 4) */
+.pgrid>*{order:1}.pgrid>:nth-child(1),.pgrid>:nth-child(2),.pgrid>:nth-child(3),.pgrid>:nth-child(4),.pgrid>:nth-child(5),.pgrid>:nth-child(6),.pgrid>:nth-child(7){order:0}
+.pgrid>.gmood{order:2}.pgrid>:nth-child(n+8){order:3}
+@media(max-width:767px){.gmood{border-radius:14px;aspect-ratio:16/9}.pgrid>:nth-child(6),.pgrid>:nth-child(7){order:3}}
 
