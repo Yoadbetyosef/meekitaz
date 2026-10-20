@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Coords from "./Coords";
 import Link from "next/link";
 import { shopLook } from "@/lib/data";
 
@@ -28,6 +29,7 @@ export default function ShopLook() {
           <p className="sl-sub">Tap a piece. Every one of them lives in a category.</p>
         </div>
         <div className="sl-stage" ref={stage}>
+          <Coords k="look" />
           <Image src={shopLook.img} alt="Laughing woman in an open convertible wearing yellow cushion diamond studs, a tennis necklace, an oval diamond ring and stacked tennis bracelets" fill sizes="(max-width:767px) 100vw, 1200px" quality={80} style={{ objectFit: "cover", objectPosition: `${shopLook.focusX * 100}% 50%` }} />
           <div className={`sl-dim${cur ? " on" : ""}`} style={{ ["--x" as string]: `${pos.x}%`, ["--y" as string]: `${pos.y}%` }} aria-hidden="true" />
           {cur && <Link href={cur.href} className="sl-go" style={{ left: `${Math.min(88, Math.max(12, pos.x))}%`, top: `${pos.y}%` }}>Shop {cur.label.toLowerCase()} &rarr;</Link>}

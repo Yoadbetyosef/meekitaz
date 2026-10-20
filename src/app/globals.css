@@ -649,3 +649,20 @@ a.rp-mt{text-decoration:none}
 .hush-tx p{font:500 clamp(18px,2vw,28px)/1.25 var(--sub);font-style:italic;margin:0 0 26px;opacity:.8;max-width:26ch}
 .hush-cta{display:inline-flex;background:var(--red);color:#fff;border-radius:999px;padding:17px 30px;font:700 12px var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
 @media(max-width:767px){.hush-ph{-webkit-mask-image:linear-gradient(180deg,#000 90%,transparent);mask-image:linear-gradient(180deg,#000 90%,transparent)}.hush{grid-template-columns:1fr}.hush-tx h2{font-size:22vw}.foot-cols{display:grid;grid-template-columns:1fr 1fr;gap:26px 20px}.foot-cols>div:first-child{grid-column:1/-1}.foot-cols>div:first-child a{display:inline-block;width:49%}}
+/* ---- Photo corners (try-out): white corner brackets, plus a place and coordinates in the corners, over the category tiles, NEW cards, film and Shop the look. Remove: frameStyle = "off" in data.ts ---- */
+[data-frame] :is(.ct-img,.nf-img,.sl-stage,.mkfilm-vid){--fc:#fff;--fl:26px;--fw:2px;--fi:16px}
+[data-frame] :is(.ct-img,.nf-img,.sl-stage,.mkfilm-vid)::after{content:"";position:absolute;inset:var(--fi);z-index:5;pointer-events:none;transition:inset .4s;filter:drop-shadow(0 1px 3px rgba(0,0,0,.3));
+  background:linear-gradient(var(--fc),var(--fc)) left top/var(--fl) var(--fw) no-repeat,linear-gradient(var(--fc),var(--fc)) left top/var(--fw) var(--fl) no-repeat,
+    linear-gradient(var(--fc),var(--fc)) right top/var(--fl) var(--fw) no-repeat,linear-gradient(var(--fc),var(--fc)) right top/var(--fw) var(--fl) no-repeat,
+    linear-gradient(var(--fc),var(--fc)) left bottom/var(--fl) var(--fw) no-repeat,linear-gradient(var(--fc),var(--fc)) left bottom/var(--fw) var(--fl) no-repeat,
+    linear-gradient(var(--fc),var(--fc)) right bottom/var(--fl) var(--fw) no-repeat,linear-gradient(var(--fc),var(--fc)) right bottom/var(--fw) var(--fl) no-repeat}
+@media(hover:hover){[data-frame] .ct:hover .ct-img,[data-frame] :is(.nf-img,.sl-stage,.mkfilm-vid):hover{--fi:10px}}
+@media(max-width:767px){[data-frame] :is(.ct-img,.nf-img,.sl-stage,.mkfilm-vid){--fl:20px;--fi:11px}}
+/* the four corner notes (only rendered when frameStyle = "coords") */
+.fc{position:absolute;inset:0;z-index:5;pointer-events:none}
+.fc-t{position:absolute;font:700 9.5px ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-style:normal;letter-spacing:.18em;text-transform:uppercase;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.55);white-space:nowrap;transition:all .4s}
+.fc-t.a{left:calc(var(--fi,16px) + 6px);top:calc(var(--fi,16px) + var(--fl,26px) + 6px)}
+.fc-t.b{right:calc(var(--fi,16px) + 6px);top:calc(var(--fi,16px) + var(--fl,26px) + 6px)}
+.fc-t.c{left:calc(var(--fi,16px) + 6px);bottom:calc(var(--fi,16px) + var(--fl,26px) + 6px)}
+.fc-t.d{right:calc(var(--fi,16px) + 6px);bottom:calc(var(--fi,16px) + var(--fl,26px) + 6px)}
+@media(max-width:767px){.fc-t{font-size:8px;letter-spacing:.12em}}

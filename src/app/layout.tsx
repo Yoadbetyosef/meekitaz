@@ -7,7 +7,7 @@ import Toast from "@/components/Toast";
 import CartProvider from "@/components/CartProvider";
 import CartDrawer from "@/components/CartDrawer";
 import HeroWarm from "@/components/HeroWarm";
-import { categories } from "@/lib/data";
+import { categories, frameStyle } from "@/lib/data";
 
 const prata = Prata({ weight: "400", subsets: ["latin"], variable: "--f-display", display: "swap" });
 const cormorant = Cormorant_Garamond({ weight: ["500"], style: ["italic"], subsets: ["latin"], variable: "--f-sub", display: "swap" });
@@ -21,7 +21,7 @@ export const viewport: Viewport = { themeColor: "#C4DEEE", viewportFit: "cover" 
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable}`}>
+    <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable}`} data-frame={frameStyle === "off" ? undefined : frameStyle}>
       <body>
         <CartProvider>
           <Nav />

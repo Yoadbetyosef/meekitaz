@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Coords from "./Coords";
 
 export default function Film() {
   const v = useRef<HTMLVideoElement>(null);
@@ -19,6 +20,7 @@ export default function Film() {
           <Link href="/engagement-rings" className="pill">Shop engagement rings</Link>
         </div>
         <div className="mkfilm-vid">
+        <Coords k="film" />
         <video ref={v} playsInline muted loop preload="none" poster="/media/meekitaz-film-poster.jpg" onClick={() => { const el = v.current!; el.paused ? el.play() : el.pause(); }}>
           <source src="/media/meekitaz-film.mp4" type="video/mp4" />
         </video>
