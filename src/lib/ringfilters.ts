@@ -13,13 +13,19 @@ export const RING_STYLES: { label: string; tag: string }[] = [
 ];
 export const RING_PRICE = { min: 100, max: 5000, step: 50 }; // the top of the slider is open-ended ("$5,000+")
 
-export type RingSel = { shapes: string[]; metals: string[]; styles: string[]; min?: number; max?: number; fancy?: string };
+export type RingSel = { shapes: string[]; metals: string[]; styles: string[]; min?: number; max?: number; fancy?: string; type?: string };
+/** Jewelry types on the Fancy Colors page: every product carries its category tag. */
+export const FANCY_TYPES = [
+  { label: "Rings", tag: "Engagement Ring" }, { label: "Earrings", tag: "Earrings" }, { label: "Necklaces", tag: "Necklace" }, { label: "Bracelets", tag: "Bracelets" }, { label: "Bands", tag: "Wedding Bands" },
+];
 const or = (xs: string[]) => (xs.length === 1 ? xs[0] : `(${xs.join(" OR ")})`);
 
 /** The Shopify product search for a set of selected filters. */
 export function ringQuery(sel: RingSel): string {
-  const parts = ["tag:'Engagement Ring'"];
-  // Fancy-colour settings are titled "… Fancy Blue Cushion Cut Diamond …"; the fancy page lists only those, in one colour or all four.
+  // Fancy Colors: fancy pieces of one jewelry type, or of every type; helper products (configured copies, karat variants) never show.
+  const ft = sel.fancy ? FANCY_TYPES.find(t => t.label === sel.type) : undefined;
+  const parts = sel.fancy ? [ft ? `tag:'${ft.tag}'` : `(${FANCY_TYPES.map(t => `tag:'${t.tag}'`).join(" OR ")})`, "-tag:Configured", "-tag:'Karat variant'"] : ["tag:'Engagement Ring'"];
+  // Fancy-colour pieces are titled "… Fancy Blue Cushion Cut Diamond …"; the fancy page lists only those, in one colour or all four.
   if (sel.fancy === "all") parts.push("title:Fancy");
   else if (sel.fancy && ["Yellow", "Pink", "Blue", "Green"].includes(sel.fancy)) parts.push(`title:'Fancy ${sel.fancy}'`);
   const shapes = sel.shapes.filter(s => RING_SHAPES.includes(s)).map(s => `tag:${s}`);
