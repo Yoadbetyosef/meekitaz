@@ -13,11 +13,14 @@ const Gem = () => <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" str
 export default function DesignCard({ p }: { p: Product }) {
   const metals = shownMetals(p);
   const [metal, setMetal] = useState(p.metal || metals[0]?.metal || "");
-  const cur = metals.find(v => v.metal === metal) || { metal: p.metal || "", handle: p.handle, title: p.title, image: p.image, price: p.price, compareAt: p.compareAt };
+  const cur = metals.find(v => v.metal === metal) || { metal: p.metal || "", handle: p.handle, title: p.title, image: p.image, modelImage: p.modelImage, price: p.price, compareAt: p.compareAt };
+  // the on-model photo: this metal's, or the design's (the model shot is made once per design, in yellow gold)
+  const model = cur.modelImage || p.modelImage || metals.find(v => v.modelImage)?.modelImage;
+  const [onModel, setOnModel] = useState(false); // phones: a tap on the dot flips the photo
   const title = (p.variants && p.variants.length > 1) ? cur.title.replace(/^(Rose gold|Yellow gold|White gold|Platinum|Silver) /i, "") : cur.title;
   return (
     <Link href={`/products/${cur.handle}`} className="pcard">
-      <div className="pcard-img">{cur.image ? <Image src={photoSrc(cur.image.url, 700, cur.title)} alt={cur.image.alt} width={800} height={800} sizes="(max-width:767px) 50vw, 380px" quality={75} unoptimized={isCleaned(photoSrc(cur.image.url, 700, cur.title))} /> : <Gem />}</div>
+      <div className={`pcard-img${model ? " has-model" : ""}${onModel ? " on-model" : ""}`}>{model && <Image className="pcard-model" src={model} alt={`${cur.title} worn`} width={800} height={1000} sizes="(max-width:767px) 50vw, 380px" quality={78} />}{model && <button type="button" className="pcard-flip" aria-label={onModel ? "Show the piece" : "Show it worn"} onClick={e => { e.preventDefault(); e.stopPropagation(); setOnModel(v => !v); }}><i /><i /></button>}{cur.image ? <Image src={photoSrc(cur.image.url, 700, cur.title)} alt={cur.image.alt} width={800} height={800} sizes="(max-width:767px) 50vw, 380px" quality={75} unoptimized={isCleaned(photoSrc(cur.image.url, 700, cur.title))} /> : <Gem />}</div>
       <div className="pcard-txt">
         <b>{title}</b>
         {metals.length > 1 && (

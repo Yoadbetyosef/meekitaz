@@ -3,7 +3,7 @@ import { collapseDesigns } from "./designs";
 import { RING_SHAPES } from "./ringfilters";
 import { fancyColorOf } from "./fancy";
 // Set SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_TOKEN in .env.local / Vercel.
-export type Product = { id: string; handle: string; title: string; price: string; currency: string; compareAt?: number; image?: { url: string; alt: string }; code?: string; metal?: string; shape?: string; variants?: { metal: string; handle: string; title: string; image?: { url: string; alt: string }; price: string; compareAt?: number }[] };
+export type Product = { id: string; handle: string; title: string; price: string; currency: string; compareAt?: number; image?: { url: string; alt: string }; modelImage?: string; code?: string; metal?: string; shape?: string; variants?: { metal: string; handle: string; title: string; image?: { url: string; alt: string }; modelImage?: string; price: string; compareAt?: number }[] };
 
 export type CartLine = {
   id: string;
@@ -39,7 +39,7 @@ async function sf<T>(query: string, variables: Record<string, unknown> = {}, opt
 /** Products from a Shopify collection whose handle matches the category slug (e.g. "engagement-rings"). */
 export async function getCollectionProducts(handle: string, first = 12): Promise<Product[] | null> {
   const data = await sf<{ collection: { products: { edges: { node: { id: string; handle: string; title: string; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; featuredImage?: { url: string; altText?: string } } }[] } } | null }>(
-    `query($handle:String!,$first:Int!){ collection(handle:$handle){ products(first:$first){ edges{ node{ id handle title priceRange{ minVariantPrice{ amount currencyCode } } featuredImage{ url altText } } } } } }`,
+    `query($handle:String!,$first:Int!){ collection(handle:$handle){ products(first:$first){ edges{ node{ id handle title priceRange{ minVariantPrice{ amount currencyCode } } featuredImage{ url altText } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } } }`,
     { handle, first }
   );
   const edges = data?.collection?.products?.edges;
@@ -66,7 +66,7 @@ type RawCart = {
   lines: { edges: { node: { id: string; quantity: number; attributes?: { key: string; value: string }[]; merchandise: {
     title: string; price: { amount: string }; compareAtPrice?: { amount: string } | null;
     image?: { url: string; altText?: string } | null;
-    product: { title: string; handle: string; featuredImage?: { url: string; altText?: string } | null };
+    product: { title: string; handle: string; featuredImage?: { url: string; altText?: string } | null; model?: { value: string } | null };
   } } }[] };
 };
 
@@ -124,7 +124,7 @@ export async function removeCartLine(cartId: string, lineId: string): Promise<Ca
 export type ProductVariant = { id: string; title: string; available: boolean; price: number; compareAt: number; selected: { name: string; value: string }[]; imageUrl?: string };
 export type ProductFull = {
   id: string; handle: string; title: string; description: string; descriptionHtml: string; productType: string; tags: string[];
-  options: { name: string; values: string[] }[]; images: { url: string; alt: string; width: number; height: number }[]; variants: ProductVariant[]; currency: string; seoTitle?: string; seoDescription?: string;
+  options: { name: string; values: string[] }[]; images: { url: string; alt: string; width: number; height: number }[]; modelImage?: string; variants: ProductVariant[]; currency: string; seoTitle?: string; seoDescription?: string;
 };
 export type Sibling = { handle: string; title: string; metal: string; image?: string };
 export type Related = { handle: string; title: string; price: number; compareAt: number; image?: string };
@@ -136,16 +136,16 @@ export const designCode = (tags: string[]) => tags.find(t => /^NS-\d+$/i.test(t)
 export async function getProductByHandle(handle: string): Promise<ProductFull | null> {
   const d = await sf<{ product: null | { id: string; handle: string; title: string; description: string; descriptionHtml: string; productType: string; tags: string[];
     seo: { title?: string; description?: string }; options: { name: string; values: string[] }[];
-    images: { edges: { node: { url: string; altText?: string; width: number; height: number } }[] };
+    images: { edges: { node: { url: string; altText?: string; width: number; height: number } }[] }; model?: { value: string } | null;
     variants: { edges: { node: { id: string; title: string; availableForSale: boolean; price: { amount: string; currencyCode: string }; compareAtPrice?: { amount: string } | null; selectedOptions: { name: string; value: string }[]; image?: { url: string } | null } }[] } } }>(
     `query($handle:String!){ product(handle:$handle){ id handle title description descriptionHtml productType tags seo{ title description } options{ name values }
-      images(first:20){ edges{ node{ url altText width height } } }
+      images(first:20){ edges{ node{ url altText width height } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value }
       variants(first:60){ edges{ node{ id title availableForSale price{ amount currencyCode } compareAtPrice{ amount } selectedOptions{ name value } image{ url } } } } } }`, { handle });
   const p = d?.product; if (!p) return null;
   const vs = p.variants.edges.map(({ node: v }) => ({ id: v.id, title: v.title, available: v.availableForSale, price: +v.price.amount, compareAt: v.compareAtPrice && +v.compareAtPrice.amount > +v.price.amount ? +v.compareAtPrice.amount : 0, selected: v.selectedOptions, imageUrl: v.image?.url }));
   return {
     id: p.id, handle: p.handle, title: p.title, description: p.description, descriptionHtml: p.descriptionHtml, productType: p.productType, tags: p.tags,
-    options: p.options, images: p.images.edges.map(({ node: i }) => ({ url: i.url, alt: i.altText || p.title, width: i.width, height: i.height })), variants: vs,
+    options: p.options, images: p.images.edges.map(({ node: i }) => ({ url: i.url, alt: i.altText || p.title, width: i.width, height: i.height })), modelImage: p.model?.value || undefined, variants: vs,
     currency: p.variants.edges[0]?.node.price.currencyCode || "USD", seoTitle: p.seo?.title || undefined, seoDescription: p.seo?.description || undefined,
   };
 }
@@ -179,16 +179,16 @@ export const SORTS: Record<string, { key: string; reverse: boolean }> = {
 };
 export async function getCollectionPage(handle: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
   const so = SORTS[opts.sort || "best"] || SORTS.best;
-  const d = await sf<{ collection: null | { products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null } }[] } } }>(
+  const d = await sf<{ collection: null | { products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null; model?: { value: string } | null } }[] } } }>(
     `query($handle:String!,$first:Int!,$after:String,$key:ProductCollectionSortKeys!,$rev:Boolean!){ collection(handle:$handle){ products(first:$first, after:$after, sortKey:$key, reverse:$rev){
       pageInfo{ hasNextPage endCursor }
-      edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } } } } } }`,
+      edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } } }`,
     { handle, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.reverse });
   const c = d?.collection?.products; if (!c) return null;
   const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
-    image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title } : undefined,
+    image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title } : undefined, modelImage: n.model?.value || undefined,
     code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || "",
   }));
   return { products: collapseDesigns(products), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
@@ -198,16 +198,16 @@ export async function getCollectionPage(handle: string, opts: { first?: number; 
 const PSORT: Record<string, { key: string; rev: boolean }> = { best: { key: "BEST_SELLING", rev: false }, new: { key: "CREATED_AT", rev: true }, price_asc: { key: "PRICE", rev: false }, price_desc: { key: "PRICE", rev: true } };
 export async function getProductsByQuery(query: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
   const so = PSORT[opts.sort || "best"] || PSORT.best;
-  const d = await sf<{ products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null } }[] } }>(
+  const d = await sf<{ products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null; model?: { value: string } | null } }[] } }>(
     `query($q:String!,$first:Int!,$after:String,$key:ProductSortKeys,$rev:Boolean){ products(first:$first, after:$after, query:$q, sortKey:$key, reverse:$rev){
       pageInfo{ hasNextPage endCursor }
-      edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } } } } }`,
+      edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } }`,
     { q: query, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.rev });
   const c = d?.products; if (!c) return null;
   const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
-    image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title } : undefined,
+    image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title } : undefined, modelImage: n.model?.value || undefined,
     code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || "",
   }));
   return { products: collapseDesigns(products), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
@@ -218,10 +218,10 @@ export async function getProductsByQuery(query: string, opts: { first?: number; 
 const STOP = new Set(["the", "and", "for", "with", "a", "of", "in"]);
 const BAD_TAGS = ["Configured", "Karat variant", "Diamond"];
 export async function searchProducts(query: string, opts: { first?: number; maxPrice?: number } = {}): Promise<Product[] | null> {
-  type N = { id?: string; handle?: string; title?: string; tags?: string[]; priceRange?: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange?: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null };
+  type N = { id?: string; handle?: string; title?: string; tags?: string[]; priceRange?: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange?: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null; model?: { value: string } | null };
   const first = opts.first || 60;
   const d = await sf<{ search: { nodes: N[] } }>(
-    `query($q:String!,$first:Int!,$f:[ProductFilter!]){ search(query:$q, first:$first, types:PRODUCT, prefix:LAST, productFilters:$f){ nodes{ ... on Product { id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } } } } }`,
+    `query($q:String!,$first:Int!,$f:[ProductFilter!]){ search(query:$q, first:$first, types:PRODUCT, prefix:LAST, productFilters:$f){ nodes{ ... on Product { id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } }`,
     { q: query, first, f: opts.maxPrice ? [{ price: { max: opts.maxPrice } }] : null });
   let products: Product[] = (d?.search.nodes || [])
     .filter((n): n is Required<Pick<N, "id" | "handle" | "title" | "tags" | "priceRange" | "compareAtPriceRange">> & N => !!n.id && !!n.tags && !n.tags.some(t => BAD_TAGS.includes(t) || t.toLowerCase() === "fifa world cup 2026"))

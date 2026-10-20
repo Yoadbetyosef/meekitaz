@@ -10,7 +10,7 @@ export function collapseDesigns(list: Product[]): Product[] {
   for (const p of list) {
     // rings: the same design is sold in every shape, and a shape is its own card
     const key = p.code ? `${p.code}|${p.shape || ""}` : p.id;
-    const v = { metal: p.metal || "", handle: p.handle, title: p.title, image: p.image, price: p.price, compareAt: p.compareAt };
+    const v = { metal: p.metal || "", handle: p.handle, title: p.title, image: p.image, modelImage: p.modelImage, price: p.price, compareAt: p.compareAt };
     const have = byCode.get(key);
     if (!have) { const card = { ...p, variants: [v, ...(p.variants || []).filter(x => x.metal !== v.metal)] }; byCode.set(key, card); out.push(card); continue; }
     for (const x of [v, ...(p.variants || [])]) if (x.metal && !have.variants!.some(y => y.metal === x.metal)) have.variants!.push(x);
@@ -19,7 +19,7 @@ export function collapseDesigns(list: Product[]): Product[] {
     c.variants!.sort((a, b) => METAL_ORDER.indexOf(a.metal) - METAL_ORDER.indexOf(b.metal));
     // the card opens on yellow gold when the design is made in it
     const y = c.variants!.find(v => v.metal === "Yellow gold");
-    if (y) { c.handle = y.handle; c.title = y.title; c.image = y.image; c.price = y.price; c.compareAt = y.compareAt; c.metal = y.metal; }
+    if (y) { c.handle = y.handle; c.title = y.title; c.image = y.image; c.modelImage = y.modelImage; c.price = y.price; c.compareAt = y.compareAt; c.metal = y.metal; }
   }
   return out;
 }

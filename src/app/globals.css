@@ -656,4 +656,11 @@ a.rp-mt{text-decoration:none}
 .pgrid>*{order:1}.pgrid>:nth-child(1),.pgrid>:nth-child(2),.pgrid>:nth-child(3),.pgrid>:nth-child(4),.pgrid>:nth-child(5),.pgrid>:nth-child(6),.pgrid>:nth-child(7){order:0}
 .pgrid>.gmood{order:2}.pgrid>:nth-child(n+8){order:3}
 @media(max-width:767px){.gmood{border-radius:14px;aspect-ratio:16/9}.pgrid>:nth-child(6),.pgrid>:nth-child(7){order:3}}
-
+/* ---- Product cards: the on-model photo. Desktop: fades in on hover. Phones: two tiny dots at the bottom centre; a tap on the photo flips it. ---- */
+.pcard-img{position:relative}
+.pcard-img .pcard-model{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s;z-index:1}
+@media(hover:hover){.pcard:hover .pcard-img.has-model .pcard-model{opacity:1}.pcard-flip{display:none}}
+.pcard-img.on-model .pcard-model{opacity:1}
+.pcard-flip{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);z-index:3;display:flex;gap:5px;padding:6px;border:0;background:none;cursor:pointer}
+.pcard-flip i{display:block;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);box-shadow:0 0 0 .5px rgba(0,0,0,.15);transition:background .3s}
+.pcard-flip i:first-child{background:#fff}.on-model .pcard-flip i:first-child{background:rgba(255,255,255,.5)}.on-model .pcard-flip i:last-child{background:#fff}

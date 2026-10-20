@@ -84,7 +84,9 @@ export default function ProductView({ product: p, siblings, related, ring, optio
   const metal = metalOf(p.tags) || ringMetalOf(p.title);
   const save = variant.compareAt ? variant.compareAt - variant.price : 0;
   const details = p.tags.filter(t => !/gold|silver|platinum|rose|yellow|white|^NS-|^CBR$|express|normal_side|^RJ-/i.test(t)).slice(0, 4);
-  const imgs = cv ? cv.images.map(u => ({ url: u, alt: cv.title, width: 1000, height: 1000 })) : p.images;
+  const base = cv ? cv.images.map(u => ({ url: u, alt: cv.title, width: 1000, height: 1000 })) : p.images;
+  // the on-model photo sits second in the gallery, after the product shot
+  const imgs = p.modelImage && base.length ? [base[0], { url: p.modelImage, alt: `${p.title} worn`, width: 1000, height: 1250 }, ...base.slice(1)] : base;
   const metalNow = nm(cv ? cv.metal : metal || "");
   const karat = karatsFor(ns).includes(karatPick as "10K") ? karatPick : "10K"; // a design only offers the karats of its price list
   const step = karatOn && isGoldMetal(metalNow) ? karatStep(ns, karat) : 0;
