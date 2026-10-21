@@ -1,10 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { showroomImage } from "@/lib/data";
 import { brand } from "@/brands";
 
 export default function PrivateClients() {
+  const media = useRef<HTMLDivElement>(null);
+  useEffect(() => { // people who ask their device for reduced motion get the still image, not the video
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) media.current?.querySelectorAll("video").forEach(v => { v.pause(); v.removeAttribute("autoplay"); });
+  }, []);
   const [sent, setSent] = useState(false);
   const [step, setStep] = useState(1); // phones: 1 = choose, 2 = details (desktop shows everything)
   const [way, setWay] = useState("showroom");
@@ -17,7 +21,10 @@ export default function PrivateClients() {
   return (
     <section className="sec" id="contact" aria-label="Private clients">
       <div className="wrap"><div className="pc-grid">
-        <div className="pc-img">{brand.showroomImg ? (<>
+        <div className="pc-img" ref={media}>{brand.showroomImg?.video ? (<>
+          <video className="pc-ph-d" src={brand.showroomImg.video.desktop} poster={brand.showroomImg.desktop} muted loop autoPlay playsInline preload="metadata" aria-label={brand.showroomImg.alt} />
+          <video className="pc-ph-m" src={brand.showroomImg.video.mobile} poster={brand.showroomImg.mobile} muted loop autoPlay playsInline preload="metadata" aria-label={brand.showroomImg.alt} />
+        </>) : brand.showroomImg ? (<>
           <Image className="pc-ph-d" src={brand.showroomImg.desktop} alt={brand.showroomImg.alt} fill sizes="(max-width:767px) 1px, 1200px" quality={78} />
           <Image className="pc-ph-m" src={brand.showroomImg.mobile} alt={brand.showroomImg.alt} fill sizes="(max-width:767px) 100vw, 1px" quality={78} />
         </>) : <Image src={showroomImage} alt={`${brand.display} showroom, ${brand.showroom.short}`} fill sizes="(max-width:767px) 100vw, 1200px" quality={78} />}</div>

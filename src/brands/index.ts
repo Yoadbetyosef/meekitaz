@@ -29,7 +29,7 @@ export type Brand = {
   /** "Shop the look" photo (16:9) and where each piece sits on it, as [x%, y%]. focusX = which part of the photo stays in frame on phones (0 left … 1 right). */
   /** "Our designers" section on the home page (after House codes). No links by design. Omit to hide the section. */
   /** Private Clients photo: wide image for desktop, portrait for phones. Omit to keep the shared showroom image. */
-  showroomImg?: { desktop: string; mobile: string; alt: string };
+  showroomImg?: { desktop: string; mobile: string; alt: string; video?: { desktop: string; mobile: string } };
   /** House codes card images, keyed by href. Omit to keep the shared images. */
   houseCodes?: Record<string, { img: string }>;
   /** Real customer reviews (shown as text cards, no photos). Omit to keep the shared sample reviews. */
@@ -122,6 +122,8 @@ const tg: Brand = {
     desktop: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_163631_e2cb8d0a-6a41-4670-8801-051d7172e450.png",
     mobile: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_163631_d0bf4047-114f-48cc-8bab-9fc6d56ff636.png",
     alt: "TG Jewellers showroom in Vancouver: marble floor, brass and glass display cases with lilac velvet trays, white chairs and a plush white rug",
+    // Fast-cut commercial generated in Higgsfield (Kling 3.0, 15 s) from the restyled showroom; the images above are the poster / reduced-motion fallback
+    video: { desktop: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_203245_1b11eed6-cdaa-4c17-b9ec-920bfa2d541b.mp4", mobile: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_203254_8b58f480-9444-4a0d-bbc9-e58311bb2939.mp4" },
   },
   // House codes — quiet flex / statement weight / effortless cool (2026-10-21)
   houseCodes: {
