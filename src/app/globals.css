@@ -668,13 +668,15 @@ a.rp-mt{text-decoration:none}
 .on-model .pcard-flip i:first-child{background:rgba(255,255,255,.55)}.on-model .pcard-flip i:last-child{background:#fff}
 /* ---- Ring flow steps (VRAI style): 1. Setting · 2. Diamond · 3. Review ---- */
 .rsteps{display:flex;justify-content:center;gap:clamp(22px,4vw,48px);padding:0 16px}
-.rsteps a,.rsteps span{font:500 13px var(--body);letter-spacing:.06em;text-transform:uppercase;color:#9a9597;text-decoration:none;padding:10px 0 9px;border-bottom:1.5px solid transparent;white-space:nowrap}
-.rsteps .done{color:var(--ink)}.rsteps a:hover{color:var(--ink)}
+.rsteps button{background:none;border-top:0;border-left:0;border-right:0;cursor:pointer}
+.rsteps a,.rsteps span,.rsteps button{font:500 13px var(--body);letter-spacing:.06em;text-transform:uppercase;color:#9a9597;text-decoration:none;padding:10px 0 9px;border-bottom:1.5px solid transparent;white-space:nowrap}
+.rsteps .done{color:var(--ink)}.rsteps a:hover,.rsteps button:hover{color:var(--ink)}
 .rsteps .on{color:var(--ink);border-bottom-color:var(--ink)}
 .pp .rsteps,.bd .rsteps,.dd .rsteps,.catbody .rsteps{padding-top:0;background:none}
 .pp .rsteps{margin:0 0 22px;justify-content:flex-start;padding-left:0}.dd .rsteps{margin:-40px 0 30px}.catbody .rsteps{padding:28px 16px 0}
 .bd .rsteps{justify-content:flex-start;padding-left:0}
-@media(max-width:767px){.rsteps{gap:22px}.rsteps a,.rsteps span{font-size:12px}.pp .rsteps{justify-content:center;margin:0 0 14px}.dd .rsteps{margin:-24px 0 18px}}
+@media(max-width:767px){.rsteps{gap:22px}.rsteps button{background:none;border-top:0;border-left:0;border-right:0;cursor:pointer}
+.rsteps a,.rsteps span,.rsteps button{font-size:12px}.pp .rsteps{justify-content:center;margin:0 0 14px}.dd .rsteps{margin:-24px 0 18px}}
 /* ---- Product gallery (phones): VRAI line instead of 1 / 8 ---- */
 .pp-line{position:relative;height:14px;margin:0 0 6px}
 .pp-line::before{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:rgba(28,26,27,.12)}

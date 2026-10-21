@@ -122,7 +122,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
   return (
     <main className="pp">
       <div className="wrap">
-        {ring ? <RingSteps step={1} /> : <p className="pp-crumb"><Link href="/">Home</Link> / {p.productType || "Shop"}{metal ? ` / ${metal}` : ""}</p>}
+        {ring ? <RingSteps step={1} onDiamond={cv ? chooseSetting : undefined} /> : <p className="pp-crumb"><Link href="/">Home</Link> / {p.productType || "Shop"}{metal ? ` / ${metal}` : ""}</p>}
         <div className="pp-grid">
           {/* desktop: stacked gallery */}
           <div className="pp-gal">
