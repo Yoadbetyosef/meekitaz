@@ -710,22 +710,31 @@ html[data-brand="tg"] .pc-body .eyebrow{color:var(--red);opacity:1}
 /* Shhh card: same lilac as the photo's own backdrop, so the photo melts into the card without touching the photo */
 html[data-brand="tg"] .hush{--hush-bg:#CECADF}
 
-/* Real-review cards (text only, no photo) + the rating line under the heading */
-.rv-sum{display:flex;align-items:center;gap:10px;margin:14px 0 0;font:500 15px var(--body)}
-.rv-sum b{font-weight:700}.rv-sum span{opacity:.8}
-.rv-sum .stars svg{width:16px;height:16px}
-.rv.rv-g{flex-basis:min(380px,86vw)}
-.rv-g .rv-body{padding:26px 26px 24px;gap:16px}
-.rv-g .rv-body p{font:500 clamp(18px,1.5vw,21px)/1.45 var(--sub);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:12;overflow:hidden}
-.rv-g .rv-who{border-top:1px solid rgba(28,26,27,.1);padding-top:14px}
 
-/* customer photos on real-review cards */
-.rv-g .rv-img{aspect-ratio:4/5;background:#e9e4f5}
-.rv-tag{position:absolute;left:12px;bottom:12px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.88);backdrop-filter:blur(8px);font:600 10px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
-.rv-flip{position:absolute;right:12px;bottom:12px;display:flex;gap:6px;align-items:center;padding:7px 12px;border:0;border-radius:999px;background:rgba(255,255,255,.88);backdrop-filter:blur(8px);font:700 11px var(--body);color:var(--ink);cursor:pointer}
-.rv-flip:hover{background:#fff}
 
 /* TG "As seen in": blush-pink wordmarks on the purple page (Meekitaz uses the same idea in rose on blue) */
 html[data-brand="tg"] .pr{--pr-color:#F7D3DA}
 html[data-brand="tg"] .pr-lab{color:rgba(255,255,255,.88)}
 html[data-brand="tg"] .pr-track>.pr-lg:hover{background:#fff}
+
+/* ===== Reviews reel (real Google reviews): giant rating + staggered photo cards ===== */
+.rl-head{display:grid;grid-template-columns:auto 1fr;gap:clamp(20px,5vw,80px);align-items:end;margin-bottom:clamp(20px,3vw,40px)}
+.rl-big{font:400 clamp(130px,19vw,270px)/.78 var(--display);letter-spacing:-.04em;color:var(--ink)}
+.rl-meta{padding-bottom:clamp(6px,1.4vw,22px)}
+.rl-sum{display:flex;align-items:center;gap:10px;margin:14px 0 0;font:500 15px var(--body)}
+.rl-sum .stars svg{width:20px;height:20px}
+.rl-view{overflow:hidden;padding:24px 0 112px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+.rl-row{display:flex;gap:22px;width:max-content;animation:rl-scroll 130s linear infinite}
+.rl-view:hover .rl-row{animation-play-state:paused}
+@keyframes rl-scroll{to{transform:translateX(-50%)}}
+.rl-card{flex:0 0 clamp(220px,19vw,262px);position:relative;margin-top:var(--o)}
+.rl-ph{position:relative;aspect-ratio:4/5;border-radius:26px;overflow:hidden;background:linear-gradient(150deg,#d9cff4,#f6dbe3);box-shadow:0 22px 40px -22px rgba(30,10,70,.55)}
+.rl-ph img{display:block;width:100%;height:100%;object-fit:cover}
+.rl-no{display:grid;place-items:center}
+.rl-no i{font:400 150px/1 var(--display);font-style:normal;color:#fff;opacity:.85}
+.rl-k1{background:#F7D3DA}.rl-k2{background:#E9E4F5}.rl-k3{background:#F7E9A8}.rl-k4{background:#D6E4C8}
+.rl-pill{position:absolute;left:12px;right:12px;bottom:-34px;background:#fff;border-radius:18px;padding:12px 14px;box-shadow:0 14px 30px -14px rgba(30,10,70,.6)}
+.rl-pill p{margin:0;font:500 14px/1.35 var(--display);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.rl-pill small{display:block;margin-top:6px;font:600 11px var(--body)}
+@media(max-width:767px){.rl-head{grid-template-columns:1fr;gap:8px}.rl-big{font-size:34vw}.rl-card{flex-basis:62vw}}
+@media(prefers-reduced-motion:reduce){.rl-view{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.rl-row{animation:none}}
