@@ -666,9 +666,3 @@ a.rp-mt{text-decoration:none}
 .pcard-flip i:first-child{background:var(--ink)}
 .on-model .pcard-flip i{background:rgba(255,255,255,.55);box-shadow:0 0 0 .5px rgba(0,0,0,.2)} /* white on the model photo */
 .on-model .pcard-flip i:first-child{background:rgba(255,255,255,.55)}.on-model .pcard-flip i:last-child{background:#fff}
-/* ---- Glass header (B): clear frosted glass; white text over hero photos, ink over the page ---- */
-.nav,.cart{background:rgba(255,255,255,.18);-webkit-backdrop-filter:blur(22px) saturate(1.8);backdrop-filter:blur(22px) saturate(1.8);border:1px solid rgba(255,255,255,.45);box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 18px 50px -24px rgba(0,0,0,.35);color:var(--ink);transition:background .35s,color .35s,border-color .35s,transform .25s}
-.burger i{background:currentColor}.nav-search{color:inherit}
-html[data-navphoto] .nav,html[data-navphoto] .cart{color:#fff}
-@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.nav,.cart{background:rgba(255,255,255,.88)}html[data-navphoto] .nav,html[data-navphoto] .cart{background:rgba(28,26,27,.45)}}
-
