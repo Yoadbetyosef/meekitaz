@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import RingSteps from "./RingSteps";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "./CartProvider";
@@ -121,7 +122,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
   return (
     <main className="pp">
       <div className="wrap">
-        <p className="pp-crumb"><Link href="/">Home</Link> / {p.productType || "Shop"}{metal ? ` / ${metal}` : ""}</p>
+        {ring ? <RingSteps step={1} /> : <p className="pp-crumb"><Link href="/">Home</Link> / {p.productType || "Shop"}{metal ? ` / ${metal}` : ""}</p>}
         <div className="pp-grid">
           {/* desktop: stacked gallery */}
           <div className="pp-gal">
@@ -136,7 +137,11 @@ export default function ProductView({ product: p, siblings, related, ring, optio
             <div className="pp-car" ref={car} onScroll={() => car.current && setSlide(Math.round(car.current.scrollLeft / car.current.clientWidth))}>
               {imgs.map((im, i) => <figure key={im.url}><Image src={photoSrc(im.url, 900, title, i)} alt={im.alt} fill sizes="100vw" quality={75} priority={i === 0} unoptimized={isCleaned(photoSrc(im.url, 900, title, i))} /></figure>)}
             </div>
-            {imgs.length > 1 && <span className="pp-cnt">{slide + 1} / {imgs.length}</span>}
+            {imgs.length > 1 && (
+              <div className="pp-line" aria-label={`Photo ${slide + 1} of ${imgs.length}`}>
+                <span style={{ width: `max(${100 / imgs.length}%, 56px)`, left: `calc(${(slide * 100) / imgs.length}% - ${slide / (imgs.length - 1)} * (max(${100 / imgs.length}%, 56px) - ${100 / imgs.length}%))` }} />
+              </div>
+            )}
           </div>
 
           <div className="pp-info">

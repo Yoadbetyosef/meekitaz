@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import StoneMedia from "@/components/StoneMedia";
 import ChooseStone from "@/components/ChooseStone";
+import RingSteps from "@/components/RingSteps";
 import { getDiamond, vdbConfigured } from "@/lib/vdb";
 
 export const revalidate = 300;
@@ -28,6 +29,7 @@ export default async function DiamondPage({ params }: { params: Promise<{ id: st
   ];
   return (
     <main className="dd">
+      {!d.fancy && <RingSteps step={2} />}
       <div className="wrap dd-grid">
         <StoneMedia image={d.image} embed={d.embed} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />
         <div className="dd-info">

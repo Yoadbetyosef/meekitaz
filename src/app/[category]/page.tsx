@@ -1,3 +1,4 @@
+import RingSteps from "@/components/RingSteps";
 import Image, { getImageProps } from "next/image";
 import { notFound } from "next/navigation";
 import { categories } from "@/lib/data";
@@ -38,6 +39,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
         <div className="wrap"><h1><small>{p.small}</small>{p.title}</h1></div>
       </section>
       <div className="catbody">
+        {p.slug === "diamonds" && <RingSteps step={2} />}
         {p.slug === "diamonds" && <Suspense fallback={null}><SettingBar /></Suspense>}
         {p.slug === "engagement-rings" && <Suspense fallback={null}><StoneBar /></Suspense>}
         <JumpToResults />

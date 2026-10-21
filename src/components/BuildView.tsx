@@ -1,4 +1,5 @@
 "use client";
+import RingSteps from "./RingSteps";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { clearSetting, clearStone, loadSetting, loadStone, saveSetting, saveStone, stoneLabel, type Setting, type Stone } from "@/lib/setting";
@@ -56,7 +57,7 @@ export default function BuildView() {
   return (
     <main className="bd">
       <div className="wrap">
-        <div className="bd-steps"><span className="done"><b>✓</b>Setting</span><i /><span className="done"><b>✓</b>Diamond</span><i /><span className="on"><b>3</b>Review</span></div>
+        <RingSteps step={3} />
         <h1>Your ring</h1>
         {!ready ? <p className="bd-msg">Loading…</p> : !setting || !stone ? (
           <div className="bd-msg"><p>{!setting && !stone ? "You have not chosen a setting or a diamond yet." : !setting ? "You have a diamond. Now choose a setting for it." : "You have a setting. Now choose a diamond for it."}</p>
