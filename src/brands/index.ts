@@ -4,7 +4,7 @@ export type Brand = {
   key: string;
   name: string;            // "MEEKITAZ"
   wordmark: string;        // text wordmark used when there is no logo image
-  logo?: { src: string; width: number; height: number; alt: string }; // optional image wordmark (nav + footer)
+  logo?: { src: string; width: number; height: number; alt: string; color?: string }; // optional image wordmark (nav + footer); with color, the image is used as a mask and painted in that colour
   title: string;           // <title>
   description: string;
   email: string;
@@ -33,24 +33,24 @@ const tg: Brand = {
   key: "tg",
   name: "TG Jewellers",
   wordmark: "TG JEWELLERS",
-  logo: { src: "/brands/tg/logo.png", width: 2089, height: 230, alt: "TG Jewellers" },
+  logo: { src: "/brands/tg/logo.png", width: 2089, height: 230, alt: "TG Jewellers", color: "#E9E4F5" },
   title: "TG Jewellers — Custom rings & fine jewellery.",
   description: "Custom rings and fine jewellery with lab-grown diamonds. IGI / GIA certified. Engagement rings, diamonds, earrings, necklaces, bracelets and bands.",
   email: "hello@tgjewellers.com",
   domain: "tgjewellers.com",
-  themeColor: "#E9E4F5",
+  themeColor: "#9B7BE0",
   fonts: "tg",
-  // Pastel palette: lilac / blush / butter on warm off-white, plum CTA
+  // Amethyst: purple page, lavender logo on a glass nav, lilac-mist CTAs with ink text (chosen 2026-10-21)
   colors: {
-    "blue-light": "#FBF9F6",  // page background
-    "blue": "#C9B6F2",        // lilac accent (hero button, dots, checks)
+    "blue-light": "#9B7BE0",  // page background (Amethyst)
+    "blue": "#E6D9FF",        // light accent (desktop hero button, dots, checks)
     "pink": "#F7D3DA",        // blush
-    "rose": "#E9E4F5",        // menu overlay
+    "rose": "#7B5BC4",        // menu overlay
     "sage": "#DCE9D9",
-    "red": "#4A3A6B",         // every CTA
-    "ivory": "#FDF8F3",
-    "ink": "#2B2733",
-    "gold": "#C9B6F2",
+    "red": "#F3EFF9",         // every CTA (Lilac mist)
+    "ivory": "#2B2733",       // CTA text (ink on lilac)
+    "ink": "#2B2733",         // body text
+    "gold": "#E9E4F5",
   },
   film: { src: "/media/meekitaz-film.mp4", poster: "/media/meekitaz-film-poster.jpg", headline: "How we do diamonds", copy: "Every TG Jewellers stone is IGI or GIA certified, grown above ground and set by hand in our workshop. Same fire. Lighter footprint." },
 };
