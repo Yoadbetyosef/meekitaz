@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { menuTiles } from "@/lib/data";
+import { menuTiles as baseTiles } from "@/lib/data";
+import { brand } from "@/brands";
+
+// The brand can swap each menu tile image by href; labels and order are shared.
+const menuTiles = baseTiles.map(t => ({ ...t, ...(brand.menuTiles?.[t.href] || {}) }));
 import { useCart } from "./CartProvider";
 import SearchPalette from "./SearchPalette";
 import Wordmark from "./Wordmark";
