@@ -173,8 +173,8 @@ export async function getRelated(productType: string, exceptHandle: string, firs
   if (!productType) return [];
   const d = await sf<{ products: { edges: { node: { handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string } | null } }[] } }>(
     `query($q:String!,$n:Int!){ products(first:$n, query:$q, sortKey:BEST_SELLING){ edges{ node{ handle title tags priceRange{ minVariantPrice{ amount } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url } } } } }`,
-    { q: `product_type:"${productType.replace(/"/g, "")}"`, n: first + 6 });
-  return (d?.products.edges || []).map(e => e.node).filter(n => n.handle !== exceptHandle && !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026"))
+    { q: `product_type:"${productType.replace(/"/g, "")}" AND -tag:Configured AND -tag:'Karat variant'`, n: first + 6 });
+  return (d?.products.edges || []).map(e => e.node).filter(n => n.handle !== exceptHandle && !n.tags.some(t => ["configured", "karat variant", "fifa world cup 2026"].includes(t.toLowerCase())))
     .slice(0, first).map(n => ({ handle: n.handle, title: n.title, price: +n.priceRange.minVariantPrice.amount, compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0, image: n.featuredImage?.url }));
 }
 
