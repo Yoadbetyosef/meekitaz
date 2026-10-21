@@ -64,7 +64,7 @@ const tg: Brand = {
   display: "TG Jewellers",
   showroom: { in: "Vancouver", short: "Vancouver", line: "Granville Street, Vancouver", address: ["#622-736 Granville", "Vancouver, BC V6Z 1G3", "Canada"] },
   wordmark: "TG JEWELLERS",
-  logo: { src: "/brands/tg/logo.png", width: 2089, height: 230, alt: "TG Jewellers", color: "#E9E4F5" },
+  logo: { src: "/brands/tg/logo.png", width: 2089, height: 230, alt: "TG Jewellers", color: "#FFFFFF" },
   title: "TG Jewellers — Custom rings & fine jewellery.",
   description: "Custom rings and fine jewellery with lab-grown diamonds. IGI / GIA certified. Engagement rings, diamonds, earrings, necklaces, bracelets and bands.",
   email: "hello@tgjewellers.com",
