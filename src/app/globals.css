@@ -709,3 +709,12 @@ html[data-brand="tg"] .sec .eyebrow,html[data-brand="tg"] .sec .ct-txt i,html[da
 html[data-brand="tg"] .pc-body .eyebrow{color:var(--red);opacity:1}
 /* Shhh card: same lilac as the photo's own backdrop, so the photo melts into the card without touching the photo */
 html[data-brand="tg"] .hush{--hush-bg:#CECADF}
+
+/* Real-review cards (text only, no photo) + the rating line under the heading */
+.rv-sum{display:flex;align-items:center;gap:10px;margin:14px 0 0;font:500 15px var(--body)}
+.rv-sum b{font-weight:700}.rv-sum span{opacity:.8}
+.rv-sum .stars svg{width:16px;height:16px}
+.rv.rv-g{flex-basis:min(380px,86vw)}
+.rv-g .rv-body{padding:26px 26px 24px;gap:16px}
+.rv-g .rv-body p{font:500 clamp(18px,1.5vw,21px)/1.45 var(--sub);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:12;overflow:hidden}
+.rv-g .rv-who{border-top:1px solid rgba(28,26,27,.1);padding-top:14px}

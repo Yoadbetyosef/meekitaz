@@ -9,6 +9,7 @@ export type Brand = {
   description: string;
   display: string;         // name as written in running text ("Meekitaz")
   email: string;
+  phone?: { display: string; tel: string };
   /** Showroom: `in` = "in our ___ showroom", `short` = back-label, `line` = booking option sub-line, `address` = footer lines. */
   showroom: { in: string; short: string; line: string; address: string[] };
   domain: string;
@@ -31,6 +32,8 @@ export type Brand = {
   showroomImg?: { desktop: string; mobile: string; alt: string };
   /** House codes card images, keyed by href. Omit to keep the shared images. */
   houseCodes?: Record<string, { img: string }>;
+  /** Real customer reviews (shown as text cards, no photos). Omit to keep the shared sample reviews. */
+  reviews?: { source: string; rating: number; count: number; asOf: string; items: { name: string; text: string; date: string }[] };
   designers?: { eyebrow: string; title: string; intro: string; items: { name: string; tag: string; text: string; img: string; alt: string }[] };
   shopLook?: { img: string; alt: string; focusX: number; points: Record<"earrings" | "necklaces" | "bracelets" | "rings", [number, number]> };
 };
@@ -61,6 +64,7 @@ const tg: Brand = {
   title: "TG Jewellers — Custom rings & fine jewellery.",
   description: "Custom rings and fine jewellery with lab-grown diamonds. IGI / GIA certified. Engagement rings, diamonds, earrings, necklaces, bracelets and bands.",
   email: "hello@tgjewellers.com",
+  phone: { display: "+1 604-446-8438", tel: "+16044468438" },
   domain: "tgjewellers.com",
   themeColor: "#9B7BE0",
   fonts: "tg",
@@ -120,6 +124,24 @@ const tg: Brand = {
     "/necklaces": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_164215_56dfb432-0442-4156-b2f6-84f4ed506511.png" },
     "/bracelets": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_164216_0ed69b0c-5d97-4e1e-aeda-b6ac9c14046a.png" },
     "/engagement-rings": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_164214_4a53f759-9ee6-4c65-9638-4b942046f5d6.png" },
+  },
+  // Real Google reviews of TG Jewellers (verbatim, reviewer shown as first name + initial). Pulled 2026-10-21 from the Google Business Profile: 5.0 · 102 reviews.
+  reviews: {
+    source: "Google", rating: 5, count: 102, asOf: "Oct 2026",
+    items: [
+      { name: "Lidia P.", text: "I was looking for a tennis necklace and was really impressed by their selection! They have so many beautiful options at great prices. The staff were also super friendly and helpful throughout the process. Definitely recommend checking them out!", date: "Oct 2026" },
+      { name: "Adiya B.", text: "Me and my now husband chose  TG Jewellers for our wedding bands and really appreciated Tatiana's knowledge and guidance. Having someone knowledgeable help us with such a meaningful decision made the experience special. We're very happy with our rings and look forward to wearing them for years to come. Thank you for being part of our wedding journey!", date: "Oct 2026" },
+      { name: "Altynay P.", text: "I received a beautiful set of diamond earrings and a pendant for my birthday specially made for me by TG Jewellers. The set is even more beautiful than I expected! I will definitely be back for more pieces in the future. Thank you so much, TG Jewellers!", date: "Oct 2026" },
+      { name: "Nader N.", text: "Very happy with my custom design order for my partner. Perfect timing, great design and very professional. Thank you 🙏🏼", date: "Oct 2026" },
+      { name: "Yulia N.", text: "So happy with my purchase and overall experience! I needed to have custom pins made, and nobody could make them except for TG Jewellers. When I picked them up, I couldn’t believe how amazing they looked, beyond my expectations! Love my pins and will only be going to TG going forward! Thank you!", date: "Oct 2026" },
+      { name: "Jordan R.", text: "Amazing experience with TG Jewellers! Got such a beautiful engagement ring. Tatiana was so helpful in choosing the perfect ring. Would recommend 10/10!", date: "Jul 2026" },
+      { name: "Dani L.", text: "We were visiting Vancouver for the 2026 FIFA World Cup, and it also happened to be our 20th wedding anniversary. I wanted to surprise my wife with something special, so I found TG Jewellers through a Google search. From the moment we walked in, we were impressed by the exceptional service, beautiful selection, and outstanding craftsmanship. I purchased a stunning tennis bracelet, and my wife absolutely loved it. We were so happy with our experience that we came back later that week to buy a few more gifts to take home. Thank you, Tatiana and the entire TG Jewellers team, for making our anniversary even more memorable. We will definitely be ordering more pieces in the future and highly recommend TG Jewellers to anyone looking for beautiful jewellery and outstanding customer service!", date: "Jul 2026" },
+      { name: "Josh H.", text: "The diamond is beautiful and was perfectly made with the help of Tatiana! She was very helpful with the entire process of getting a ring that was perfect for my soon to be fiancée.", date: "Jul 2026" },
+      { name: "Larisa T.", text: "I can't recommend TG Jewellers enough! I've been buying and creating my jewelry with them for over 10 years, and I wouldn't go anywhere else. Tatiana, Avi, and the whole family are amazing, kind, and always make the experience enjoyable. Their prices are unbeatable, and the quality and craftsmanship are exceptional. If you're looking for beautiful jewelry and outstanding service, TG Jewellers is the place to go!", date: "Jul 2026" },
+      { name: "Jill K.", text: "Working with Tatiana was wonderful! She created exactly what I wanted, providing guidance throughout the process. My rings are beautiful. Looking forward to more.", date: "Apr 2026" },
+      { name: "Janet G.", text: "Beautiful craftsmanship and such a great experience from start to finish. The attention to detail is amazing and you can really feel the care that goes into each piece. I’m so happy with my jewelry and would highly recommend Tatiana!!", date: "Mar 2026" },
+      { name: "Anya E.", text: "I’ve been buying jewelry from TG Jewellers on a regular basis, and it’s truly never a disappointment. Working with Tatiana is an absolute pleasure ,she is incredibly knowledgeable, honest, and genuinely cares about her clients. Every piece I’ve purchased has been stunning, beautifully crafted, and exactly what I was hoping for (if not better). The entire experience always feels personal and special. I wouldn’t trust anyone else with my jewelry. Highly, highly recommend Tatiana and TG Jewellers.", date: "Feb 2026" },
+    ],
   },
   // Our designers — two houses TG carries; mood photography generated 2026-10-21 (swap for the houses' own campaign images if licensed)
   designers: {

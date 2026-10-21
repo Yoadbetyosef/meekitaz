@@ -24,7 +24,7 @@ export default function Footer() {
           <div className="foot-cols">
             <div><h4>Shop</h4>{categories.map(c => <Link key={c.slug} href={`/${c.slug}`}>{c.nav}</Link>)}</div>
             <div><h4>House</h4><Link href="/#codes">House codes</Link><Link href="/#reviews">Reviews</Link><Link href="/#contact">Private clients</Link></div>
-            <div><h4>Contact</h4><a href={`mailto:${brand.email}`}>{brand.email}</a><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a><span>{brand.showroom.address.map((l, i) => <Fragment key={i}>{l}<br /></Fragment>)}By appointment</span></div>
+            <div><h4>Contact</h4><a href={`mailto:${brand.email}`}>{brand.email}</a>{brand.phone && <a href={`tel:${brand.phone.tel}`}>{brand.phone.display}</a>}<a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a><span>{brand.showroom.address.map((l, i) => <Fragment key={i}>{l}<br /></Fragment>)}By appointment</span></div>
           </div>
         </div>
         <div className="foot-base"><span>© {new Date().getFullYear()} {brand.name}. All rights reserved.</span><span>Lab-grown · IGI / GIA certified · 30-day returns · Lifetime warranty</span></div>
