@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { brand } from "@/brands";
 
 export default function Film() {
   const v = useRef<HTMLVideoElement>(null);
@@ -11,16 +12,16 @@ export default function Film() {
     io.observe(el); return () => io.disconnect();
   }, []);
   return (
-    <section className="mkfilm" id="film" aria-label="Meekitaz film">
+    <section className="mkfilm" id="film" aria-label={`${brand.name} film`}>
       <div className="mkfilm-in">
         <div className="mkfilm-txt">
           <h2>Made, not mined.<br />Worn loudly.</h2>
-          <p>Every Meekitaz stone is IGI or GIA certified, grown above ground and set in our Fifth Avenue atelier. Same fire. Lighter footprint.</p>
+          <p>{brand.film.copy}</p>
           <Link href="/engagement-rings" className="pill">Shop engagement rings</Link>
         </div>
         <div className="mkfilm-vid">
-        <video ref={v} playsInline muted loop preload="none" poster="/media/meekitaz-film-poster.jpg" onClick={() => { const el = v.current!; el.paused ? el.play() : el.pause(); }}>
-          <source src="/media/meekitaz-film.mp4" type="video/mp4" />
+        <video ref={v} playsInline muted loop preload="none" poster={brand.film.poster} onClick={() => { const el = v.current!; el.paused ? el.play() : el.pause(); }}>
+          <source src={brand.film.src} type="video/mp4" />
         </video>
         <div className="mkctl">
           <button className={`mkmute${sound ? " on" : ""}`} type="button" aria-label={sound ? "Sound off" : "Sound on"} onClick={() => { const el = v.current!; el.muted = sound; setSound(!sound); if (sound === false) el.play().catch(() => {}); }}>

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { menuTiles } from "@/lib/data";
 import { useCart } from "./CartProvider";
 import SearchPalette from "./SearchPalette";
+import Wordmark from "./Wordmark";
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
@@ -23,7 +24,7 @@ export default function Nav() {
   return (
     <>
       <nav className="nav" aria-label="Main">
-        <Link href="/" className="brand">MEEKITAZ<i>©</i></Link>
+        <Link href="/" className="brand"><Wordmark /></Link>
         <div className="nav-r">
           <button className="nav-search" aria-label="Search" onClick={() => { setOpen(false); openCart(false); setSearching(true); }}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" /></svg>
