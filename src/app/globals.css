@@ -738,3 +738,11 @@ html[data-brand="tg"] .pr-track>.pr-lg:hover{background:#fff}
 .rl-pill small{display:block;margin-top:6px;font:600 11px var(--body)}
 @media(max-width:767px){.rl-head{grid-template-columns:1fr;gap:8px}.rl-big{font-size:34vw}.rl-card{flex-basis:62vw}}
 @media(prefers-reduced-motion:reduce){.rl-view{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.rl-row{animation:none}}
+
+/* ===== Instagram reel ===== */
+.ig-actions{display:flex;align-items:center;gap:18px}
+.ig-row{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px max(24px,calc((100% - 1180px)/2 + 24px)) 14px;scrollbar-width:none}
+.ig-row::-webkit-scrollbar{display:none}
+.ig-tile{flex:0 0 clamp(210px,21vw,272px);aspect-ratio:4/5;scroll-snap-align:start;border-radius:22px;overflow:hidden;position:relative;background:linear-gradient(150deg,#d9cff4,#f6dbe3);box-shadow:0 20px 40px -24px rgba(30,10,70,.55)}
+.ig-tile video{display:block;width:100%;height:100%;object-fit:cover}
+@media(max-width:767px){.ig-actions .rv-nav{display:none}.ig-actions{gap:0}.ig-tile{flex-basis:62vw}}

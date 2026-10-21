@@ -8,6 +8,7 @@ import PressRow from "@/components/PressRow";
 import ShopLook from "@/components/ShopLook";
 import Reviews from "@/components/Reviews";
 import PrivateClients from "@/components/PrivateClients";
+import InstagramReel from "@/components/InstagramReel";
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
       <ShopLook />
       <Reviews />
       <PrivateClients />
+      <InstagramReel />
     </main>
   );
 }

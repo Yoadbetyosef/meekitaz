@@ -34,6 +34,8 @@ export type Brand = {
   houseCodes?: Record<string, { img: string }>;
   /** Real customer reviews (shown as text cards, no photos). Omit to keep the shared sample reviews. */
   reviews?: { source: string; rating: number; count: number; asOf: string; items: { name: string; text: string; date: string; photos?: string[] }[] };
+  /** "Follow us on Instagram" reel (after Private Clients): short muted looping clips from the brand's own feed. Omit to hide. */
+  instagram?: { handle: string; url: string; items: { video: string; poster: string }[] };
   designers?: { eyebrow: string; title: string; intro: string; items: { name: string; tag: string; text: string; img: string; alt: string }[] };
   shopLook?: { img: string; alt: string; focusX: number; points: Record<"earrings" | "necklaces" | "bracelets" | "rings", [number, number]> };
 };
@@ -144,6 +146,18 @@ const tg: Brand = {
       { name: "Josh H.", text: "The diamond is beautiful and was perfectly made with the help of Tatiana! She was very helpful with the entire process of getting a ring that was perfect for my soon to be fiancée.", date: "Jul 2026" },
       { name: "Jill K.", text: "Working with Tatiana was wonderful! She created exactly what I wanted, providing guidance throughout the process. My rings are beautiful. Looking forward to more.", date: "Apr 2026" },
       { name: "Janet G.", text: "Beautiful craftsmanship and such a great experience from start to finish. The attention to detail is amazing and you can really feel the care that goes into each piece. I’m so happy with my jewelry and would highly recommend Tatiana!!", date: "Mar 2026" },
+    ],
+  },
+  // Instagram reel: six clips from TG's own feed (copied from tgjewellers.com into our media storage on 2026-10-21 so they don't depend on the old site's backend)
+  instagram: {
+    handle: "tgjewellers", url: "https://www.instagram.com/tgjewellers/",
+    items: [
+      { video: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/c4796725-3ce4-485b-9fcd-142b27c70a99.mp4", poster: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/bf1d9b11-be27-4153-beab-ffdb1700f62c.png" },
+      { video: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/8aff6efe-cfaa-4c09-b6ac-d0e93ac57a2f.mp4", poster: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/75d5acd1-a1f5-4a00-9fdd-02a7ddab9d47.png" },
+      { video: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/23f89dae-24a9-4fac-8428-a839c4dc30dd.mp4", poster: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/dd99e355-4d96-4584-978b-a3501dd1809a.png" },
+      { video: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/f1483273-7a87-4234-8acf-5fd815a4d082.mp4", poster: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/b309e388-a62a-4404-9a28-c160233b702f.png" },
+      { video: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/f1800ff2-1b67-4464-a0d4-8729ba1589fc.mp4", poster: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/51ff9807-42d8-492f-8ff1-9d90450b497f.png" },
+      { video: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/3c810c7b-86f8-4ded-9983-115c0aed67f0.mp4", poster: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/d8d049ec-849c-4ac1-b55f-967c4a77c645.png" },
     ],
   },
   // Our designers — two houses TG carries; mood photography generated 2026-10-21 (swap for the houses' own campaign images if licensed)
