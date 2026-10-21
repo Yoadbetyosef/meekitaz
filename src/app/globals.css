@@ -7,9 +7,9 @@
 /* TG Jewellers fonts (Cormorant Garamond + Jost) — chosen by data-brand on <html> */
 html[data-brand="tg"]{--display:var(--f-display-tg),Georgia,serif;--sub:var(--f-display-tg),Georgia,serif;--body:var(--f-body-tg),Helvetica,Arial,sans-serif}
 html[data-brand="tg"] h1,html[data-brand="tg"] h2,html[data-brand="tg"] h3{font-weight:500}
-html[data-brand="tg"] .nav .brand img{height:22px;width:auto;display:block}
+html[data-brand="tg"] .nav .brand img{height:30px;width:auto;display:block}
 html[data-brand="tg"] .foot-giant img{width:min(80vw,900px);height:auto;margin:0 auto}
-@media(max-width:767px){html[data-brand="tg"] .nav .brand img{height:18px}}
+@media(max-width:767px){html[data-brand="tg"] .nav .brand img{height:22px}}
 *{box-sizing:border-box} html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{margin:0;font-family:var(--body);color:var(--ink);background:var(--blue-light)}
 a{color:inherit} img{max-width:100%;display:block} button{font-family:inherit}

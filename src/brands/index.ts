@@ -33,7 +33,7 @@ const tg: Brand = {
   key: "tg",
   name: "TG Jewellers",
   wordmark: "TG JEWELLERS",
-  logo: { src: "/brands/tg/logo.png", width: 456, height: 72, alt: "TG Jewellers" },
+  logo: { src: "/brands/tg/logo.png", width: 2089, height: 230, alt: "TG Jewellers" },
   title: "TG Jewellers — Custom rings & fine jewellery.",
   description: "Custom rings and fine jewellery with lab-grown diamonds. IGI / GIA certified. Engagement rings, diamonds, earrings, necklaces, bracelets and bands.",
   email: "hello@tgjewellers.com",
