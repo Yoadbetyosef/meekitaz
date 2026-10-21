@@ -29,6 +29,8 @@ export type Brand = {
   /** "Our designers" section on the home page (after House codes). No links by design. Omit to hide the section. */
   /** Private Clients photo: wide image for desktop, portrait for phones. Omit to keep the shared showroom image. */
   showroomImg?: { desktop: string; mobile: string; alt: string };
+  /** House codes card images, keyed by href. Omit to keep the shared images. */
+  houseCodes?: Record<string, { img: string }>;
   designers?: { eyebrow: string; title: string; intro: string; items: { name: string; tag: string; text: string; img: string; alt: string }[] };
   shopLook?: { img: string; alt: string; focusX: number; points: Record<"earrings" | "necklaces" | "bracelets" | "rings", [number, number]> };
 };
@@ -62,18 +64,23 @@ const tg: Brand = {
   domain: "tgjewellers.com",
   themeColor: "#9B7BE0",
   fonts: "tg",
-  // Amethyst: purple page, lavender logo on a glass nav, lilac-mist CTAs with ink text (chosen 2026-10-21)
+  // Amethyst: purple page, lavender logo on a glass nav, lilac-mist CTAs with ink text (chosen 2026-10-21).
+  // --red = accent text on light surfaces, --cta = button background, --on-cta = text on buttons, --on-ink = text on dark chips, --ivory = light surface.
   colors: {
     "blue-light": "#9B7BE0",  // page background (Amethyst)
     "blue": "#E6D9FF",        // light accent (desktop hero button, dots, checks)
     "pink": "#F7D3DA",        // blush
     "rose": "#7B5BC4",        // menu overlay
     "sage": "#DCE9D9",
-    "red": "#F3EFF9",         // every CTA (Lilac mist)
-    "ivory": "#2B2733",       // CTA text (ink on lilac)
+    "red": "#4A3A6B",         // accent text on light surfaces (prices, labels, active states)
+    "cta": "#F3EFF9",         // every button background (Lilac mist)
+    "on-cta": "#2B2733",      // text on buttons (ink)
+    "on-ink": "#FFFFFF",      // text on dark ink chips / selected options
+    "ivory": "#FBF9F6",       // light surface (drawer, product & category pages)
     "ink": "#2B2733",         // body text
     "gold": "#E9E4F5",
   },
+
   // Hero: natural-colour lifestyle set in the Meekitaz style (studs slide kept lilac) — 2026-10-21 (desktop 16:9 / mobile 3:4)
   heroSlides: [
     { desktop: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_153756_96e7714b-5de1-4c62-b4ae-0f9e3b08a9c6.png", mobile: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_153756_12e9df29-f3b8-4f69-95d4-b17a233c22e9.png", pos: "50% 40%", posM: "50% 30%", zoomM: 1 },
@@ -107,6 +114,12 @@ const tg: Brand = {
     desktop: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_163631_e2cb8d0a-6a41-4670-8801-051d7172e450.png",
     mobile: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_163631_d0bf4047-114f-48cc-8bab-9fc6d56ff636.png",
     alt: "TG Jewellers showroom in Vancouver: marble floor, brass and glass display cases with lilac velvet trays, white chairs and a plush white rug",
+  },
+  // House codes — quiet flex / statement weight / effortless cool (2026-10-21)
+  houseCodes: {
+    "/necklaces": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_164215_56dfb432-0442-4156-b2f6-84f4ed506511.png" },
+    "/bracelets": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_164216_0ed69b0c-5d97-4e1e-aeda-b6ac9c14046a.png" },
+    "/engagement-rings": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_164214_4a53f759-9ee6-4c65-9638-4b942046f5d6.png" },
   },
   // Our designers — two houses TG carries; mood photography generated 2026-10-21 (swap for the houses' own campaign images if licensed)
   designers: {

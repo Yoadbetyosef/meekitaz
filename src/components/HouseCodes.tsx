@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { houseCodes } from "@/lib/data";
+import { houseCodes as baseCodes } from "@/lib/data";
+import { brand } from "@/brands";
+
+// The brand can swap each card image by href; numbering, titles and copy are shared.
+const houseCodes = baseCodes.map(c => ({ ...c, ...(brand.houseCodes?.[c.href] || {}) }));
 
 export default function HouseCodes() {
   return (
