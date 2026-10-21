@@ -1,3 +1,4 @@
+import { brand } from "@/brands";
 // Generated from the approved static site. Edit freely.
 export const slides = [
   {
@@ -749,3 +750,11 @@ export const hushCard = { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63
 
 
 
+
+// A brand can restyle the diamond-shape tiles (engagement rings + diamonds only, so gemstone tiles named "Emerald" etc. stay as they are).
+if (brand.shapeImages) {
+  for (const c of categories) {
+    if (c.slug !== "engagement-rings" && c.slug !== "diamonds") continue;
+    for (const st of c.styles) { const u = brand.shapeImages[st.label]; if (u) st.img = u; }
+  }
+}

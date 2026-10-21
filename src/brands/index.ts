@@ -36,6 +36,8 @@ export type Brand = {
   reviews?: { source: string; rating: number; count: number; asOf: string; items: { name: string; text: string; date: string; photos?: string[] }[] };
   /** "Follow us on Instagram" reel (after Private Clients): short muted looping clips from the brand's own feed. Omit to hide. */
   instagram?: { handle: string; url: string; items: { video: string; poster: string }[] };
+  /** Replacement thumbnails for the diamond-shape tiles (Round, Oval…) wherever they appear: search panel, engagement rings and diamonds pages. */
+  shapeImages?: Record<string, string>;
   designers?: { eyebrow: string; title: string; intro: string; items: { name: string; tag: string; text: string; img: string; alt: string }[] };
   shopLook?: { img: string; alt: string; focusX: number; points: Record<"earrings" | "necklaces" | "bracelets" | "rings", [number, number]> };
 };
@@ -159,6 +161,18 @@ const tg: Brand = {
       { video: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/f1800ff2-1b67-4464-a0d4-8729ba1589fc.mp4", poster: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/51ff9807-42d8-492f-8ff1-9d90450b497f.png" },
       { video: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/3c810c7b-86f8-4ded-9983-115c0aed67f0.mp4", poster: "https://d2ol7oe51mr4n9.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/d8d049ec-849c-4ac1-b55f-967c4a77c645.png" },
     ],
+  },
+  // Diamond-shape tiles on lilac marble (2026-10-21)
+  shapeImages: {
+    Round: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_171810_ad83f1d6-aed5-4259-b0a8-764d34fb326e.png",
+    Oval: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_171810_323d0aec-d709-4f98-9062-663554b621de.png",
+    Cushion: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_171811_ca66a013-c131-4711-b0a1-aeb2a03d3617.png",
+    Emerald: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_171811_4b6ddc10-e989-4624-baa0-07d8fb316471.png",
+    Pear: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_171811_8c66f953-5e50-4687-a8f1-79a2b6edc587.png",
+    Princess: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_171810_30350630-86d1-44c8-9ca5-f89779709fc4.png",
+    Radiant: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_171809_ed16210a-8eeb-43a3-b54d-5761eb3f2021.png",
+    Marquise: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_171830_8d3ac7df-1230-40ea-abcd-2dbf40edea35.png",
+    Asscher: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_171812_62defa89-00c6-4d05-8882-ca9d6a765f7b.png",
   },
   // Our designers — two houses TG carries; mood photography generated 2026-10-21 (swap for the houses' own campaign images if licensed)
   designers: {
