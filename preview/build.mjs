@@ -18,7 +18,7 @@ const css = fs.readFileSync("src/app/globals.css", "utf8");
 const b64 = f => fs.readFileSync(f).toString("base64");
 const assets = { "/brands/tg/logo.png": "data:image/png;base64," + b64("public/brands/tg/logo.png"),
   "/media/meekitaz-film-poster.jpg": "data:image/jpeg;base64," + b64("public/media/meekitaz-film-poster.jpg") };
-for (const f of fs.readdirSync("public/press")) assets["/press/" + f] = "data:image/png;base64," + b64("public/press/" + f);
+const pressMap = {}; for (const f of fs.readdirSync("public/press")) { const d = "data:image/png;base64," + b64("public/press/" + f); assets["/press/" + f] = d; pressMap[f.replace(/\.png$/, "")] = d; }
 let js2 = js; for (const [k, v] of Object.entries(assets)) js2 = js2.split(JSON.stringify(k)).join(JSON.stringify(v)).split(k).join(v);
 const fonts = brandKey === "tg"
   ? "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@300;400;500;600;700&display=swap"
@@ -27,7 +27,7 @@ const fontVars = brandKey === "tg" ? ":root{--f-display-tg:'Cormorant Garamond';
 const html = `<!DOCTYPE html><html lang="en" data-brand="${brandKey}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${brandKey === "tg" ? "TG Jewellers — home preview" : "Meekitaz — home preview"}</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="${fonts}" rel="stylesheet">
-<style>${fontVars}\n${css}</style></head><body><div id="root"></div><script>${js2}</script></body></html>`;
+<style>${fontVars}\n${css}</style></head><body><div id="root"></div><script>${js2}</script><script>${fs.readFileSync("preview/press-fix.js","utf8").replace("__MAP__", JSON.stringify(pressMap))}</script></body></html>`;
 fs.mkdirSync("/mnt/user-data/outputs", { recursive: true });
 const out = `/mnt/user-data/outputs/${brandKey === "tg" ? "TG-home-preview" : "meekitaz-home-preview"}.html`;
 fs.writeFileSync(out, html); console.log(out, (html.length/1024|0) + "KB");
