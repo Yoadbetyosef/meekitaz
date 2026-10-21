@@ -20,6 +20,22 @@ export default function Nav() {
     window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k);
   }, [openCart]);
   useEffect(() => { document.body.style.overflow = open || searching ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open, searching]);
+  // Glass header: white text while the bar sits over a hero photo, ink over the page.
+  useEffect(() => {
+    const root = document.documentElement;
+    let raf = 0;
+    const check = () => {
+      raf = 0;
+      if (open || searching) { delete root.dataset.navphoto; return; }
+      const y = window.innerWidth < 768 ? 47 : 67; // the bar's vertical centre
+      const over = [...document.querySelectorAll<HTMLElement>(".hero, .cat-hero")].some(el => { const r = el.getBoundingClientRect(); return r.top < y && r.bottom > y; });
+      if (over) root.dataset.navphoto = ""; else delete root.dataset.navphoto;
+    };
+    const on = () => { if (!raf) raf = requestAnimationFrame(check); };
+    check(); const t = setTimeout(check, 400);
+    window.addEventListener("scroll", on, { passive: true }); window.addEventListener("resize", on);
+    return () => { window.removeEventListener("scroll", on); window.removeEventListener("resize", on); if (raf) cancelAnimationFrame(raf); clearTimeout(t); delete root.dataset.navphoto; };
+  }, [pathname, open, searching]);
   return (
     <>
       <nav className="nav" aria-label="Main">
