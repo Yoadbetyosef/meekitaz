@@ -26,6 +26,8 @@ export type Brand = {
   newCard?: { fancy?: string; pink?: string; green?: string };
   hushImg?: string;
   /** "Shop the look" photo (16:9) and where each piece sits on it, as [x%, y%]. focusX = which part of the photo stays in frame on phones (0 left … 1 right). */
+  /** "Our designers" section on the home page (after House codes). No links by design. Omit to hide the section. */
+  designers?: { eyebrow: string; title: string; intro: string; items: { name: string; tag: string; text: string; img: string; alt: string }[] };
   shopLook?: { img: string; alt: string; focusX: number; points: Record<"earrings" | "necklaces" | "bracelets" | "rings", [number, number]> };
 };
 
@@ -98,6 +100,16 @@ const tg: Brand = {
   // NEW block layers + footer hush card, 2026-10-21
   newCard: { fancy: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_155309_58f13e5a-5ca7-4919-bb35-bb0042ca2f3f.png", pink: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_155310_917dfe5d-2b3a-48ee-b69b-702698b5eccd.png", green: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_155309_c44f285b-5534-4e05-8cc7-09a4ca77a9ed.png" },
   hushImg: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154916_7791fcbf-a9cd-41de-bf8c-2ef949b7ff95.png",
+  // Our designers — two houses TG carries; mood photography generated 2026-10-21 (swap for the houses' own campaign images if licensed)
+  designers: {
+    eyebrow: "Our designers",
+    title: "The houses we trust",
+    intro: "Alongside our own custom work, TG Jewellers carries collections from design houses we have worked with for years.",
+    items: [
+      { name: "A.JAFFE", tag: "Est. 1892 · New York", text: "A New York house with more than a century behind it. The Quilts collection draws on 19th-century American quilting, where every patch tells a story, and the Classic collection is made for brides who prefer quiet detail.", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_162314_526809a6-ccb0-441b-bd94-16338f801e54.png", alt: "Black and white photo of a bride's hand with a slim diamond band on a groom's tuxedo lapel" },
+      { name: "CROWNRING", tag: "Since 1999", text: "Founded in 1999 by longtime friends Thierry Bellisha and Haimy Mann to mark life's biggest moments. Bridal jewellery and men's bands, built to be worn every day after the day itself.", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_162252_8e8aa88c-69ae-40e8-8edc-12d99491180a.png", alt: "A men's rose gold and black wedding band with black diamonds on navy velvet" },
+    ],
+  },
   // Shop the look: lilac diner. Points are estimates from a screenshot — fine-tune with TG-shop-the-look-picker.html
   shopLook: {
     img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_160306_8baa115a-f754-4dea-a755-bc9091a9f9ad.png",

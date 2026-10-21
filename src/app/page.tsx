@@ -3,6 +3,7 @@ import Film from "@/components/Film";
 import Categories from "@/components/Categories";
 import HouseCodes from "@/components/HouseCodes";
 import NewFancy from "@/components/NewFancy";
+import Designers from "@/components/Designers";
 import PressRow from "@/components/PressRow";
 import ShopLook from "@/components/ShopLook";
 import Reviews from "@/components/Reviews";
@@ -16,6 +17,7 @@ export default function Home() {
       <Categories />
       <NewFancy />
       <HouseCodes />
+      <Designers />
       <PressRow />
       <ShopLook />
       <Reviews />

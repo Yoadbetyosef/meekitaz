@@ -686,3 +686,16 @@ a.rp-mt{text-decoration:none}
 .pcard-flip i:first-child{background:var(--ink)}
 .on-model .pcard-flip i{background:rgba(255,255,255,.55);box-shadow:0 0 0 .5px rgba(0,0,0,.2)} /* white on the model photo */
 .on-model .pcard-flip i:first-child{background:rgba(255,255,255,.55)}.on-model .pcard-flip i:last-child{background:#fff}
+
+/* ===== OUR DESIGNERS (brand-defined; hidden when a brand has none) ===== */
+.dz-intro{margin:14px 0 0;max-width:54ch;font:400 17px/1.55 var(--sub);color:var(--ink);opacity:.8}
+.dz-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,56px)}
+.dz-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(18px,2.4vw,34px);align-items:stretch}
+.dz-img{position:relative;aspect-ratio:3/4;border-radius:16px;overflow:hidden}
+.dz-img img{object-fit:cover}
+.dz-txt{display:flex;flex-direction:column;justify-content:center;gap:clamp(18px,2.6vw,36px);padding:4px 0}
+.dz-mark b{display:block;font:500 clamp(24px,2.5vw,38px)/1 var(--display);letter-spacing:.24em;text-transform:uppercase;white-space:nowrap}
+.dz-mark small{display:block;margin-top:10px;font:600 10px var(--body);letter-spacing:.28em;text-transform:uppercase;opacity:.7}
+.dz-txt p{margin:0;font:400 clamp(15px,1.15vw,17px)/1.7 var(--body);opacity:.88;max-width:40ch}
+@media(max-width:1023px){.dz-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.dz-card{grid-template-columns:1fr}.dz-img{aspect-ratio:4/5}.dz-mark b{white-space:normal}}
