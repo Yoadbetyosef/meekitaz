@@ -7,7 +7,10 @@ export type Brand = {
   logo?: { src: string; width: number; height: number; alt: string; color?: string }; // optional image wordmark (nav + footer); with color, the image is used as a mask and painted in that colour
   title: string;           // <title>
   description: string;
+  display: string;         // name as written in running text ("Meekitaz")
   email: string;
+  /** Showroom: `in` = "in our ___ showroom", `short` = back-label, `line` = booking option sub-line, `address` = footer lines. */
+  showroom: { in: string; short: string; line: string; address: string[] };
   domain: string;
   themeColor: string;
   fonts: "meekitaz" | "tg";
@@ -29,6 +32,8 @@ export type Brand = {
 const meekitaz: Brand = {
   key: "meekitaz",
   name: "MEEKITAZ",
+  display: "Meekitaz",
+  showroom: { in: "Fifth Avenue", short: "Fifth Avenue", line: "Fifth Avenue, New York", address: ["Fifth Avenue, New York"] },
   wordmark: "MEEKITAZ",
   title: "MEEKITAZ — Serious diamonds, worn lightly.",
   description: "Lab-grown diamond jewelry. IGI / GIA certified. Engagement rings, diamonds, earrings, necklaces, bracelets and bands.",
@@ -43,6 +48,8 @@ const meekitaz: Brand = {
 const tg: Brand = {
   key: "tg",
   name: "TG Jewellers",
+  display: "TG Jewellers",
+  showroom: { in: "Vancouver", short: "Vancouver", line: "Granville Street, Vancouver", address: ["#622-736 Granville", "Vancouver, BC V6Z 1G3", "Canada"] },
   wordmark: "TG JEWELLERS",
   logo: { src: "/brands/tg/logo.png", width: 2089, height: 230, alt: "TG Jewellers", color: "#E9E4F5" },
   title: "TG Jewellers — Custom rings & fine jewellery.",
