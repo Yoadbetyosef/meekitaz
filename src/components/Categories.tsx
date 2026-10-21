@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { categoryTiles } from "@/lib/data";
+import { categoryTiles as baseTiles } from "@/lib/data";
+import { brand } from "@/brands";
+
+// The brand can swap each category image by href; numbering, titles and captions are shared.
+const categoryTiles = baseTiles.map(t => ({ ...t, ...(brand.categoryTiles?.[t.href] || {}) }));
 
 export default function Categories() {
   return (

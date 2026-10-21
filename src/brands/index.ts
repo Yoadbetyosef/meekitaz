@@ -17,6 +17,8 @@ export type Brand = {
   heroSlides?: Partial<{ desktop: string; mobile: string; pos: string; posM: string; zoomM: number; small: string; big: string }>[];
   /** Image per hamburger-menu tile, keyed by href (/engagement-rings, /diamonds, …). Omit to keep the shared images. */
   menuTiles?: Record<string, { img: string; pos?: string; posM?: string }>;
+  /** Image per "Shop by category" tile on the home page, keyed by href. Omit to keep the shared images. */
+  categoryTiles?: Record<string, { img: string }>;
 };
 
 const meekitaz: Brand = {
@@ -71,6 +73,15 @@ const tg: Brand = {
     "/necklaces": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154432_8b206341-d43d-4585-856b-313018d2461c.png" },
     "/bracelets": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154431_cbceb330-b0d6-4e68-94dc-ed071a1e696d.png" },
     "/bands": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154431_58183e72-566b-487c-a138-6bf3d3c7b276.png" },
+  },
+  // Shop by category — black & white studio set, 2026-10-21
+  categoryTiles: {
+    "/engagement-rings": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154804_b3e86786-0e3a-4d70-b96b-cbf20f8dc575.png" },
+    "/diamonds": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154803_5fd76d05-22b1-444a-b3e8-deac63b751a4.png" },
+    "/earrings": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154802_9c5d7e3d-da5f-4e88-a1b2-a315d3e7db75.png" },
+    "/necklaces": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154804_3138d189-e2c3-4b28-b05c-6b73a7f8865b.png" },
+    "/bracelets": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154805_cfbfaebb-7bb7-4d13-a5a3-08ce555ad115.png" },
+    "/bands": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154803_b84a6343-8d4a-40c7-b39a-f5f64c03c316.png" },
   },
   film: { src: "/media/meekitaz-film.mp4", poster: "/media/meekitaz-film-poster.jpg", headline: "How we do diamonds", copy: "Every TG Jewellers stone is IGI or GIA certified, grown above ground and set by hand in our workshop. Same fire. Lighter footprint." },
 };
