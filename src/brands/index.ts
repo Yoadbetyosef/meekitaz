@@ -22,6 +22,8 @@ export type Brand = {
   /** Images of the NEW block layers (yellow / pink / green) and the footer "hush" card. Omit to keep the shared images. */
   newCard?: { fancy?: string; pink?: string; green?: string };
   hushImg?: string;
+  /** "Shop the look" photo (16:9) and where each piece sits on it, as [x%, y%]. focusX = which part of the photo stays in frame on phones (0 left … 1 right). */
+  shopLook?: { img: string; alt: string; focusX: number; points: Record<"earrings" | "necklaces" | "bracelets" | "rings", [number, number]> };
 };
 
 const meekitaz: Brand = {
@@ -89,6 +91,13 @@ const tg: Brand = {
   // NEW block layers + footer hush card, 2026-10-21
   newCard: { fancy: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_155309_58f13e5a-5ca7-4919-bb35-bb0042ca2f3f.png", pink: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_155310_917dfe5d-2b3a-48ee-b69b-702698b5eccd.png", green: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_155309_c44f285b-5534-4e05-8cc7-09a4ca77a9ed.png" },
   hushImg: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154916_7791fcbf-a9cd-41de-bf8c-2ef949b7ff95.png",
+  // Shop the look: lilac diner. Points are estimates from a screenshot — fine-tune with TG-shop-the-look-picker.html
+  shopLook: {
+    img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_160306_8baa115a-f754-4dea-a755-bc9091a9f9ad.png",
+    alt: "Woman in a lilac diner booth, chin on her hand, wearing round diamond studs, a diamond tennis necklace, an oval diamond ring and two stacked tennis bracelets",
+    focusX: 0.32,
+    points: { earrings: [31, 34], necklaces: [36, 57], bracelets: [46, 54], rings: [48, 29] },
+  },
   film: { src: "/media/meekitaz-film.mp4", poster: "/media/meekitaz-film-poster.jpg", headline: "How we do diamonds", copy: "Every TG Jewellers stone is IGI or GIA certified, grown above ground and set by hand in our workshop. Same fire. Lighter footprint." },
 };
 

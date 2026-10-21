@@ -2,7 +2,13 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { shopLook } from "@/lib/data";
+import { shopLook as baseLook } from "@/lib/data";
+import { brand } from "@/brands";
+
+// The brand can swap the photo, its framing and the position of each piece; labels, links and behaviour are shared.
+const bl = brand.shopLook;
+const shopLook = bl ? { ...baseLook, img: bl.img, focusX: bl.focusX, items: baseLook.items.map(i => ({ ...i, p: (bl.points[i.k as keyof typeof bl.points] || i.p) as [number, number] })) } : baseLook;
+const lookAlt = bl?.alt || "Laughing woman in an open convertible wearing yellow cushion diamond studs, a tennis necklace, an oval diamond ring and stacked tennis bracelets";
 
 /** "Shop the look": one editorial photo; the chips under it spotlight a piece of jewelry and offer its category. */
 export default function ShopLook() {
@@ -28,7 +34,7 @@ export default function ShopLook() {
           <p className="sl-sub">Tap a piece. Every one of them lives in a category.</p>
         </div>
         <div className="sl-stage" ref={stage}>
-          <Image src={shopLook.img} alt="Laughing woman in an open convertible wearing yellow cushion diamond studs, a tennis necklace, an oval diamond ring and stacked tennis bracelets" fill sizes="(max-width:767px) 100vw, 1200px" quality={80} style={{ objectFit: "cover", objectPosition: `${shopLook.focusX * 100}% 50%` }} />
+          <Image src={shopLook.img} alt={lookAlt} fill sizes="(max-width:767px) 100vw, 1200px" quality={80} style={{ objectFit: "cover", objectPosition: `${shopLook.focusX * 100}% 50%` }} />
           <div className={`sl-dim${cur ? " on" : ""}`} style={{ ["--x" as string]: `${pos.x}%`, ["--y" as string]: `${pos.y}%` }} aria-hidden="true" />
           {cur && <Link href={cur.href} className="sl-go" style={{ left: `${Math.min(88, Math.max(12, pos.x))}%`, top: `${pos.y}%` }}>Shop {cur.label.toLowerCase()} &rarr;</Link>}
           <div className="sl-chips" role="group" aria-label="Pieces in this photo">
