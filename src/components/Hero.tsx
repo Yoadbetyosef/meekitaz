@@ -2,7 +2,11 @@
 import { useEffect, useRef, useState } from "react";
 import Image, { getImageProps } from "next/image";
 import Link from "next/link";
-import { slides, faces } from "@/lib/data";
+import { slides as baseSlides, faces } from "@/lib/data";
+import { brand } from "@/brands";
+
+// The brand can swap the hero images (and copy) slide by slide; everything else about the hero is shared.
+const slides = baseSlides.map((s, k) => ({ ...s, ...(brand.heroSlides?.[k] || {}) })) as unknown as typeof baseSlides;
 import Stars from "./Stars";
 
 // The mobile photo goes through the same image optimiser as the desktop one (a plain <source> would download the original multi-megabyte file on a phone).
