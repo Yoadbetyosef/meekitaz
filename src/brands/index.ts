@@ -27,6 +27,8 @@ export type Brand = {
   hushImg?: string;
   /** "Shop the look" photo (16:9) and where each piece sits on it, as [x%, y%]. focusX = which part of the photo stays in frame on phones (0 left … 1 right). */
   /** "Our designers" section on the home page (after House codes). No links by design. Omit to hide the section. */
+  /** Private Clients photo: wide image for desktop, portrait for phones. Omit to keep the shared showroom image. */
+  showroomImg?: { desktop: string; mobile: string; alt: string };
   designers?: { eyebrow: string; title: string; intro: string; items: { name: string; tag: string; text: string; img: string; alt: string }[] };
   shopLook?: { img: string; alt: string; focusX: number; points: Record<"earrings" | "necklaces" | "bracelets" | "rings", [number, number]> };
 };
@@ -100,6 +102,12 @@ const tg: Brand = {
   // NEW block layers + footer hush card, 2026-10-21
   newCard: { fancy: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_155309_58f13e5a-5ca7-4919-bb35-bb0042ca2f3f.png", pink: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_155310_917dfe5d-2b3a-48ee-b69b-702698b5eccd.png", green: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_162704_f128b38b-3639-4705-a7f8-2d6e34dc0d56.png" },
   hushImg: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154916_7791fcbf-a9cd-41de-bf8c-2ef949b7ff95.png",
+  // Private Clients: the Vancouver showroom, restyled lilac-and-white with the gold computer (2026-10-21)
+  showroomImg: {
+    desktop: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_163631_e2cb8d0a-6a41-4670-8801-051d7172e450.png",
+    mobile: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_163631_d0bf4047-114f-48cc-8bab-9fc6d56ff636.png",
+    alt: "TG Jewellers showroom in Vancouver: marble floor, brass and glass display cases with lilac velvet trays, white chairs and a plush white rug",
+  },
   // Our designers — two houses TG carries; mood photography generated 2026-10-21 (swap for the houses' own campaign images if licensed)
   designers: {
     eyebrow: "Our designers",

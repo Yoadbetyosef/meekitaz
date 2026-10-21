@@ -17,7 +17,10 @@ export default function PrivateClients() {
   return (
     <section className="sec" id="contact" aria-label="Private clients">
       <div className="wrap"><div className="pc-grid">
-        <div className="pc-img"><Image src={showroomImage} alt={`${brand.display} showroom, ${brand.showroom.short}`} fill sizes="(max-width:767px) 100vw, 1200px" quality={78} /></div>
+        <div className="pc-img">{brand.showroomImg ? (<>
+          <Image className="pc-ph-d" src={brand.showroomImg.desktop} alt={brand.showroomImg.alt} fill sizes="(max-width:767px) 1px, 1200px" quality={78} />
+          <Image className="pc-ph-m" src={brand.showroomImg.mobile} alt={brand.showroomImg.alt} fill sizes="(max-width:767px) 100vw, 1px" quality={78} />
+        </>) : <Image src={showroomImage} alt={`${brand.display} showroom, ${brand.showroom.short}`} fill sizes="(max-width:767px) 100vw, 1200px" quality={78} />}</div>
         <div className="pc-body">
           <small className="eyebrow">Private clients</small>
           <h2>See it before you say yes</h2>
