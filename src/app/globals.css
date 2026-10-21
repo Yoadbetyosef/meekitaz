@@ -718,3 +718,9 @@ html[data-brand="tg"] .hush{--hush-bg:#CECADF}
 .rv-g .rv-body{padding:26px 26px 24px;gap:16px}
 .rv-g .rv-body p{font:500 clamp(18px,1.5vw,21px)/1.45 var(--sub);display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:12;overflow:hidden}
 .rv-g .rv-who{border-top:1px solid rgba(28,26,27,.1);padding-top:14px}
+
+/* customer photos on real-review cards */
+.rv-g .rv-img{aspect-ratio:4/5;background:#e9e4f5}
+.rv-tag{position:absolute;left:12px;bottom:12px;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.88);backdrop-filter:blur(8px);font:600 10px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+.rv-flip{position:absolute;right:12px;bottom:12px;display:flex;gap:6px;align-items:center;padding:7px 12px;border:0;border-radius:999px;background:rgba(255,255,255,.88);backdrop-filter:blur(8px);font:700 11px var(--body);color:var(--ink);cursor:pointer}
+.rv-flip:hover{background:#fff}
