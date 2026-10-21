@@ -17,6 +17,13 @@ html[data-brand="tg"] .nav,html[data-brand="tg"] .cart{background:rgba(255,255,2
 html[data-brand="tg"] .burger i{background:#fff}
 html[data-brand="tg"] .nav-search{color:#fff}
 html[data-brand="tg"] .cart b{background:#F3EFF9;color:#2B2733}
+/* TG: the NEW-card photo fades into the card colour along its left edge, so the card and the photo backdrop read as one surface */
+html[data-brand="tg"] .nf{--sagecard:#D6E4C8}
+html[data-brand="tg"] .nf-img::before{content:"";position:absolute;inset:0 auto 0 0;width:22%;z-index:1;pointer-events:none;background:linear-gradient(90deg,var(--nf-seam),rgba(255,255,255,0))}
+html[data-brand="tg"] .nf-y .nf-img{--nf-seam:var(--butter)}html[data-brand="tg"] .nf-p .nf-img{--nf-seam:var(--babypink)}html[data-brand="tg"] .nf-g .nf-img{--nf-seam:var(--sagecard)}
+html[data-brand="tg"] .nf-p .nf-img img{object-position:50% 32%;transform:none}html[data-brand="tg"] .nf-g .nf-img img{object-position:50% 32%}
+@media(max-width:767px){html[data-brand="tg"] .nf-img::before{inset:auto 0 0 0;width:auto;height:22%;background:linear-gradient(0deg,var(--nf-seam),rgba(255,255,255,0))}}
+
 *{box-sizing:border-box} html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{margin:0;font-family:var(--body);color:var(--ink);background:var(--blue-light)}
 a{color:inherit} img{max-width:100%;display:block} button{font-family:inherit}
