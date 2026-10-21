@@ -8,6 +8,7 @@ import type { Product } from "@/lib/shopify";
 // Mood clips per category (silent, looping). Hosted on the Higgsfield CDN; move to /public/media to self-host.
 const MOOD: Record<string, { src: string; poster: string }> = {
   earrings: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_155403_077e3a3c-af03-47fe-b905-7f55fefe401b.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_202431_3c1ef1d0-1b33-46e4-8c3e-e06be191f4ef.png" },
+  bands: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_010122_488fa782-706a-46c5-9884-95593bf3210f.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_005300_520e34ad-6539-4260-82ac-59d4202aeb20.png" },
   bracelets: { src: "/media/bracelets-mood.mp4", poster: "/media/bracelets-mood-poster.jpg" },
   necklaces: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_192549_6e320ce1-d71d-450f-8631-a855c98ead92.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_192442_05315264-b6cf-451e-a12d-9fb869e2f2b1.png" },
 };
