@@ -2,7 +2,11 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { newFancy, newPink, newGreen } from "@/lib/data";
+import { newFancy as baseFancy, newPink as basePink, newGreen as baseGreen } from "@/lib/data";
+import { brand } from "@/brands";
+
+// The brand can swap the three layer images; copy and behaviour are shared.
+const newFancy = { ...baseFancy, img: brand.newCard?.fancy || baseFancy.img }, newPink = { ...basePink, img: brand.newCard?.pink || basePink.img }, newGreen = { ...baseGreen, img: brand.newCard?.green || baseGreen.img };
 
 /** "NEW" statement block between the categories and House codes. The card pins in the viewport while the page scrolls past it,
  *  and the yellow (fancy colours) content gives way to the pink (pink stones) content as a scroll-driven crossfade. */

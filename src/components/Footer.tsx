@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { categories, hushCard } from "@/lib/data";
+import { categories, hushCard as baseHush } from "@/lib/data";
 import { brand } from "@/brands";
 import Wordmark from "./Wordmark";
+
+const hushCard = { ...baseHush, img: brand.hushImg || baseHush.img };
 
 export default function Footer() {
   return (

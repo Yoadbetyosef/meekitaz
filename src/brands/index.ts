@@ -19,6 +19,9 @@ export type Brand = {
   menuTiles?: Record<string, { img: string; pos?: string; posM?: string }>;
   /** Image per "Shop by category" tile on the home page, keyed by href. Omit to keep the shared images. */
   categoryTiles?: Record<string, { img: string }>;
+  /** Images of the NEW block layers (yellow / pink / green) and the footer "hush" card. Omit to keep the shared images. */
+  newCard?: { fancy?: string; pink?: string; green?: string };
+  hushImg?: string;
 };
 
 const meekitaz: Brand = {
@@ -83,6 +86,9 @@ const tg: Brand = {
     "/bracelets": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154805_cfbfaebb-7bb7-4d13-a5a3-08ce555ad115.png" },
     "/bands": { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154803_b84a6343-8d4a-40c7-b39a-f5f64c03c316.png" },
   },
+  // NEW block layers + footer hush card, 2026-10-21
+  newCard: { fancy: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154915_5e8aa664-a9db-4472-a339-e09885b74fbb.png", pink: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154916_088bfbd3-c298-4c81-8a56-117d8947f0f1.png", green: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154916_164ba74b-849c-4191-b1c4-55460f0359fd.png" },
+  hushImg: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_154916_7791fcbf-a9cd-41de-bf8c-2ef949b7ff95.png",
   film: { src: "/media/meekitaz-film.mp4", poster: "/media/meekitaz-film-poster.jpg", headline: "How we do diamonds", copy: "Every TG Jewellers stone is IGI or GIA certified, grown above ground and set by hand in our workshop. Same fire. Lighter footprint." },
 };
 
