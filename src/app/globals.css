@@ -772,7 +772,7 @@ a.rp-mt{text-decoration:none}
 @media(prefers-reduced-motion:reduce){.pc-metals i,.mk-col span{transition:none}}
 .pc-err{margin:12px 0 0;color:var(--red);font:600 13px/1.5 var(--body)}.pc-err a{text-decoration:underline}
 .pc-done{margin-top:8px}.pc-done svg{width:52px;height:52px;display:block}.pc-done circle{fill:var(--ink)}.pc-done path{fill:none;stroke:#fff;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:pc-tick .5s .15s ease-out forwards}
-.pc-done h3{font:400 clamp(28px,3.2vw,38px)/1.1 var(--disp);margin:14px 0 8px}.pc-done p{font:400 16px/1.6 var(--body);margin:0;opacity:.82;max-width:46ch}
+.pc-done h3{font:400 clamp(28px,3.2vw,38px)/1.1 var(--display);margin:14px 0 8px}.pc-done p{font:400 16px/1.6 var(--body);margin:0;opacity:.82;max-width:46ch}
 @keyframes pc-tick{to{stroke-dashoffset:0}}
 .pc-form button[type=submit]:disabled{opacity:.65;cursor:wait}
 @media(prefers-reduced-motion:reduce){.pc-done path{animation:none;stroke-dashoffset:0}}
