@@ -719,3 +719,9 @@ a.rp-mt{text-decoration:none}
 .lg-body p,.lg-body li{font:400 16px/1.7 var(--body);color:#2c2a2b}
 .lg-body p{margin:0 0 14px}.lg-body ul,.lg-body ol{margin:0 0 16px;padding-left:22px}.lg-body li{margin-bottom:8px}
 .lg-body a{color:var(--red);text-underline-offset:3px}
+
+/* ---- Buttons: ink, with an arrow that slides in on hover (chosen in the button lab) ---- */
+.pill,.mkfilm-txt .pill,.pc-form button,.pc-next,.cd-empty a,.cd-co,.pp-add,.dcard-cta,.dd-choose,.nf-cta,.sl-all,.sq-all,.lr-go,.hush-cta{background:var(--ink) !important;color:#fff !important;border:1px solid transparent !important}
+@media(min-width:768px){.heroc .pill{background:var(--ink) !important;color:#fff !important;border:1px solid transparent !important}}
+.pill::after,.mkfilm-txt .pill::after,.pc-form button::after,.pc-next::after,.cd-empty a::after,.cd-co::after,.pp-add::after,.dcard-cta::after,.dd-choose::after,.nf-cta::after,.sl-all::after,.sq-all::after,.lr-go::after,.hush-cta::after,.heroc .pill::after{content:"\2192";display:inline-block;width:0;overflow:hidden;opacity:0;transition:width .3s,margin .3s,opacity .3s;white-space:nowrap}
+.pill:hover::after,.mkfilm-txt .pill:hover::after,.pc-form button:hover::after,.pc-next:hover::after,.cd-empty a:hover::after,.cd-co:hover::after,.pp-add:hover::after,.dcard-cta:hover::after,.dd-choose:hover::after,.nf-cta:hover::after,.sl-all:hover::after,.sq-all:hover::after,.lr-go:hover::after,.hush-cta:hover::after,.heroc .pill:hover::after{width:18px;margin-left:10px;opacity:1}
