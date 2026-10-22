@@ -642,9 +642,18 @@ a.rp-mt{text-decoration:none}
 @media(max-width:767px){.gmood{border-radius:14px;aspect-ratio:16/9}.pgrid>:nth-child(6),.pgrid>:nth-child(7){order:3}}
 /* ---- Product cards: the on-model photo. Desktop: fades in on hover. Phones: two tiny dots at the bottom centre; a tap on the photo flips it. ---- */
 .pcard-img{position:relative}
-.pcard-img .pcard-model{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s;z-index:1}
-@media(hover:hover){.pcard:hover .pcard-img.has-model .pcard-model{opacity:1}.pcard-flip{display:none}}
-.pcard-img.on-model .pcard-model{opacity:1}
+.pcard-img .pcard-model{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:translateX(101%);transition:transform .55s cubic-bezier(.65,0,.25,1);z-index:1}
+.pcard-img>img:not(.pcard-model){transition:transform .55s cubic-bezier(.65,0,.25,1)}
+/* the worn photo slides in from the side over the piece (which slides out the other way), like turning a page; arrows and a thin bar show it is a pair */
+@media(hover:hover){.pcard:hover .pcard-img.has-model:not(.hold) .pcard-model{transform:none}.pcard:hover .pcard-img.has-model:not(.hold)>img:not(.pcard-model){transform:translateX(-101%)}.pcard-flip{display:none}}
+.pcard-img.on-model .pcard-model{transform:none}.pcard-img.on-model>img:not(.pcard-model){transform:translateX(-101%)}
+.pcard-arr{position:absolute;top:50%;z-index:4;width:38px;height:38px;margin-top:-19px;border:0;border-radius:50%;background:rgba(255,255,255,.88);box-shadow:0 4px 14px rgba(0,0,0,.14);display:grid;place-items:center;cursor:pointer;opacity:0;transition:opacity .25s,transform .25s;padding:0}
+.pcard-arr svg{width:18px;height:18px;fill:none;stroke:var(--ink);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.pcard-arr.l{left:10px}.pcard-arr.r{right:10px}.pcard-arr:hover{transform:scale(1.08)}
+.pcard-bar{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(28,26,27,.12);z-index:4;overflow:hidden}.pcard-bar::after{content:"";position:absolute;left:0;top:0;bottom:0;width:50%;background:var(--ink);transition:transform .55s cubic-bezier(.65,0,.25,1)}
+@media(hover:hover){.pcard:hover .pcard-arr{opacity:1}.pcard:hover .pcard-img.has-model:not(.hold) .pcard-bar::after{transform:translateX(100%)}}
+.pcard-img.on-model .pcard-bar::after{transform:translateX(100%)}
+@media(hover:none){.pcard-arr,.pcard-bar{display:none}}
+@media(prefers-reduced-motion:reduce){.pcard-img .pcard-model,.pcard-img>img:not(.pcard-model),.pcard-bar::after{transition:none}}
 .pcard-flip{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);z-index:3;display:flex;gap:6px;padding:10px 14px;border:0;background:none;cursor:pointer} /* a 44px tap target, the dots themselves stay tiny */
 .pcard-flip i{display:block;width:6px;height:6px;border-radius:50%;background:rgba(28,26,27,.28);transition:background .3s} /* dark on the white product photo */
 .pcard-flip i:first-child{background:var(--ink)}
