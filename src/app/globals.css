@@ -687,7 +687,13 @@ a.rp-mt{text-decoration:none}
 .lr-next em{font-style:normal}.lr-next::after{content:"\2192";display:inline-block;margin-left:8px;animation:lr-nudge 1.2s ease-in-out infinite}@keyframes lr-nudge{50%{transform:translateX(4px)}}
 .lr-next.off{opacity:0;pointer-events:none}
 @media(max-width:767px){.lr-pin{padding:96px 0 16px}.lr-stage{aspect-ratio:4/5;max-height:calc(100vh - 280px);border-radius:24px}.lr-big{font-size:17vw}.lr-cap b{font-size:34px}}
-@media(max-width:767px){.lr-next em{display:none}}
+@media(max-width:767px){
+  /* phone: one title, the line and the button. The giant duplicate word, "Look 03", the counter pill and the Next button are gone; thin bars show where you are,
+     and each photo is framed on its jewelry instead of the middle of the wide picture */
+  .lr-big,.lr-cap small,.lr-count,.lr-next{display:none}
+  .lr-segs{display:flex}
+  .lr-look video{object-position:var(--pos-m,50% 50%)}
+}
 @media(prefers-reduced-motion:reduce){.lr-track{height:auto}.lr-pin{position:relative;height:auto}.lr-next::after{animation:none}}
 .lr .sl-cta{margin-top:14px}.lr .sl-all{padding:13px 24px}
 
@@ -786,3 +792,4 @@ a.rp-mt{text-decoration:none}
 .pc-rcpt div{display:flex;justify-content:space-between;gap:14px}.pc-rcpt span{opacity:.6;font-weight:400}.pc-rcpt b{font-weight:600;text-align:right;overflow-wrap:anywhere}
 @media(prefers-reduced-motion:reduce){.pc-got{animation:none}.pc-form button.busy::after{animation:none}}
 .nf-line{display:block;overflow:hidden;padding-bottom:.07em;margin-bottom:-.07em}.nf-line>span{display:block;will-change:transform}
+.lr-segs{display:none;position:absolute;top:12px;left:14px;right:14px;z-index:20;gap:5px}.lr-segs i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.4);transition:background .3s}.lr-segs i.on{background:#fff}
