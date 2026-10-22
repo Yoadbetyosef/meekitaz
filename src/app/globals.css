@@ -616,20 +616,22 @@ a.rp-mt{text-decoration:none}
 /* ---- Home: "As seen in" lettering row (deeper pink, scrolling on phones) ---- */
 .pr{--pr-color:#EDA8B9;--pr-k:.62;position:relative;z-index:7;background:var(--blue-light);margin:calc(clamp(56px,7vw,110px) * -.45) 0;text-align:center}
 .pr-lab{display:block;font:700 11px var(--body);letter-spacing:.3em;text-transform:uppercase;color:rgba(28,26,27,.5);margin:0 0 26px}
-.pr-track{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 clamp(0px,3vw,60px)}
-.pr-dup{display:none}
+.pr-dup{display:flex;align-items:center;gap:0}
+.pr-view{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+/* the pink wordmarks drift slowly right to left on every screen size, and stop under the pointer */
+.pr-track{display:flex;align-items:center;width:max-content;gap:0;padding:0;animation:pr-scroll 40s linear infinite}
+.pr-track>.pr-lg,.pr-dup .pr-lg{margin-right:70px}
+.pr-view:hover .pr-track{animation-play-state:paused}
 .pr-lg{display:block;flex:none;width:calc(var(--w) * var(--pr-k) * 1px);height:calc(var(--h) * var(--pr-k) * 1px);background:var(--pr-color);-webkit-mask-image:var(--m);mask-image:var(--m);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain;transition:background .2s}
-.pr-track>.pr-lg:hover{background:var(--ink)}
+.pr-lg:hover{background:var(--ink)}
 @media(max-width:1000px){
   .pr{--pr-k:.46}
-  .pr-view{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
-  .pr-track{width:max-content;justify-content:flex-start;gap:0;padding:0;animation:pr-scroll 26s linear infinite}
-  .pr-track>.pr-lg{margin-right:44px}
-  .pr-dup{display:flex;align-items:center;gap:0}.pr-dup .pr-lg{margin-right:44px}
+  .pr-track{animation-duration:30s}
+  .pr-track>.pr-lg,.pr-dup .pr-lg{margin-right:44px}
   .pr-lab{margin-bottom:18px;font-size:10px}
 }
 @keyframes pr-scroll{to{transform:translateX(-50%)}}
-@media(prefers-reduced-motion:reduce){.pr-track{animation:none}}
+@media(prefers-reduced-motion:reduce){.pr-track{animation:none;width:auto;flex-wrap:wrap;justify-content:center;gap:18px 30px}.pr-track>.pr-lg{margin-right:0}.pr-dup{display:none}.pr-view{overflow:visible;-webkit-mask-image:none;mask-image:none}}
 /* ---- Footer: the "Shhh." card ---- */
 /* ---- Rings grid: silent mood video as a full-row tile after the first two rows ---- */
 .gmood{grid-column:1/-1;border-radius:22px;overflow:hidden;background:var(--ink);aspect-ratio:16/9;order:2}
