@@ -794,3 +794,12 @@ a.rp-mt{text-decoration:none}
 .nf-line{display:block;overflow:hidden;padding-bottom:.07em;margin-bottom:-.07em}.nf-line>span{display:block;will-change:transform}
 .lr-segs{display:none;position:absolute;top:12px;left:14px;right:14px;z-index:20;gap:5px}.lr-segs i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.4);transition:background .3s}.lr-segs i.on{background:#fff}
 @media(max-width:767px){.lr-segs{display:flex}}
+/* stone colour icons are round diamonds in that colour: the chosen one lifts, grows and gives off a small sparkle */
+.rp-sw.rp-gem{position:relative;width:60px;height:60px;border:0;padding:0;background:none;border-radius:0;box-shadow:none;filter:drop-shadow(0 6px 8px rgba(28,26,27,.12));transition:transform .35s cubic-bezier(.2,.9,.3,1.4),filter .3s}
+.rp-gem img{display:block;width:100%;height:100%;object-fit:contain}
+.rp-mt:hover .rp-gem{transform:scale(1.08)}
+.rp-mt.on .rp-sw.rp-gem{border:0;box-shadow:none;transform:translateY(-5px) scale(1.12);filter:drop-shadow(0 14px 12px rgba(28,26,27,.25))}
+.rp-mt.on .rp-gem::after{content:"\2726";position:absolute;right:-6px;top:-6px;color:#C8A24A;font-size:16px;animation:rp-spark .9s ease-out forwards;pointer-events:none}
+@keyframes rp-spark{0%{opacity:0;transform:scale(.3) rotate(-20deg)}35%{opacity:1}100%{opacity:0;transform:translate(8px,-10px) scale(1.4) rotate(20deg)}}
+@media(prefers-reduced-motion:reduce){.rp-mt.on .rp-gem::after{animation:none;opacity:0}}
+
