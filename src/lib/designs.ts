@@ -17,6 +17,8 @@ export function gemFacets(title: string, tags: string[]): { shape: string; stone
   const rest = (shape ? title.slice(shape.length + 1) : title).replace(/^Cut /, "");
   return { shape, stone: GEM_STONES.find(g => rest.startsWith(g + " ")) || "" };
 }
+/** A piece with no photo at all (no studio photo and no on-model photo) is not offered: its card would be an empty box. */
+export const hasPhoto = (p: Product) => !!p.image || !!p.modelImage;
 export function collapseDesigns(list: Product[]): Product[] {
   const out: Product[] = [], byCode = new Map<string, Product>();
   for (const p of list) {

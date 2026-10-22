@@ -1,5 +1,5 @@
 // Shopify Storefront API client (server only).
-import { collapseDesigns, gemFacets } from "./designs";
+import { collapseDesigns, gemFacets, hasPhoto } from "./designs";
 import { cardImage, isSupplierImage } from "./supplierImages";
 import { RING_SHAPES } from "./ringfilters";
 import { fancyColorOf } from "./fancy";
@@ -198,7 +198,7 @@ export async function getCollectionPage(handle: string, opts: { first?: number; 
     image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || undefined,
     code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || gemFacets(n.title, n.tags).shape, stone: gemFacets(n.title, n.tags).stone,
   }));
-  return { products: collapseDesigns(products), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
+  return { products: collapseDesigns(products.filter(hasPhoto)), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
 }
 
 /** Cards for a Shopify product search (used by the filtered category pages). */
@@ -217,7 +217,7 @@ export async function getProductsByQuery(query: string, opts: { first?: number; 
     image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || undefined,
     code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || gemFacets(n.title, n.tags).shape, stone: gemFacets(n.title, n.tags).stone,
   }));
-  return { products: collapseDesigns(products), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
+  return { products: collapseDesigns(products.filter(hasPhoto)), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
 }
 
 /** Free-text product search, collapsed to one card per design. Storefront `search` first (relevance-ranked, tolerant of small typos, the last word matched
@@ -238,7 +238,7 @@ export async function searchProducts(query: string, opts: { first?: number; maxP
       image: cardImage({ title: n.title!, tags: n.tags!, featuredImage: n.featuredImage, images: (n as { images?: { edges: { node: { url: string; altText?: string } }[] } }).images }),
       code: n.tags!.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title!), shape: n.tags!.find(t => RING_SHAPES.includes(t)) || "",
     }));
-  if (products.length) return collapseDesigns(products);
+  if (products.length) return collapseDesigns(products.filter(hasPhoto));
   // fallback: every word must be in the title or a tag
   const tokens = query.toLowerCase().split(/[^a-z0-9é]+/).filter(t => t.length > 1 && !STOP.has(t)).slice(0, 5);
   if (!tokens.length) return d ? [] : null;
@@ -263,7 +263,7 @@ export async function getRingFamily(code: string, color = ""): Promise<RingVaria
     id: n.id, handle: n.handle, title: n.title, shape: ringShapeOf(n.tags, n.title), metal: ringMetalOf(n.title), price: +n.priceRange.minVariantPrice.amount,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
     images: n.images.edges.map(i => i.node.url).filter(u => !isSupplierImage(u, n.tags)), variantId: n.variants.edges[0]?.node.id || "",
-  })).filter(v => v.shape && v.metal);
+  })).filter(v => v.shape && v.metal && v.images.length > 0); // a shape or metal with no photo is not offered
 }
 
 /* ---------------- Cart: several lines at once, with line attributes (a ring = setting + diamond) ---------------- */
