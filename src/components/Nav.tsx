@@ -1,4 +1,5 @@
 "use client";
+import Logo from "./Logo";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -23,7 +24,7 @@ export default function Nav() {
   return (
     <>
       <nav className="nav" aria-label="Main">
-        <Link href="/" className="brand">MEEKITAZ<i>©</i></Link>
+        <Link href="/" className="brand" aria-label="Meekitaz, home"><Logo className="brand-logo" /></Link>
         <div className="nav-r">
           <button className="nav-search" aria-label="Search" onClick={() => { setOpen(false); openCart(false); setSearching(true); }}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" /></svg>

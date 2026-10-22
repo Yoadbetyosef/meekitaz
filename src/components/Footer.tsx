@@ -3,6 +3,7 @@ import Link from "next/link";
 import { categories, hushCard } from "@/lib/data";
 import { legalLinks } from "@/lib/legal";
 import FooterFx from "./FooterFx";
+import Logo from "./Logo";
 
 /** The closing: an all-pink footer revealed under the page. She rises from behind the giant wordmark. */
 export default function Footer() {
@@ -15,7 +16,7 @@ export default function Footer() {
           <p>Serious diamonds, worn lightly.</p>
           <Link href={hushCard.href} className="hush-cta">{hushCard.cta}</Link>
         </section>
-        <div className="foot-giant" aria-hidden="true">MEEKITAZ<i>&copy;</i></div>
+        <div className="foot-giant" aria-hidden="true"><Logo className="foot-logo" /></div>
         <div className="mkf-under">
           <nav aria-label="Shop">{categories.map(c => <Link key={c.slug} href={`/${c.slug}`}>{c.nav}</Link>)}</nav>
           <nav aria-label="House"><Link href="/#codes">House codes</Link><Link href="/#reviews">Reviews</Link><Link href="/#contact">Private clients</Link><a href="mailto:hello@meekitaz.com">hello@meekitaz.com</a><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a></nav>
