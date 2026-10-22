@@ -262,7 +262,7 @@ export async function getRingFamily(code: string, color = ""): Promise<RingVaria
   return (d?.products.edges || []).map(e => e.node).filter(n => n.tags.includes("Engagement Ring") && n.tags.includes(code) && fancyColorOf(n.title) === color).map(n => ({
     id: n.id, handle: n.handle, title: n.title, shape: ringShapeOf(n.tags, n.title), metal: ringMetalOf(n.title), price: +n.priceRange.minVariantPrice.amount,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
-    images: n.images.edges.map(i => i.node.url), variantId: n.variants.edges[0]?.node.id || "",
+    images: n.images.edges.map(i => i.node.url).filter(u => !isSupplierImage(u, n.tags)), variantId: n.variants.edges[0]?.node.id || "",
   })).filter(v => v.shape && v.metal);
 }
 
