@@ -770,3 +770,4 @@ a.rp-mt{text-decoration:none}
 .gt-chip:hover{border-color:var(--ink)}.gt-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 @media(max-width:767px){.gt-chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.gt-chips::-webkit-scrollbar{display:none}.gt-chip{flex:none;padding:10px 16px}}
 @media(prefers-reduced-motion:reduce){.pc-metals i,.mk-col span{transition:none}}
+.pc-err{margin:12px 0 0;color:var(--red);font:600 13px/1.5 var(--body)}.pc-err a{text-decoration:underline}

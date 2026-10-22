@@ -22,7 +22,7 @@ export default function Footer() {
           <p className="mkf-base">&copy; {new Date().getFullYear()} Meekitaz &middot; Fifth Avenue, New York, by appointment</p>
           <div className="mkf-r">
             <nav aria-label="House"><Link href="/#codes">House codes</Link><Link href="/#reviews">Reviews</Link><Link href="/#contact">Private clients</Link></nav>
-            <nav aria-label="Contact"><a href="mailto:hello@meekitaz.com">hello@meekitaz.com</a><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a></nav>
+            <nav aria-label="Contact"><a href="mailto:sales@meekitaz.com">sales@meekitaz.com</a><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a></nav>
             <nav aria-label="Legal">{legalLinks.map(l => <Link key={l.href} href={l.href}>{l.label}</Link>)}</nav>
           </div>
         </div>

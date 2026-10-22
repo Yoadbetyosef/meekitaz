@@ -3,7 +3,7 @@
 export type Block = { h: string } | { h3: string } | { p: string } | { ul: string[] } | { ol: string[] };
 export type LegalPage = { slug: string; title: string; eyebrow: string; updated: string; blocks: Block[] };
 
-const EMAIL = "hello@meekitaz.com";
+const EMAIL = "sales@meekitaz.com";
 const CONTACT = `Meekitaz, Fifth Avenue, New York, by appointment. Email: [${EMAIL}](mailto:${EMAIL})`;
 const UPDATED = "October 2026";
 

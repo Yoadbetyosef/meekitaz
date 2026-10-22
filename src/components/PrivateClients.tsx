@@ -5,12 +5,17 @@ import { showroomImage } from "@/lib/data";
 
 export default function PrivateClients() {
   const [sent, setSent] = useState(false);
+  const [err, setErr] = useState(false);
   const [step, setStep] = useState(1); // phones: 1 = choose, 2 = details (desktop shows everything)
   const [way, setWay] = useState("showroom");
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(e.currentTarget).entries());
-    try { await fetch("/api/appointment", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }); } catch {}
+    setErr(false);
+    try {
+      const r = await fetch("/api/appointment", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
+      if (!r.ok) { setErr(true); return; }
+    } catch { setErr(true); return; }
     setSent(true);
   }
   return (
@@ -35,6 +40,7 @@ export default function PrivateClients() {
                 <input type="email" name="email" placeholder="Email" required />
                 <input type="text" name="looking" placeholder="What are you looking for? (e.g. oval, 2 ct)" />
                 <button type="submit">Request an appointment</button>
+                {err && <p className="pc-err" role="alert">That did not go through. Please email us at <a href="mailto:sales@meekitaz.com">sales@meekitaz.com</a> and we will book you in.</p>}
               </div>
             </form>
           )}
