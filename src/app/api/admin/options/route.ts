@@ -25,23 +25,37 @@ export async function GET(req: NextRequest) {
       if (p.metafield && !force) { skipped++; continue; }
       if (p.tags.some(t => ["Diamond", "Karat variant"].includes(t))) { skipped++; continue; }
       // the Nature Sparkle page is usually at the handle we imported under (kept as a tag); for products renamed twice the
-      // current handle is the original one, so both are tried
+      // current handle is the original one, so both are tried. A page only counts if it carries the piece's own NS code, so two
+      // designs that share a title ("White gold Round Diamond Solitaire Stud Earrings" exists as a 4-prong and a bezel design,
+      // and the second one is renamed "...-2") can never take each other's option prices.
+      const code = p.tags.find(t => /^NS-\d+$/.test(t)) || "";
       const old = p.tags.find(t => t.startsWith(OLD_HANDLE_TAG))?.slice(OLD_HANDLE_TAG.length);
       const candidates = [...new Set([old, p.handle].filter((x): x is string => !!x))];
-      let r: Response | null = null, url = "";
-      for (const h of candidates) {
-        url = `https://naturesparkle.com/products/${h}`;
-        // Nature Sparkle rate-limits bursts (429): one request at a time, a short pause between them, and a patient retry
+      // Nature Sparkle rate-limits bursts (429): one request at a time, a short pause between them, and a patient retry
+      const page = async (u: string): Promise<string | null> => {
+        let r: Response | null = null;
         for (let a = 0; a < 4; a++) {
-          r = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0 (Meekitaz catalogue sync)" }, cache: "no-store" });
+          r = await fetch(u, { headers: { "User-Agent": "Mozilla/5.0 (Meekitaz catalogue sync)" }, cache: "no-store" });
           if (r.status !== 429 && r.status !== 503) break;
           await new Promise(res => setTimeout(res, 2500 * (a + 1)));
         }
         await new Promise(res => setTimeout(res, 700));
-        if (r?.ok) break;
+        if (!r?.ok) return null;
+        const h = await r.text();
+        return !code || h.includes(code) ? h : null;
+      };
+      let html: string | null = null, url = "";
+      for (const h of candidates) { url = `https://naturesparkle.com/products/${h}`; html = await page(url); if (html) break; }
+      if (!html) {
+        // no page at the handles we know (typical for the "-2" copies of a shared title): look the piece up by its title and keep the page with its NS code
+        try {
+          const sr = await fetch(`https://naturesparkle.com/search/suggest.json?q=${encodeURIComponent(p.title)}&resources[type]=product&resources[limit]=10`, { headers: { "User-Agent": "Mozilla/5.0 (Meekitaz catalogue sync)" }, cache: "no-store" });
+          const hits = ((await sr.json()) as { resources?: { results?: { products?: { handle: string }[] } } })?.resources?.results?.products || [];
+          for (const x of hits.map(h => h.handle).filter(h => !candidates.includes(h)).slice(0, 5)) { url = `https://naturesparkle.com/products/${x}`; html = await page(url); if (html) break; }
+        } catch { /* fall through to "missing" */ }
       }
-      if (!r || !r.ok) { missing++; log.push(`${p.handle}: ${r?.status} at ${url}`); continue; }
-      const opts = parseNsOptions(await r.text(), url);
+      if (!html) { missing++; log.push(`${p.handle}: no Nature Sparkle page carrying ${code || "its code"}`); continue; }
+      const opts = parseNsOptions(html, url);
       if (!opts) { missing++; log.push(`${p.handle}: no options on the Nature Sparkle page`); continue; }
       const m = await adminGraphql<{ metafieldsSet: { userErrors: { message: string }[] } }>(
         `mutation($m:[MetafieldsSetInput!]!){ metafieldsSet(metafields:$m){ userErrors{ field message } } }`,
