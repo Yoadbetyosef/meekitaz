@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/shopify";
-import { METAL_SWATCH, shownMetals } from "@/lib/designs";
+import { METAL_LINE, shownMetals } from "@/lib/designs";
 import { isCleaned, photoSrc } from "@/lib/img";
 
 const usd = (n: number | string, cur = "USD") => new Intl.NumberFormat("en-US", { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(+n);
@@ -33,7 +33,7 @@ export default function DesignCard({ p }: { p: Product }) {
         <b>{title}</b>
         {metals.length > 1 && (
           <span className="pc-metals" aria-label="Metal">
-            {metals.map(v => <i key={v.metal} className={v.metal === metal ? "on" : ""} style={{ background: METAL_SWATCH[v.metal] || "#ddd" }} title={v.metal} onClick={e => { e.preventDefault(); e.stopPropagation(); setMetal(v.metal); }} />)}
+            {metals.map(v => <i key={v.metal} className={v.metal === metal ? "on" : ""} style={{ "--lc": METAL_LINE[v.metal] || "#B3B8C0" } as React.CSSProperties} title={v.metal} onClick={e => { e.preventDefault(); e.stopPropagation(); setMetal(v.metal); }} />)}
           </span>
         )}
         <span className="price">{usd(cur.price, p.currency)}{cur.compareAt ? <s className="was">{usd(cur.compareAt, p.currency)}</s> : null}</span>

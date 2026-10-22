@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import StoneImg from "./StoneImg";
 import RingSteps from "./RingSteps";
@@ -11,6 +11,7 @@ import { metalOf } from "@/lib/shopify";
 import type { RingVariant } from "@/lib/shopify";
 import { saveSetting, diamondsUrl, loadStone } from "@/lib/setting";
 import { fancyColorOf } from "@/lib/fancy";
+import { METAL_LINE } from "@/lib/designs";
 import { addonFor, completeSel, optionRows, type ProductOptions, type Sel } from "@/lib/options";
 import StoneSwatch from "./StoneSwatch";
 import { GOLD_COLORS, hasKarat, isGoldMetal, karatsFor, karatStep } from "@/lib/karat";
@@ -28,7 +29,6 @@ const FACTS: Record<string, string> = {
   "18K": "75% gold. The richest colour; a little softer.",
   Platinum: "95% pure platinum. Naturally white, dense and long-wearing.",
 };
-const COLG: Record<string, string> = { "White gold": "linear-gradient(135deg,#F4F4F6,#C9CBD2)", "Yellow gold": "linear-gradient(135deg,#F3DC8B,#D9A93C)", "Rose gold": "linear-gradient(135deg,#F2C3B2,#CF8F78)" };
 /** The approved two-step picker: Silver · 10K · 14K · 18K · Platinum, then the colour (dimmed for silver and platinum). The karat prices come from our price list. */
 function Material({ ns, metals, metal, karat, onMetal, onKarat, karats, steps }: { ns: string; metals: string[]; metal: string; karat: string; onMetal: (m: string) => void; onKarat: (k: string) => void; karats?: string[]; steps?: Record<string, number> }) {
   const golds = GOLD_COLORS.filter(g => metals.includes(g)), ks = golds.length ? (karats || karatsFor(ns)) : [];
@@ -47,7 +47,7 @@ function Material({ ns, metals, metal, karat, onMetal, onKarat, karats, steps }:
       <div className="mk-lbl">Colour <em>{gold ? metal : "Natural white"}</em></div>
       <div className="mk-cols">{golds.map(g => (
         <button key={g} type="button" className={`mk-col${gold && metal === g ? " on" : ""}${gold ? "" : " off"}`} aria-pressed={gold && metal === g} disabled={!gold} onClick={() => onMetal(g)}>
-          <span><i style={{ background: COLG[g] }} /></span>{g.replace(" gold", "")}</button>))}</div>
+          <span style={{ "--lc": METAL_LINE[g] } as CSSProperties} />{g.replace(" gold", "")}</button>))}</div>
       <p className="mk-hint">{FACTS[picked]}</p>
     </>
   );

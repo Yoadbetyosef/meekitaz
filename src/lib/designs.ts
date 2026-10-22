@@ -3,6 +3,8 @@ import { RING_SHAPES } from "./ringfilters";
 
 /** Catalogue grids show one card per design: the metal versions of a design (same NS code) collapse into one card,
  *  so neighbouring cards are different pieces, not the same ring in five colours. */
+/** The metal swatches are drawn as outlined circles in the metal's own line colour; the selected one fills with it. */
+export const METAL_LINE: Record<string, string> = { "White gold": "#9DA5B0", "Yellow gold": "#D4A62A", "Rose gold": "#D08B76", Platinum: "#8C95A2", Silver: "#B3B8C0" };
 export const METAL_SWATCH: Record<string, string> = { "Rose gold": "#E3AE98", "Yellow gold": "#E6C56B", "White gold": "#E8E8EA", Platinum: "#DADCE2", Silver: "#D3D5DB" };
 const METAL_ORDER = ["White gold", "Yellow gold", "Rose gold", "Platinum", "Silver"];
 const GOLD_SHOWN = ["White gold", "Yellow gold", "Rose gold"]; // the three dots on a card; the product page offers every metal
