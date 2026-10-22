@@ -735,3 +735,7 @@ a.rp-mt{text-decoration:none}
 /* ---- Jewelry (product) titles: Didact Gothic Regular at 90%, everywhere a product name appears ---- */
 .pcard-txt b,.pp-info h1,.pp-lk b,.cd-li h4,.sq-tx b{font-family:var(--f-title) !important;font-weight:400;zoom:.9}
 
+/* ---- Stone cards on phones: "Choose this diamond" stays on one line ---- */
+@media(max-width:767px){.dcard-cta{white-space:nowrap;font-size:10px;letter-spacing:.1em;padding:14px 8px}}
+@media(max-width:360px){.dcard-cta{font-size:9px;letter-spacing:.06em}}
+
