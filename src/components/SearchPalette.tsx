@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import StoneImg from "./StoneImg";
 import { useRouter } from "next/navigation";
 import { categories } from "@/lib/data";
 import { photoSrc, isCleaned } from "@/lib/img";
@@ -86,7 +87,7 @@ export default function SearchPalette({ open, onClose }: { open: boolean; onClos
               <h5>Shop by shape</h5>
               <div className="sq-shapes">{shapes.map(s => (
                 <button key={s.label} type="button" className="sq-shape" onClick={() => { setQ(`${s.label} engagement ring`); input.current?.focus(); }}>
-                  <span><Image src={s.img} alt="" fill sizes="64px" quality={60} /></span>{s.label}
+                  <span><StoneImg img={s.img} alt="" base={64} quality={70} /></span>{s.label}
                 </button>))}
               </div>
               <h5>Browse</h5>

@@ -754,3 +754,10 @@ a.rp-mt{text-decoration:none}
 .gm-big{font:400 clamp(22px,5cqw,54px)/.98 var(--display);text-shadow:0 2px 26px rgba(0,0,0,.25)}.gm-big span{display:block}
 @media(max-width:767px){.gmood.gmood-rv{height:min(70vh,440px);border-radius:0;aspect-ratio:auto}.gm-win{border-radius:18px}.gm-tag{font-size:10px;letter-spacing:.22em}}
 
+/* ---- Picker stones (shapes, earring / necklace / band styles): transparent cut-out on a cream-paper circle, lifts on hover ---- */
+.sp-img,.rp-sh i,.sq-shape span{background-color:#F1E8DA;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .35  0 0 0 0 .25  0 0 0 .22 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");background-size:160px 160px}
+.sp-img img.stone-cut,.rp-sh i img.stone-cut,.sq-shape span img.stone-cut{object-fit:contain;transform:translate(var(--tx),var(--ty)) scale(var(--s));filter:drop-shadow(0 2.5px 3px rgba(90,60,30,.3));transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.sp:hover .sp-img{transform:translateY(-8px) scale(1.04)}
+.sp:hover .sp-img img.stone-cut{transform:translate(var(--tx),var(--ty)) scale(calc(var(--s)*1.06)) rotate(-5deg)}
+@media(prefers-reduced-motion:reduce){.sp:hover .sp-img{transform:none}.sp:hover .sp-img img.stone-cut{transform:translate(var(--tx),var(--ty)) scale(var(--s))}}
+

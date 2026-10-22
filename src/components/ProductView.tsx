@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import StoneImg from "./StoneImg";
 import RingSteps from "./RingSteps";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -167,7 +168,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
                 <span className="pp-lbl">Shape · {cv.shape}</span>
                 <div className="rp-shapes">{shapesHere.map(sh => (
                   <button key={sh.label} type="button" className={`rp-sh${cv.shape === sh.label ? " on" : ""}`} aria-pressed={cv.shape === sh.label} onClick={() => pickRing(sh.label, cv.metal)}>
-                    <i><Image src={sh.img} alt="" fill sizes="64px" quality={60} /></i><b>{sh.label}</b></button>))}</div>
+                    <i><StoneImg img={sh.img} alt="" base={64} quality={70} /></i><b>{sh.label}</b></button>))}</div>
                 {karatOn ? (
                   <Material ns={ns} metals={metalsHere} metal={cv.metal} karat={karat} onMetal={m => pickRing(cv.shape, m)}
                     onKarat={k => { pickKarat(k); if (!isGoldMetal(cv.metal)) pickRing(cv.shape, GOLD_COLORS.find(g => metalsHere.includes(g)) || cv.metal); }} />
