@@ -1,16 +1,16 @@
 "use client";
 import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
-import GridMood from "./GridMood";
+import GridMood, { type Reveal } from "./GridMood";
 import { Fragment, useState } from "react";
 import type { Product } from "@/lib/shopify";
 
 // Mood clips per category (silent, looping). Hosted on the Higgsfield CDN; move to /public/media to self-host.
-const MOOD: Record<string, { src: string; poster: string }> = {
+const MOOD: Record<string, { src: string; poster: string; reveal?: Reveal }> = {
   earrings: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_155403_077e3a3c-af03-47fe-b905-7f55fefe401b.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_202431_3c1ef1d0-1b33-46e4-8c3e-e06be191f4ef.png" },
-  bands: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_010122_488fa782-706a-46c5-9884-95593bf3210f.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_005300_520e34ad-6539-4260-82ac-59d4202aeb20.png" },
+  bands: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_010122_488fa782-706a-46c5-9884-95593bf3210f.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_005300_520e34ad-6539-4260-82ac-59d4202aeb20.png", reveal: { tag: "Wedding bands", l1: "The quiet one next to", l2: "the loud one.", cta: "Shop the look", href: "/looks" } },
   bracelets: { src: "/media/bracelets-mood.mp4", poster: "/media/bracelets-mood-poster.jpg" },
-  necklaces: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_192549_6e320ce1-d71d-450f-8631-a855c98ead92.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_192442_05315264-b6cf-451e-a12d-9fb869e2f2b1.png" },
+  necklaces: { src: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_192549_6e320ce1-d71d-450f-8631-a855c98ead92.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_192442_05315264-b6cf-451e-a12d-9fb869e2f2b1.png", reveal: { tag: "Necklaces", l1: "Layered.", l2: "Then layered again.", cta: "Shop the look", href: "/looks" } },
 };
 
 
@@ -45,7 +45,7 @@ export default function ProductBrowser({ handle, style = "", initial, hasNext: h
           {items.map((p, i) => (
             <Fragment key={p.id}>
               {/* earrings: the silent mood clip sits after the first two rows (CSS order places it; 6 cards before it on desktop, 4 on phones) */}
-              {MOOD[handle] && i === 4 && items.length > 4 && <GridMood src={MOOD[handle].src} poster={MOOD[handle].poster} />}
+              {MOOD[handle] && i === 4 && items.length > 4 && <GridMood src={MOOD[handle].src} poster={MOOD[handle].poster} reveal={MOOD[handle].reveal} />}
               <DesignCard p={p} />
             </Fragment>
           ))}

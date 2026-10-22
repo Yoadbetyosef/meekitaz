@@ -744,3 +744,13 @@ a.rp-mt{text-decoration:none}
 @media(max-width:360px){.dcard-cta{font-size:10px;letter-spacing:.05em}}
 @media(max-width:330px){.dcard-cta{font-size:9px}}
 
+/* ---- Video tile that opens and closes on scroll (rings, necklaces, bands): a small frame grows to full width, caption bottom-left ---- */
+.gmood.gmood-rv{aspect-ratio:auto;height:min(78vh,560px);overflow:visible;background:none;border-radius:0;position:relative;container-type:inline-size}
+.gm-win{position:absolute;inset:0;border-radius:26px;overflow:hidden;background:var(--ink);will-change:clip-path}
+.gm-win video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;will-change:transform}
+.gm-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.12),rgba(0,0,0,.46));pointer-events:none}
+.gm-txt{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:14px;padding:clamp(18px,3.4cqw,40px);color:#fff;text-align:left;will-change:opacity,transform}
+.gm-tag{font:700 11px var(--body);letter-spacing:.28em;text-transform:uppercase;opacity:.9}
+.gm-big{font:400 clamp(22px,5cqw,54px)/.98 var(--display);text-shadow:0 2px 26px rgba(0,0,0,.25)}.gm-big span{display:block}
+@media(max-width:767px){.gmood.gmood-rv{height:min(70vh,440px);border-radius:0;aspect-ratio:auto}.gm-win{border-radius:18px}.gm-tag{font-size:10px;letter-spacing:.22em}}
+
