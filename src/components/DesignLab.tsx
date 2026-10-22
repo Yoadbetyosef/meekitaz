@@ -31,8 +31,8 @@ const look = (o: Opt) => `background:${o.bg} !important;color:${o.fg} !important
 const pre = (s: string, x: string) => s.split(",").map(t => t + x).join(",");
 
 /* ---------- logos ---------- */
-const VINTAGE = "/lab/meekitaz-vintage.svg", VINTAGE_AR = 4.2229;
-const LOGOS = [["a", "Handwritten (current)"], ["b", "Vintage serif (new)"]] as const;
+const ALT = "/lab/meekitaz-handwritten.svg", ALT_AR = 3.6070;
+const LOGOS = [["a", "Vintage serif (current)"], ["b", "Handwritten (previous)"]] as const;
 
 /* ---------- fonts ---------- */
 type Font = { n: string; fam?: string; q?: string; track?: string };
@@ -96,10 +96,10 @@ function el(id: string) { let e = document.getElementById(id) as HTMLStyleElemen
 function build(s: State) {
   let out = "";
   /* logos */
-  const A = VINTAGE_AR, n = s.sn / 100, f = s.sf / 100;
-  if (s.ln === "b") out += `.brand-logo{display:none !important}.nav .brand::after{content:"";display:block;aspect-ratio:${A};height:calc(34px*${n});background:currentColor;-webkit-mask:url(${VINTAGE}) no-repeat center/contain;mask:url(${VINTAGE}) no-repeat center/contain}@media(max-width:767px){.nav .brand::after{height:calc(28px*${n})}}`;
+  const A = ALT_AR, n = s.sn / 100, f = s.sf / 100;
+  if (s.ln === "b") out += `.brand-logo{display:none !important}.nav .brand::after{content:"";display:block;aspect-ratio:${A};height:calc(34px*${n});background:currentColor;-webkit-mask:url(${ALT}) no-repeat center/contain;mask:url(${ALT}) no-repeat center/contain}@media(max-width:767px){.nav .brand::after{height:calc(28px*${n})}}`;
   else if (s.sn !== 100) out += `.brand-logo{height:calc(34px*${n}) !important}@media(max-width:767px){.brand-logo{height:calc(28px*${n}) !important}}`;
-  if (s.lf === "b") out += `.foot-logo{display:none !important}.foot-giant::after{content:"";display:block;aspect-ratio:${A};height:calc(clamp(120px,44vh,560px)*${f});max-width:100%;background:currentColor;-webkit-mask:url(${VINTAGE}) no-repeat center/contain;mask:url(${VINTAGE}) no-repeat center/contain}@media(max-width:767px){.foot-giant::after{width:calc(100%*${Math.min(f, 1)});height:auto}}`;
+  if (s.lf === "b") out += `.foot-logo{display:none !important}.foot-giant::after{content:"";display:block;aspect-ratio:${A};height:calc(clamp(120px,44vh,560px)*${f});max-width:100%;background:currentColor;-webkit-mask:url(${ALT}) no-repeat center/contain;mask:url(${ALT}) no-repeat center/contain}@media(max-width:767px){.foot-giant::after{width:calc(100%*${Math.min(f, 1)});height:auto}}`;
   else if (s.sf !== 100) out += `.foot-logo{height:calc(clamp(120px,44vh,560px)*${f}) !important}@media(max-width:767px){.foot-logo{width:calc(100%*${Math.min(f, 1)}) !important;height:auto !important}}`;
   /* fonts */
   if (s.d > 0) out += `html{--display:'LabDisplay',Georgia,serif !important}`;
@@ -130,8 +130,8 @@ export default function DesignLab({ onClose }: { onClose: () => void }) {
   const [right, setRight] = useState(false);
   const [err, setErr] = useState("");
   const set = (p: Partial<State>) => setS(prev => ({ ...prev, ...p }));
-  useEffect(() => { try { const v = sessionStorage.getItem("designlab-s"); if (v) setS({ ...START, ...JSON.parse(v) }); } catch { /* ignore */ } }, []);
-  useEffect(() => { el("dl-css").textContent = build(s); try { sessionStorage.setItem("designlab-s", JSON.stringify(s)); } catch { /* ignore */ } }, [s]);
+  useEffect(() => { try { const v = sessionStorage.getItem("designlab-s2"); if (v) setS({ ...START, ...JSON.parse(v) }); } catch { /* ignore */ } }, []);
+  useEffect(() => { el("dl-css").textContent = build(s); try { sessionStorage.setItem("designlab-s2", JSON.stringify(s)); } catch { /* ignore */ } }, [s]);
   useEffect(() => {
     let dead = false;
     (async () => {
@@ -142,7 +142,7 @@ export default function DesignLab({ onClose }: { onClose: () => void }) {
     })();
     return () => { dead = true; };
   }, [s.d, s.u, s.b, s.l]);
-  const close = () => { try { sessionStorage.removeItem("designlab"); sessionStorage.removeItem("designlab-s"); } catch { /* ignore */ } el("dl-css").remove(); el("dl-fonts").remove(); onClose(); };
+  const close = () => { try { sessionStorage.removeItem("designlab"); sessionStorage.removeItem("designlab-s2"); } catch { /* ignore */ } el("dl-css").remove(); el("dl-fonts").remove(); onClose(); };
   const Chip = ({ on, children, onClick }: { on: boolean; children: React.ReactNode; onClick: () => void }) => <button type="button" className={`dl-b${on ? " on" : ""}`} onClick={onClick}>{children}</button>;
   const Dot = ({ o }: { o: Opt }) => <i className="dl-dot" style={{ background: o.bg, borderColor: o.bd || "rgba(0,0,0,.25)" }} />;
   return (

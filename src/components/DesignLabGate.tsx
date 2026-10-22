@@ -12,7 +12,7 @@ export default function DesignLabGate() {
       const sp = new URLSearchParams(window.location.search);
       const q = sp.get("lab") ?? sp.get("cta");
       if (q === "1") sessionStorage.setItem("designlab", "1");
-      if (q === "0") { sessionStorage.removeItem("designlab"); sessionStorage.removeItem("designlab-s"); }
+      if (q === "0") { sessionStorage.removeItem("designlab"); sessionStorage.removeItem("designlab-s2"); }
       setOn(sessionStorage.getItem("designlab") === "1");
     } catch { /* private mode: no lab */ }
   }, []);
