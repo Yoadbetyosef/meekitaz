@@ -32,6 +32,7 @@ const pre = (s: string, x: string) => s.split(",").map(t => t + x).join(",");
 
 /* ---------- logos ---------- */
 const ALT = "/lab/meekitaz-handwritten.svg", ALT_AR = 3.6070;
+const BLUES: [string, string][] = [["Powder (site blue)", "#C4DEEE"], ["Baby blue", "#9CC9EC"], ["Sky (poster)", "#58A5DB"], ["Cornflower", "#6C8EEA"], ["Azure", "#2F7FD1"], ["Cobalt", "#0F4FBF"], ["Ultramarine", "#2A3BAE"], ["Navy", "#14305F"], ["Midnight", "#0B1E3F"]];
 const LOGOS = [["a", "Vintage serif (current)"], ["b", "Handwritten (previous)"]] as const;
 
 /* ---------- fonts ---------- */
@@ -75,12 +76,13 @@ const TAGS = ".cat-hero h1 small,.cd-empty p,.ct-txt small,.dd-sub,.flt-note,.fp
 const HEAD = "h1,h2,h3,.h2,.lr-big,.lr-cap b,.hush h2";
 const LABELS = ".eyebrow,.pill,.mkfilm-txt .pill,.pp-add,.cd-co,.hush-cta,.lr-go,.lr-cap small,.sl-all,.dcard-cta,.dd-choose,.nf-cta,.pc-next,.mkf-under a,.mkf-base,.rsteps a,.rsteps span,.rsteps button";
 
-type State = { ln: string; lf: string; sn: number; sf: number; d: number; u: number; b: number; l: number; cs: string; tr: string; sz: number; up: boolean; pt: number; ptw: number; pts: number; ptc: string; ptt: string; h: number; c: number; hv: string };
-const START: State = { ln: "a", lf: "a", sn: 100, sf: 100, d: 0, u: 0, b: 0, l: 0, cs: "as", tr: "as", sz: 1, up: false, pt: 0, ptw: 500, pts: 1, ptc: "as", ptt: "as", h: 0, c: 0, hv: "arrow" };
+type State = { ln: string; lf: string; sn: number; sf: number; d: number; u: number; b: number; l: number; cs: string; tr: string; sz: number; up: boolean; pt: number; ptw: number; pts: number; ptc: string; ptt: string; lcn: string; lcf: string; h: number; c: number; hv: string };
+const START: State = { ln: "a", lf: "a", sn: 100, sf: 100, d: 0, u: 0, b: 0, l: 0, cs: "as", tr: "as", sz: 1, up: false, pt: 0, ptw: 500, pts: 1, ptc: "as", ptt: "as", lcn: "", lcf: "", h: 0, c: 0, hv: "arrow" };
 const idx = (list: Font[], n: string) => Math.max(0, list.findIndex(f => f.n === n));
 /* whole "type languages": the movie-credits look in four round geometric fonts */
 const LANGS: { n: string; note: string; p: Partial<State> }[] = [
-  { n: "Today", note: "Prata + Cormorant + Archivo", p: { d: 0, u: 0, b: 0, l: 0, cs: "as", tr: "as", sz: 1 } },
+  { n: "My picks", note: "Lexend + Fredoka + Quicksand, titles Didact Gothic 90%", p: { d: idx(DISPLAY, "Lexend 500"), u: idx(SUB, "Fredoka"), b: idx(BODY, "Quicksand"), l: 0, cs: "as", tr: "as", sz: 0.9, pt: Math.max(0, PT.findIndex(f => f.n === "Didact Gothic")), ptw: 400, pts: 0.9, ptc: "as", ptt: "as" } },
+  { n: "Today", note: "Prata + Cormorant + Archivo", p: { d: 0, u: 0, b: 0, l: 0, cs: "as", tr: "as", sz: 1, pt: 0, ptw: 500, pts: 1, ptc: "as", ptt: "as" } },
   { n: "Credits · Jost", note: "the closest: round geometric, mixed case", p: { d: idx(DISPLAY, "Jost 500"), u: idx(SUB, "Jost"), b: idx(BODY, "Jost"), l: 0, cs: "as", tr: "as", sz: 1 } },
   { n: "Credits · Outfit", note: "a touch rounder, taglines upright", p: { d: idx(DISPLAY, "Outfit 500"), u: idx(SUB, "Outfit"), b: idx(BODY, "Outfit"), l: 0, cs: "as", tr: "as", sz: 1, up: true } },
   { n: "Credits · Quicksand", note: "rounded stroke ends, taglines upright", p: { d: idx(DISPLAY, "Quicksand 600"), u: idx(SUB, "Quicksand"), b: idx(BODY, "Quicksand"), l: 0, cs: "as", tr: "as", sz: 1, up: true } },
@@ -106,6 +108,8 @@ function build(s: State) {
   else if (s.sn !== 100) out += `.brand-logo{height:calc(34px*${n}) !important}@media(max-width:767px){.brand-logo{height:calc(28px*${n}) !important}}`;
   if (s.lf === "b") out += `.foot-logo{display:none !important}.foot-giant::after{content:"";display:block;aspect-ratio:${A};height:calc(clamp(120px,44vh,560px)*${f});max-width:100%;background:currentColor;-webkit-mask:url(${ALT}) no-repeat center/contain;mask:url(${ALT}) no-repeat center/contain}@media(max-width:767px){.foot-giant::after{width:calc(100%*${Math.min(f, 1)});height:auto}}`;
   else if (s.sf !== 100) out += `.foot-logo{height:calc(clamp(120px,44vh,560px)*${f}) !important}@media(max-width:767px){.foot-logo{width:calc(100%*${Math.min(f, 1)}) !important;height:auto !important}}`;
+  if (s.lcn) out += `.nav .brand{color:${s.lcn} !important}`;
+  if (s.lcf) out += `.foot-giant{color:${s.lcf} !important}`;
   /* fonts */
   if (s.d > 0) out += `html{--display:'LabDisplay',Georgia,serif !important}`;
   if (s.u > 0) out += `html{--sub:'LabSub',Georgia,serif !important}`;
@@ -179,7 +183,11 @@ export default function DesignLab({ onClose }: { onClose: () => void }) {
             <h5>Header size</h5><div className="dl-r"><input type="range" min={50} max={220} step={5} value={s.sn} onChange={e => set({ sn: +e.target.value })} /><b>{s.sn}%</b></div>
             <h5>Footer logo (the big one)</h5><div className="dl-g">{LOGOS.map(([k, n]) => <Chip key={k} on={s.lf === k} onClick={() => set({ lf: k })}>{n}</Chip>)}</div>
             <h5>Footer size</h5><div className="dl-r"><input type="range" min={50} max={130} step={5} value={s.sf} onChange={e => set({ sf: +e.target.value })} /><b>{s.sf}%</b></div>
-            <h5>Quick</h5><div className="dl-g"><Chip on={false} onClick={() => set({ ln: "b", lf: "b" })}>New logo in both</Chip><Chip on={false} onClick={() => set({ ln: "a", lf: "a", sn: 100, sf: 100 })}>Back to current</Chip></div>
+            <h5>Header logo colour</h5>
+            <div className="dl-g"><Chip on={!s.lcn} onClick={() => set({ lcn: "" })}>Ink (current)</Chip>{BLUES.map(([n, hex]) => <Chip key={hex} on={s.lcn === hex} onClick={() => set({ lcn: hex })}><i className="dl-dot" style={{ background: hex }} />{n}</Chip>)}</div>
+            <h5>Footer logo colour</h5>
+            <div className="dl-g"><Chip on={!s.lcf} onClick={() => set({ lcf: "" })}>White (current)</Chip>{BLUES.map(([n, hex]) => <Chip key={hex} on={s.lcf === hex} onClick={() => set({ lcf: hex })}><i className="dl-dot" style={{ background: hex }} />{n}</Chip>)}<Chip on={s.lcf === "#1C1A1B"} onClick={() => set({ lcf: "#1C1A1B" })}><i className="dl-dot" style={{ background: "#1C1A1B" }} />Ink</Chip></div>
+            <h5>Quick</h5><div className="dl-g"><Chip on={false} onClick={() => set({ ln: "b", lf: "b" })}>New logo in both</Chip><Chip on={false} onClick={() => set({ ln: "a", lf: "a", sn: 100, sf: 100, lcn: "", lcf: "" })}>Back to current</Chip></div>
           </>)}
           {tab === "fonts" && (<>
             <h5>Product titles (cards, product pages, related, bag, search)</h5>
@@ -208,7 +216,7 @@ export default function DesignLab({ onClose }: { onClose: () => void }) {
             <h5>Hover effect</h5><div className="dl-g">{HOVER.map(([k, n]) => <Chip key={k} on={s.hv === k} onClick={() => set({ hv: k })}>{n}</Chip>)}</div>
           </>)}
           <div className="dl-s">
-            Logo: <b>{LOGOS.find(l => l[0] === s.ln)![1]}</b> {s.sn}% / <b>{LOGOS.find(l => l[0] === s.lf)![1]}</b> {s.sf}%<br />
+            Logo: <b>{LOGOS.find(l => l[0] === s.ln)![1]}</b> {s.sn}% {s.lcn ? `in ${BLUES.find(b => b[1] === s.lcn)?.[0] || s.lcn}` : "in ink"} / <b>{LOGOS.find(l => l[0] === s.lf)![1]}</b> {s.sf}% {s.lcf ? `in ${BLUES.find(b => b[1] === s.lcf)?.[0] || s.lcf}` : "in white"}<br />
             Product titles: <b>{s.pt > 0 ? `${PT[s.pt].n} ${WNAME[s.ptw]} ${Math.round(s.pts * 100)}%` : "same as headlines"}</b><br />
             Fonts: <b>{DISPLAY[s.d].n}</b> · {SUB[s.u].n} · {BODY[s.b].n} · labels {LABEL[s.l].n} · {CASES.find(c => c[0] === s.cs)![1]} · {TRACKS.find(t => t[0] === s.tr)![1]} · {Math.round(s.sz * 100)}% · taglines {s.up ? "upright" : "italic"}<br />
             Buttons: <b>{CTA[s.c].n}</b> · hero {HERO[s.h].n} · {HOVER.find(h => h[0] === s.hv)![1]}<br />
