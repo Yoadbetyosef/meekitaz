@@ -18,10 +18,13 @@ export default function Footer() {
         </section>
         <div className="foot-giant" aria-hidden="true"><Logo className="foot-logo" /></div>
         <div className="mkf-under">
-          <nav aria-label="Shop">{categories.map(c => <Link key={c.slug} href={`/${c.slug}`}>{c.nav}</Link>)}</nav>
-          <nav aria-label="House"><Link href="/#codes">House codes</Link><Link href="/#reviews">Reviews</Link><Link href="/#contact">Private clients</Link><a href="mailto:hello@meekitaz.com">hello@meekitaz.com</a><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a></nav>
-          <nav aria-label="Legal">{legalLinks.map(l => <Link key={l.href} href={l.href}>{l.label}</Link>)}</nav>
-          <p className="mkf-base">&copy; {new Date().getFullYear()} Meekitaz &middot; Fifth Avenue, New York, by appointment &middot; Lab-grown, IGI / GIA certified</p>
+          <nav className="mkf-l" aria-label="Shop">{categories.map(c => <Link key={c.slug} href={`/${c.slug}`}>{c.nav}</Link>)}</nav>
+          <p className="mkf-base">&copy; {new Date().getFullYear()} Meekitaz &middot; Fifth Avenue, New York, by appointment</p>
+          <div className="mkf-r">
+            <nav aria-label="House"><Link href="/#codes">House codes</Link><Link href="/#reviews">Reviews</Link><Link href="/#contact">Private clients</Link></nav>
+            <nav aria-label="Contact"><a href="mailto:hello@meekitaz.com">hello@meekitaz.com</a><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a></nav>
+            <nav aria-label="Legal">{legalLinks.map(l => <Link key={l.href} href={l.href}>{l.label}</Link>)}</nav>
+          </div>
         </div>
       </div>
       <FooterFx />
