@@ -37,34 +37,37 @@ const LOGOS = [["a", "Vintage serif (current)"], ["b", "Handwritten (previous)"]
 /* ---------- fonts ---------- */
 type Font = { n: string; fam?: string; q?: string; track?: string };
 const DISPLAY: Font[] = [
-  { n: "Prata (current)" }, { n: "Caprasimo", fam: "Caprasimo", q: "Caprasimo" }, { n: "Fraunces", fam: "Fraunces", q: "Fraunces:ital,wght@0,600;1,400" },
-  { n: "Gloock", fam: "Gloock", q: "Gloock" }, { n: "DM Serif Display", fam: "DM Serif Display", q: "DM+Serif+Display:ital@0;1" },
-  { n: "Instrument Serif", fam: "Instrument Serif", q: "Instrument+Serif:ital@0;1" }, { n: "Playfair Display", fam: "Playfair Display", q: "Playfair+Display:ital,wght@0,600;1,400" },
-  { n: "Young Serif", fam: "Young Serif", q: "Young+Serif" }, { n: "Bodoni Moda", fam: "Bodoni Moda", q: "Bodoni+Moda:ital,wght@0,500;1,400" },
-  { n: "Bricolage Grotesque", fam: "Bricolage Grotesque", q: "Bricolage+Grotesque:wght@800" }, { n: "Inter Tight Black", fam: "Inter Tight", q: "Inter+Tight:wght@800" },
-  { n: "Anton", fam: "Anton", q: "Anton" }, { n: "Unbounded", fam: "Unbounded", q: "Unbounded:wght@700" }, { n: "Syne", fam: "Syne", q: "Syne:wght@800" },
-  { n: "Space Grotesk", fam: "Space Grotesk", q: "Space+Grotesk:wght@700" },
-  { n: "Jost 500", fam: "Jost", q: "Jost:wght@500" }, { n: "Outfit 500", fam: "Outfit", q: "Outfit:wght@500" }, { n: "Quicksand 600", fam: "Quicksand", q: "Quicksand:wght@600" },
+  { n: "Prata (current)" }, { n: "Jost 500", fam: "Jost", q: "Jost:wght@500" }, { n: "Outfit 500", fam: "Outfit", q: "Outfit:wght@500" }, { n: "Quicksand 600", fam: "Quicksand", q: "Quicksand:wght@600" },
   { n: "Fredoka 500", fam: "Fredoka", q: "Fredoka:wght@500" }, { n: "Lexend 500", fam: "Lexend", q: "Lexend:wght@500" }, { n: "Urbanist 600", fam: "Urbanist", q: "Urbanist:wght@600" },
-  { n: "Questrial", fam: "Questrial", q: "Questrial" }, { n: "Comfortaa 600", fam: "Comfortaa", q: "Comfortaa:wght@600" },
+  { n: "Questrial", fam: "Questrial", q: "Questrial" }, { n: "Comfortaa 600", fam: "Comfortaa", q: "Comfortaa:wght@600" }, { n: "Varela Round", fam: "Varela Round", q: "Varela+Round" },
+  { n: "Nunito 700", fam: "Nunito", q: "Nunito:wght@700" }, { n: "Didact Gothic", fam: "Didact Gothic", q: "Didact+Gothic" }, { n: "Poppins 500", fam: "Poppins", q: "Poppins:wght@500" },
 ];
 const SUB: Font[] = [
-  { n: "Cormorant (current)" }, { n: "Instrument Serif", fam: "Instrument Serif", q: "Instrument+Serif:ital@0;1" }, { n: "Fraunces", fam: "Fraunces", q: "Fraunces:ital,wght@0,400;1,400" },
-  { n: "Playfair Display", fam: "Playfair Display", q: "Playfair+Display:ital,wght@0,400;1,400" }, { n: "Newsreader", fam: "Newsreader", q: "Newsreader:ital,wght@0,400;1,400" },
-  { n: "Libre Baskerville", fam: "Libre Baskerville", q: "Libre+Baskerville:ital@0;1" },
-  { n: "Jost", fam: "Jost", q: "Jost:ital,wght@0,400;1,400" }, { n: "Outfit", fam: "Outfit", q: "Outfit:wght@400" }, { n: "Quicksand", fam: "Quicksand", q: "Quicksand:wght@400" }, { n: "Fredoka", fam: "Fredoka", q: "Fredoka:wght@400" },
+  { n: "Cormorant (current)" }, { n: "Jost", fam: "Jost", q: "Jost:ital,wght@0,400;1,400" }, { n: "Outfit", fam: "Outfit", q: "Outfit:wght@400" },
+  { n: "Quicksand", fam: "Quicksand", q: "Quicksand:wght@400" }, { n: "Fredoka", fam: "Fredoka", q: "Fredoka:wght@400" },
 ];
 const BODY: Font[] = [
-  { n: "Archivo (current)" }, { n: "Inter Tight", fam: "Inter Tight", q: "Inter+Tight:wght@300..800" }, { n: "DM Sans", fam: "DM Sans", q: "DM+Sans:wght@300..800" },
-  { n: "Manrope", fam: "Manrope", q: "Manrope:wght@300..800" }, { n: "Hanken Grotesk", fam: "Hanken Grotesk", q: "Hanken+Grotesk:wght@300..800" },
-  { n: "Space Grotesk", fam: "Space Grotesk", q: "Space+Grotesk:wght@300..700" }, { n: "Work Sans", fam: "Work Sans", q: "Work+Sans:wght@300..800" },
-  { n: "Jost", fam: "Jost", q: "Jost:wght@300..700" }, { n: "Outfit", fam: "Outfit", q: "Outfit:wght@300..700" }, { n: "Quicksand", fam: "Quicksand", q: "Quicksand:wght@300..700" },
+  { n: "Archivo (current)" }, { n: "Jost", fam: "Jost", q: "Jost:wght@300..700" }, { n: "Outfit", fam: "Outfit", q: "Outfit:wght@300..700" }, { n: "Quicksand", fam: "Quicksand", q: "Quicksand:wght@300..700" },
   { n: "Lexend", fam: "Lexend", q: "Lexend:wght@300..700" }, { n: "Urbanist", fam: "Urbanist", q: "Urbanist:wght@300..700" }, { n: "Nunito", fam: "Nunito", q: "Nunito:wght@300..800" },
 ];
 const LABEL: Font[] = [
-  { n: "Body font (current)" }, { n: "Condensed caps (Anton)", fam: "Anton", q: "Anton", track: ".06em" }, { n: "Grotesk bold (Inter Tight)", fam: "Inter Tight", q: "Inter+Tight:wght@700", track: ".05em" },
-  { n: "Space Grotesk", fam: "Space Grotesk", q: "Space+Grotesk:wght@600", track: ".1em" }, { n: "Bricolage", fam: "Bricolage Grotesque", q: "Bricolage+Grotesque:wght@800", track: ".05em" },
+  { n: "Body font (current)" }, { n: "Jost bold", fam: "Jost", q: "Jost:wght@600", track: ".12em" }, { n: "Outfit bold", fam: "Outfit", q: "Outfit:wght@600", track: ".12em" },
+  { n: "Quicksand bold", fam: "Quicksand", q: "Quicksand:wght@700", track: ".1em" },
 ];
+/* product titles get their own font, weight, size, case and spacing (cards, product pages, related, bag, search) */
+type PFont = { n: string; fam?: string; q?: (w: number) => string; w: number[] };
+const PT: PFont[] = [
+  { n: "Same as headlines (current)", w: [] },
+  { n: "Jost", fam: "Jost", q: w => `Jost:wght@${w}`, w: [300, 400, 500, 600] }, { n: "Outfit", fam: "Outfit", q: w => `Outfit:wght@${w}`, w: [300, 400, 500, 600] },
+  { n: "Lexend", fam: "Lexend", q: w => `Lexend:wght@${w}`, w: [300, 400, 500] }, { n: "Quicksand", fam: "Quicksand", q: w => `Quicksand:wght@${w}`, w: [400, 500, 600, 700] },
+  { n: "Urbanist", fam: "Urbanist", q: w => `Urbanist:wght@${w}`, w: [400, 500, 600] }, { n: "Fredoka", fam: "Fredoka", q: w => `Fredoka:wght@${w}`, w: [400, 500, 600] },
+  { n: "Comfortaa", fam: "Comfortaa", q: w => `Comfortaa:wght@${w}`, w: [400, 500, 600] }, { n: "Nunito", fam: "Nunito", q: w => `Nunito:wght@${w}`, w: [400, 600, 700] },
+  { n: "Questrial", fam: "Questrial", q: () => "Questrial", w: [400] }, { n: "Varela Round", fam: "Varela Round", q: () => "Varela+Round", w: [400] },
+  { n: "Didact Gothic", fam: "Didact Gothic", q: () => "Didact+Gothic", w: [400] }, { n: "Poppins", fam: "Poppins", q: w => `Poppins:wght@${w}`, w: [400, 500] },
+];
+const WNAME: Record<number, string> = { 300: "Light", 400: "Regular", 500: "Medium", 600: "Semibold", 700: "Bold" };
+const PT_SEL = ".pcard-txt b,.pp-info h1,.pp-lk b,.cd-li h4,.sq-tx b";
+const PT_SIZES = [0.9, 1, 1.1, 1.25];
 const CASES = [["as", "As designed"], ["caps", "ALL CAPS"], ["lower", "lowercase"]] as const;
 const TRACKS = [["tight", "Tight"], ["as", "As designed"], ["loose", "Loose"]] as const;
 const SIZES = [0.9, 1, 1.15, 1.3];
@@ -72,25 +75,16 @@ const TAGS = ".cat-hero h1 small,.cd-empty p,.ct-txt small,.dd-sub,.flt-note,.fp
 const HEAD = "h1,h2,h3,.h2,.lr-big,.lr-cap b,.hush h2";
 const LABELS = ".eyebrow,.pill,.mkfilm-txt .pill,.pp-add,.cd-co,.hush-cta,.lr-go,.lr-cap small,.sl-all,.dcard-cta,.dd-choose,.nf-cta,.pc-next,.mkf-under a,.mkf-base,.rsteps a,.rsteps span,.rsteps button";
 
-type State = { ln: string; lf: string; sn: number; sf: number; d: number; u: number; b: number; l: number; cs: string; tr: string; sz: number; up: boolean; h: number; c: number; hv: string };
-const START: State = { ln: "a", lf: "a", sn: 100, sf: 100, d: 0, u: 0, b: 0, l: 0, cs: "as", tr: "as", sz: 1, up: false, h: 0, c: 0, hv: "arrow" };
+type State = { ln: string; lf: string; sn: number; sf: number; d: number; u: number; b: number; l: number; cs: string; tr: string; sz: number; up: boolean; pt: number; ptw: number; pts: number; ptc: string; ptt: string; h: number; c: number; hv: string };
+const START: State = { ln: "a", lf: "a", sn: 100, sf: 100, d: 0, u: 0, b: 0, l: 0, cs: "as", tr: "as", sz: 1, up: false, pt: 0, ptw: 500, pts: 1, ptc: "as", ptt: "as", h: 0, c: 0, hv: "arrow" };
 const idx = (list: Font[], n: string) => Math.max(0, list.findIndex(f => f.n === n));
-/* whole "type languages": display / tagline / body / labels / case / tracking / size */
+/* whole "type languages": the movie-credits look in four round geometric fonts */
 const LANGS: { n: string; note: string; p: Partial<State> }[] = [
   { n: "Today", note: "Prata + Cormorant + Archivo", p: { d: 0, u: 0, b: 0, l: 0, cs: "as", tr: "as", sz: 1 } },
-  { n: "Cooper soft", note: "goes with the vintage logo", p: { d: idx(DISPLAY, "Caprasimo"), u: idx(SUB, "Fraunces"), b: idx(BODY, "DM Sans"), l: 0, cs: "as", tr: "tight", sz: 1 } },
-  { n: "Boutique", note: "high-contrast serif, quiet body", p: { d: idx(DISPLAY, "Gloock"), u: idx(SUB, "Instrument Serif"), b: idx(BODY, "Hanken Grotesk"), l: 0, cs: "as", tr: "as", sz: 1 } },
-  { n: "Editorial", note: "big, thin, magazine", p: { d: idx(DISPLAY, "Instrument Serif"), u: idx(SUB, "Instrument Serif"), b: idx(BODY, "Inter Tight"), l: 0, cs: "as", tr: "tight", sz: 1.15 } },
-  { n: "Fashion Didone", note: "Bodoni, caps", p: { d: idx(DISPLAY, "Bodoni Moda"), u: idx(SUB, "Playfair Display"), b: idx(BODY, "Manrope"), l: 0, cs: "caps", tr: "as", sz: 1 } },
-  { n: "TinyWins loud", note: "heavy tight grotesk, all caps (their giant wordmark)", p: { d: idx(DISPLAY, "Inter Tight Black"), u: idx(SUB, "Instrument Serif"), b: idx(BODY, "Inter Tight"), l: idx(LABEL, "Grotesk bold (Inter Tight)"), cs: "caps", tr: "tight", sz: 1.1 } },
-  { n: "TinyWins condensed", note: "Anton caps for labels and headlines (their SHIPYARD tag)", p: { d: idx(DISPLAY, "Anton"), u: idx(SUB, "Cormorant (current)"), b: 0, l: idx(LABEL, "Condensed caps (Anton)"), cs: "caps", tr: "as", sz: 1.05 } },
-  { n: "Playful", note: "round, wide, friendly", p: { d: idx(DISPLAY, "Unbounded"), u: idx(SUB, "Fraunces"), b: idx(BODY, "DM Sans"), l: 0, cs: "as", tr: "as", sz: 0.9 } },
-  { n: "Quirky", note: "Syne, mono-ish labels", p: { d: idx(DISPLAY, "Syne"), u: idx(SUB, "Instrument Serif"), b: idx(BODY, "Space Grotesk"), l: idx(LABEL, "Space Grotesk"), cs: "as", tr: "as", sz: 1 } },
-  { n: "Credits · Jost", note: "the movie-credits look: round geometric, mixed case", p: { d: idx(DISPLAY, "Jost 500"), u: idx(SUB, "Jost"), b: idx(BODY, "Jost"), l: 0, cs: "as", tr: "as", sz: 1 } },
+  { n: "Credits · Jost", note: "the closest: round geometric, mixed case", p: { d: idx(DISPLAY, "Jost 500"), u: idx(SUB, "Jost"), b: idx(BODY, "Jost"), l: 0, cs: "as", tr: "as", sz: 1 } },
   { n: "Credits · Outfit", note: "a touch rounder, taglines upright", p: { d: idx(DISPLAY, "Outfit 500"), u: idx(SUB, "Outfit"), b: idx(BODY, "Outfit"), l: 0, cs: "as", tr: "as", sz: 1, up: true } },
   { n: "Credits · Quicksand", note: "rounded stroke ends, taglines upright", p: { d: idx(DISPLAY, "Quicksand 600"), u: idx(SUB, "Quicksand"), b: idx(BODY, "Quicksand"), l: 0, cs: "as", tr: "as", sz: 1, up: true } },
   { n: "Credits · Fredoka", note: "softest, toy-like, taglines upright", p: { d: idx(DISPLAY, "Fredoka 500"), u: idx(SUB, "Fredoka"), b: idx(BODY, "Nunito"), l: 0, cs: "as", tr: "as", sz: 1, up: true } },
-  { n: "Soft story", note: "Young Serif, warm body", p: { d: idx(DISPLAY, "Young Serif"), u: idx(SUB, "Newsreader"), b: idx(BODY, "Work Sans"), l: 0, cs: "as", tr: "as", sz: 1 } },
 ];
 
 const fcache: Record<string, string> = {};
@@ -125,6 +119,16 @@ function build(s: State) {
   if (s.tr === "loose") hd.push("letter-spacing:.04em !important");
   if (s.sz !== 1) hd.push(`zoom:${s.sz}`);
   if (hd.length) out += `${HEAD}{${hd.join(";")}}`;
+  /* product titles */
+  if (s.pt > 0) {
+    const t = ["font-family:'LabTitle',sans-serif !important", "font-weight:400 !important"];
+    if (s.ptc === "caps") t.push("text-transform:uppercase !important");
+    if (s.ptc === "lower") t.push("text-transform:lowercase !important");
+    if (s.ptt === "tight") t.push("letter-spacing:-.01em !important");
+    if (s.ptt === "loose") t.push("letter-spacing:.03em !important");
+    if (s.pts !== 1) t.push(`zoom:${s.pts}`);
+    out += `${PT_SEL}{${t.join(";")}}`;
+  }
   /* buttons */
   const grp = BTN.join(","), all = `${grp},${HERO_SEL}`;
   if (s.c > 0) out += `${grp}{${look(CTA[s.c])}}`;
@@ -142,19 +146,19 @@ export default function DesignLab({ onClose }: { onClose: () => void }) {
   const [right, setRight] = useState(false);
   const [err, setErr] = useState("");
   const set = (p: Partial<State>) => setS(prev => ({ ...prev, ...p }));
-  useEffect(() => { try { const v = sessionStorage.getItem("designlab-s2"); if (v) setS({ ...START, ...JSON.parse(v) }); } catch { /* ignore */ } }, []);
-  useEffect(() => { el("dl-css").textContent = build(s); try { sessionStorage.setItem("designlab-s2", JSON.stringify(s)); } catch { /* ignore */ } }, [s]);
+  useEffect(() => { try { const v = sessionStorage.getItem("designlab-s3"); if (v) setS({ ...START, ...JSON.parse(v) }); } catch { /* ignore */ } }, []);
+  useEffect(() => { el("dl-css").textContent = build(s); try { sessionStorage.setItem("designlab-s3", JSON.stringify(s)); } catch { /* ignore */ } }, [s]);
   useEffect(() => {
     let dead = false;
     (async () => {
       const parts: string[] = []; const bad: string[] = [];
-      const roles: [string, Font, boolean][] = [["LabDisplay", DISPLAY[s.d], true], ["LabSub", SUB[s.u], true], ["LabBody", BODY[s.b], false], ["LabLabel", LABEL[s.l], true]];
+      const roles: [string, Font, boolean][] = [["LabDisplay", DISPLAY[s.d], true], ["LabSub", SUB[s.u], true], ["LabBody", BODY[s.b], false], ["LabLabel", LABEL[s.l], true], ["LabTitle", s.pt > 0 ? { n: PT[s.pt].n, fam: PT[s.pt].fam, q: PT[s.pt].q!(s.ptw) } : { n: "" }, true]];
       for (const [alias, f, range] of roles) { if (!f.q) continue; try { parts.push(rename(await fontCss(f.q), f.fam!, alias, range)); } catch { bad.push(f.n); } }
       if (!dead) { el("dl-fonts").textContent = parts.join("\n"); setErr(bad.length ? `Could not load: ${bad.join(", ")}` : ""); }
     })();
     return () => { dead = true; };
-  }, [s.d, s.u, s.b, s.l]);
-  const close = () => { try { sessionStorage.removeItem("designlab"); sessionStorage.removeItem("designlab-s2"); } catch { /* ignore */ } el("dl-css").remove(); el("dl-fonts").remove(); onClose(); };
+  }, [s.d, s.u, s.b, s.l, s.pt, s.ptw]);
+  const close = () => { try { sessionStorage.removeItem("designlab"); sessionStorage.removeItem("designlab-s3"); } catch { /* ignore */ } el("dl-css").remove(); el("dl-fonts").remove(); onClose(); };
   const Chip = ({ on, children, onClick }: { on: boolean; children: React.ReactNode; onClick: () => void }) => <button type="button" className={`dl-b${on ? " on" : ""}`} onClick={onClick}>{children}</button>;
   const Dot = ({ o }: { o: Opt }) => <i className="dl-dot" style={{ background: o.bg, borderColor: o.bd || "rgba(0,0,0,.25)" }} />;
   return (
@@ -178,13 +182,21 @@ export default function DesignLab({ onClose }: { onClose: () => void }) {
             <h5>Quick</h5><div className="dl-g"><Chip on={false} onClick={() => set({ ln: "b", lf: "b" })}>New logo in both</Chip><Chip on={false} onClick={() => set({ ln: "a", lf: "a", sn: 100, sf: 100 })}>Back to current</Chip></div>
           </>)}
           {tab === "fonts" && (<>
-            <h5>Type languages (a whole set at once)</h5>
+            <h5>Product titles (cards, product pages, related, bag, search)</h5>
+            <div className="dl-g">{PT.map((f, i) => <Chip key={f.n} on={s.pt === i} onClick={() => set({ pt: i, ptw: f.w.length ? f.w.reduce((a, b) => Math.abs(b - s.ptw) < Math.abs(a - s.ptw) ? b : a) : s.ptw })}>{f.n}</Chip>)}</div>
+            {s.pt > 0 && (<>
+              <h5>Title weight</h5><div className="dl-g">{PT[s.pt].w.map(w => <Chip key={w} on={s.ptw === w} onClick={() => set({ ptw: w })}>{WNAME[w]}</Chip>)}</div>
+              <h5>Title size</h5><div className="dl-g">{PT_SIZES.map(z => <Chip key={z} on={s.pts === z} onClick={() => set({ pts: z })}>{Math.round(z * 100)}%</Chip>)}</div>
+              <h5>Title case</h5><div className="dl-g">{CASES.map(([k, n]) => <Chip key={k} on={s.ptc === k} onClick={() => set({ ptc: k })}>{n}</Chip>)}</div>
+              <h5>Title spacing</h5><div className="dl-g">{TRACKS.map(([k, n]) => <Chip key={k} on={s.ptt === k} onClick={() => set({ ptt: k })}>{n}</Chip>)}</div>
+            </>)}
+            <h5>Whole-site languages (everything else)</h5>
             <div className="dl-g">{LANGS.map(l => <Chip key={l.n} on={false} onClick={() => set({ up: false, ...l.p })}>{l.n}<small>{l.note}</small></Chip>)}</div>
             <h5>Headlines</h5><div className="dl-g">{DISPLAY.map((f, i) => <Chip key={f.n} on={s.d === i} onClick={() => set({ d: i })}>{f.n}</Chip>)}</div>
-            <h5>Taglines (the italic lines)</h5><div className="dl-g">{SUB.map((f, i) => <Chip key={f.n} on={s.u === i} onClick={() => set({ u: i })}>{f.n}</Chip>)}</div>
+            <h5>Taglines (the small italic lines)</h5><div className="dl-g">{SUB.map((f, i) => <Chip key={f.n} on={s.u === i} onClick={() => set({ u: i })}>{f.n}</Chip>)}</div>
+            <div className="dl-g" style={{ marginTop: 6 }}><Chip on={!s.up} onClick={() => set({ up: false })}>Italic (as designed)</Chip><Chip on={s.up} onClick={() => set({ up: true })}>Upright</Chip></div>
             <h5>Body text</h5><div className="dl-g">{BODY.map((f, i) => <Chip key={f.n} on={s.b === i} onClick={() => set({ b: i })}>{f.n}</Chip>)}</div>
             <h5>Small labels and buttons</h5><div className="dl-g">{LABEL.map((f, i) => <Chip key={f.n} on={s.l === i} onClick={() => set({ l: i })}>{f.n}</Chip>)}</div>
-            <h5>Taglines</h5><div className="dl-g"><Chip on={!s.up} onClick={() => set({ up: false })}>Italic (as designed)</Chip><Chip on={s.up} onClick={() => set({ up: true })}>Upright</Chip></div>
             <h5>Headline case</h5><div className="dl-g">{CASES.map(([k, n]) => <Chip key={k} on={s.cs === k} onClick={() => set({ cs: k })}>{n}</Chip>)}</div>
             <h5>Headline spacing</h5><div className="dl-g">{TRACKS.map(([k, n]) => <Chip key={k} on={s.tr === k} onClick={() => set({ tr: k })}>{n}</Chip>)}</div>
             <h5>Headline size</h5><div className="dl-g">{SIZES.map(z => <Chip key={z} on={s.sz === z} onClick={() => set({ sz: z })}>{Math.round(z * 100)}%</Chip>)}</div>
@@ -197,6 +209,7 @@ export default function DesignLab({ onClose }: { onClose: () => void }) {
           </>)}
           <div className="dl-s">
             Logo: <b>{LOGOS.find(l => l[0] === s.ln)![1]}</b> {s.sn}% / <b>{LOGOS.find(l => l[0] === s.lf)![1]}</b> {s.sf}%<br />
+            Product titles: <b>{s.pt > 0 ? `${PT[s.pt].n} ${WNAME[s.ptw]} ${Math.round(s.pts * 100)}%` : "same as headlines"}</b><br />
             Fonts: <b>{DISPLAY[s.d].n}</b> · {SUB[s.u].n} · {BODY[s.b].n} · labels {LABEL[s.l].n} · {CASES.find(c => c[0] === s.cs)![1]} · {TRACKS.find(t => t[0] === s.tr)![1]} · {Math.round(s.sz * 100)}% · taglines {s.up ? "upright" : "italic"}<br />
             Buttons: <b>{CTA[s.c].n}</b> · hero {HERO[s.h].n} · {HOVER.find(h => h[0] === s.hv)![1]}<br />
             <button type="button" className="dl-x" onClick={() => setS(START)}>Reset all</button> · <button type="button" className="dl-x" onClick={close}>Close the lab</button>
