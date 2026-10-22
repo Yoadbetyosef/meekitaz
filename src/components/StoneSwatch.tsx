@@ -1,7 +1,6 @@
 import Image from "next/image";
 
-/** The stone colour icon: a real stone photo when we have one for this piece, otherwise a round diamond photographed in that colour
- *  (white, yellow, pink, blue, green), and a plain tint only for a colour we have no diamond for. */
+/** The stone colour icon: a round diamond photographed in that colour (white, yellow, pink, blue, green). */
 const TINT: Record<string, string> = { "": "#f1f1ef", White: "#f1f1ef", Yellow: "#e9c84a", Pink: "#ef8fb0", Blue: "#6fa3e6", Green: "#8fcf9a" };
 const B = "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/";
 export const DIAMOND: Record<string, string> = {
@@ -13,11 +12,12 @@ export const DIAMOND: Record<string, string> = {
   Green: B + "hf_20261022_232448_65bcbf23-19af-4409-b536-89b78beed54d.png",
 };
 export default function StoneSwatch({ color, src }: { color: string; src?: string }) {
+  // the five colours always use the same five diamonds (so the picker looks the same on every page); another colour keeps its own stone photo, or a tint
+  const gem = DIAMOND[color];
+  if (gem) return <span className="rp-sw rp-gem"><Image src={gem} alt="" width={120} height={120} sizes="64px" quality={82} /></span>;
   if (src) {
     // eslint-disable-next-line @next/next/no-img-element
     return <span className="rp-sw"><img src={src} alt="" referrerPolicy="no-referrer" className="rp-sw-img" /></span>;
   }
-  const gem = DIAMOND[color];
-  if (gem) return <span className="rp-sw rp-gem"><Image src={gem} alt="" width={120} height={120} sizes="64px" quality={82} /></span>;
   return <span className="rp-sw"><i style={{ background: TINT[color] || "#ddd" }} /></span>;
 }
