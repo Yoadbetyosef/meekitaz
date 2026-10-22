@@ -25,14 +25,10 @@ export default function LooksReel() {
   }, [on, near]);
   return (
     <section className="sec lr" aria-label="Shop the look" ref={sec}>
-      <div className="wrap lr-head">
-        <div className="sl-head">
-          <div><small className="eyebrow">Shop the look</small><h2 className="h2">Everything she&rsquo;s wearing</h2></div>
-        </div>
-      </div>
-      <div className="lr-track" ref={track}>
+      <div className="lr-track" ref={track} style={{ ["--n" as string]: looksReel.length }}>
         <div className="lr-pin">
           <div className="wrap">
+            <div className="lr-head"><small className="eyebrow">Shop the look</small><h2 className="h2">Everything she&rsquo;s wearing</h2></div>
             <div className="lr-stage">
               {looksReel.map((l, i) => (
                 <div key={l.title} className={`lr-look${i === on ? " on" : ""}`} aria-hidden={i !== on}>

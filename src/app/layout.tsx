@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CartProvider>
           <Nav />
           <HeroWarm map={Object.fromEntries(categories.map(c => [c.slug, { d: c.desktop, m: c.mobile }]))} />
-          {children}
+          <div className="mk-page" id="mk-page">{children}</div>
           <Footer />
           <Toast />
           <CartDrawer />

@@ -751,6 +751,7 @@ export const hushCard = { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63
 export const looksReel = [
   { title: "The drive", line: "Studs, rivière, four bracelets, one ring.", href: "/looks", video: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261022_030800_9f21a3f5-7cea-4419-9c54-169a64abcb78.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_174210_63f45246-d404-4a68-bc35-29be47d8a34b.png" },
   { title: "The chain", line: "Cuban link, emerald-cut, cobalt sky.", href: "/necklaces", video: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_192549_6e320ce1-d71d-450f-8631-a855c98ead92.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_192442_05315264-b6cf-451e-a12d-9fb869e2f2b1.png" },
-  { title: "The stoop", line: "Brooklyn, a bandana, three tennis bracelets.", href: "/bracelets", video: "/media/bracelets-mood.mp4", poster: "/media/bracelets-mood-poster.jpg" },
+  { title: "The tennis", line: "Clay, white pleats, three tennis bracelets.", href: "/bracelets", video: "/media/bracelets-mood.mp4", poster: "/media/bracelets-mood-poster.jpg" },
+  { title: "The slice", line: "An eternity band and a very cold watermelon.", href: "/bands", video: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_010122_488fa782-706a-46c5-9884-95593bf3210f.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_005300_520e34ad-6539-4260-82ac-59d4202aeb20.png" },
 ];
 
