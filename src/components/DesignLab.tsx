@@ -44,16 +44,22 @@ const DISPLAY: Font[] = [
   { n: "Bricolage Grotesque", fam: "Bricolage Grotesque", q: "Bricolage+Grotesque:wght@800" }, { n: "Inter Tight Black", fam: "Inter Tight", q: "Inter+Tight:wght@800" },
   { n: "Anton", fam: "Anton", q: "Anton" }, { n: "Unbounded", fam: "Unbounded", q: "Unbounded:wght@700" }, { n: "Syne", fam: "Syne", q: "Syne:wght@800" },
   { n: "Space Grotesk", fam: "Space Grotesk", q: "Space+Grotesk:wght@700" },
+  { n: "Jost 500", fam: "Jost", q: "Jost:wght@500" }, { n: "Outfit 500", fam: "Outfit", q: "Outfit:wght@500" }, { n: "Quicksand 600", fam: "Quicksand", q: "Quicksand:wght@600" },
+  { n: "Fredoka 500", fam: "Fredoka", q: "Fredoka:wght@500" }, { n: "Lexend 500", fam: "Lexend", q: "Lexend:wght@500" }, { n: "Urbanist 600", fam: "Urbanist", q: "Urbanist:wght@600" },
+  { n: "Questrial", fam: "Questrial", q: "Questrial" }, { n: "Comfortaa 600", fam: "Comfortaa", q: "Comfortaa:wght@600" },
 ];
 const SUB: Font[] = [
   { n: "Cormorant (current)" }, { n: "Instrument Serif", fam: "Instrument Serif", q: "Instrument+Serif:ital@0;1" }, { n: "Fraunces", fam: "Fraunces", q: "Fraunces:ital,wght@0,400;1,400" },
   { n: "Playfair Display", fam: "Playfair Display", q: "Playfair+Display:ital,wght@0,400;1,400" }, { n: "Newsreader", fam: "Newsreader", q: "Newsreader:ital,wght@0,400;1,400" },
   { n: "Libre Baskerville", fam: "Libre Baskerville", q: "Libre+Baskerville:ital@0;1" },
+  { n: "Jost", fam: "Jost", q: "Jost:ital,wght@0,400;1,400" }, { n: "Outfit", fam: "Outfit", q: "Outfit:wght@400" }, { n: "Quicksand", fam: "Quicksand", q: "Quicksand:wght@400" }, { n: "Fredoka", fam: "Fredoka", q: "Fredoka:wght@400" },
 ];
 const BODY: Font[] = [
   { n: "Archivo (current)" }, { n: "Inter Tight", fam: "Inter Tight", q: "Inter+Tight:wght@300..800" }, { n: "DM Sans", fam: "DM Sans", q: "DM+Sans:wght@300..800" },
   { n: "Manrope", fam: "Manrope", q: "Manrope:wght@300..800" }, { n: "Hanken Grotesk", fam: "Hanken Grotesk", q: "Hanken+Grotesk:wght@300..800" },
   { n: "Space Grotesk", fam: "Space Grotesk", q: "Space+Grotesk:wght@300..700" }, { n: "Work Sans", fam: "Work Sans", q: "Work+Sans:wght@300..800" },
+  { n: "Jost", fam: "Jost", q: "Jost:wght@300..700" }, { n: "Outfit", fam: "Outfit", q: "Outfit:wght@300..700" }, { n: "Quicksand", fam: "Quicksand", q: "Quicksand:wght@300..700" },
+  { n: "Lexend", fam: "Lexend", q: "Lexend:wght@300..700" }, { n: "Urbanist", fam: "Urbanist", q: "Urbanist:wght@300..700" }, { n: "Nunito", fam: "Nunito", q: "Nunito:wght@300..800" },
 ];
 const LABEL: Font[] = [
   { n: "Body font (current)" }, { n: "Condensed caps (Anton)", fam: "Anton", q: "Anton", track: ".06em" }, { n: "Grotesk bold (Inter Tight)", fam: "Inter Tight", q: "Inter+Tight:wght@700", track: ".05em" },
@@ -62,11 +68,12 @@ const LABEL: Font[] = [
 const CASES = [["as", "As designed"], ["caps", "ALL CAPS"], ["lower", "lowercase"]] as const;
 const TRACKS = [["tight", "Tight"], ["as", "As designed"], ["loose", "Loose"]] as const;
 const SIZES = [0.9, 1, 1.15, 1.3];
+const TAGS = ".cat-hero h1 small,.cd-empty p,.ct-txt small,.dd-sub,.flt-note,.fp-none,.heroc h1 small,.hush p,.lg-up,.looks-lead,.lr-cap span,.mgrid a span small,.mk-lbl em,.nf-sub,.pc-ok,.pp-k,.pp-sub,.sl-sub,.sq-none,.srch-empty p";
 const HEAD = "h1,h2,h3,.h2,.lr-big,.lr-cap b,.hush h2";
 const LABELS = ".eyebrow,.pill,.mkfilm-txt .pill,.pp-add,.cd-co,.hush-cta,.lr-go,.lr-cap small,.sl-all,.dcard-cta,.dd-choose,.nf-cta,.pc-next,.mkf-under a,.mkf-base,.rsteps a,.rsteps span,.rsteps button";
 
-type State = { ln: string; lf: string; sn: number; sf: number; d: number; u: number; b: number; l: number; cs: string; tr: string; sz: number; h: number; c: number; hv: string };
-const START: State = { ln: "a", lf: "a", sn: 100, sf: 100, d: 0, u: 0, b: 0, l: 0, cs: "as", tr: "as", sz: 1, h: 0, c: 0, hv: "arrow" };
+type State = { ln: string; lf: string; sn: number; sf: number; d: number; u: number; b: number; l: number; cs: string; tr: string; sz: number; up: boolean; h: number; c: number; hv: string };
+const START: State = { ln: "a", lf: "a", sn: 100, sf: 100, d: 0, u: 0, b: 0, l: 0, cs: "as", tr: "as", sz: 1, up: false, h: 0, c: 0, hv: "arrow" };
 const idx = (list: Font[], n: string) => Math.max(0, list.findIndex(f => f.n === n));
 /* whole "type languages": display / tagline / body / labels / case / tracking / size */
 const LANGS: { n: string; note: string; p: Partial<State> }[] = [
@@ -79,6 +86,10 @@ const LANGS: { n: string; note: string; p: Partial<State> }[] = [
   { n: "TinyWins condensed", note: "Anton caps for labels and headlines (their SHIPYARD tag)", p: { d: idx(DISPLAY, "Anton"), u: idx(SUB, "Cormorant (current)"), b: 0, l: idx(LABEL, "Condensed caps (Anton)"), cs: "caps", tr: "as", sz: 1.05 } },
   { n: "Playful", note: "round, wide, friendly", p: { d: idx(DISPLAY, "Unbounded"), u: idx(SUB, "Fraunces"), b: idx(BODY, "DM Sans"), l: 0, cs: "as", tr: "as", sz: 0.9 } },
   { n: "Quirky", note: "Syne, mono-ish labels", p: { d: idx(DISPLAY, "Syne"), u: idx(SUB, "Instrument Serif"), b: idx(BODY, "Space Grotesk"), l: idx(LABEL, "Space Grotesk"), cs: "as", tr: "as", sz: 1 } },
+  { n: "Credits · Jost", note: "the movie-credits look: round geometric, mixed case", p: { d: idx(DISPLAY, "Jost 500"), u: idx(SUB, "Jost"), b: idx(BODY, "Jost"), l: 0, cs: "as", tr: "as", sz: 1 } },
+  { n: "Credits · Outfit", note: "a touch rounder, taglines upright", p: { d: idx(DISPLAY, "Outfit 500"), u: idx(SUB, "Outfit"), b: idx(BODY, "Outfit"), l: 0, cs: "as", tr: "as", sz: 1, up: true } },
+  { n: "Credits · Quicksand", note: "rounded stroke ends, taglines upright", p: { d: idx(DISPLAY, "Quicksand 600"), u: idx(SUB, "Quicksand"), b: idx(BODY, "Quicksand"), l: 0, cs: "as", tr: "as", sz: 1, up: true } },
+  { n: "Credits · Fredoka", note: "softest, toy-like, taglines upright", p: { d: idx(DISPLAY, "Fredoka 500"), u: idx(SUB, "Fredoka"), b: idx(BODY, "Nunito"), l: 0, cs: "as", tr: "as", sz: 1, up: true } },
   { n: "Soft story", note: "Young Serif, warm body", p: { d: idx(DISPLAY, "Young Serif"), u: idx(SUB, "Newsreader"), b: idx(BODY, "Work Sans"), l: 0, cs: "as", tr: "as", sz: 1 } },
 ];
 
@@ -105,6 +116,7 @@ function build(s: State) {
   if (s.d > 0) out += `html{--display:'LabDisplay',Georgia,serif !important}`;
   if (s.u > 0) out += `html{--sub:'LabSub',Georgia,serif !important}`;
   if (s.b > 0) out += `html{--body:'LabBody',Helvetica,Arial,sans-serif !important}`;
+  if (s.up) out += `${TAGS}{font-style:normal !important}`;
   if (s.l > 0) out += `${LABELS}{font-family:'LabLabel',sans-serif !important;letter-spacing:${LABEL[s.l].track} !important}`;
   const hd: string[] = [];
   if (s.cs === "caps") hd.push("text-transform:uppercase !important");
@@ -167,11 +179,12 @@ export default function DesignLab({ onClose }: { onClose: () => void }) {
           </>)}
           {tab === "fonts" && (<>
             <h5>Type languages (a whole set at once)</h5>
-            <div className="dl-g">{LANGS.map(l => <Chip key={l.n} on={false} onClick={() => set(l.p)}>{l.n}<small>{l.note}</small></Chip>)}</div>
+            <div className="dl-g">{LANGS.map(l => <Chip key={l.n} on={false} onClick={() => set({ up: false, ...l.p })}>{l.n}<small>{l.note}</small></Chip>)}</div>
             <h5>Headlines</h5><div className="dl-g">{DISPLAY.map((f, i) => <Chip key={f.n} on={s.d === i} onClick={() => set({ d: i })}>{f.n}</Chip>)}</div>
             <h5>Taglines (the italic lines)</h5><div className="dl-g">{SUB.map((f, i) => <Chip key={f.n} on={s.u === i} onClick={() => set({ u: i })}>{f.n}</Chip>)}</div>
             <h5>Body text</h5><div className="dl-g">{BODY.map((f, i) => <Chip key={f.n} on={s.b === i} onClick={() => set({ b: i })}>{f.n}</Chip>)}</div>
             <h5>Small labels and buttons</h5><div className="dl-g">{LABEL.map((f, i) => <Chip key={f.n} on={s.l === i} onClick={() => set({ l: i })}>{f.n}</Chip>)}</div>
+            <h5>Taglines</h5><div className="dl-g"><Chip on={!s.up} onClick={() => set({ up: false })}>Italic (as designed)</Chip><Chip on={s.up} onClick={() => set({ up: true })}>Upright</Chip></div>
             <h5>Headline case</h5><div className="dl-g">{CASES.map(([k, n]) => <Chip key={k} on={s.cs === k} onClick={() => set({ cs: k })}>{n}</Chip>)}</div>
             <h5>Headline spacing</h5><div className="dl-g">{TRACKS.map(([k, n]) => <Chip key={k} on={s.tr === k} onClick={() => set({ tr: k })}>{n}</Chip>)}</div>
             <h5>Headline size</h5><div className="dl-g">{SIZES.map(z => <Chip key={z} on={s.sz === z} onClick={() => set({ sz: z })}>{Math.round(z * 100)}%</Chip>)}</div>
@@ -184,7 +197,7 @@ export default function DesignLab({ onClose }: { onClose: () => void }) {
           </>)}
           <div className="dl-s">
             Logo: <b>{LOGOS.find(l => l[0] === s.ln)![1]}</b> {s.sn}% / <b>{LOGOS.find(l => l[0] === s.lf)![1]}</b> {s.sf}%<br />
-            Fonts: <b>{DISPLAY[s.d].n}</b> · {SUB[s.u].n} · {BODY[s.b].n} · labels {LABEL[s.l].n} · {CASES.find(c => c[0] === s.cs)![1]} · {TRACKS.find(t => t[0] === s.tr)![1]} · {Math.round(s.sz * 100)}%<br />
+            Fonts: <b>{DISPLAY[s.d].n}</b> · {SUB[s.u].n} · {BODY[s.b].n} · labels {LABEL[s.l].n} · {CASES.find(c => c[0] === s.cs)![1]} · {TRACKS.find(t => t[0] === s.tr)![1]} · {Math.round(s.sz * 100)}% · taglines {s.up ? "upright" : "italic"}<br />
             Buttons: <b>{CTA[s.c].n}</b> · hero {HERO[s.h].n} · {HOVER.find(h => h[0] === s.hv)![1]}<br />
             <button type="button" className="dl-x" onClick={() => setS(START)}>Reset all</button> · <button type="button" className="dl-x" onClick={close}>Close the lab</button>
           </div>
