@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Prata, Cormorant_Garamond, Archivo } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
+import DesignLabGate from "@/components/DesignLabGate";
 import Footer from "@/components/Footer";
 import Toast from "@/components/Toast";
 import CartProvider from "@/components/CartProvider";
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
           <Toast />
           <CartDrawer />
+          <DesignLabGate />
         </CartProvider>
       </body>
     </html>
