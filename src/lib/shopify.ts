@@ -1,5 +1,6 @@
 // Shopify Storefront API client (server only).
-import { collapseDesigns, gemFacets, showsSupplierMark } from "./designs";
+import { collapseDesigns, gemFacets } from "./designs";
+import { cardImage, isSupplierImage } from "./supplierImages";
 import { RING_SHAPES } from "./ringfilters";
 import { fancyColorOf } from "./fancy";
 // Set SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_TOKEN in .env.local / Vercel.
@@ -39,7 +40,7 @@ async function sf<T>(query: string, variables: Record<string, unknown> = {}, opt
 /** Products from a Shopify collection whose handle matches the category slug (e.g. "engagement-rings"). */
 export async function getCollectionProducts(handle: string, first = 12): Promise<Product[] | null> {
   const data = await sf<{ collection: { products: { edges: { node: { id: string; handle: string; title: string; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; featuredImage?: { url: string; altText?: string } } }[] } } | null }>(
-    `query($handle:String!,$first:Int!){ collection(handle:$handle){ products(first:$first){ edges{ node{ id handle title priceRange{ minVariantPrice{ amount currencyCode } } featuredImage{ url altText } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } } }`,
+    `query($handle:String!,$first:Int!){ collection(handle:$handle){ products(first:$first){ edges{ node{ id handle title priceRange{ minVariantPrice{ amount currencyCode } } featuredImage{ url altText } images(first:3){ edges{ node{ url altText } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } } }`,
     { handle, first }
   );
   const edges = data?.collection?.products?.edges;
@@ -145,7 +146,7 @@ export async function getProductByHandle(handle: string): Promise<ProductFull | 
   const vs = p.variants.edges.map(({ node: v }) => ({ id: v.id, title: v.title, available: v.availableForSale, price: +v.price.amount, compareAt: v.compareAtPrice && +v.compareAtPrice.amount > +v.price.amount ? +v.compareAtPrice.amount : 0, selected: v.selectedOptions, imageUrl: v.image?.url }));
   return {
     id: p.id, handle: p.handle, title: p.title, description: p.description, descriptionHtml: p.descriptionHtml, productType: p.productType, tags: p.tags,
-    options: p.options, images: p.images.edges.filter(({ node: i }) => !showsSupplierMark(i.url, p.tags)).map(({ node: i }) => ({ url: i.url, alt: i.altText || p.title, width: i.width, height: i.height })), modelImage: p.model?.value || undefined, variants: vs,
+    options: p.options, images: p.images.edges.filter(({ node: i }) => !isSupplierImage(i.url, p.tags)).map(({ node: i }) => ({ url: i.url, alt: i.altText || p.title, width: i.width, height: i.height })), modelImage: p.model?.value || undefined, variants: vs,
     currency: p.variants.edges[0]?.node.price.currencyCode || "USD", seoTitle: p.seo?.title || undefined, seoDescription: p.seo?.description || undefined,
   };
 }
@@ -175,7 +176,7 @@ export async function getRelated(productType: string, exceptHandle: string, firs
     `query($q:String!,$n:Int!){ products(first:$n, query:$q, sortKey:BEST_SELLING){ edges{ node{ handle title tags priceRange{ minVariantPrice{ amount } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url } } } } }`,
     { q: `product_type:"${productType.replace(/"/g, "")}" AND -tag:Configured AND -tag:'Karat variant'`, n: first + 6 });
   return (d?.products.edges || []).map(e => e.node).filter(n => n.handle !== exceptHandle && !n.tags.some(t => ["configured", "karat variant", "fifa world cup 2026"].includes(t.toLowerCase())))
-    .slice(0, first).map(n => ({ handle: n.handle, title: n.title, price: +n.priceRange.minVariantPrice.amount, compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0, image: n.featuredImage?.url }));
+    .slice(0, first).map(n => ({ handle: n.handle, title: n.title, price: +n.priceRange.minVariantPrice.amount, compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0, image: n.featuredImage && !isSupplierImage(n.featuredImage.url, n.tags) ? n.featuredImage.url : undefined }));
 }
 
 /* ---------------- Category listing with paging and sorting ---------------- */
@@ -188,13 +189,13 @@ export async function getCollectionPage(handle: string, opts: { first?: number; 
   const d = await sf<{ collection: null | { products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null; model?: { value: string } | null } }[] } } }>(
     `query($handle:String!,$first:Int!,$after:String,$key:ProductCollectionSortKeys!,$rev:Boolean!){ collection(handle:$handle){ products(first:$first, after:$after, sortKey:$key, reverse:$rev){
       pageInfo{ hasNextPage endCursor }
-      edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } } }`,
+      edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } images(first:3){ edges{ node{ url altText } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } } }`,
     { handle, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.reverse });
   const c = d?.collection?.products; if (!c) return null;
   const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
-    image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title } : undefined, modelImage: n.model?.value || undefined,
+    image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || undefined,
     code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || gemFacets(n.title, n.tags).shape, stone: gemFacets(n.title, n.tags).stone,
   }));
   return { products: collapseDesigns(products), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
@@ -207,13 +208,13 @@ export async function getProductsByQuery(query: string, opts: { first?: number; 
   const d = await sf<{ products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null; model?: { value: string } | null } }[] } }>(
     `query($q:String!,$first:Int!,$after:String,$key:ProductSortKeys,$rev:Boolean){ products(first:$first, after:$after, query:$q, sortKey:$key, reverse:$rev){
       pageInfo{ hasNextPage endCursor }
-      edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } }`,
+      edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } images(first:3){ edges{ node{ url altText } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } }`,
     { q: query, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.rev });
   const c = d?.products; if (!c) return null;
   const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
-    image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title } : undefined, modelImage: n.model?.value || undefined,
+    image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || undefined,
     code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || gemFacets(n.title, n.tags).shape, stone: gemFacets(n.title, n.tags).stone,
   }));
   return { products: collapseDesigns(products), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
@@ -227,14 +228,14 @@ export async function searchProducts(query: string, opts: { first?: number; maxP
   type N = { id?: string; handle?: string; title?: string; tags?: string[]; priceRange?: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange?: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null; model?: { value: string } | null };
   const first = opts.first || 60;
   const d = await sf<{ search: { nodes: N[] } }>(
-    `query($q:String!,$first:Int!,$f:[ProductFilter!]){ search(query:$q, first:$first, types:PRODUCT, prefix:LAST, productFilters:$f){ nodes{ ... on Product { id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } }`,
+    `query($q:String!,$first:Int!,$f:[ProductFilter!]){ search(query:$q, first:$first, types:PRODUCT, prefix:LAST, productFilters:$f){ nodes{ ... on Product { id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } images(first:3){ edges{ node{ url altText } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } }`,
     { q: query, first, f: opts.maxPrice ? [{ price: { max: opts.maxPrice } }] : null });
   let products: Product[] = (d?.search.nodes || [])
     .filter((n): n is Required<Pick<N, "id" | "handle" | "title" | "tags" | "priceRange" | "compareAtPriceRange">> & N => !!n.id && !!n.tags && !n.tags.some(t => BAD_TAGS.includes(t) || t.toLowerCase() === "fifa world cup 2026"))
     .map(n => ({
       id: n.id!, handle: n.handle!, title: n.title!, price: n.priceRange!.minVariantPrice.amount, currency: n.priceRange!.minVariantPrice.currencyCode,
       compareAt: +n.compareAtPriceRange!.minVariantPrice.amount > +n.priceRange!.minVariantPrice.amount ? +n.compareAtPriceRange!.minVariantPrice.amount : 0,
-      image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title! } : undefined,
+      image: cardImage({ title: n.title!, tags: n.tags!, featuredImage: n.featuredImage, images: (n as { images?: { edges: { node: { url: string; altText?: string } }[] } }).images }),
       code: n.tags!.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title!), shape: n.tags!.find(t => RING_SHAPES.includes(t)) || "",
     }));
   if (products.length) return collapseDesigns(products);

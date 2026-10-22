@@ -49,10 +49,3 @@ export async function fillPage(base: Product[], start: { cursor: string | null; 
   }
   return { items, cursor, hasNext, failed };
 }
-
-/** Product photos that show another brand's engraving. The 3D renders of gemstone earrings show the back of the post from two angles
- *  (files "...-Stud-Earrings-in-..._1" and "_2"), and the screw-back discs there are engraved with the supplier's name. The front view (no suffix) is clean. */
-export function showsSupplierMark(url: string, tags: string[]): boolean {
-  return tags.includes("Gemstone Earrings") && /\/[^/?]*Earrings[^/?]*_[12]\.(?:webp|jpe?g|png)(?:\?|$)/i.test(url);
-}
-
