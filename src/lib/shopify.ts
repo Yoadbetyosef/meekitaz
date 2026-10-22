@@ -1,9 +1,9 @@
 // Shopify Storefront API client (server only).
-import { collapseDesigns } from "./designs";
+import { collapseDesigns, gemFacets } from "./designs";
 import { RING_SHAPES } from "./ringfilters";
 import { fancyColorOf } from "./fancy";
 // Set SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_TOKEN in .env.local / Vercel.
-export type Product = { id: string; handle: string; title: string; price: string; currency: string; compareAt?: number; image?: { url: string; alt: string }; modelImage?: string; code?: string; metal?: string; shape?: string; variants?: { metal: string; handle: string; title: string; image?: { url: string; alt: string }; modelImage?: string; price: string; compareAt?: number }[] };
+export type Product = { id: string; handle: string; title: string; price: string; currency: string; compareAt?: number; image?: { url: string; alt: string }; modelImage?: string; code?: string; metal?: string; shape?: string; stone?: string; variants?: { metal: string; handle: string; title: string; image?: { url: string; alt: string }; modelImage?: string; price: string; compareAt?: number }[] };
 
 export type CartLine = {
   id: string;
@@ -195,7 +195,7 @@ export async function getCollectionPage(handle: string, opts: { first?: number; 
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
     image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title } : undefined, modelImage: n.model?.value || undefined,
-    code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || "",
+    code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || gemFacets(n.title, n.tags).shape, stone: gemFacets(n.title, n.tags).stone,
   }));
   return { products: collapseDesigns(products), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
 }
@@ -214,7 +214,7 @@ export async function getProductsByQuery(query: string, opts: { first?: number; 
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
     image: n.featuredImage ? { url: n.featuredImage.url, alt: n.featuredImage.altText || n.title } : undefined, modelImage: n.model?.value || undefined,
-    code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || "",
+    code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || gemFacets(n.title, n.tags).shape, stone: gemFacets(n.title, n.tags).stone,
   }));
   return { products: collapseDesigns(products), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
 }

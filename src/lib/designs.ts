@@ -1,15 +1,25 @@
 import type { Product } from "./shopify";
+import { RING_SHAPES } from "./ringfilters";
 
 /** Catalogue grids show one card per design: the metal versions of a design (same NS code) collapse into one card,
  *  so neighbouring cards are different pieces, not the same ring in five colours. */
 export const METAL_SWATCH: Record<string, string> = { "Rose gold": "#E3AE98", "Yellow gold": "#E6C56B", "White gold": "#E8E8EA", Platinum: "#DADCE2", Silver: "#D3D5DB" };
 const METAL_ORDER = ["White gold", "Yellow gold", "Rose gold", "Platinum", "Silver"];
 const GOLD_SHOWN = ["White gold", "Yellow gold", "Rose gold"]; // the three dots on a card; the product page offers every metal
+/** Gemstone pieces carry no shape tag and one design is sold in every shape and every stone, so shape and stone are read from the title
+ *  ("Round Cut Amethyst Stud Earrings in Rose gold ..."). Each stone in each shape is then its own card, instead of one card per design. */
+const GEM_STONES = ["Yellow Sapphire", "Green Sapphire", "Blue Sapphire", "Pink Sapphire", "Aquamarine", "Moissanite", "Blue Topaz", "Tanzanite", "Morganite", "Amethyst", "Peridot", "Citrine", "Emerald", "Garnet", "Ruby"];
+export function gemFacets(title: string, tags: string[]): { shape: string; stone: string } {
+  if (!tags.includes("Gemstone")) return { shape: "", stone: "" };
+  const shape = RING_SHAPES.find(sh => title.startsWith(sh + " ")) || "";
+  const rest = (shape ? title.slice(shape.length + 1) : title).replace(/^Cut /, "");
+  return { shape, stone: GEM_STONES.find(g => rest.startsWith(g + " ")) || "" };
+}
 export function collapseDesigns(list: Product[]): Product[] {
   const out: Product[] = [], byCode = new Map<string, Product>();
   for (const p of list) {
     // rings: the same design is sold in every shape, and a shape is its own card
-    const key = p.code ? `${p.code}|${p.shape || ""}` : p.id;
+    const key = p.code ? `${p.code}|${p.shape || ""}|${p.stone || ""}` : p.id;
     const v = { metal: p.metal || "", handle: p.handle, title: p.title, image: p.image, modelImage: p.modelImage, price: p.price, compareAt: p.compareAt };
     const have = byCode.get(key);
     if (!have) { const card = { ...p, variants: [v, ...(p.variants || []).filter(x => x.metal !== v.metal)] }; byCode.set(key, card); out.push(card); continue; }
