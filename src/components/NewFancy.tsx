@@ -4,29 +4,42 @@ import Image from "next/image";
 import Link from "next/link";
 import { newFancy, newPink, newGreen } from "@/lib/data";
 
-/** "NEW" statement block between the categories and House codes. The card pins in the viewport while the page scrolls past it,
- *  and the yellow (fancy colours) content gives way to the pink (pink stones) content as a scroll-driven crossfade. */
+const clamp = (x: number, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+
+/** "NEW" statement block between the categories and House codes. The card pins in the viewport while the page scrolls past it.
+ *  The next colour floods in from the NEW badge in the corner in step with the scroll (no hard cut): the headline rises into place line by line,
+ *  the text follows and the photo settles. Yellow (fancy colours) → pink (pink stones) → green (gemstones), each with a pause before the next. */
 export default function NewFancy() {
   const pin = useRef<HTMLDivElement>(null), y = useRef<HTMLDivElement>(null), p = useRef<HTMLDivElement>(null), g = useRef<HTMLDivElement>(null), d1 = useRef<HTMLElement>(null), d2 = useRef<HTMLElement>(null), d3 = useRef<HTMLElement>(null);
   useEffect(() => {
     const el = pin.current; if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const tick = () => {
       const r = el.getBoundingClientRect(), total = Math.max(1, el.offsetHeight - window.innerHeight);
-      const prog = Math.min(1, Math.max(0, -r.top / total));
-      // three layers; each swap happens over a short window of the pinned scroll: yellow → pink at ~35%, pink → green at ~70%
-      const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-      const e1 = ease(Math.min(1, Math.max(0, (prog - 0.22) / 0.26))), e2 = ease(Math.min(1, Math.max(0, (prog - 0.57) / 0.26)));
-      // A hard switch, no crossfade: the layer for this scroll position is shown in full, the others are hidden.
-      const idx = e2 >= 0.5 ? 2 : e1 >= 0.5 ? 1 : 0;
-      [y.current, p.current, g.current].forEach((el, k) => {
-        if (!el) return;
+      const prog = clamp(-r.top / total);
+      // each flood takes a third of the pinned scroll, with a pause on every colour: pink floods at 12–45%, green at 55–88%
+      const qs = [1, clamp((prog - 0.12) / 0.33), clamp((prog - 0.55) / 0.33)];
+      const idx = qs[2] >= 0.5 ? 2 : qs[1] >= 0.5 ? 1 : 0;
+      [y.current, p.current, g.current].forEach((layer, k) => {
+        if (!layer) return;
         const on = k === idx;
-        el.style.opacity = on ? "1" : "0";
-        el.style.transform = "";
-        el.style.visibility = on ? "visible" : "hidden";
+        if (reduce) { // no motion: the layer for this scroll position is shown in full, the others are hidden
+          layer.style.opacity = on ? "1" : "0"; layer.style.visibility = on ? "visible" : "hidden"; layer.style.clipPath = "";
+        } else {
+          const e = ease(qs[k]);
+          layer.style.zIndex = String(k + 1);
+          layer.style.opacity = "1";
+          layer.style.visibility = qs[k] > 0 ? "visible" : "hidden";
+          layer.style.clipPath = k === 0 ? "" : `circle(${e * 150}% at 100% 0%)`; // grows out of the NEW badge
+          const txt = layer.querySelector<HTMLElement>(".nf-txt");
+          if (txt) { txt.style.transform = `translateY(${(1 - e) * 36}px)`; txt.style.opacity = k === 0 ? "1" : String(clamp((e - 0.15) / 0.4)); }
+          layer.querySelectorAll<HTMLElement>(".nf-line > span").forEach((sp, j) => { sp.style.transform = `translateY(${(1 - clamp((e - 0.2 - j * 0.12) / 0.45)) * 105}%)`; });
+          layer.style.setProperty("--nf-s", String(1 + (1 - e) * 0.12));
+        }
         // only the layer you are looking at can be clicked, tabbed to or read out
-        el.style.pointerEvents = on ? "auto" : "none";
-        (el as HTMLElement & { inert: boolean }).inert = !on;
+        layer.style.pointerEvents = on ? "auto" : "none";
+        (layer as HTMLElement & { inert: boolean }).inert = !on;
       });
       d1.current?.classList.toggle("on", idx === 0); d2.current?.classList.toggle("on", idx === 1); d3.current?.classList.toggle("on", idx === 2);
     };
@@ -34,6 +47,7 @@ export default function NewFancy() {
     tick(); window.addEventListener("scroll", onFrame, { passive: true }); window.addEventListener("resize", onFrame);
     return () => { window.removeEventListener("scroll", onFrame); window.removeEventListener("resize", onFrame); if (raf) cancelAnimationFrame(raf); };
   }, []);
+  const lines = (a: string, b: string) => <h2 className="nf-h"><span className="nf-line"><span>{a}</span></span><span className="nf-line"><span>{b}</span></span></h2>;
   return (
     <section className="sec nf" id="new" aria-label="New: Fancy colors">
       <div className="wrap"><div className="nf-pin" ref={pin}><div className="nf-hold">
@@ -41,7 +55,7 @@ export default function NewFancy() {
         <div className="nf-card">
           <div className="nf-layer nf-y" ref={y}>
             <div className="nf-txt">
-              <h2 className="nf-h">Fancy<br />colors.</h2>
+              {lines("Fancy", "colors.")}
               <p className="nf-sub">One yellow stone. Zero apologies. Pink, blue, yellow and green lab-grown diamonds, IGI certified.</p>
               <Link href="/fancy-colors" className="pill nf-cta">Shop fancy colors</Link>
             </div>
@@ -49,7 +63,7 @@ export default function NewFancy() {
           </div>
           <div className="nf-layer nf-p" ref={p}>
             <div className="nf-txt">
-              <h2 className="nf-h">Pink,<br />obviously.</h2>
+              {lines("Pink,", "obviously.")}
               <p className="nf-sub">Fancy pink lab-grown diamonds, for people who were never going to wear white. IGI certified, naturally.</p>
               <Link href="/fancy-colors?color=Pink" className="pill nf-cta">Shop pink</Link>
             </div>
@@ -57,7 +71,7 @@ export default function NewFancy() {
           </div>
           <div className="nf-layer nf-g" ref={g}>
             <div className="nf-txt">
-              <h2 className="nf-h">Green<br />with envy.</h2>
+              {lines("Green", "with envy.")}
               <p className="nf-sub">Emeralds, sapphires and the colours in between. Worn lightly, meant seriously.</p>
               <Link href="/gemstones" className="pill nf-cta">Shop gemstones</Link>
             </div>
