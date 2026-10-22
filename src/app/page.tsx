@@ -4,7 +4,7 @@ import Categories from "@/components/Categories";
 import HouseCodes from "@/components/HouseCodes";
 import NewFancy from "@/components/NewFancy";
 import PressRow from "@/components/PressRow";
-import ShopLook from "@/components/ShopLook";
+import LooksReel from "@/components/LooksReel";
 import Reviews from "@/components/Reviews";
 import PrivateClients from "@/components/PrivateClients";
 
@@ -17,7 +17,7 @@ export default function Home() {
       <NewFancy />
       <HouseCodes />
       <PressRow />
-      <ShopLook />
+      <LooksReel />
       <Reviews />
       <PrivateClients />
     </main>

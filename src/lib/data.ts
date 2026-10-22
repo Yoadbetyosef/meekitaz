@@ -747,5 +747,10 @@ export const pressLogos = [
 // Footer: the "Shhh." card (pink backdrop photo, quiet flex). Change the link or the button text here.
 export const hushCard = { img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_194914_469381c0-892c-4a9f-a68e-87acf8101d3a.png", href: "/engagement-rings", cta: "Shop the collection" };
 
-
+/** Shop the look reel on the home page: three silent loops in one frame. */
+export const looksReel = [
+  { title: "The drive", line: "Studs, rivière, four bracelets, one ring.", href: "/looks", video: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261022_030800_9f21a3f5-7cea-4419-9c54-169a64abcb78.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261019_174210_63f45246-d404-4a68-bc35-29be47d8a34b.png" },
+  { title: "The chain", line: "Cuban link, emerald-cut, cobalt sky.", href: "/necklaces", video: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_192549_6e320ce1-d71d-450f-8631-a855c98ead92.mp4", poster: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261020_192442_05315264-b6cf-451e-a12d-9fb869e2f2b1.png" },
+  { title: "The stoop", line: "Brooklyn, a bandana, three tennis bracelets.", href: "/bracelets", video: "/media/bracelets-mood.mp4", poster: "/media/bracelets-mood-poster.jpg" },
+];
 
