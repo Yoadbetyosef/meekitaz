@@ -1,5 +1,5 @@
 // Shopify Storefront API client (server only).
-import { collapseDesigns, gemFacets } from "./designs";
+import { collapseDesigns, gemFacets, showsSupplierMark } from "./designs";
 import { RING_SHAPES } from "./ringfilters";
 import { fancyColorOf } from "./fancy";
 // Set SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_TOKEN in .env.local / Vercel.
@@ -145,7 +145,7 @@ export async function getProductByHandle(handle: string): Promise<ProductFull | 
   const vs = p.variants.edges.map(({ node: v }) => ({ id: v.id, title: v.title, available: v.availableForSale, price: +v.price.amount, compareAt: v.compareAtPrice && +v.compareAtPrice.amount > +v.price.amount ? +v.compareAtPrice.amount : 0, selected: v.selectedOptions, imageUrl: v.image?.url }));
   return {
     id: p.id, handle: p.handle, title: p.title, description: p.description, descriptionHtml: p.descriptionHtml, productType: p.productType, tags: p.tags,
-    options: p.options, images: p.images.edges.map(({ node: i }) => ({ url: i.url, alt: i.altText || p.title, width: i.width, height: i.height })), modelImage: p.model?.value || undefined, variants: vs,
+    options: p.options, images: p.images.edges.filter(({ node: i }) => !showsSupplierMark(i.url, p.tags)).map(({ node: i }) => ({ url: i.url, alt: i.altText || p.title, width: i.width, height: i.height })), modelImage: p.model?.value || undefined, variants: vs,
     currency: p.variants.edges[0]?.node.price.currencyCode || "USD", seoTitle: p.seo?.title || undefined, seoDescription: p.seo?.description || undefined,
   };
 }
