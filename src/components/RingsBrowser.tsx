@@ -118,7 +118,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
           {items.map((p, i) => (
             <Fragment key={p.id}>
               {/* the mood tile sits after the first two rows (6 on desktop, 4 on a phone: CSS picks the slot) */}
-              {handle === "engagement-rings" && i === 4 && items.length > 4 && <GridMood src="/media/rings-mood.mp4" poster="/media/rings-mood-poster.jpg" reveal={{ tag: "Engagement rings", l1: "One stone.", l2: "The whole conversation.", cta: "Shop the look", href: "/looks" }} />}
+              {handle === "engagement-rings" && i === 4 && items.length > 4 && <GridMood src="/media/rings-mood.mp4" poster="/media/rings-mood-poster.jpg" reveal={{ tag: "Engagement rings", l1: "One stone.", l2: "The whole conversation.", cta: "Shop the look", href: "/products/yellow-gold-cushion-diamond-solitaire-engagement-ring" }} />}
               <DesignCard p={p} />
             </Fragment>
           ))}
