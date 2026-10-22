@@ -725,3 +725,9 @@ a.rp-mt{text-decoration:none}
 @media(min-width:768px){.heroc .pill{background:var(--ink) !important;color:#fff !important;border:1px solid transparent !important}}
 .pill::after,.mkfilm-txt .pill::after,.pc-form button::after,.pc-next::after,.cd-empty a::after,.cd-co::after,.pp-add::after,.dcard-cta::after,.dd-choose::after,.nf-cta::after,.sl-all::after,.sq-all::after,.lr-go::after,.hush-cta::after,.heroc .pill::after{content:"\2192";display:inline-block;width:0;overflow:hidden;opacity:0;transition:width .3s,margin .3s,opacity .3s;white-space:nowrap}
 .pill:hover::after,.mkfilm-txt .pill:hover::after,.pc-form button:hover::after,.pc-next:hover::after,.cd-empty a:hover::after,.cd-co:hover::after,.pp-add:hover::after,.dcard-cta:hover::after,.dd-choose:hover::after,.nf-cta:hover::after,.sl-all:hover::after,.sq-all:hover::after,.lr-go:hover::after,.hush-cta:hover::after,.heroc .pill:hover::after{width:18px;margin-left:10px;opacity:1}
+/* ---- Fix: the hover arrow must never add a line to the two-line "Choose this setting" button (it made it tall) ---- */
+.pp-add::after,.pp-add:hover::after,.pp-add:disabled::after{display:none !important}
+.pp-info .pp-add{position:relative}
+.pp-info .pp-add:not(:disabled)::after{display:block !important;position:absolute;right:26px;top:50%;width:auto;margin:0;transform:translate(-8px,-50%);transition:opacity .3s,transform .3s}
+.pp-info .pp-add:not(:disabled):hover::after{width:auto;margin:0;opacity:1;transform:translate(0,-50%)}
+
