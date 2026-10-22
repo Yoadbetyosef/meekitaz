@@ -761,3 +761,10 @@ a.rp-mt{text-decoration:none}
 .sp:hover .sp-img img.stone-cut{transform:translate(var(--tx),var(--ty)) scale(calc(var(--s)*1.06)) rotate(-5deg)}
 @media(prefers-reduced-motion:reduce){.sp:hover .sp-img{transform:none}.sp:hover .sp-img img.stone-cut{transform:translate(var(--tx),var(--ty)) scale(var(--s))}}
 
+/* ---- Gemstones: jewelry type filter ---- */
+.gem-types{padding:6px 0 18px}.gem-types .eyebrow{display:block;margin-bottom:10px}
+.gt-chips{display:flex;flex-wrap:wrap;gap:8px}
+.gt-chip{border:1px solid rgba(28,26,27,.2);background:#fff;color:var(--ink);border-radius:999px;padding:11px 20px;font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.gt-chip:hover{border-color:var(--ink)}.gt-chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+@media(max-width:767px){.gt-chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}.gt-chips::-webkit-scrollbar{display:none}.gt-chip{flex:none;padding:10px 16px}}
+

@@ -12,6 +12,9 @@ import RingsSection from "@/components/RingsSection";
 import SettingBar from "@/components/SettingBar";
 import JumpToResults from "@/components/JumpToResults";
 import StoneBar from "@/components/StoneBar";
+import GemTypeBar from "@/components/GemTypeBar";
+import { GEM_TYPES, gemQuery } from "@/lib/ringfilters";
+import { getProductsByQuery, shopifyConfigured } from "@/lib/shopify";
 
 export function generateStaticParams() { return categories.map(c => ({ category: c.slug })); }
 // Always rendered fresh: the page reads its filters from the address bar, and a cached copy from an older build must never be served.
@@ -28,6 +31,11 @@ export default async function CategoryPage({ params, searchParams }: { params: P
   const p = categories.find(c => c.slug === category);
   if (!p) notFound();
   const n = p.styles.length;
+  // Gemstones: which jewelry types exist for the chosen stone (a type with nothing in it is not offered), so the page never leads to an empty list.
+  const gemTypes = p.slug === "gemstones" && shopifyConfigured
+    ? (await Promise.all(GEM_TYPES.map(async t => { const r = await getProductsByQuery(gemQuery(one("style"), t.label), { first: 1 }).catch(() => null); return r && r.products.length ? t.label : ""; }))).filter(Boolean)
+    : [];
+  const gemType = gemTypes.includes(one("type")) ? one("type") : "";
   const heroMobile = getImageProps({ src: p.mobile, alt: "", fill: true, sizes: "100vw", quality: 78 }).props;
   return (
     <main>
@@ -51,7 +59,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
             </div>
           </section>
         )}
-        {p.special === "fancy" ? <><FancyColorRow color={one("color")} /><Suspense fallback={null}><RingsSection fancy={one("color") || "all"} /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><StoneBrowser swatches={vdbConfigured ? await fancySwatches() : {}} /></Suspense> : <ProductGrid page={p} style={one("style")} />}
+        {p.special === "fancy" ? <><FancyColorRow color={one("color")} /><Suspense fallback={null}><RingsSection fancy={one("color") || "all"} /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><StoneBrowser swatches={vdbConfigured ? await fancySwatches() : {}} /></Suspense> : <><Suspense fallback={null}>{gemTypes.length > 1 && <section className="gem-types" aria-label="Jewelry type"><div className="wrap"><small className="eyebrow">Jewelry type</small><GemTypeBar types={gemTypes} /></div></section>}</Suspense><ProductGrid page={p} style={one("style")} type={gemType} /></>}
       </div>
     </main>
   );

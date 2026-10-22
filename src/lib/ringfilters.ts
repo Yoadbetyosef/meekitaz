@@ -64,3 +64,26 @@ export function styleQuery(slug: string, style: string): string {
   parts.push("-tag:'Configured'", "-tag:'Karat variant'", "-tag:'Diamond'");
   return parts.join(" AND ");
 }
+
+/** Jewelry types on the Gemstones page. Every gemstone piece carries "Gemstone" plus its own type tag; necklaces and bracelets are listed
+ *  so they appear by themselves as soon as the catalogue has them (today it has rings, earrings and bands). */
+export const GEM_TYPES: { label: string; tags: string[] }[] = [
+  { label: "Rings", tags: ["Gemstone Engagement Rings"] },
+  { label: "Earrings", tags: ["Gemstone Earrings"] },
+  { label: "Bands", tags: ["Gemstone Wedding Bands"] },
+  { label: "Necklaces", tags: ["Gemstone Necklaces", "Gemstone Necklace", "Gemstone Pendants"] },
+  { label: "Bracelets", tags: ["Gemstone Bracelets", "Gemstone Bracelet"] },
+];
+/** Gemstone pieces of one jewelry type, optionally in one stone / colour (the same stone match the colour tiles use). */
+export function gemQuery(style: string, type: string): string {
+  const t = GEM_TYPES.find(x => x.label === type);
+  const parts = ["tag:Gemstone"];
+  if (t) parts.push(anyOf(t.tags.map(x => `tag:'${x}'`)));
+  if (style) {
+    const def = STYLE[style] || { words: [style.replace(/^Diamond /i, "")] };
+    parts.push(anyOf([...(def.tags || []).map(x => `tag:'${x.replace(/'/g, "")}'`), ...(def.words || []).map(w => `title:'${w.replace(/'/g, "")}'`)]));
+  }
+  parts.push("-tag:'Configured'", "-tag:'Karat variant'", "-tag:'Diamond'");
+  return parts.join(" AND ");
+}
+

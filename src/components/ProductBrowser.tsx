@@ -14,7 +14,7 @@ const MOOD: Record<string, { src: string; poster: string; reveal?: Reveal }> = {
 };
 
 
-export default function ProductBrowser({ handle, style = "", initial, hasNext: h0, cursor: c0 }: { handle: string; style?: string; initial: Product[]; hasNext: boolean; cursor: string | null }) {
+export default function ProductBrowser({ handle, style = "", type = "", initial, hasNext: h0, cursor: c0 }: { handle: string; style?: string; type?: string; initial: Product[]; hasNext: boolean; cursor: string | null }) {
   const [items, setItems] = useState<Product[]>(initial);
   const [hasNext, setHasNext] = useState(h0);
   const [cursor, setCursor] = useState<string | null>(c0);
@@ -24,7 +24,7 @@ export default function ProductBrowser({ handle, style = "", initial, hasNext: h
   async function load(reset: boolean, s = sort) {
     setBusy(true);
     try {
-      const page = (after: string | null) => { const q = new URLSearchParams({ handle, sort: s }); if (style) q.set("style", style); if (after) q.set("after", after); return fetch(`/api/products?${q}`).then(r => (r.ok ? r.json() : null)); };
+      const page = (after: string | null) => { const q = new URLSearchParams({ handle, sort: s }); if (style) q.set("style", style); if (type) q.set("type", type); if (after) q.set("after", after); return fetch(`/api/products?${q}`).then(r => (r.ok ? r.json() : null)); };
       const r = await fillPage(reset ? [] : items, reset ? { cursor: null, hasNext: true } : { cursor, hasNext }, page);
       if (!(reset && r.failed && !r.items.length)) { setItems(r.items); setCursor(r.cursor); setHasNext(r.hasNext); }
     } finally { setBusy(false); }
@@ -33,7 +33,7 @@ export default function ProductBrowser({ handle, style = "", initial, hasNext: h
     <section className="grid-wrap" id="results" aria-label="The collection">
       <div className="wrap">
         <div className="dres">
-          <h2>{style ? style : "The collection"}</h2>
+          <h2>{[style, type].filter(Boolean).join(" \u00b7 ") || "The collection"}</h2>
           <label className="dsort">Sort
             <select value={sort} onChange={e => { setSort(e.target.value); load(true, e.target.value); }}>
               <option value="best">Best selling</option><option value="new">Newest</option>
