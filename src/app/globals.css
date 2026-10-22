@@ -1,6 +1,6 @@
 :root{
   --red:#7E0508; --pink:#F7D3DA; --blue:#C4DEEE; --blue-light:#DCEBF4; --sage:#D6E4C8; --ivory:#FDF8F3; --ink:#1C1A1B; --gold:#C29A55; --rose:#E8B4B8; --star:#FFC53D;
-  --logo:#2F7FD1; --f-title:"Didact Gothic",Helvetica,Arial,sans-serif;
+  --f-title:"Didact Gothic",Helvetica,Arial,sans-serif;
   --f-display:Prata,Georgia,serif; --f-sub:'Cormorant Garamond',Georgia,serif; --f-body:Archivo,Helvetica,Arial,sans-serif;
   --display:var(--f-display); --sub:var(--f-sub); --body:var(--f-body);
   --nav-h:70px;
@@ -16,7 +16,7 @@ h1,h2,h3{font-family:var(--display);font-weight:400;margin:0}
 
 /* ===== NAV ===== */
 .nav{position:fixed;top:30px;left:50%;transform:translateX(calc(-50% - 37px));z-index:60;width:680px;max-width:calc(100% - 110px);background:#fff;border-radius:999px;display:flex;align-items:center;justify-content:space-between;padding:28px 28px 28px 40px;box-shadow:0 18px 50px -20px rgba(0,0,0,.45)}
-.nav .brand{display:flex;align-items:center;text-decoration:none;color:var(--logo)}
+.nav .brand{display:flex;align-items:center;text-decoration:none;color:var(--ink)}
 .brand-logo{display:block;height:34px;width:auto}
 .burger{width:30px;height:22px;background:none;border:0;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding:0}
 .burger i{display:block;height:2px;width:30px;background:var(--ink);transition:.3s}
@@ -695,7 +695,7 @@ a.rp-mt{text-decoration:none}
 .hush h2{font:400 clamp(54px,7vw,120px)/.9 var(--display);margin:0}
 .hush p{font:italic 500 clamp(20px,2vw,28px)/1.25 var(--sub);margin:10px 0 20px;opacity:.85}
 .hush-cta{display:inline-flex;background:var(--red);color:#fff;border-radius:999px;padding:16px 26px;font:700 11px var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
-.foot-giant{position:relative;z-index:4;color:var(--logo);margin:0;padding:0 clamp(16px,4vw,56px) clamp(6px,1vh,12px);user-select:none;display:flex;justify-content:center}
+.foot-giant{position:relative;z-index:4;color:#fff;margin:0;padding:0 clamp(16px,4vw,56px) clamp(6px,1vh,12px);user-select:none;display:flex;justify-content:center}
 .foot-logo{display:block;height:clamp(120px,44vh,560px);width:auto;max-width:100%}
 .mkf-under{position:relative;z-index:6;display:grid;grid-template-columns:1fr clamp(120px,min(56vh,30vw),620px) 1fr;grid-template-areas:"l . r" "b . r";align-items:end;row-gap:6px;padding:0 clamp(16px,4vw,56px) clamp(10px,1.8vh,20px)}
 .mkf-l{grid-area:l}.mkf-base{grid-area:b}.mkf-r{grid-area:r;display:flex;flex-direction:column;align-items:flex-end;gap:5px}

@@ -184,9 +184,9 @@ export default function DesignLab({ onClose }: { onClose: () => void }) {
             <h5>Footer logo (the big one)</h5><div className="dl-g">{LOGOS.map(([k, n]) => <Chip key={k} on={s.lf === k} onClick={() => set({ lf: k })}>{n}</Chip>)}</div>
             <h5>Footer size</h5><div className="dl-r"><input type="range" min={50} max={130} step={5} value={s.sf} onChange={e => set({ sf: +e.target.value })} /><b>{s.sf}%</b></div>
             <h5>Header logo colour</h5>
-            <div className="dl-g"><Chip on={!s.lcn} onClick={() => set({ lcn: "" })}><i className="dl-dot" style={{ background: "#2F7FD1" }} />Azure (current)</Chip><Chip on={s.lcn === "#1C1A1B"} onClick={() => set({ lcn: "#1C1A1B" })}><i className="dl-dot" style={{ background: "#1C1A1B" }} />Ink (before)</Chip>{BLUES.map(([n, hex]) => <Chip key={hex} on={s.lcn === hex} onClick={() => set({ lcn: hex })}><i className="dl-dot" style={{ background: hex }} />{n}</Chip>)}</div>
+            <div className="dl-g"><Chip on={!s.lcn} onClick={() => set({ lcn: "" })}><i className="dl-dot" style={{ background: "#1C1A1B" }} />Ink (current)</Chip>{BLUES.map(([n, hex]) => <Chip key={hex} on={s.lcn === hex} onClick={() => set({ lcn: hex })}><i className="dl-dot" style={{ background: hex }} />{n}</Chip>)}</div>
             <h5>Footer logo colour</h5>
-            <div className="dl-g"><Chip on={!s.lcf} onClick={() => set({ lcf: "" })}><i className="dl-dot" style={{ background: "#2F7FD1" }} />Azure (current)</Chip><Chip on={s.lcf === "#FFFFFF"} onClick={() => set({ lcf: "#FFFFFF" })}><i className="dl-dot" style={{ background: "#fff" }} />White (before)</Chip>{BLUES.map(([n, hex]) => <Chip key={hex} on={s.lcf === hex} onClick={() => set({ lcf: hex })}><i className="dl-dot" style={{ background: hex }} />{n}</Chip>)}<Chip on={s.lcf === "#1C1A1B"} onClick={() => set({ lcf: "#1C1A1B" })}><i className="dl-dot" style={{ background: "#1C1A1B" }} />Ink</Chip></div>
+            <div className="dl-g"><Chip on={!s.lcf} onClick={() => set({ lcf: "" })}><i className="dl-dot" style={{ background: "#fff" }} />White (current)</Chip>{BLUES.map(([n, hex]) => <Chip key={hex} on={s.lcf === hex} onClick={() => set({ lcf: hex })}><i className="dl-dot" style={{ background: hex }} />{n}</Chip>)}<Chip on={s.lcf === "#1C1A1B"} onClick={() => set({ lcf: "#1C1A1B" })}><i className="dl-dot" style={{ background: "#1C1A1B" }} />Ink</Chip></div>
             <h5>Quick</h5><div className="dl-g"><Chip on={false} onClick={() => set({ ln: "b", lf: "b" })}>New logo in both</Chip><Chip on={false} onClick={() => set({ ln: "a", lf: "a", sn: 100, sf: 100, lcn: "", lcf: "" })}>Back to current</Chip></div>
           </>)}
           {tab === "fonts" && (<>
@@ -216,7 +216,7 @@ export default function DesignLab({ onClose }: { onClose: () => void }) {
             <h5>Hover effect</h5><div className="dl-g">{HOVER.map(([k, n]) => <Chip key={k} on={s.hv === k} onClick={() => set({ hv: k })}>{n}</Chip>)}</div>
           </>)}
           <div className="dl-s">
-            Logo: <b>{LOGOS.find(l => l[0] === s.ln)![1]}</b> {s.sn}% {s.lcn ? `in ${BLUES.find(b => b[1] === s.lcn)?.[0] || s.lcn}` : "in azure"} / <b>{LOGOS.find(l => l[0] === s.lf)![1]}</b> {s.sf}% {s.lcf ? `in ${BLUES.find(b => b[1] === s.lcf)?.[0] || s.lcf}` : "in azure"}<br />
+            Logo: <b>{LOGOS.find(l => l[0] === s.ln)![1]}</b> {s.sn}% {s.lcn ? `in ${BLUES.find(b => b[1] === s.lcn)?.[0] || s.lcn}` : "in ink"} / <b>{LOGOS.find(l => l[0] === s.lf)![1]}</b> {s.sf}% {s.lcf ? `in ${BLUES.find(b => b[1] === s.lcf)?.[0] || s.lcf}` : "in white"}<br />
             Product titles: <b>{s.pt > 0 ? `${PT[s.pt].n} ${WNAME[s.ptw]} ${Math.round(s.pts * 100)}%` : "Didact Gothic 90% (current)"}</b><br />
             Fonts: <b>{DISPLAY[s.d].n}</b> · {SUB[s.u].n} · {BODY[s.b].n} · labels {LABEL[s.l].n} · {CASES.find(c => c[0] === s.cs)![1]} · {TRACKS.find(t => t[0] === s.tr)![1]} · {Math.round(s.sz * 100)}% · taglines {s.up ? "upright" : "italic"}<br />
             Buttons: <b>{CTA[s.c].n}</b> · hero {HERO[s.h].n} · {HOVER.find(h => h[0] === s.hv)![1]}<br />
