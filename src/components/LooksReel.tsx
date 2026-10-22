@@ -21,7 +21,7 @@ export default function LooksReel() {
     return () => { io.disconnect(); window.removeEventListener("scroll", tick); window.removeEventListener("resize", tick); if (raf) cancelAnimationFrame(raf); };
   }, []);
   useEffect(() => {
-    vids.current.forEach((v, i) => { if (!v) return; if (near && i === on) { if (!v.getAttribute("src")) v.setAttribute("src", looksReel[i].video); v.play().catch(() => {}); } else v.pause(); });
+    vids.current.forEach((v, i) => { if (!v) return; if (near && (i === on || i === on + 1) && !v.getAttribute("src")) v.setAttribute("src", looksReel[i].video); /* the next look is warmed up so the slide-in is never blank */ if (near && i === on) v.play().catch(() => {}); else v.pause(); });
   }, [on, near]);
   return (
     <section className="sec lr" aria-label="Shop the look" ref={sec}>
@@ -31,7 +31,7 @@ export default function LooksReel() {
             <div className="lr-head"><small className="eyebrow">Shop the look</small><h2 className="h2">Everything she&rsquo;s wearing</h2></div>
             <div className="lr-stage">
               {looksReel.map((l, i) => (
-                <div key={l.title} className={`lr-look${i === on ? " on" : ""}`} aria-hidden={i !== on}>
+                <div key={l.title} className={`lr-look${i === on ? " on" : i < on ? " before" : " after"}`} style={{ zIndex: i + 1 }} aria-hidden={i !== on}>
                   <video ref={el => { vids.current[i] = el; }} muted loop playsInline preload="none" poster={l.poster} />
                   <div className="lr-big" aria-hidden="true">{l.title}</div>
                   <div className="lr-cap"><small>Look {String(i + 1).padStart(2, "0")}</small><b>{l.title}</b><span>{l.line}</span><Link href={l.href} className="pill lr-go" tabIndex={i === on ? 0 : -1}>Shop the look</Link></div>
