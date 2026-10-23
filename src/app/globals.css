@@ -1126,7 +1126,7 @@ a.rp-mt{text-decoration:none}
   .df-stage{height:auto;aspect-ratio:4/3;width:100%}
   .df-ccard{flex-basis:84%;min-height:330px;padding:20px 18px 16px}.df-ccard h2{font-size:36px}.df-ccard p{font-size:14px}
   .df-arr{display:none}
-  .df-bglogo{order:3;position:static;transform:none;opacity:1;width:auto;height:42px;color:var(--red);align-self:center;margin-top:8px}
+  .df-bglogo{order:3;position:static;transform:none;opacity:1;width:auto;height:42px;color:#fff;align-self:center;margin-top:8px}
   .df-ruler span{font-size:11px}
 }
 /* the gauges stay on one row inside a card; the small label fits one line */

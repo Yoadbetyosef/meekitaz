@@ -104,7 +104,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
   const stone: Stone = { vendor: d.vendor, stock: d.stock, shape: d.shape, carat: d.carat, color: d.color, clarity: d.clarity, cut: d.cut, lab: d.lab, image: d.image, price: d.price, fancy: d.fancy };
   const go = () => chooseStone(stone, { push: u => router.push(u), addRing, notify: toast });
   const total = d.price + (shown ? shown.price : 0);
-  const ctaText = shown ? "Add the ring to the bag" : "Choose this diamond";
+  const ctaText = shown ? "Add to bag" : "Choose this diamond";
   const sTitle = shown ? shown.title.replace(/^(Yellow|White|Rose) gold /i, "").replace(new RegExp(`^${shape} Diamond `, "i"), "") : "";
   const sMetal = shown ? [shown.karat, shown.metal].filter(Boolean).join(" ") : "";
   const n = nums(d), mmw = n.length > 1 ? Math.min(78, Math.round(n[0] * 7.5)) : 40;
@@ -167,7 +167,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
                 <div className="df-ccard"><span className="df-n">02 / 05</span><h2>{d.fancy ? `${d.fancy.replace(/^Fancy /, "")}.` : `${d.color} colour.`}</h2><p>{d.fancy ? "A saturated fancy colour, grown in a lab." : ["D", "E", "F"].includes(d.color || "") ? "Colourless: pure white in any setting." : "Near-colourless: it reads as white in any setting."}</p>{!d.fancy && <div className="df-gg"><div className="df-scale">{COL.map(c => <i key={c} className={c === d.color ? "on" : ""}>{c}</i>)}</div></div>}</div>
                 <div className="df-ccard"><span className="df-n">03 / 05</span><h2>{d.clarity} clarity.</h2><p>{/SI|I1/.test(d.clarity || "") ? "Tiny characteristics you can see up close." : "Eye-clean: any tiny characteristics are only visible under 10× magnification."}</p><div className="df-gg"><div className="df-scale sm">{CLR.map(c => <i key={c} className={c === d.clarity ? "on" : ""}>{c}</i>)}</div></div></div>
                 <div className="df-ccard"><span className="df-n">04 / 05</span><h2>{d.cut || d.polish || "Finished"}.</h2><p>How well it was cut, polished and made symmetrical decides how it catches the light.</p><div className="df-gg">{([["Cut", d.cut], ["Polish", d.polish], ["Symmetry", d.symmetry], ["Table", d.table && d.table + "%"], ["Depth", d.depth && d.depth + "%"]] as [string, string | null][]).filter(r => r[1]).map(([k, v]) => <div key={k} className="df-row"><span>{k}</span><b>{v}</b></div>)}</div></div>
-                <div className="df-ccard"><span className="df-n">05 / 05</span><h2>Certified.</h2><div className="df-gg"><div className="df-cert"><b>{d.lab} {d.cert}</b><span>Independently graded. {perCarat(d)}.</span><a href={d.certUrl} target="_blank" rel="noopener noreferrer">View the certificate →</a></div><button type="button" className="df-cta" onClick={go}>{shown ? `Add the ring · ${usd(total)}` : `Choose this diamond · ${usd(d.price)}`}</button></div></div>
+                <div className="df-ccard"><span className="df-n">05 / 05</span><h2>Certified.</h2><div className="df-gg"><div className="df-cert"><b>{d.lab} {d.cert}</b><span>Independently graded. {perCarat(d)}.</span><a href={d.certUrl} target="_blank" rel="noopener noreferrer">View the certificate →</a></div><button type="button" className="df-cta" onClick={go}>{shown ? `Add to bag · ${usd(total)}` : `Choose this diamond · ${usd(d.price)}`}</button></div></div>
                 </div>
               </div>
             </div>
@@ -221,7 +221,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
       </section>
 
       {/* phone: the total and the button stay in reach */}
-      <div className="df-sbar"><b>{usd(total)}</b><button type="button" className="df-cta" onClick={go}>{shown ? "Add the ring" : "Choose diamond"}</button></div>
+      <div className="df-sbar"><b>{usd(total)}</b><button type="button" className="df-cta" onClick={go}>{shown ? "Add to bag" : "Choose diamond"}</button></div>
     </>
   );
 }
