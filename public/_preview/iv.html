@@ -150,8 +150,8 @@ function paint(){const H=$("#H");if(!H)return;const dark=S.o==="2"||S.o==="4";H.
  [".count .segs i",".segs-top i"].forEach(q=>H.querySelectorAll(q).forEach((e,i)=>e.classList.toggle("on",i===S.i)));
  H.querySelectorAll("video").forEach(v=>{try{(S.o==="4"||S.i===5)?(v.play&&v.play()):(v.pause&&v.pause())}catch(e){}})}
 let Z=1;
-function go(i,fromScroll){const n=(i+N)%N;if(S.o==="5"&&!fromScroll){const t=$("#trk"),span=(t?t.offsetHeight:vp.clientHeight*(1+N*.7))-(vp.clientHeight||780);vp.scrollTop=span*((n+.5)/N);onScroll();return}S.i=n;paint()}
-function onScroll(){if(S.o!=="5")return;const t=$("#trk");const h=vp.clientHeight||780;const span=(t?t.offsetHeight:h*(1+N*.7))-h;const p=clamp(vp.scrollTop/span);const i=Math.min(N-1,Math.floor(p*N));if(i!==S.i){S.i=i;paint()}}
+function go(i,fromScroll){const n=(i+N)%N;if(S.o==="5"&&!fromScroll){const t=$("#trk"),span=((t&&t.offsetHeight)||(vp.clientHeight||780)*(1+N*.7))-(vp.clientHeight||780);vp.scrollTop=span*((n+.5)/N);onScroll();return}S.i=n;paint()}
+function onScroll(){if(S.o!=="5")return;const t=$("#trk");const h=vp.clientHeight||780;const span=((t&&t.offsetHeight)||h*(1+N*.7))-h;const p=clamp(vp.scrollTop/span);const i=Math.min(N-1,Math.floor(p*N));if(i!==S.i){S.i=i;paint()}}
 function wire(){const H=$("#H");
  H.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(+b.dataset.go));const pv=$("#prev"),nx=$("#next");if(pv)pv.onclick=()=>go(S.i-1);if(nx)nx.onclick=()=>go(S.i+1);wireCtrl();
  let x0=null;H.onpointerdown=e=>{if(e.target.closest(".card,.bar,.dock,.drawer,.thumbs,.pth,.arr,.cf"))return;x0=e.clientX};H.onpointerup=e=>{if(x0===null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>50)go(S.i+(dx<0?1:-1));else if(ph()&&Math.abs(dx)<10){const r=H.getBoundingClientRect(),f=(e.clientX-r.left)/r.width;if(f>.66)go(S.i+1);else if(f<.34)go(S.i-1)}};
