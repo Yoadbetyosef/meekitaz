@@ -81,7 +81,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
 
   // swipe (phone), and a tap on the left or right third of the picture
   const x0 = useRef<number | null>(null);
-  const down = (e: React.PointerEvent) => { if ((e.target as HTMLElement).closest(".ih-ctl,.ih-thumbs,.ih-pager,.rsteps")) { x0.current = null; return; } x0.current = e.clientX; };
+  const down = (e: React.PointerEvent) => { if ((e.target as HTMLElement).closest(".ih-ctl,.ih-thumbs,.ih-pager,.rsteps,.ih-scrim,.ih-ar,.ih-cnt")) { x0.current = null; return; } x0.current = e.clientX; };
   const up = (e: React.PointerEvent) => {
     if (x0.current === null) return; const dx = e.clientX - x0.current; x0.current = null;
     if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1));

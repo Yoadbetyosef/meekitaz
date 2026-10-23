@@ -969,4 +969,5 @@ a.rp-mt{text-decoration:none}
   .ih .ih-ph2.mdl .ih-fg{height:calc(var(--sht,560px) + 70px) !important;bottom:auto !important;object-fit:cover;object-position:50% 22%;-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 84%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 84%,transparent 100%)}
   .ih .ih-ph2:not(.mdl) .ih-fg{top:92px !important;bottom:auto !important;height:calc(var(--sht,560px) - 100px) !important;object-fit:contain;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 86%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 14%,#000 86%,transparent 100%)}
 }
+@media(max-width:767px){.ih .ih-pills span{word-spacing:.18em}}
 
