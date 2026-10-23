@@ -156,8 +156,8 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
               const dc = x.carat - d.carat, dp = x.price - d.price;
               return (
                 <Link key={`${x.vendor}-${x.stock}`} href={`/diamonds/${x.vendor}-${encodeURIComponent(x.stock)}`}>
-                  <div className="im" style={{ "--bgc": x.bg } as React.CSSProperties}>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={x.image} alt={`${x.carat.toFixed(2)} carat ${x.shape} diamond`} referrerPolicy="no-referrer" loading="lazy" /></div>
-                  <div className="tx"><b>{x.carat.toFixed(2)} ct</b><span>{x.fancy || `${x.color} · ${x.clarity}`} · {x.lab}</span><span className="pr">{usd(x.price)}</span><em>{dc >= 0 ? "+" : "−"}{Math.abs(dc).toFixed(2)} ct · {dp >= 0 ? "+" : "−"}{usd(Math.abs(dp))}</em></div>
+                  <div className="df-im" style={{ "--bgc": x.bg } as React.CSSProperties}>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={x.image} alt={`${x.carat.toFixed(2)} carat ${x.shape} diamond`} referrerPolicy="no-referrer" loading="lazy" /></div>
+                  <div className="df-tx"><b>{x.carat.toFixed(2)} ct</b><span>{x.fancy || `${x.color} · ${x.clarity}`} · {x.lab}</span><span className="df-pr">{usd(x.price)}</span><em>{dc >= 0 ? "+" : "−"}{Math.abs(dc).toFixed(2)} ct · {dp >= 0 ? "+" : "−"}{usd(Math.abs(dp))}</em></div>
                 </Link>
               );
             })}
@@ -168,11 +168,11 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
       <section className="df-sec">
         <div className="df-see">
           <Image src={showroomImage} alt="The Meekitaz showroom" width={900} height={900} sizes="(max-width:767px) 100vw, 50vw" quality={75} />
-          <div className="tx">
+          <div className="df-tx">
             <span className="eyebrow">See it first</span><h2>Come and see it, or have us show you on camera.</h2>
-            <div className="addr">Fifth Avenue, New York</div>
+            <div className="df-addr">Fifth Avenue, New York</div>
             <p>By appointment, with the stone and the settings in front of you. Or a virtual appointment: we hold it up to the camera and talk you through it.</p>
-            <div className="btns"><Link href="/#contact" className="df-cta">Book a private appointment</Link><Link href="/#contact" className="df-cta o">Virtual appointment</Link></div>
+            <div className="df-btns"><Link href="/#contact" className="df-cta">Book a private appointment</Link><Link href="/#contact" className="df-cta o">Virtual appointment</Link></div>
           </div>
         </div>
       </section>
@@ -181,14 +181,14 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
         <div className="df-band">
           <Logo className="df-bandlogo" />
           <div><span className="eyebrow">Your ring</span><h2>Ready when you are.</h2><p>{title(d)}{shown ? ` in the ${sTitle}${sMetal ? ", " + sMetal : ""}` : ""}</p></div>
-          <div className="r"><div className="big">{usd(total)}</div><button type="button" className="df-cta" onClick={go}>{ctaText}</button><small>Free insured shipping · 30-day free returns · Lifetime warranty</small></div>
+          <div className="df-r"><div className="df-big">{usd(total)}</div><button type="button" className="df-cta" onClick={go}>{ctaText}</button><small>Free insured shipping · 30-day free returns · Lifetime warranty</small></div>
         </div>
         <div className="df-icons"><div><b>IGI / GIA</b>Every stone independently certified</div><div><b>30 days</b>Free returns</div><div><b>For life</b>Warranty on every piece</div><div><b>Free</b>Insured shipping</div></div>
       </section>
 
       <section className="df-close" ref={close} aria-label="Meekitaz">
         <div><Logo className="df-closelogo" /><p>Serious diamonds, worn lightly.</p></div>
-        <div className="vid"><video ref={reel} muted loop playsInline preload="none" poster="/media/brand-reel-poster.jpg" aria-label="Meekitaz, a short film" /></div>
+        <div className="df-reel"><video ref={reel} muted loop playsInline preload="none" poster="/media/brand-reel-poster.jpg" aria-label="Meekitaz, a short film" /></div>
       </section>
 
       {/* phone: the total and the button stay in reach */}
