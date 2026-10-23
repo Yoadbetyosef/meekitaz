@@ -907,3 +907,16 @@ a.rp-mt{text-decoration:none}
 .ih[data-mode=photo] .ih-ctl,.ih[data-mode=photo] .ih-top,.ih[data-mode=photo] .ih-bot{-webkit-backdrop-filter:blur(22px) saturate(1.2) brightness(.74);backdrop-filter:blur(22px) saturate(1.2) brightness(.74)}
 /* desktop: when a piece has many choices the card scrolls, and the price button stays in view at its bottom */
 @media(min-width:768px){.ih-cta{position:sticky;bottom:-24px;margin:20px -24px -24px;padding:14px 24px 24px;background:var(--glass);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-radius:0 0 30px 30px;z-index:2}.ih-appt{margin-bottom:6px}}
+/* the piece is always shown whole: it fits the free space between the header and the pager (desktop), or between the headline and the choices (phone); a tall ring photo is no longer cut by the header */
+.ih-pc{top:124px;bottom:150px;left:45%;width:min(54%,820px);aspect-ratio:auto;transform:translateX(-50%) scale(.94)}
+.ih-sl.on .ih-pc{transform:translateX(-50%) scale(1)}
+.ih-pc.st{top:50%;bottom:auto;width:min(38%,500px);aspect-ratio:1;transform:translate(-50%,-52%) scale(.94)}
+.ih-sl.on .ih-pc.st{transform:translate(-50%,-52%) scale(1)}
+.ih-ph2{position:absolute;inset:0;background:#111}.ih-bk{object-fit:cover;filter:blur(30px) brightness(.78) saturate(1.2);transform:scale(1.25)}.ih-fg{object-fit:contain}
+@media(max-width:767px){
+  .ih-pc{left:50%;top:var(--pct,200px);bottom:auto;height:var(--pch,320px);width:88%;transform:translateX(-50%) scale(.94)}
+  .ih-sl.on .ih-pc{transform:translateX(-50%) scale(1)}
+  .ih-pc.st{top:calc(var(--pct,200px) + var(--pch,320px) / 2);height:auto;width:min(60%,var(--pch,320px));transform:translate(-50%,-50%) scale(.94)}
+  .ih-sl.on .ih-pc.st{transform:translate(-50%,-50%) scale(1)}
+}
+

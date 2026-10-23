@@ -46,11 +46,12 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   // phone: the piece sits in the middle of the free space between the headline and the choices, however tall either of them is
   const fit = useCallback(() => {
     const el = box.current; if (!el) return;
-    if (window.innerWidth > 767) { el.style.removeProperty("--pcy"); return; }
+    if (window.innerWidth > 767) { el.style.removeProperty("--pct"); el.style.removeProperty("--pch"); return; }
     const hr = el.getBoundingClientRect(), tt = el.querySelector(".ih-tt")?.getBoundingClientRect(), bot = el.querySelector(".ih-bot")?.getBoundingClientRect();
     if (!tt || !bot) return;
     const top = tt.bottom - hr.top + 8, bottom = bot.top - hr.top - 8;
-    el.style.setProperty("--pcy", `${Math.round(Math.max((top + bottom) / 2, top + 80))}px`);
+    el.style.setProperty("--pct", `${Math.round(top)}px`);
+    el.style.setProperty("--pch", `${Math.round(Math.max(bottom - top, 170))}px`);
   }, []);
   useEffect(() => {
     fit();
@@ -104,7 +105,9 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
           return (
             <div key={`${sl.kind}-${sl.url || k}`} className={`ih-sl ${m}${on ? " on" : ""}`} aria-hidden={!on}>
               {sl.kind === "img" && sl.url && (m === "photo"
-                ? <Image className="ih-ph" src={src(sl.url, 1500, k)} alt={sl.alt} fill sizes="100vw" quality={78} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1500, k))} onLoad={onImg(sl.url)} />
+                ? (sl.url === model
+                  ? <Image className="ih-ph" src={src(sl.url, 1500, k)} alt={sl.alt} fill sizes="100vw" quality={78} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1500, k))} onLoad={onImg(sl.url)} />
+                  : <div className="ih-ph2"><Image className="ih-bk" src={src(sl.url, 300, k)} alt="" fill sizes="30vw" quality={40} unoptimized={isCleaned(src(sl.url, 300, k))} /><Image className="ih-fg" src={src(sl.url, 1500, k)} alt={sl.alt} fill sizes="100vw" quality={78} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1500, k))} onLoad={onImg(sl.url)} /></div>)
                 : <div className="ih-pc"><Image className="ih-pi" src={src(sl.url, 1400, k)} alt={sl.alt} fill sizes="(max-width:767px) 92vw, 820px" quality={80} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1400, k))} onLoad={onImg(sl.url)} /></div>)}
               {sl.kind === "stone" && <div className="ih-pc st"><Image src={diamond} alt="" fill sizes="(max-width:767px) 70vw, 560px" quality={80} /></div>}
               {sl.kind === "film" && <video ref={vid} muted loop playsInline preload="none" poster="/media/brand-reel-poster.jpg" aria-label={sl.alt} />}
