@@ -1003,3 +1003,27 @@ a.rp-mt{text-decoration:none}
   .ih.open .ih-dots{display:none}
 }
 
+/* ===== phone: natural photo (no dark layer), sheet type that follows the picture, no appointment button in the sheet, margins for the text under the gallery ===== */
+@media(max-width:767px){
+  .ih .ih-shade{display:none}
+  .ih[data-mode=photo] .ih-ctl{-webkit-backdrop-filter:blur(30px) saturate(1.7);backdrop-filter:blur(30px) saturate(1.7)}
+  .ih.open[data-mode=photo] .ih-ctl{-webkit-backdrop-filter:blur(34px) saturate(1.6);backdrop-filter:blur(34px) saturate(1.6)}
+  .ih .ih-ctl .ih-appt,.ih.open .ih-ctl .ih-appt{display:none}
+  .pp-below{padding-left:24px;padding-right:24px}
+  .pp-below .pp-acc{margin:0}.pp-below .pp-trust{margin-top:22px}
+  /* a dark picture behind the sheet: smoke-tinted glass with white type */
+  .ih[data-tone=dark] .ih-ctl{--fg:#fff;--gb:rgba(255,255,255,.3);color:#fff;background:rgba(24,20,21,.36);border-color:rgba(255,255,255,.24)}
+  .ih.open[data-tone=dark] .ih-ctl{background:rgba(24,20,21,.62)}
+  .ih[data-tone=dark] .ih-pills span{background:rgba(255,255,255,.17);border-color:rgba(255,255,255,.3);color:#fff}
+  .ih[data-tone=dark] .ih-pills span.m{background:transparent;border-color:rgba(255,255,255,.45)}
+  .ih[data-tone=dark] .ih-hdl i{background:rgba(255,255,255,.55)}
+  .ih[data-tone=dark] .ih-ctl .pp-add{background:#fff;color:var(--ink)}
+  .ih[data-tone=dark] .ih-ctl .mk-seg{background:rgba(255,255,255,.12)}.ih[data-tone=dark] .ih-ctl .mk-seg button.on{background:#fff;color:var(--ink)}
+  .ih[data-tone=dark] .ih-ctl .po-v,.ih[data-tone=dark] .ih-ctl .pp-pills button{background:rgba(255,255,255,.12)}
+  .ih[data-tone=dark] .ih-ctl .po-v.on,.ih[data-tone=dark] .ih-ctl .pp-pills button.on{background:#fff;color:var(--ink);border-color:#fff}
+  .ih[data-tone=dark] .ih-ctl .mk-hint{opacity:.8}
+  .ih.open[data-tone=dark] .ih-ctl .ih-pa{background:rgba(26,22,23,.92);border-top-color:rgba(255,255,255,.18)}
+  .ih[data-tone=dark] .ih-ctl .rp-sh i{background:rgba(255,255,255,.2)}
+  .ih[data-tone=dark] .ih-ctl .rp-sw{border-color:rgba(255,255,255,.4)}
+}
+

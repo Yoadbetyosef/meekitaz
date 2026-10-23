@@ -11,16 +11,19 @@ type Img = { url: string; alt: string };
 type Slide = { kind: "img" | "stone" | "film"; url?: string; alt: string; label: string };
 const VIEW_NAMES = ["The piece", "Another view", "Detail", "Detail", "Detail", "Detail"];
 
-/** Is this picture a photograph (dark page) rather than a product shot on white (cream page)? Looks at the corners and edges. Null when the browser will not let us look. */
-function looksLikePhoto(el: HTMLImageElement): boolean | null {
+/** Looks at a picture: is it a photograph (dark page) rather than a product shot on white (cream page)? And is its lower part, which sits behind the sheet on a phone, dark or light?
+ *  Null when the browser will not let us look. */
+function measure(el: HTMLImageElement): { photo: boolean | null; dark: boolean | null } {
   try {
     const c = document.createElement("canvas"); c.width = 16; c.height = 16;
-    const x = c.getContext("2d", { willReadFrequently: true }); if (!x) return null;
+    const x = c.getContext("2d", { willReadFrequently: true }); if (!x) return { photo: null, dark: null };
     x.drawImage(el, 0, 0, 16, 16);
-    const pts: [number, number][] = [[0, 0], [15, 0], [0, 15], [15, 15], [8, 0], [0, 8], [15, 8], [8, 15]];
-    let sum = 0; for (const [px, py] of pts) { const d = x.getImageData(px, py, 1, 1).data; sum += (d[0] + d[1] + d[2]) / 3; }
-    return sum / pts.length < 225;
-  } catch { return null; }
+    const lum = (px: number, py: number) => { const d = x.getImageData(px, py, 1, 1).data; return (d[0] * 0.299 + d[1] * 0.587 + d[2] * 0.114); };
+    const edge: [number, number][] = [[0, 0], [15, 0], [0, 15], [15, 15], [8, 0], [0, 8], [15, 8], [8, 15]];
+    let e = 0; for (const [px, py] of edge) e += lum(px, py);
+    let low = 0, n = 0; for (let py = 9; py < 16; py++) for (let px = 1; px < 15; px += 2) { low += lum(px, py); n++; }
+    return { photo: e / edge.length < 225, dark: low / n < 118 };
+  } catch { return { photo: null, dark: null }; }
 }
 
 export default function ImmersiveHero({ title, bigTitle, images, model, stone, steps, summary, price, metal, rows, cta, appt, onVisible }: {
@@ -38,6 +41,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const [i, setI] = useState(0);
   const [open, setOpen] = useState(false); // phone: the sheet at the bottom, folded (title, what is chosen, price, button) or open (every choice)
   const [modes, setModes] = useState<Record<string, "photo" | "piece">>({});
+  const [tones, setTones] = useState<Record<string, "dark" | "light">>({});
   const box = useRef<HTMLElement>(null), vid = useRef<HTMLVideoElement>(null), vis = useRef(true);
   const cur = Math.min(i, N - 1);
   const modeOf = useCallback((s: Slide): "photo" | "piece" => s.kind === "film" ? "photo" : s.kind === "stone" ? "piece" : (modes[s.url || ""] ?? (s.url === model ? "photo" : "piece")), [modes, model]);
@@ -88,15 +92,18 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
     else if (Math.abs(dx) < 10 && e.pointerType !== "mouse") { const r = e.currentTarget.getBoundingClientRect(), f = (e.clientX - r.left) / r.width; if (f > 0.66) go(cur + 1); else if (f < 0.34) go(cur - 1); }
   };
   const onImg = (url: string) => (e: React.SyntheticEvent<HTMLImageElement>) => {
-    if (url === model) return; const p = looksLikePhoto(e.currentTarget);
-    if (p !== null) setModes(m => (m[url] === (p ? "photo" : "piece") ? m : { ...m, [url]: p ? "photo" : "piece" }));
+    const r = measure(e.currentTarget);
+    if (url !== model && r.photo !== null) setModes(m => (m[url] === (r.photo ? "photo" : "piece") ? m : { ...m, [url]: r.photo ? "photo" : "piece" }));
+    if (r.dark !== null) setTones(t => (t[url] === (r.dark ? "dark" : "light") ? t : { ...t, [url]: r.dark ? "dark" : "light" }));
   };
   const s = slides[cur], mode = modeOf(s);
+  // on a phone the sheet sits over the lower part of the picture: white type when that part is dark, dark type when it is light
+  const tone: "dark" | "light" = s.kind === "film" ? "dark" : mode === "photo" && s.url ? (tones[s.url] ?? "light") : "light";
   const len = bigTitle.length, sz = len <= 22 ? "l1" : len <= 40 ? "l2" : "l3";
   const diamond = DIAMOND[stone || ""] || DIAMOND.White;
   const src = (u: string, w: number, k: number) => photoSrc(u, w, title, k);
   return (
-    <section className={`ih${open ? " open" : ""}`} ref={box} data-mode={mode} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
+    <section className={`ih${open ? " open" : ""}`} ref={box} data-mode={mode} data-tone={tone} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
       <div className="ih-slides">
         {slides.map((sl, k) => {
           const m = modeOf(sl), on = k === cur;
