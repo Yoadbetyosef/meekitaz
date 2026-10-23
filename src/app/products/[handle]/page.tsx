@@ -5,6 +5,7 @@ import { brandify, isBlocked } from "@/lib/text";
 import { fancyColorOf, FANCY_COLORS } from "@/lib/fancy";
 import { fancySwatches, vdbConfigured } from "@/lib/vdb";
 import { adminConfigured, getProductOptions } from "@/lib/shopifyAdmin";
+import BrandEnd from "@/components/BrandEnd";
 import ProductView from "@/components/ProductView";
 
 export const revalidate = 300;
@@ -61,6 +62,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
         ring={ring}
         options={options}
       />
+      <BrandEnd />
     </>
   );
 }
