@@ -1170,3 +1170,33 @@ a.rp-mt{text-decoration:none}
   .hush-cta{white-space:nowrap}
 }
 
+/* ===== the diamonds list: the gallery look (grey-lavender with the wordmark behind, white cards, stickers, cards between the stones) ===== */
+.dm-gal{--dg-bg:#ABAFBF;--dg-s1:#F7D3DA;--dg-s2:#D6E4C8;position:relative;overflow:hidden;background:var(--dg-bg) url(/brand/wordmark-tile.svg) repeat-y 50% 220px/116% auto}
+@media(min-width:768px){.dm-gal{background-size:78% auto}}
+.dm-gal .wrap{position:relative;z-index:2}
+.dm-gal .dres h2{color:var(--ink)}.dm-gal .dcount{opacity:.8}
+.dm-gal .dsort select{border:0;box-shadow:0 10px 20px -14px rgba(0,0,0,.4)}
+.dm-gal .pgrid{gap:24px 18px}
+.dm-gal .dcard-wrap{gap:0;position:relative;background:#fff;border-radius:30px;padding:10px 10px 14px;box-shadow:0 22px 40px -26px rgba(126,5,8,.6)}
+.dm-gal .pcard-img{position:relative;border-radius:22px}
+.dm-gal .pcard-txt{padding:12px 6px 0}
+.dm-gal .dcard-cta{margin:10px 6px 0;width:calc(100% - 12px);white-space:nowrap;letter-spacing:.1em;font-size:10.5px;padding:14px 8px}
+.dcard-tag{position:absolute;left:12px;top:12px;z-index:4;background:var(--dg-s1,#F7D3DA);color:var(--ink);border-radius:999px;padding:6px 11px;font:700 9px var(--body);letter-spacing:.14em;text-transform:uppercase;transform:rotate(-4deg);box-shadow:0 8px 16px -8px rgba(0,0,0,.35);pointer-events:none}
+/* the cards between the stones */
+.dm-blk{grid-column:1/-1;position:relative;overflow:hidden;border-radius:32px;padding:clamp(24px,3.2vw,44px);box-shadow:0 22px 40px -28px rgba(126,5,8,.5)}
+.dm-blk h4{font:400 clamp(28px,3.4vw,46px)/1.05 var(--display);margin:8px 0 10px}.dm-blk p{font:400 16px/1.55 var(--body);margin:0;max-width:48ch}
+.dm-blk.a{background:var(--dg-s1,#F7D3DA);transform:rotate(-1deg)}.dm-blk.b{background:var(--dg-s2,#D6E4C8);transform:rotate(1deg)}.dm-blk.w{background:#fff}.dm-blk.r{background:var(--red);color:#fff}.dm-blk.r .eyebrow{color:var(--dg-s1,#F7D3DA)}
+.dm-blk .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.dm-blk .pills button,.dm-blk .pills span{background:#fff;color:var(--ink);border:0;border-radius:999px;padding:10px 15px;font:700 11px var(--body);letter-spacing:.08em;cursor:pointer}.dm-blk .pills span{cursor:default}.dm-blk .pills button.on{background:var(--ink);color:#fff}
+.dm-blk .says{margin-top:14px;font:italic 500 20px/1.3 var(--sub);min-height:54px}
+.dm-blk .ruler{display:flex;align-items:flex-end;justify-content:space-around;gap:10px;margin-top:20px;padding-bottom:6px;border-bottom:2px solid var(--ink)}.dm-blk .ruler div{text-align:center;font:700 11px var(--body);letter-spacing:.06em}
+.dm-blk .ruler i{display:block;margin:0 auto 8px;border-radius:50%;width:calc(var(--mm)*9px);height:calc(var(--mm)*9px);background:radial-gradient(circle at 35% 30%,#fff,#cfd3dc);box-shadow:inset 0 0 0 1px rgba(28,26,27,.2)}
+.dm-blk .gems{display:flex;gap:14px;margin-top:18px;flex-wrap:wrap}.dm-blk .gems a{display:block;width:60px;height:60px;border-radius:50%;overflow:hidden;box-shadow:0 10px 18px -8px rgba(0,0,0,.4),inset 0 0 0 2px rgba(255,255,255,.7)}.dm-blk .gems img{width:100%;height:100%;object-fit:cover}
+.dm-btn{display:inline-block;margin-top:16px;background:#fff;color:var(--ink);border-radius:999px;padding:14px 22px;font:700 10.5px var(--body);letter-spacing:.14em;text-transform:uppercase;text-decoration:none}
+@media(max-width:767px){
+  .dm-gal .pgrid{gap:16px 10px}
+  .dm-gal .dcard-wrap{border-radius:26px;padding:9px 9px 12px}.dm-gal .pcard-img{border-radius:18px}
+  .dm-gal .dcard-cta{font-size:8.6px;letter-spacing:.07em;padding:13px 4px}
+  .dm-blk{padding:24px 20px;border-radius:26px}.dm-blk h4{font-size:28px}.dm-blk p{font-size:14px}.dm-blk .ruler i{width:calc(var(--mm)*6px);height:calc(var(--mm)*6px)}
+}
+@media(prefers-reduced-motion:reduce){.dm-blk{transform:none!important}}
+

@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import StoneCard, { type Item } from "./StoneCard";
+import StoneInterlude from "./StoneInterlude";
 import { Dual, Scale } from "./DiamondFilters";
 
 const INTENSITIES = ["Light", "Fancy Light", "Fancy", "Intense", "Vivid", "Deep"];
@@ -132,7 +133,7 @@ export default function FancyBrowser({ embedded = false }: { embedded?: boolean 
         </div>
       </section>
 
-      <section className="grid-wrap" id="results" aria-label="The collection">
+      <section className="grid-wrap dm-gal" id="results" aria-label="The collection">
         <div className="wrap">
           <div className="dres">
             <div><h2>The collection</h2>{state === "ready" && <p className="dcount">{total.toLocaleString("en-US")} fancy-color diamonds{color ? <> · <button type="button" className="dchip" onClick={() => pickColor(color)}>{color} ×</button></> : null}</p>}</div>
@@ -149,7 +150,11 @@ export default function FancyBrowser({ embedded = false }: { embedded?: boolean 
           {state === "empty" && <><p className="dmsg">No diamonds match these filters. Try widening carat, price or intensity.</p>{f.carat[0] > 0.5 && <div className="dmore"><button type="button" onClick={() => setF({ ...f, carat: [0.5, f.carat[1]] })}>Show all sizes</button></div>}</>}
           {state === "ready" && (
             <>
-              <div className="pgrid">{items.map(d => <StoneCard key={d.id} d={d} playing={playing === d.id} setPlaying={setPlaying} onOpen={remember} />)}</div>
+              <div className="pgrid">{items.flatMap((d, n) => {
+                const cells = [<StoneCard key={d.id} d={d} playing={playing === d.id} setPlaying={setPlaying} onOpen={remember} />];
+                if ((n + 1) % 8 === 0 && n < items.length - 1) cells.push(<StoneInterlude key={`i${n}`} k={(n + 1) / 8 - 1} />);
+                return cells;
+              })}</div>
               {page * 24 < total && <div className="dmore"><button type="button" onClick={more} disabled={busy}>{busy ? "Loading…" : "Show more"}</button></div>}
             </>
           )}

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import StoneCard, { type Item as CardItem } from "./StoneCard";
+import StoneInterlude from "./StoneInterlude";
 import DiamondFilters, { COLORS, CLARITIES, DEFAULT_FILTERS, type DFilters } from "./DiamondFilters";
 
 type Item = CardItem;
@@ -17,6 +18,8 @@ const parseF = (sp: URLSearchParams): DFilters => ({
   color: pair(sp.get("col"), 0, 5, DEF.color, true), clarity: pair(sp.get("cl"), 0, 5, DEF.clarity, true),
 });
 const same = (a: [number, number], b: [number, number]) => a[0] === b[0] && a[1] === b[1];
+/** One honest sticker per stone, or none: the lowest price in this list, a colourless stone (D to F), or one that is clean to the eye (VVS or better). */
+const tagFor = (d: Item, n: number, sort: string) => d.fancy ? "" : n === 0 && sort === "price_asc" ? "Lowest price" : d.color && "DEF".includes(d.color) ? "Colourless" : d.clarity && ["FL", "IF", "VVS1", "VVS2"].includes(d.clarity) ? "Eye-clean" : "";
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 
 export default function DiamondsBrowser() {
@@ -94,7 +97,7 @@ export default function DiamondsBrowser() {
   return (
     <>
       <DiamondFilters f={f} setF={setF} />
-      <section className="grid-wrap" id="results" aria-label="The collection">
+      <section className="grid-wrap dm-gal" id="results" aria-label="The collection">
         <div className="wrap">
           <div className="dres">
             <div><h2>The collection</h2>{state === "ready" && <p className="dcount">{total.toLocaleString("en-US")} lab-grown diamonds{style ? <> · <Link href="/diamonds" scroll={false} className="dchip">{style} ×</Link></> : null}</p>}</div>
@@ -111,7 +114,11 @@ export default function DiamondsBrowser() {
           {state === "empty" && <><p className="dmsg">No diamonds match these filters. Try widening carat, price, color or clarity.</p>{f.carat[0] > 0.5 && <div className="dmore"><button type="button" onClick={() => setF({ ...f, carat: [0.5, f.carat[1]] })}>Show all sizes</button></div>}</>}
           {state === "ready" && (
             <>
-              <div className="pgrid">{items.map(d => <StoneCard key={d.id} d={d} playing={playing === d.id} setPlaying={setPlaying} onOpen={remember} />)}</div>
+              <div className="pgrid">{items.flatMap((d, n) => {
+                const cells = [<StoneCard key={d.id} d={d} tag={tagFor(d, n, sort)} playing={playing === d.id} setPlaying={setPlaying} onOpen={remember} />];
+                if ((n + 1) % 8 === 0 && n < items.length - 1) cells.push(<StoneInterlude key={`i${n}`} k={(n + 1) / 8 - 1} />);
+                return cells;
+              })}</div>
               {page * 24 < total && <div className="dmore"><button type="button" onClick={more} disabled={busy}>{busy ? "Loading…" : "Show more"}</button></div>}
             </>
           )}

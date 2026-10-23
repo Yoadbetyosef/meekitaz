@@ -10,7 +10,7 @@ export type Item = { fancy: string | null; id: string; vendor: number; stock: st
 export const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 const isTouch = () => typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
 
-export default function StoneCard({ d, playing, setPlaying, onOpen }: { d: Item; playing: boolean; setPlaying: (id: string | null) => void; onOpen: () => void }) {
+export default function StoneCard({ d, playing, setPlaying, onOpen, tag }: { d: Item; playing: boolean; setPlaying: (id: string | null) => void; onOpen: () => void; tag?: string }) {
   const router = useRouter();
   const { addRing } = useCart();
   const notify = toast;
@@ -27,6 +27,7 @@ export default function StoneCard({ d, playing, setPlaying, onOpen }: { d: Item;
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={d.image} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} loading="lazy" referrerPolicy="no-referrer" />
+        {tag && <span className="dcard-tag">{tag}</span>}
         {d.embed && !playing && <span className="b360">360°</span>}
         {playing && d.embed && <div className="vw"><iframe src={d.embed} title={`360° view of ${d.carat.toFixed(2)} carat ${d.shape}`} scrolling="no" allow="autoplay" /></div>}
       </div>
