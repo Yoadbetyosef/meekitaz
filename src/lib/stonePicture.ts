@@ -7,6 +7,6 @@ const COLOURS = ["white", "yellow", "pink", "blue", "green"];
 export function stonePicture(shape?: string, color?: string): string {
   const c = (color || "White").toLowerCase();
   const sh = shape === "Elongated Cushion" ? "Cushion" : shape;
-  if (sh && SHAPES.includes(sh) && COLOURS.includes(c)) return `/stones/${c}-${sh.toLowerCase()}.jpg`;
+  if (sh && SHAPES.includes(sh) && COLOURS.includes(c)) return `/stones/${c}-${sh.toLowerCase()}.webp`; // transparent cut-outs, so they sit on the cream page with no white box
   return DIAMOND[color || ""] || DIAMOND.White;
 }
