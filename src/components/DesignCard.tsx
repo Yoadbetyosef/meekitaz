@@ -16,7 +16,7 @@ export default function DesignCard({ p }: { p: Product }) {
   const cur = metals.find(v => v.metal === metal) || { metal: p.metal || "", handle: p.handle, title: p.title, image: p.image, modelImage: p.modelImage, price: p.price, compareAt: p.compareAt };
   // the on-model photo: this metal's, or the design's (the model shot is made once per design, in yellow gold)
   const model = cur.modelImage || p.modelImage || metals.find(v => v.modelImage)?.modelImage;
-  const [onModel, setOnModel] = useState(false); // phones: a tap on the dots or a horizontal swipe flips the photo
+  const [onModel, setOnModel] = useState(false); const [held, setHeld] = useState(false); // after choosing a metal, the piece photo stays up while the pointer is on the card, so the change is seen // phones: a tap on the dots or a horizontal swipe flips the photo
   const touch = useRef<{ x: number; y: number; t: number } | null>(null);
   const swipeStart = (e: React.TouchEvent) => { const t = e.touches[0]; touch.current = { x: t.clientX, y: t.clientY, t: Date.now() }; };
   const swipeEnd = (e: React.TouchEvent) => {
@@ -27,13 +27,13 @@ export default function DesignCard({ p }: { p: Product }) {
   };
   const title = (p.variants && p.variants.length > 1) ? cur.title.replace(/^(Rose gold|Yellow gold|White gold|Platinum|Silver) /i, "") : cur.title;
   return (
-    <Link href={`/products/${cur.handle}`} className="pcard">
-      <div className={`pcard-img${model ? " has-model" : ""}${onModel || (!cur.image && model) ? " on-model" : ""}`} onTouchStart={model ? swipeStart : undefined} onTouchEnd={model ? swipeEnd : undefined}>{model && <Image className="pcard-model" src={model} alt={`${cur.title} worn`} width={800} height={1000} sizes="(max-width:767px) 50vw, 380px" quality={78} />}{model && <button type="button" className="pcard-flip" aria-label={onModel ? "Show the piece" : "Show it worn"} onClick={e => { e.preventDefault(); e.stopPropagation(); setOnModel(v => !v); }}><i /><i /></button>}{cur.image ? <Image src={photoSrc(cur.image.url, 700, cur.title)} alt={cur.image.alt} width={800} height={800} sizes="(max-width:767px) 50vw, 380px" quality={75} unoptimized={isCleaned(photoSrc(cur.image.url, 700, cur.title))} /> : <Gem />}</div>
+    <Link href={`/products/${cur.handle}`} className="pcard" onMouseLeave={() => setHeld(false)}>
+      <div className={`pcard-img${model ? " has-model" : ""}${onModel || (!cur.image && model) ? " on-model" : ""}${held ? " hold" : ""}`} onTouchStart={model ? swipeStart : undefined} onTouchEnd={model ? swipeEnd : undefined}>{model && <Image className="pcard-model" src={model} alt={`${cur.title} worn`} width={800} height={1000} sizes="(max-width:767px) 50vw, 380px" quality={78} />}{model && <button type="button" className="pcard-flip" aria-label={onModel ? "Show the piece" : "Show it worn"} onClick={e => { e.preventDefault(); e.stopPropagation(); setOnModel(v => !v); }}><i /><i /></button>}{cur.image ? <Image src={photoSrc(cur.image.url, 700, cur.title)} alt={cur.image.alt} width={800} height={800} sizes="(max-width:767px) 50vw, 380px" quality={75} unoptimized={isCleaned(photoSrc(cur.image.url, 700, cur.title))} /> : <Gem />}</div>
       <div className="pcard-txt">
         <b>{title}</b>
         {metals.length > 1 && (
           <span className="pc-metals" aria-label="Metal">
-            {metals.map(v => <i key={v.metal} className={v.metal === metal ? "on" : ""} style={{ "--lc": METAL_LINE[v.metal] || "#B3B8C0" } as React.CSSProperties} title={v.metal} onClick={e => { e.preventDefault(); e.stopPropagation(); setMetal(v.metal); }} />)}
+            {metals.map(v => <i key={v.metal} className={v.metal === metal ? "on" : ""} style={{ "--lc": METAL_LINE[v.metal] || "#B3B8C0" } as React.CSSProperties} title={v.metal} onClick={e => { e.preventDefault(); e.stopPropagation(); setMetal(v.metal); setHeld(true); setOnModel(false); }} />)}
           </span>
         )}
         <span className="price">{usd(cur.price, p.currency)}{cur.compareAt ? <s className="was">{usd(cur.compareAt, p.currency)}</s> : null}</span>

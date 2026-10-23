@@ -643,7 +643,7 @@ a.rp-mt{text-decoration:none}
 /* ---- Product cards: the on-model photo. Desktop: fades in on hover. Phones: two tiny dots at the bottom centre; a tap on the photo flips it. ---- */
 .pcard-img{position:relative}
 .pcard-img .pcard-model{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s;z-index:1}
-@media(hover:hover){.pcard:hover .pcard-img.has-model .pcard-model{opacity:1}.pcard-flip{display:none}}
+@media(hover:hover){.pcard:hover .pcard-img.has-model:not(.hold) .pcard-model{opacity:1}.pcard-flip{display:none}}
 .pcard-img.on-model .pcard-model{opacity:1}
 .pcard-flip{position:absolute;left:50%;bottom:4px;transform:translateX(-50%);z-index:3;display:flex;gap:6px;padding:10px 14px;border:0;background:none;cursor:pointer} /* a 44px tap target, the dots themselves stay tiny */
 .pcard-flip i{display:block;width:6px;height:6px;border-radius:50%;background:rgba(28,26,27,.28);transition:background .3s} /* dark on the white product photo */
@@ -804,3 +804,6 @@ a.rp-mt{text-decoration:none}
 @media(prefers-reduced-motion:reduce){.rp-mt.on .rp-gem::after{animation:none;opacity:0}}
 
 @media(max-width:767px){.sc-row{flex-wrap:nowrap;gap:6px;justify-content:space-between}.rp-sw.rp-gem{width:52px;height:52px}.sc-row .rp-mt{font-size:11px;letter-spacing:.04em}}
+/* choosing a metal must show the ring in that metal: while the pointer is on the metal circles, and after a click until the pointer leaves the card, the worn photo steps aside */
+@media(hover:hover){.pcard:has(.pc-metals:hover) .pcard-img.has-model .pcard-model{opacity:0}}
+
