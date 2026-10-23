@@ -991,3 +991,15 @@ a.rp-mt{text-decoration:none}
   .ih .ih-ar svg{width:15px;height:15px;stroke-width:1.5}.ih .ih-ar.l{left:12px}.ih .ih-ar.r{right:12px}
 }
 
+/* phone: no arrows, just the dots under the picture (and swipe, and a tap on the left or right of the picture) */
+.ih-dots{display:none}
+@media(max-width:767px){
+  .ih .ih-ar{display:none}
+  .ih .ih-dots{display:flex;position:absolute;left:0;right:0;top:calc(var(--sht,560px) - 30px);justify-content:center;z-index:8}
+  .ih .ih-dots button{width:20px;height:26px;background:none;border:0;padding:0;display:grid;place-items:center;cursor:pointer}
+  .ih .ih-dots i{display:block;width:6px;height:6px;border-radius:50%;background:var(--fg);opacity:.55;transition:width .3s,opacity .3s}
+  .ih .ih-dots button.on i{width:18px;border-radius:3px;opacity:1}
+  .ih[data-mode=photo] .ih-dots i{box-shadow:0 1px 5px rgba(0,0,0,.45)}
+  .ih.open .ih-dots{display:none}
+}
+

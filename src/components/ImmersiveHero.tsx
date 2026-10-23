@@ -81,7 +81,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
 
   // swipe (phone), and a tap on the left or right third of the picture
   const x0 = useRef<number | null>(null);
-  const down = (e: React.PointerEvent) => { if ((e.target as HTMLElement).closest(".ih-ctl,.ih-thumbs,.ih-pager,.rsteps,.ih-scrim,.ih-ar,.ih-cnt")) { x0.current = null; return; } x0.current = e.clientX; };
+  const down = (e: React.PointerEvent) => { if ((e.target as HTMLElement).closest(".ih-ctl,.ih-thumbs,.ih-pager,.rsteps,.ih-scrim,.ih-dots,.ih-cnt")) { x0.current = null; return; } x0.current = e.clientX; };
   const up = (e: React.PointerEvent) => {
     if (x0.current === null) return; const dx = e.clientX - x0.current; x0.current = null;
     if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1));
@@ -114,9 +114,9 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
       <div className="ih-shade" />
       {open && <div className="ih-scrim" onClick={() => setOpen(false)} />}
       <span className="ih-cnt" aria-hidden="true">{String(cur + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}</span>
-      <button type="button" className="ih-ar l" aria-label="Previous photo" onClick={() => go(cur - 1)}><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg></button>
-      <button type="button" className="ih-ar r" aria-label="Next photo" onClick={() => go(cur + 1)}><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg></button>
-      <div className="ih-segs" aria-hidden="true">{slides.map((_, k) => <i key={k} className={k === cur ? "on" : ""} />)}</div>
+      <div className="ih-dots" aria-label="Photos">{slides.map((sl, k) => (
+        <button key={k} type="button" className={k === cur ? "on" : ""} aria-label={`${sl.label}, photo ${k + 1} of ${N}`} aria-current={k === cur} onClick={() => go(k)}><i /></button>))}
+      </div>
 
       <div className="ih-tt">
         <small className="eyebrow">Lab-grown · IGI certified</small>
