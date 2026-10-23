@@ -32,8 +32,12 @@ function StoneWindow({ d, bg, alt, children }: { d: FlowStone; bg: string; alt: 
     <div className="df-win" style={{ "--bgc": bg } as React.CSSProperties}>
       {vid && d.embed
         ? <iframe src={d.embed} title="360° view of the diamond" scrolling="no" allow="autoplay" className="df-vid" />
-        // eslint-disable-next-line @next/next/no-img-element
-        : <img src={d.image} alt={alt} referrerPolicy="no-referrer" />}
+        : <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="df-bgimg" src={d.image} alt="" aria-hidden="true" referrerPolicy="no-referrer" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={d.image} alt={alt} referrerPolicy="no-referrer" />
+        </>}
       {d.embed
         ? <button type="button" className="df-360" aria-pressed={vid} aria-label={vid ? "Back to the photo" : "See the diamond turn, 360 degrees"} onClick={() => setVid(v => !v)}><Icon360 /><span>{vid ? "Photo" : "360°"}</span></button>
         : d.video ? <a className="df-360" href={d.video} target="_blank" rel="noopener noreferrer" aria-label="See the diamond turn, 360 degrees (opens a video)"><Icon360 /><span>360°</span></a> : null}
@@ -149,6 +153,8 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
           <div className={`df-stage c${ch}`}>
             <div className="df-win" style={{ "--bgc": bg } as React.CSSProperties}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="df-bgimg" src={d.image} alt="" aria-hidden="true" referrerPolicy="no-referrer" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={d.image} alt="" referrerPolicy="no-referrer" />
             </div>
             <div className="df-loupe" />
@@ -183,7 +189,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
               const dc = x.carat - d.carat, dp = x.price - d.price;
               return (
                 <Link key={`${x.vendor}-${x.stock}`} href={`/diamonds/${x.vendor}-${encodeURIComponent(x.stock)}`}>
-                  <div className="df-im" style={{ "--bgc": x.bg } as React.CSSProperties}>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={x.image} alt={`${x.carat.toFixed(2)} carat ${x.shape} diamond`} referrerPolicy="no-referrer" loading="lazy" /></div>
+                  <div className="df-im" style={{ "--bgc": x.bg } as React.CSSProperties}>{/* eslint-disable-next-line @next/next/no-img-element */}<img className="df-bgimg" src={x.image} alt="" aria-hidden="true" referrerPolicy="no-referrer" loading="lazy" />{/* eslint-disable-next-line @next/next/no-img-element */}<img src={x.image} alt={`${x.carat.toFixed(2)} carat ${x.shape} diamond`} referrerPolicy="no-referrer" loading="lazy" /></div>
                   <div className="df-tx"><b>{x.carat.toFixed(2)} ct</b><span>{x.fancy || `${x.color} · ${x.clarity}`} · {x.lab}</span><span className="df-pr">{usd(x.price)}</span><em>{dc >= 0 ? "+" : "−"}{Math.abs(dc).toFixed(2)} ct · {dp >= 0 ? "+" : "−"}{usd(Math.abs(dp))}</em></div>
                 </Link>
               );
