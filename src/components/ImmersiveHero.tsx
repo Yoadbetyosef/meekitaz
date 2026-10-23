@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { photoSrc, isCleaned } from "@/lib/img";
-import { DIAMOND } from "./StoneSwatch";
+import { stonePicture } from "@/lib/stonePicture";
 
 /** The top of every product page: a full-screen gallery (the worn photo, the piece, the stone, the film) with the choices in glass on top.
  *  A photo turns the page dark with white type; a product shot on white turns it warm cream with dark type, so the piece is always seen properly.
@@ -26,8 +26,8 @@ function measure(el: HTMLImageElement): { photo: boolean | null; dark: boolean |
   } catch { return { photo: null, dark: null }; }
 }
 
-export default function ImmersiveHero({ title, bigTitle, images, model, stone, steps, summary, price, metal, rows, cta, appt, onVisible }: {
-  title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; summary?: string[];
+export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, film, steps, summary, price, metal, rows, cta, appt, onVisible }: {
+  title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; stoneShape?: string; film?: { src: string; poster: string }; summary?: string[];
   steps?: ReactNode; price: ReactNode; metal?: ReactNode; rows?: ReactNode; cta: ReactNode; appt?: ReactNode; onVisible?: (on: boolean) => void;
 }) {
   const slides = useMemo<Slide[]>(() => {
@@ -66,7 +66,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
     const v = vid.current; if (!v) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const near = slides[cur]?.kind === "film" || slides[(cur + 1) % N]?.kind === "film";
-    if (near && !v.getAttribute("src")) v.setAttribute("src", "/media/brand-reel.mp4");
+    if (near && !v.getAttribute("src")) v.setAttribute("src", filmSrc);
     if (slides[cur]?.kind === "film" && vis.current && !reduce) v.play().catch(() => {}); else v.pause();
   }, [cur, slides, N]);
   useEffect(() => {
@@ -100,7 +100,8 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   // on a phone the sheet sits over the lower part of the picture: white type when that part is dark, dark type when it is light
   const tone: "dark" | "light" = s.kind === "film" ? "dark" : mode === "photo" && s.url ? (tones[s.url] ?? "light") : "light";
   const len = bigTitle.length, sz = len <= 22 ? "l1" : len <= 40 ? "l2" : "l3";
-  const diamond = DIAMOND[stone || ""] || DIAMOND.White;
+  const diamond = stonePicture(stoneShape, stone); // the stone slide shows the shape the customer is looking at
+  const filmSrc = film?.src || "/media/brand-reel.mp4", filmPoster = film?.poster || "/media/brand-reel-poster.jpg";
   const src = (u: string, w: number, k: number) => photoSrc(u, w, title, k);
   return (
     <section className={`ih${open ? " open" : ""}`} ref={box} data-mode={mode} data-tone={tone} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
@@ -113,7 +114,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
                 ? <div className={`ih-ph2${sl.url === model ? " mdl" : ""}`}><Image className="ih-bk" src={src(sl.url, 300, k)} alt="" fill sizes="30vw" quality={40} unoptimized={isCleaned(src(sl.url, 300, k))} /><Image className="ih-fg" src={src(sl.url, 1500, k)} alt={sl.alt} fill sizes="100vw" quality={78} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1500, k))} onLoad={onImg(sl.url)} /></div>
                 : <div className="ih-pc"><Image className="ih-pi" src={src(sl.url, 1400, k)} alt={sl.alt} fill sizes="(max-width:767px) 92vw, 820px" quality={80} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1400, k))} onLoad={onImg(sl.url)} /></div>)}
               {sl.kind === "stone" && <div className="ih-pc st"><Image src={diamond} alt="" fill sizes="(max-width:767px) 70vw, 560px" quality={80} /></div>}
-              {sl.kind === "film" && <video ref={vid} muted loop playsInline preload="none" poster="/media/brand-reel-poster.jpg" aria-label={sl.alt} />}
+              {sl.kind === "film" && <video ref={vid} muted loop playsInline preload="none" poster={filmPoster} aria-label={sl.alt} />}
             </div>
           );
         })}
@@ -135,7 +136,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
         <button key={k} type="button" className={k === cur ? "on" : ""} aria-label={sl.label} aria-current={k === cur} onClick={() => go(k)}>
           {sl.kind === "img" && sl.url && <Image src={src(sl.url, 160, k)} alt="" width={64} height={64} quality={60} unoptimized={isCleaned(src(sl.url, 160, k))} />}
           {sl.kind === "stone" && <Image src={diamond} alt="" width={64} height={64} quality={60} />}
-          {sl.kind === "film" && <><Image src="/media/brand-reel-poster.jpg" alt="" width={64} height={64} quality={60} /><span className="pl">▶</span></>}
+          {sl.kind === "film" && <><Image src={filmPoster} alt="" width={64} height={64} quality={60} /><span className="pl">▶</span></>}
         </button>))}
       </div>
       <div className="ih-pager">

@@ -221,7 +221,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
 
   return (
     <main className="pp ih-on">
-      <ImmersiveHero title={title} bigTitle={heroTitle(title)} images={imgs} model={worn || undefined} stone={ring?.color || ""}
+      <ImmersiveHero title={title} bigTitle={heroTitle(title)} images={imgs} model={worn || undefined} stone={ring?.color || ""} stoneShape={ring && cv ? cv.shape : undefined} film={ring ? { src: "/media/rings-film.mp4", poster: "/media/rings-film-poster.jpg" } : undefined}
         steps={ring ? <RingSteps step={1} onDiamond={cv ? chooseSetting : undefined} /> : null}
         summary={summary}
         price={priceNode} metal={hasMetal ? metalNode : null} rows={rowsNode} cta={ctaNode} appt={apptNode} onVisible={setHeroOn} />
