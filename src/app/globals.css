@@ -1129,4 +1129,7 @@ a.rp-mt{text-decoration:none}
   .df-bglogo{order:3;position:static;transform:none;opacity:1;width:auto;height:42px;color:var(--red);align-self:center;margin-top:8px}
   .df-ruler span{font-size:11px}
 }
+/* the gauges stay on one row inside a card; the small label fits one line */
+.df-scale{flex-wrap:nowrap}.df-scale i{min-width:0}.df-scale.sm i{font-size:9px}
+.df-ccard .df-n{letter-spacing:.2em}
 
