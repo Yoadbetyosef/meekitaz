@@ -5,6 +5,7 @@ import Nav from "@/components/Nav";
 import DesignLabGate from "@/components/DesignLabGate";
 import Footer from "@/components/Footer";
 import Toast from "@/components/Toast";
+import PressFx from "@/components/PressFx";
 import CartProvider from "@/components/CartProvider";
 import CartDrawer from "@/components/CartDrawer";
 import HeroWarm from "@/components/HeroWarm";
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="mk-page" id="mk-page">{children}</div>
           <Footer />
           <Toast />
+          <PressFx />
           <CartDrawer />
           <DesignLabGate />
         </CartProvider>
