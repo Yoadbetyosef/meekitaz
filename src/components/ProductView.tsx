@@ -88,7 +88,9 @@ export default function ProductView({ product: p, siblings, related, ring, optio
   const details = p.tags.filter(t => !/gold|silver|platinum|rose|yellow|white|^NS-|^CBR$|express|normal_side|^RJ-/i.test(t)).slice(0, 4);
   const base = cv ? cv.images.map(u => ({ url: u, alt: cv.title, width: 1000, height: 1000 })) : p.images;
   // the on-model photo sits second in the gallery, after the product shot
-  const imgs = p.modelImage && base.length ? [base[0], { url: p.modelImage, alt: `${p.title} worn`, width: 1000, height: 1250 }, ...base.slice(1)] : base;
+  // the worn photo belongs to the shape and metal chosen here (a ring in another shape shows its own, never the old shape's)
+  const worn = cv ? cv.modelImage : p.modelImage;
+  const imgs = worn && base.length ? [base[0], { url: worn, alt: `${cv ? cv.title : p.title} worn`, width: 1000, height: 1250 }, ...base.slice(1)] : base;
   const metalNow = nm(cv ? cv.metal : metal || "");
   const karat = karatsFor(ns).includes(karatPick as "10K") ? karatPick : "10K"; // a design only offers the karats of its price list
   const step = karatOn && isGoldMetal(metalNow) ? karatStep(ns, karat) : 0;
@@ -219,7 +221,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
 
   return (
     <main className="pp ih-on">
-      <ImmersiveHero title={title} bigTitle={heroTitle(title)} images={imgs} model={p.modelImage || undefined} stone={ring?.color || ""}
+      <ImmersiveHero title={title} bigTitle={heroTitle(title)} images={imgs} model={worn || undefined} stone={ring?.color || ""}
         steps={ring ? <RingSteps step={1} onDiamond={cv ? chooseSetting : undefined} /> : null}
         summary={summary}
         price={priceNode} metal={hasMetal ? metalNode : null} rows={rowsNode} cta={ctaNode} appt={apptNode} onVisible={setHeroOn} />

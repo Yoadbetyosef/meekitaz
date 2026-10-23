@@ -249,7 +249,7 @@ export async function searchProducts(query: string, opts: { first?: number; maxP
 }
 
 /* ---------------- Engagement-ring settings: one design in every shape and metal ---------------- */
-export type RingVariant = { id: string; handle: string; title: string; shape: string; metal: string; price: number; compareAt: number; images: string[]; variantId: string };
+export type RingVariant = { id: string; handle: string; title: string; shape: string; metal: string; price: number; compareAt: number; images: string[]; variantId: string; modelImage?: string };
 const SHAPE_NAMES = ["Round", "Oval", "Cushion", "Emerald", "Pear", "Princess", "Radiant", "Marquise", "Asscher", "Heart"];
 const METAL_RE = /(Rose gold|Yellow gold|White gold|Platinum|Silver)/i;
 export const ringMetalOf = (title: string) => { const m = title.match(METAL_RE); if (!m) return ""; const t = m[1].toLowerCase(); return t.charAt(0).toUpperCase() + t.slice(1); };
@@ -257,13 +257,16 @@ export const ringShapeOf = (tags: string[], title: string) => SHAPE_NAMES.find(n
 /** One design in every shape and metal. A design exists in white and in fancy colours under the same code, so the family is for one colour ("" = white). */
 export async function getRingFamily(code: string, color = ""): Promise<RingVariant[]> {
   if (!code) return [];
-  const d = await sf<{ products: { edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; images: { edges: { node: { url: string } }[] }; variants: { edges: { node: { id: string } }[] } } }[] } }>(
-    `query($q:String!){ products(first:250, query:$q){ edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount } } compareAtPriceRange{ minVariantPrice{ amount } } images(first:4){ edges{ node{ url } } } variants(first:1){ edges{ node{ id } } } } } } }`, { q: color ? `tag:${code} AND title:'Fancy ${color}'` : `tag:${code}` });
-  return (d?.products.edges || []).map(e => e.node).filter(n => n.tags.includes("Engagement Ring") && n.tags.includes(code) && fancyColorOf(n.title) === color).map(n => ({
+  const d = await sf<{ products: { edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; images: { edges: { node: { url: string } }[] }; variants: { edges: { node: { id: string } }[] }; model?: { value: string } | null } }[] } }>(
+    `query($q:String!){ products(first:250, query:$q){ edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount } } compareAtPriceRange{ minVariantPrice{ amount } } images(first:4){ edges{ node{ url } } } variants(first:1){ edges{ node{ id } } } model: metafield(namespace:\"meekitaz\", key:\"model_image\"){ value } } } } }`, { q: color ? `tag:${code} AND title:'Fancy ${color}'` : `tag:${code}` });
+  const list = (d?.products.edges || []).map(e => e.node).filter(n => n.tags.includes("Engagement Ring") && n.tags.includes(code) && fancyColorOf(n.title) === color).map(n => ({
     id: n.id, handle: n.handle, title: n.title, shape: ringShapeOf(n.tags, n.title), metal: ringMetalOf(n.title), price: +n.priceRange.minVariantPrice.amount,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
-    images: n.images.edges.map(i => i.node.url).filter(u => !isSupplierImage(u, n.tags)), variantId: n.variants.edges[0]?.node.id || "",
+    images: n.images.edges.map(i => i.node.url).filter(u => !isSupplierImage(u, n.tags)), variantId: n.variants.edges[0]?.node.id || "", modelImage: n.model?.value || undefined,
   })).filter(v => v.shape && v.metal && v.images.length > 0); // a shape or metal with no photo is not offered
+  // the worn photo is made once per shape: a metal without its own shows the one of the same shape (yellow gold first), and a shape never shows another shape's
+  const byShape: Record<string, string> = {}; for (const v of list) if (v.modelImage && (!byShape[v.shape] || /yellow/i.test(v.metal))) byShape[v.shape] = v.modelImage;
+  return list.map(v => (v.modelImage || !byShape[v.shape] ? v : { ...v, modelImage: byShape[v.shape] }));
 }
 
 /* ---------------- Cart: several lines at once, with line attributes (a ring = setting + diamond) ---------------- */
