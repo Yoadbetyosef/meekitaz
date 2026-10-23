@@ -903,3 +903,5 @@ a.rp-mt{text-decoration:none}
   .pp-below{grid-template-columns:1fr;gap:26px;padding:36px 0 20px}
 }
 @media(prefers-reduced-motion:reduce){.ih-sl,.ih-pc,.ih-sl.photo .ih-ph{transition:none}}
+/* clear glass stays clear, but darkens a bright photograph a little behind it so the white type is always readable */
+.ih[data-mode=photo] .ih-ctl,.ih[data-mode=photo] .ih-top,.ih[data-mode=photo] .ih-bot{-webkit-backdrop-filter:blur(22px) saturate(1.2) brightness(.74);backdrop-filter:blur(22px) saturate(1.2) brightness(.74)}
