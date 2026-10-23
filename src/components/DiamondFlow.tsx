@@ -48,7 +48,8 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
   const [shown, setShown] = useState<Setting | null>(null);   // that same design in this diamond's shape
   const [missing, setMissing] = useState(false);
   const [ch, setCh] = useState(0);
-  const story = useRef<HTMLElement>(null), close = useRef<HTMLElement>(null), reel = useRef<HTMLVideoElement>(null);
+  const cards = useRef<HTMLDivElement>(null), close = useRef<HTMLElement>(null), reel = useRef<HTMLVideoElement>(null);
+  const [hint, setHint] = useState(true);
   const shape = d.shape === "Elongated Cushion" ? "Cushion" : d.shape;
   const fc = fancyColorOfStone(d.fancy);
   const pickUrl = fc ? fancySettingsUrl(fc, shape) : `/engagement-rings?style=${encodeURIComponent(shape)}&build=1`;
@@ -64,14 +65,19 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
     return () => { off = true; };
   }, [set, d.shape]);
 
-  // the story: five chapters, chosen by how far the pinned section has been scrolled
+  // the story: five cards you swipe sideways; the photograph follows the card in view
   useEffect(() => {
-    const el = story.current; if (!el) return; let raf = 0;
-    const upd = () => { raf = 0; const r = el.getBoundingClientRect(), span = r.height - window.innerHeight; setCh(span > 0 ? Math.min(4, Math.floor(Math.min(1, Math.max(0, -r.top / span)) * 5)) : 0); };
+    const el = cards.current; if (!el) return; let raf = 0;
+    const upd = () => {
+      raf = 0; const mid = el.scrollLeft + el.clientWidth / 2; let best = 0, bd = 1e9;
+      Array.from(el.children).forEach((c, k) => { const h = c as HTMLElement, dd = Math.abs(h.offsetLeft + h.offsetWidth / 2 - mid); if (dd < bd) { bd = dd; best = k; } });
+      setCh(best); if (best > 0) setHint(false);
+    };
     const on = () => { if (!raf) raf = requestAnimationFrame(upd); };
-    upd(); window.addEventListener("scroll", on, { passive: true }); window.addEventListener("resize", on);
-    return () => { window.removeEventListener("scroll", on); window.removeEventListener("resize", on); if (raf) cancelAnimationFrame(raf); };
+    upd(); el.addEventListener("scroll", on, { passive: true }); window.addEventListener("resize", on);
+    return () => { el.removeEventListener("scroll", on); window.removeEventListener("resize", on); if (raf) cancelAnimationFrame(raf); };
   }, []);
+  const slide = (k: number) => { const el = cards.current; if (!el) return; const c = el.children[Math.max(0, Math.min(4, k))] as HTMLElement; el.scrollTo({ left: c.offsetLeft - (el.clientWidth - c.offsetWidth) / 2, behavior: "smooth" }); };
   // the reel loads and plays only while it is near the screen
   useEffect(() => {
     const el = close.current, v = reel.current; if (!el || !v) return;
@@ -125,8 +131,8 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
         </div>
       </section>
 
-      {/* 2 · the story of this stone */}
-      <section className="df-st" ref={story} aria-label="The story of this diamond">
+      {/* 2 · the story of this stone: swipe through five cards */}
+      <section className="df-st" aria-label="The story of this diamond">
         <div className="df-pin">
           <Logo className="df-bglogo" />
           <div className={`df-stage c${ch}`}>
@@ -134,16 +140,24 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={d.image} alt="" referrerPolicy="no-referrer" />
             </div>
-            <div className="df-ruler"><i style={{ left: `${50 - mmw / 2}%`, right: `${50 - mmw / 2}%` }} /><span>{n.length > 1 ? `${n[0]} × ${n[1]} mm` : ""}</span></div>
+            <div className="df-loupe" />
+            <div className="df-ruler"><i /><span>{n.length > 1 ? `${n[0]} × ${n[1]} mm` : ""}</span></div>
+            <span className="df-tag">{["Carat", "Colour", "Clarity", "Cut", "Certificate"][ch]}</span>
           </div>
           <div className="df-txt">
-            <div className={`df-ch${ch === 0 ? " on" : ""}`}><span className="df-n">01 / 05 · THE STORY OF THIS STONE</span><h2>{d.carat.toFixed(2)} carats.</h2><p>{n.length > 1 ? `About ${n[0]} × ${n[1]} mm face-up. ` : ""}A {d.shape.toLowerCase()} cut, {d.carat >= 2 ? "a substantial stone" : d.carat >= 1 ? "a generous stone" : "a delicate stone"}.</p><div className="df-gg"><div className="df-row"><span>Shape</span><b>{d.shape}</b></div><div className="df-row"><span>Ratio</span><b>{d.ratio || "—"}</b></div></div></div>
-            <div className={`df-ch${ch === 1 ? " on" : ""}`}><span className="df-n">02 / 05</span><h2>{d.fancy ? `${d.fancy.replace(/^Fancy /, "")}.` : `${d.color} colour.`}</h2><p>{d.fancy ? "A saturated fancy colour, grown in a lab." : ["D", "E", "F"].includes(d.color || "") ? "Colourless: pure white in any setting." : "Near-colourless: it reads as white in any setting."}</p>{!d.fancy && <div className="df-gg"><div className="df-scale">{COL.map(c => <i key={c} className={c === d.color ? "on" : ""}>{c}</i>)}</div></div>}</div>
-            <div className={`df-ch${ch === 2 ? " on" : ""}`}><span className="df-n">03 / 05</span><h2>{d.clarity} clarity.</h2><p>{/SI|I1/.test(d.clarity || "") ? "Tiny characteristics you can see up close." : "Eye-clean: any tiny characteristics are only visible under 10× magnification."}</p><div className="df-gg"><div className="df-scale sm">{CLR.map(c => <i key={c} className={c === d.clarity ? "on" : ""}>{c}</i>)}</div></div></div>
-            <div className={`df-ch${ch === 3 ? " on" : ""}`}><span className="df-n">04 / 05</span><h2>{d.cut || d.polish || "Finished"}.</h2><p>How well it was cut, polished and made symmetrical decides how it catches the light.</p><div className="df-gg">{([["Cut", d.cut], ["Polish", d.polish], ["Symmetry", d.symmetry], ["Table", d.table && d.table + "%"], ["Depth", d.depth && d.depth + "%"]] as [string, string | null][]).filter(r => r[1]).map(([k, v]) => <div key={k} className="df-row"><span>{k}</span><b>{v}</b></div>)}</div></div>
-            <div className={`df-ch${ch === 4 ? " on" : ""}`}><span className="df-n">05 / 05</span><h2>Certified.</h2><div className="df-gg"><div className="df-cert"><b>{d.lab} {d.cert}</b><span>Independently graded. {perCarat(d)}.</span><a href={d.certUrl} target="_blank" rel="noopener noreferrer">View the certificate →</a></div><button type="button" className="df-cta" onClick={go}>{shown ? `Add the ring · ${usd(total)}` : `Choose this diamond · ${usd(d.price)}`}</button></div></div>
+            <div className="df-cwrap">
+              <button type="button" className="df-arr l" aria-label="Previous" onClick={() => slide(ch - 1)} disabled={ch === 0}>‹</button>
+              <button type="button" className="df-arr r" aria-label="Next" onClick={() => slide(ch + 1)} disabled={ch === 4}>›</button>
+              <div className="df-cards" ref={cards} role="region" aria-label="The five chapters of this diamond, swipe sideways" tabIndex={0}>
+                <div className="df-ccard">{hint && <span className="df-swipe">Swipe →</span>}<span className="df-n">01 / 05 · THE STORY OF THIS STONE</span><h2>{d.carat.toFixed(2)} carats.</h2><p>{n.length > 1 ? `About ${n[0]} × ${n[1]} mm face-up. ` : ""}A {d.shape.toLowerCase()} cut, {d.carat >= 2 ? "a substantial stone" : d.carat >= 1 ? "a generous stone" : "a delicate stone"}.</p><div className="df-gg"><div className="df-row"><span>Shape</span><b>{d.shape}</b></div><div className="df-row"><span>Ratio</span><b>{d.ratio || "—"}</b></div></div></div>
+                <div className="df-ccard"><span className="df-n">02 / 05</span><h2>{d.fancy ? `${d.fancy.replace(/^Fancy /, "")}.` : `${d.color} colour.`}</h2><p>{d.fancy ? "A saturated fancy colour, grown in a lab." : ["D", "E", "F"].includes(d.color || "") ? "Colourless: pure white in any setting." : "Near-colourless: it reads as white in any setting."}</p>{!d.fancy && <div className="df-gg"><div className="df-scale">{COL.map(c => <i key={c} className={c === d.color ? "on" : ""}>{c}</i>)}</div></div>}</div>
+                <div className="df-ccard"><span className="df-n">03 / 05</span><h2>{d.clarity} clarity.</h2><p>{/SI|I1/.test(d.clarity || "") ? "Tiny characteristics you can see up close." : "Eye-clean: any tiny characteristics are only visible under 10× magnification."}</p><div className="df-gg"><div className="df-scale sm">{CLR.map(c => <i key={c} className={c === d.clarity ? "on" : ""}>{c}</i>)}</div></div></div>
+                <div className="df-ccard"><span className="df-n">04 / 05</span><h2>{d.cut || d.polish || "Finished"}.</h2><p>How well it was cut, polished and made symmetrical decides how it catches the light.</p><div className="df-gg">{([["Cut", d.cut], ["Polish", d.polish], ["Symmetry", d.symmetry], ["Table", d.table && d.table + "%"], ["Depth", d.depth && d.depth + "%"]] as [string, string | null][]).filter(r => r[1]).map(([k, v]) => <div key={k} className="df-row"><span>{k}</span><b>{v}</b></div>)}</div></div>
+                <div className="df-ccard"><span className="df-n">05 / 05</span><h2>Certified.</h2><div className="df-gg"><div className="df-cert"><b>{d.lab} {d.cert}</b><span>Independently graded. {perCarat(d)}.</span><a href={d.certUrl} target="_blank" rel="noopener noreferrer">View the certificate →</a></div><button type="button" className="df-cta" onClick={go}>{shown ? `Add the ring · ${usd(total)}` : `Choose this diamond · ${usd(d.price)}`}</button></div></div>
+              </div>
+            </div>
+            <div className="df-dots">{[0, 1, 2, 3, 4].map(i => <button key={i} type="button" aria-label={`Chapter ${i + 1}`} className={i === ch ? "on" : ""} onClick={() => slide(i)} />)}</div>
           </div>
-          <div className="df-rail" aria-hidden="true">{[0, 1, 2, 3, 4].map(i => <i key={i} className={i === ch ? "on" : ""} />)}</div>
         </div>
       </section>
 
