@@ -140,6 +140,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
       </div>
 
       <div className="ih-ctl">
+        <button type="button" className="ih-x" aria-label="Close the choices" onClick={() => setOpen(false)}><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
         <button type="button" className="ih-hdl" aria-label={open ? "Fold the choices" : "Open the choices"} aria-expanded={open} onClick={() => setOpen(o => !o)}><i /></button>
         <div className="ih-pk">
           {steps}
