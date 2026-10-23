@@ -919,4 +919,12 @@ a.rp-mt{text-decoration:none}
   .ih-pc.st{top:calc(var(--pct,200px) + var(--pch,320px) / 2);height:auto;width:min(60%,var(--pch,320px));transform:translate(-50%,-50%) scale(.94)}
   .ih-sl.on .ih-pc.st{transform:translate(-50%,-50%) scale(1)}
 }
+/* the worn photograph is shown whole on desktop (no zoom, nothing cropped) over a soft blurred copy of itself; on a phone it still fills the screen */
+.ih-sl.photo .ih-ph{transform:none}.ih-sl.photo.on .ih-ph{transform:none}
+.ih-ph2.mdl .ih-fg{object-fit:contain;object-position:54% 50%}
+.ih[data-mode=photo] .ih-tt{max-width:min(33%,460px)}.ih[data-mode=photo] .ih-tt h1{font-size:clamp(30px,3.5vw,56px)}.ih[data-mode=photo] .ih-tt h1.l2{font-size:clamp(28px,3.1vw,48px)}.ih[data-mode=photo] .ih-tt h1.l3{font-size:clamp(24px,2.6vw,40px)}
+@media(max-width:767px){
+  .ih-ph2.mdl .ih-bk{display:none}.ih-ph2.mdl .ih-fg{object-fit:cover;object-position:50% 38%}
+  .ih[data-mode=photo] .ih-tt{max-width:calc(100% - 36px)}.ih[data-mode=photo] .ih-tt h1{font-size:34px}.ih[data-mode=photo] .ih-tt h1.l2{font-size:28px}.ih[data-mode=photo] .ih-tt h1.l3{font-size:24px}
+}
 
