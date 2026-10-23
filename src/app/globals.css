@@ -823,6 +823,14 @@ a.rp-mt{text-decoration:none}
 .be-fr{height:clamp(560px,45vw,640px);border-radius:36px;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.45);border:6px solid #fff;transform:rotate(2deg);background:#3a2a28}.be-fr video{display:block;width:100%;height:100%;object-fit:cover}
 .be-spin{position:absolute;left:-30px;top:42px;width:120px;height:120px;z-index:5;animation:be-rot 14s linear infinite}.be-spin circle{fill:#F7E9A8}.be-spin text{font:700 9.5px var(--body);fill:var(--ink);text-transform:uppercase}
 @keyframes be-rot{to{transform:rotate(360deg)}}
-@media(max-width:767px){.be-grid{grid-template-columns:1fr}.be-l{border-radius:26px;padding:22px}.be-p{font-size:16px}.be-v{margin:-30px 22px 0}.be-fr{height:480px;border-width:5px}.be-facts span{padding:8px 12px;font-size:9px}.be-spin{left:-14px;top:-28px;width:96px;height:96px}.be-show img{width:78px;height:78px}}
+@media(max-width:767px){
+  /* phone: one pink block, the reel in the middle like a window: wordmark and line above it, the promises and the showroom below it */
+  .be-grid{display:flex;flex-direction:column;gap:16px;background:#EFC5CA;border-radius:26px;padding:22px}
+  .be-l{display:contents}
+  .be-logo{order:0}.be-p{order:1;font-size:15px}.be-v{order:2;margin:2px -4px;align-self:stretch}.be-facts{order:3}.be-show{order:4}
+  .be-fr{height:420px;border-width:5px;transform:rotate(-2deg)}
+  .be-spin{left:auto;right:-12px;top:-30px;width:92px;height:92px}
+  .be-facts span{padding:8px 12px;font-size:9px}.be-show img{width:78px;height:78px}
+}
 @media(prefers-reduced-motion:reduce){.be-spin{animation:none}}
 

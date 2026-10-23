@@ -32,7 +32,7 @@ export default function BrandEnd() {
           </div>
         </div>
         <div className="be-v">
-          <svg className="be-spin" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="58" /><defs><path id="be-cp" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" /></defs><text><textPath href="#be-cp" textLength="268" lengthAdjust="spacing">Serious diamonds · worn lightly ·</textPath></text></svg>
+          <svg className="be-spin" viewBox="0 0 120 120" role="img" aria-label="Most trusted brand 2026"><circle cx="60" cy="60" r="58" /><defs><path id="be-cp" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0" /></defs><text><textPath href="#be-cp" textLength="268" lengthAdjust="spacing">Most trusted brand · 2026 ·</textPath></text></svg>
           <div className="be-fr"><video ref={vid} muted loop playsInline preload="none" poster="/media/brand-reel-poster.jpg" aria-label="Meekitaz, a short film" /></div>
         </div>
       </div></div>
