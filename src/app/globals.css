@@ -1026,4 +1026,6 @@ a.rp-mt{text-decoration:none}
   .ih[data-tone=dark] .ih-ctl .rp-sh i{background:rgba(255,255,255,.2)}
   .ih[data-tone=dark] .ih-ctl .rp-sw{border-color:rgba(255,255,255,.4)}
 }
+/* the site-wide button rule forces an ink background with !important: on a dark picture the buy button in the sheet must be white */
+@media(max-width:767px){.ih[data-tone=dark] .ih-ctl .pp-add{background:#fff!important;color:var(--ink)!important}}
 
