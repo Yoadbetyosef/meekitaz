@@ -1029,3 +1029,7 @@ a.rp-mt{text-decoration:none}
 /* the site-wide button rule forces an ink background with !important: on a dark picture the buy button in the sheet must be white */
 @media(max-width:767px){.ih[data-tone=dark] .ih-ctl .pp-add{background:#fff!important;color:var(--ink)!important}}
 
+/* cart: the close ×, "Remove", the quantity buttons and the other small buttons use the site's ink, not the browser's blue (iOS paints unstyled buttons blue) */
+.cd-x,.cd-rm,.cd-chg,.cd-qty button,.cd-wgo{color:var(--ink)}
+.cd-rm,.cd-chg{-webkit-text-fill-color:currentColor}
+
