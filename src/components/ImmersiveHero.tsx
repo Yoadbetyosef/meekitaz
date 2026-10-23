@@ -43,6 +43,21 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const go = useCallback((k: number) => setI(((k % N) + N) % N), [N]);
   useEffect(() => { setI(x => Math.min(x, N - 1)); }, [N]);
 
+  // phone: the piece sits in the middle of the free space between the headline and the choices, however tall either of them is
+  const fit = useCallback(() => {
+    const el = box.current; if (!el) return;
+    if (window.innerWidth > 767) { el.style.removeProperty("--pcy"); return; }
+    const hr = el.getBoundingClientRect(), tt = el.querySelector(".ih-tt")?.getBoundingClientRect(), bot = el.querySelector(".ih-bot")?.getBoundingClientRect();
+    if (!tt || !bot) return;
+    const top = tt.bottom - hr.top + 8, bottom = bot.top - hr.top - 8;
+    el.style.setProperty("--pcy", `${Math.round(Math.max((top + bottom) / 2, top + 80))}px`);
+  }, []);
+  useEffect(() => {
+    fit();
+    const ro = new ResizeObserver(fit); [".ih-tt", ".ih-bot"].forEach(q => { const n = box.current?.querySelector(q); if (n) ro.observe(n); });
+    window.addEventListener("resize", fit); return () => { ro.disconnect(); window.removeEventListener("resize", fit); };
+  }, [fit, cur, rows]);
+
   // the film loads when it is near, plays only while it is the slide on screen and the hero is on screen
   useEffect(() => {
     const v = vid.current; if (!v) return;
