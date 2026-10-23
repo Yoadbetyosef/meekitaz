@@ -1147,16 +1147,19 @@ a.rp-mt{text-decoration:none}
 /* a little air around the stone so a tall one never touches the frame */
 .df-win img:not(.df-bgimg){inset:3.5%;width:93%;height:93%}
 
-/* ===== the feel of a press: lift on hover, sink when touched, a soft pink ring when let go ===== */
-:where(.pill, .df-cta, .df-pill, .pp-add, .dd-choose, .dcard, .pcard, .df-sim a, .sp-row > *, .rp-sw, .rp-shapes button, .rp-metals button, .rp-colors button, .mk-seg button, .po-vals button, .ih-thumbs button, .df-dots button, .df-arr, .cd-co, .cd-qty button, .pc-way){transition:transform .3s cubic-bezier(.2,.8,.2,1),filter .3s}
-@media(hover:hover){:where(.pill,.df-cta,.df-pill,.pp-add,.dd-choose,.rp-sw,.rp-shapes button,.rp-metals button,.rp-colors button,.mk-seg button,.po-vals button,.ih-thumbs button,.df-sim a,.cd-co):hover{transform:translateY(-3px)}
-  :where(.dcard,.pcard):hover{filter:drop-shadow(0 14px 16px rgba(126,5,8,.2))}}
-.fx-down{transform:translateY(1px) scale(.975)!important;filter:brightness(.96)!important;transition-duration:.06s!important}
-.fx-pulse{animation:fxpulse .65s ease-out}
-@keyframes fxpulse{0%{outline:3px solid rgba(229,138,160,.95);outline-offset:0}100%{outline:3px solid rgba(229,138,160,0);outline-offset:12px}}
+/* ===== the feel of a press: squish under the finger, spring back with a little overshoot ===== */
+:where(.pill, .df-cta, .df-pill, .pp-add, .dd-choose, .dcard, .pcard, .df-sim a, .sp-row > *, .rp-sw, .rp-shapes button, .rp-metals button, .rp-colors button, .mk-seg button, .po-vals button, .ih-thumbs button, .df-dots button, .df-arr, .cd-co, .cd-qty button, .pc-way){transition:transform .55s cubic-bezier(.3,1.9,.5,1),box-shadow .3s}
+.fx-down{transform:scale(.92)!important;transition-duration:.07s!important;box-shadow:0 2px 6px rgba(0,0,0,.18)}
+.dcard.fx-down,.pcard.fx-down,.df-sim a.fx-down{transform:scale(.965)!important}
+.fx-pop{animation:fxpop .5s cubic-bezier(.3,1.7,.5,1)}@keyframes fxpop{0%{transform:scale(.86)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
 .fx-loading{opacity:.62;pointer-events:none;cursor:progress;transition:opacity .2s}
 .fx-bar{position:fixed;left:0;right:0;top:0;height:3px;z-index:200;pointer-events:none}.fx-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#EFC5CA,#7E0508)}
 .fx-bar.go i{animation:fxbar 1.5s cubic-bezier(.2,.7,.3,1) forwards}@keyframes fxbar{0%{width:0}60%{width:78%}100%{width:90%}}
 .fx-bar.done i{animation:none;width:100%;transition:width .2s}.fx-bar.done{opacity:0;transition:opacity .4s .25s}
-@media(prefers-reduced-motion:reduce){:where(.pill, .df-cta, .df-pill, .pp-add, .dd-choose, .dcard, .pcard, .df-sim a, .sp-row > *, .rp-sw, .rp-shapes button, .rp-metals button, .rp-colors button, .mk-seg button, .po-vals button, .ih-thumbs button, .df-dots button, .df-arr, .cd-co, .cd-qty button, .pc-way){transition:none}.fx-down{transform:none!important}.fx-pulse{animation:none}.fx-bar.go i{animation:none;width:70%}}
+@media(prefers-reduced-motion:reduce){:where(.pill, .df-cta, .df-pill, .pp-add, .dd-choose, .dcard, .pcard, .df-sim a, .sp-row > *, .rp-sw, .rp-shapes button, .rp-metals button, .rp-colors button, .mk-seg button, .po-vals button, .ih-thumbs button, .df-dots button, .df-arr, .cd-co, .cd-qty button, .pc-way){transition:none}.fx-down{transform:none!important}.fx-pop{animation:none}.fx-bar.go i{animation:none;width:70%}}
+
+/* diamond photographs: no blurred copy behind (it showed as grey in grey). The flat backdrop is the photo's own colour, and the photograph only feathers across its outermost 5% so its rectangle melts away while the stone stays intact */
+.df-win img:not(.df-bgimg),.df-sim .df-im img:not(.df-bgimg){position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent),linear-gradient(to bottom,transparent,#000 5%,#000 95%,transparent);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent),linear-gradient(to bottom,transparent,#000 5%,#000 95%,transparent);mask-composite:intersect}
 

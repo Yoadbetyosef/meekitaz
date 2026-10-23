@@ -2,9 +2,11 @@
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
-/** The feel of a press, everywhere: things lift on hover (CSS), sink the moment a finger lands, and send a soft pink ring outward when let go.
+/** The feel of a press, everywhere: things squish under the finger and spring back with a little overshoot, and a choice pops when it is picked.
  *  And a thin bar at the top (with the tapped card dimmed) while another page is opening, so a slow page never feels like nothing happened. */
 export const PRESS = ".pill, .df-cta, .df-pill, .pp-add, .dd-choose, .dcard, .pcard, .df-sim a, .sp-row > *, .rp-sw, .rp-shapes button, .rp-metals button, .rp-colors button, .mk-seg button, .po-vals button, .ih-thumbs button, .df-dots button, .df-arr, .cd-co, .cd-qty button, .pc-way";
+
+export const CHOICE = ".sp-row > *, .rp-sw, .rp-shapes button, .rp-metals button, .rp-colors button, .mk-seg button, .po-vals button, .ih-thumbs button, .df-dots button, .pc-way";
 
 export default function PressFx() {
   const path = usePathname();
@@ -20,13 +22,14 @@ export default function PressFx() {
 
   useEffect(() => {
     const downEls = new Set<Element>();
-    const pulse = (t: Element) => { t.classList.remove("fx-pulse"); void (t as HTMLElement).offsetWidth; t.classList.add("fx-pulse"); window.setTimeout(() => t.classList.remove("fx-pulse"), 700); };
+    const pop = (t: Element) => { t.classList.remove("fx-pop"); void (t as HTMLElement).offsetWidth; t.classList.add("fx-pop"); window.setTimeout(() => t.classList.remove("fx-pop"), 560); };
     const down = (e: PointerEvent) => {
       const t = (e.target as Element | null)?.closest?.(PRESS); if (!t || (t as HTMLButtonElement).disabled) return;
       t.classList.add("fx-down"); downEls.add(t);
     };
-    const up = () => { downEls.forEach(t => { t.classList.remove("fx-down"); pulse(t); }); downEls.clear(); };
+    const up = () => { downEls.forEach(t => t.classList.remove("fx-down")); downEls.clear(); };
     const click = (e: MouseEvent) => {
+      const ch = (e.target as Element | null)?.closest?.(CHOICE); if (ch) pop(ch); // a choice springs when it is picked
       if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       const a = (e.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null; if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
       let u: URL; try { u = new URL(a.href, location.href); } catch { return; }
