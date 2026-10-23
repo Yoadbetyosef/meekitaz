@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import Image from "next/image";
 import StoneImg from "./StoneImg";
 import RingSteps from "./RingSteps";
+import ImmersiveHero from "./ImmersiveHero";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "./CartProvider";
@@ -81,8 +82,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
   const real = p.options.filter(o => !(o.values.length === 1 && o.values[0] === "Default Title") && o.name !== "Title");
   const [sel, setSel] = useState<Record<string, string>>(() => Object.fromEntries((p.variants[0]?.selected || []).map(s => [s.name, s.value])));
   const variant = useMemo(() => p.variants.find(v => v.selected.every(s => sel[s.name] === s.value)) || p.variants[0], [p, sel]);
-  const [slide, setSlide] = useState(0);
-  const car = useRef<HTMLDivElement>(null);
+  const [heroOn, setHeroOn] = useState(true);
   const metal = metalOf(p.tags) || ringMetalOf(p.title);
   const save = variant.compareAt ? variant.compareAt - variant.price : 0;
   const details = p.tags.filter(t => !/gold|silver|platinum|rose|yellow|white|^NS-|^CBR$|express|normal_side|^RJ-/i.test(t)).slice(0, 4);
@@ -99,7 +99,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
   const metalsHere = cv && ring ? RING_METALS.filter(m => ring.family.some(v => v.shape === cv.shape && v.metal === m)) : [];
   const pickRing = (shape: string, metal: string) => {
     const next = ring?.family.find(v => v.shape === shape && v.metal === metal) || ring?.family.find(v => v.shape === shape);
-    if (!next) return; setRh(next.handle); setSlide(0); car.current?.scrollTo({ left: 0 });
+    if (!next) return; setRh(next.handle);
     window.history.replaceState(null, "", `/products/${next.handle}`);
   };
   const chooseSetting = () => {
@@ -120,55 +120,14 @@ export default function ProductView({ product: p, siblings, related, ring, optio
     addRing(setting, stone);
   };
 
-  return (
-    <main className="pp">
-      <div className="wrap">
-        {ring ? <RingSteps step={1} onDiamond={cv ? chooseSetting : undefined} /> : <p className="pp-crumb"><Link href="/">Home</Link> / {p.productType || "Shop"}{metal ? ` / ${metal}` : ""}</p>}
-        <div className="pp-grid">
-          {/* desktop: stacked gallery */}
-          <div className="pp-gal">
-            {imgs.map((im, i) => (
-              <figure key={im.url} className={i === 0 ? "first" : ""}>
-                <Image src={photoSrc(im.url, 1100, title, i)} alt={im.alt} fill sizes="(max-width:1100px) 50vw, 620px" quality={78} priority={i === 0} unoptimized={isCleaned(photoSrc(im.url, 1100, title, i))} />
-              </figure>
-            ))}
-          </div>
-          {/* phone: swipe */}
-          <div className="pp-carw">
-            <div className="pp-car" ref={car} onScroll={() => car.current && setSlide(Math.round(car.current.scrollLeft / car.current.clientWidth))}>
-              {imgs.map((im, i) => <figure key={im.url}><Image src={photoSrc(im.url, 900, title, i)} alt={im.alt} fill sizes="100vw" quality={75} priority={i === 0} unoptimized={isCleaned(photoSrc(im.url, 900, title, i))} /></figure>)}
-            </div>
-            {imgs.length > 1 && (
-              <div className="pp-line" aria-label={`Photo ${slide + 1} of ${imgs.length}`}>
-                <span style={{ width: `max(${100 / imgs.length}%, 56px)`, left: `calc(${(slide * 100) / imgs.length}% - ${slide / (imgs.length - 1)} * (max(${100 / imgs.length}%, 56px) - ${100 / imgs.length}%))` }} />
-              </div>
-            )}
-          </div>
-
-          <div className="pp-info">
-            <small className="eyebrow">Lab-grown · IGI certified</small>
-            <h1>{title}{kLabel ? <em className="pp-k"> · {kLabel}</em> : null}</h1>
-            <div className="pp-price"><b>{usd(price)}</b>{compareAt > 0 && <><s>{usd(compareAt)}</s><i>{ring ? "Setting only" : `Save ${usd(compareAt - price)}`}</i></>}</div>
-            <p className="pp-sub">{ring ? "Choose the setting first. Next, pick your diamond." : "Serious diamonds, worn lightly."}</p>
-
-            {ring && cv && (
-              <>
-                {(ring.palette?.length ?? 0) > 0 && (<>
-                  <span className="pp-lbl">Stone colour · {ring.color || "White"}</span>
-                  <div className="rp-colors">
-                    {[{ color: ring.color || "", items: [] as { handle: string; shape: string; metal: string }[] }, ...(ring.palette || [])].map(pc => {
-                      const on = pc.color === (ring.color || "");
-                      const hit = on ? null : pc.items.find(v => v.shape === cv.shape && v.metal === cv.metal) || pc.items.find(v => v.shape === cv.shape) || pc.items[0];
-                      return (
-                        <button key={pc.color || "white"} type="button" className={`rp-mt${on ? " on" : ""}`} aria-pressed={on} disabled={!on && !hit} onClick={() => hit && router.push(`/products/${hit.handle}`)}>
-                          <StoneSwatch color={pc.color} src={ring.swatches?.[pc.color]} />{pc.color || "White"}</button>);
-                    })}
-                  </div>
-                </>)}
-                <span className="pp-lbl">Shape · {cv.shape}</span>
-                <div className="rp-shapes">{shapesHere.map(sh => (
-                  <button key={sh.label} type="button" className={`rp-sh${cv.shape === sh.label ? " on" : ""}`} aria-pressed={cv.shape === sh.label} onClick={() => pickRing(sh.label, cv.metal)}>
-                    <i><StoneImg img={sh.img} alt="" base={64} quality={70} /></i><b>{sh.label}</b></button>))}</div>
+  const heroTitle = (t: string) => t.replace(/^(yellow gold|white gold|rose gold|silver|platinum)\s+/i, "").replace(/^\d+K\s+/i, "");
+  const hasMetal = Boolean((ring && cv) || (!ring && ((karatOn && siblings.length > 0) || (hasOpts && siblings.length > 0) || (!karatOn && !hasOpts && siblings.length > 1))));
+  const priceNode = <div className="pp-price"><b>{usd(price)}</b>{compareAt > 0 && <><s>{usd(compareAt)}</s><i>{ring ? "Setting only" : `Save ${usd(compareAt - price)}`}</i></>}</div>;
+  // the metal (and its colour) sit apart from the other choices: on a phone they are the slim bar at the top
+  const metalNode = (
+    <>
+      {ring && cv && (
+        <>
                 {karatOn ? (
                   <Material ns={ns} metals={metalsHere} metal={cv.metal} karat={karat} onMetal={m => pickRing(cv.shape, m)}
                     onKarat={k => { pickKarat(k); if (!isGoldMetal(cv.metal)) pickRing(cv.shape, GOLD_COLORS.find(g => metalsHere.includes(g)) || cv.metal); }} />
@@ -178,9 +137,8 @@ export default function ProductView({ product: p, siblings, related, ring, optio
                     <button key={m} type="button" className={`rp-mt${cv.metal === m ? " on" : ""}`} aria-pressed={cv.metal === m} onClick={() => pickRing(cv.shape, m)}>
                       <span className="rp-sw"><i style={{ background: SW[m] || "#ddd" }} /></span>{m.replace(" gold", "")}</button>))}</div>
                 </>)}
-              </>
-            )}
-
+        </>
+      )}
             {!ring && karatOn && siblings.length > 0 && (
               <Material ns={ns} metals={siblings.map(s => nm(s.metal))} metal={metalNow} karat={karat}
                 onMetal={m => { const t = siblings.find(s => nm(s.metal) === m); if (t && t.handle !== p.handle) router.replace(`/products/${t.handle}`, { scroll: false }); }}
@@ -207,7 +165,30 @@ export default function ProductView({ product: p, siblings, related, ring, optio
                 </div>
               </>
             )}
-
+    </>
+  );
+  const rowsNode = (
+    <>
+      {ring && cv && (
+        <>
+                {(ring.palette?.length ?? 0) > 0 && (<>
+                  <span className="pp-lbl">Stone colour · {ring.color || "White"}</span>
+                  <div className="rp-colors">
+                    {[{ color: ring.color || "", items: [] as { handle: string; shape: string; metal: string }[] }, ...(ring.palette || [])].map(pc => {
+                      const on = pc.color === (ring.color || "");
+                      const hit = on ? null : pc.items.find(v => v.shape === cv.shape && v.metal === cv.metal) || pc.items.find(v => v.shape === cv.shape) || pc.items[0];
+                      return (
+                        <button key={pc.color || "white"} type="button" className={`rp-mt${on ? " on" : ""}`} aria-pressed={on} disabled={!on && !hit} onClick={() => hit && router.push(`/products/${hit.handle}`)}>
+                          <StoneSwatch color={pc.color} src={ring.swatches?.[pc.color]} />{pc.color || "White"}</button>);
+                    })}
+                  </div>
+                </>)}
+                <span className="pp-lbl">Shape · {cv.shape}</span>
+                <div className="rp-shapes">{shapesHere.map(sh => (
+                  <button key={sh.label} type="button" className={`rp-sh${cv.shape === sh.label ? " on" : ""}`} aria-pressed={cv.shape === sh.label} onClick={() => pickRing(sh.label, cv.metal)}>
+                    <i><StoneImg img={sh.img} alt="" base={64} quality={70} /></i><b>{sh.label}</b></button>))}</div>
+        </>
+      )}
             {hasOpts && rows.filter(r => r.name !== "Gold Purity").map(r => (
               <div key={r.name} className="po-row">
                 <span className="pp-lbl">{r.name} · <em>{osel[r.name]}</em></span>
@@ -224,17 +205,25 @@ export default function ProductView({ product: p, siblings, related, ring, optio
                 <div className="pp-pills">{o.values.map(val => <button key={val} type="button" className={sel[o.name] === val ? "on" : ""} onClick={() => setSel({ ...sel, [o.name]: val })}>{val}</button>)}</div>
               </div>
             ))}
+    </>
+  );
+  const ctaNode = ring && cv ? (
+    <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting<small>Next: pick your {cv.shape.toLowerCase()} diamond</small></button>
+  ) : (
+    <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={async () => { const r = hasOpts ? await addConfigured(variant.id, p.handle, osel) : await add(variant.id, 1, step ? karat : ""); if (!r.ok) toast(r.error === "not_configured" ? "This option is being connected for checkout. Please book an appointment and we will complete it with you." : "We could not add this to your bag. Please try again."); }}>{!variant.available ? "Sold out" : busy ? "Adding…" : `Add to bag · ${usd(price)}`}</button>
+  );
+  const apptNode = <Link href="/#contact" className="pp-appt">Book a private appointment</Link>;
 
-            <div className="pp-cta">
-              {ring && cv ? (
-                <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting<small>Next: pick your {cv.shape.toLowerCase()} diamond</small></button>
-              ) : (
-                <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={async () => { const r = hasOpts ? await addConfigured(variant.id, p.handle, osel) : await add(variant.id, 1, step ? karat : ""); if (!r.ok) toast(r.error === "not_configured" ? "This option is being connected for checkout. Please book an appointment and we will complete it with you." : "We could not add this to your bag. Please try again."); }}>{!variant.available ? "Sold out" : busy ? "Adding…" : `Add to bag · ${usd(price)}`}</button>
-              )}
-              <Link href="/#contact" className="pp-appt">Book a private appointment</Link>
-            </div>
-            <div className="pp-trust">{TRUST.map(([d, t]) => <div key={t}><Ic d={d} />{t}</div>)}</div>
-
+  return (
+    <main className="pp ih-on">
+      <ImmersiveHero title={title} bigTitle={heroTitle(title)} images={imgs} model={p.modelImage || undefined} stone={ring?.color || ""}
+        steps={ring ? <RingSteps step={1} onDiamond={cv ? chooseSetting : undefined} /> : null}
+        price={priceNode} metal={hasMetal ? metalNode : null} rows={rowsNode} cta={ctaNode} appt={apptNode} onVisible={setHeroOn} />
+      <div className="wrap">
+        <section className="pp-below">
+          <div>
+            {!ring && <p className="pp-crumb"><Link href="/">Home</Link> / {p.productType || "Shop"}{metal ? ` / ${metal}` : ""}</p>}
+            <h2>Serious diamonds, worn lightly.</h2>
             <div className="pp-acc">
               <details open><summary>Description</summary><div className="pp-desc" dangerouslySetInnerHTML={{ __html: p.descriptionHtml }} /></details>
               <details><summary>Details</summary><ul><li>Lab-grown diamonds, independently certified</li>{metal && <li>Metal: {metal}</li>}{details.map(t => <li key={t}>{t}</li>)}</ul></details>
@@ -242,7 +231,8 @@ export default function ProductView({ product: p, siblings, related, ring, optio
               <details><summary>Care</summary><p>Store separately, avoid harsh chemicals, and clean with warm water and a soft brush. Complimentary cleaning for life at our showroom.</p></details>
             </div>
           </div>
-        </div>
+          <div className="pp-trust">{TRUST.map(([d, t]) => <div key={t}><Ic d={d} />{t}</div>)}</div>
+        </section>
 
         {related.length > 0 && (
           <section className="pp-look">
@@ -260,10 +250,12 @@ export default function ProductView({ product: p, siblings, related, ring, optio
         )}
       </div>
 
-      <div className="pp-sbar">
+      {!heroOn && (
+        <div className="pp-sbar">
         <div><b>{usd(price)}</b>{compareAt > 0 && <s>{usd(compareAt)}</s>}</div>
         {ring && cv ? <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting</button> : <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={() => (hasOpts ? addConfigured(variant.id, p.handle, osel) : add(variant.id))}>{variant.available ? `Add to bag · ${usd(price)}` : "Sold out"}</button>}
       </div>
+      )}
     </main>
   );
 }
