@@ -1,12 +1,10 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import StoneMedia from "@/components/StoneMedia";
-import ChooseStone from "@/components/ChooseStone";
 import RingSteps from "@/components/RingSteps";
-import { getDiamond, vdbConfigured } from "@/lib/vdb";
+import DiamondFlow, { type FlowStone, type Similar } from "@/components/DiamondFlow";
+import { getDiamond, searchDiamonds, searchFancy, vdbConfigured, type Diamond } from "@/lib/vdb";
+import { stoneBg } from "@/lib/stonebg";
 
 export const revalidate = 300;
-const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 
 async function load(id: string) {
   const i = id.indexOf("-"); if (i < 1 || !vdbConfigured) return null;
@@ -19,34 +17,33 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return { title: d ? `${d.carat.toFixed(2)} ct ${d.shape} lab-grown diamond — MEEKITAZ` : "Diamond — MEEKITAZ" };
 }
 
+const flow = (d: Diamond): FlowStone => ({
+  vendor: d.vendor, stock: d.stock, shape: d.shape, carat: d.carat, color: d.color, clarity: d.clarity, cut: d.cut, polish: d.polish, symmetry: d.symmetry, fluor: d.fluor,
+  lab: d.lab, cert: d.cert, certUrl: d.certUrl, image: d.image, video: d.video, embed: d.embed, price: d.price, fancy: d.fancy, ratio: d.ratio, depth: d.depth, table: d.table, measurements: d.measurements,
+});
+
+/** The four stones closest in size: same shape, same kind (white or the same fancy colour). Quiet failure: no list rather than a broken page. */
+async function similarOf(d: Diamond): Promise<Diamond[]> {
+  try {
+    const lo = Math.max(0.3, +(d.carat * 0.78).toFixed(2)), hi = +(d.carat * 1.3).toFixed(2);
+    const pool = d.fancy
+      ? (await searchFancy({ color: d.fancyColor || undefined, shapes: [d.shape], caratFrom: lo, caratTo: hi })).items
+      : (await searchDiamonds({ shapes: [d.shape], caratFrom: lo, caratTo: hi, sort: "price_asc", pageSize: 50 })).items.filter(x => !x.fancy);
+    return pool.filter(x => x.image && !(x.vendor === d.vendor && x.stock === d.stock))
+      .sort((a, b) => Math.abs(a.carat - d.carat) - Math.abs(b.carat - d.carat) || a.price - b.price).slice(0, 4);
+  } catch { return []; }
+}
+
 export default async function DiamondPage({ params }: { params: Promise<{ id: string }> }) {
   const d = await load((await params).id);
   if (!d) notFound();
-  const rows: [string, string | null][] = [
-    ["Shape", d.shape], ["Carat", d.carat.toFixed(2)], [d.fancy ? "Fancy color" : "Color", d.fancy || d.color], ["Clarity", d.clarity], ["Cut", d.cut], ["Polish", d.polish],
-    ["Symmetry", d.symmetry], ["Fluorescence", d.fluor], ["Measurements", d.measurements], ["Table", d.table ? d.table + "%" : null],
-    ["Depth", d.depth ? d.depth + "%" : null], ["Ratio", d.ratio], ["Certificate", `${d.lab} ${d.cert}`],
-  ];
+  const [bg, sim] = await Promise.all([stoneBg(d.image), similarOf(d)]);
+  const simBg = await Promise.all(sim.map(x => stoneBg(x.image, 1200)));
+  const similar: Similar[] = sim.map((x, i) => ({ ...flow(x), bg: simBg[i] }));
   return (
-    <main className="dd">
+    <main className="df">
       {!d.fancy && <RingSteps step={2} />}
-      <div className="wrap dd-grid">
-        <StoneMedia image={d.image} embed={d.embed} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />
-        <div className="dd-info">
-          <Link href={d.fancy ? "/fancy-colors" : "/diamonds"} className="dd-back">{d.fancy ? "← All fancy colors" : "← All diamonds"}</Link>
-          <small className="eyebrow">{d.fancy ? "Fancy color" : "Lab-grown"} · {d.lab} certified</small>
-          <h1>{d.carat.toFixed(2)} ct {d.shape}</h1>
-          <p className="dd-sub">{[d.fancy ? d.fancy : d.color && `${d.color} color`, d.clarity && `${d.clarity} clarity`, d.cut && `${d.cut} cut`].filter(Boolean).join(" · ")}</p>
-          <div className="dd-price">{usd(d.price)}</div>
-          <div className="dd-cta">
-            <ChooseStone stone={{ vendor: d.vendor, stock: d.stock, shape: d.shape, carat: d.carat, color: d.color, clarity: d.clarity, cut: d.cut, lab: d.lab, image: d.image, price: d.price, fancy: d.fancy }} />
-            <Link href="/#contact" className="pill">Book a private appointment</Link>
-            {d.video && !d.embed && <a href={d.video} target="_blank" rel="noopener noreferrer" className="dd-ghost">360° view</a>}
-            <a href={d.certUrl} target="_blank" rel="noopener noreferrer" className="dd-ghost">View certificate</a>
-          </div>
-          <dl className="dd-specs">{rows.filter(r => r[1]).map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}</dl>
-        </div>
-      </div>
+      <DiamondFlow d={flow(d)} bg={bg} similar={similar} />
     </main>
   );
 }

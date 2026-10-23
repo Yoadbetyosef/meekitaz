@@ -1,0 +1,198 @@
+"use client";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import Logo from "./Logo";
+import { useCart } from "./CartProvider";
+import { toast } from "./Toast";
+import { loadSetting, chooseStone, settingFrom, type Setting, type Stone } from "@/lib/setting";
+import { fancyColorOfStone, fancySettingsUrl } from "@/lib/fancy";
+import { showroomImage } from "@/lib/data";
+
+export type FlowStone = {
+  vendor: number; stock: string; shape: string; carat: number; color: string | null; clarity: string | null; cut: string | null; polish: string | null; symmetry: string | null; fluor: string | null;
+  lab: string; cert: string; certUrl: string; image: string; video: string | null; embed: string | null; price: number; fancy: string | null; ratio: string | null; depth: string | null; table: string | null; measurements: string | null;
+};
+export type Similar = FlowStone & { bg: string };
+
+const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
+const title = (d: FlowStone) => `${d.carat.toFixed(2)} ct ${d.shape}`;
+const sub = (d: FlowStone) => [d.fancy ? d.fancy : d.color && `${d.color} color`, d.clarity && `${d.clarity} clarity`, d.cut && `${d.cut} cut`].filter(Boolean).join(" · ");
+const nums = (d: FlowStone) => (String(d.measurements || "").match(/[\d.]+/g) || []).map(Number);
+const perCarat = (d: FlowStone) => `${usd(d.price / d.carat)} per carat`;
+const COL = ["D", "E", "F", "G", "H", "I", "J", "K"], CLR = ["FL", "IF", "VVS1", "VVS2", "VS1", "VS2", "SI1", "SI2"];
+
+function Icon360() { return <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="10" ry="4.2" /><path d="M20.4 9.1l1.7 2.3-2.8.5" /></svg>; }
+
+/** The diamond's photograph in a window the colour of its own backdrop, with the small 360° chip when the stone has a video. */
+function StoneWindow({ d, bg, alt, children }: { d: FlowStone; bg: string; alt: string; children?: React.ReactNode }) {
+  const [vid, setVid] = useState(false);
+  return (
+    <div className="df-win" style={{ "--bgc": bg } as React.CSSProperties}>
+      {vid && d.embed
+        ? <iframe src={d.embed} title="360° view of the diamond" scrolling="no" allow="autoplay" className="df-vid" />
+        // eslint-disable-next-line @next/next/no-img-element
+        : <img src={d.image} alt={alt} referrerPolicy="no-referrer" />}
+      {d.embed
+        ? <button type="button" className="df-360" aria-pressed={vid} aria-label={vid ? "Back to the photo" : "See the diamond turn, 360 degrees"} onClick={() => setVid(v => !v)}><Icon360 /><span>{vid ? "Photo" : "360°"}</span></button>
+        : d.video ? <a className="df-360" href={d.video} target="_blank" rel="noopener noreferrer" aria-label="See the diamond turn, 360 degrees (opens a video)"><Icon360 /><span>360°</span></a> : null}
+      {children}
+    </div>
+  );
+}
+
+export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: string; similar: Similar[] }) {
+  const router = useRouter(); const { addRing } = useCart();
+  const [set, setSet] = useState<Setting | null>(null);       // what the customer chose in step 1
+  const [shown, setShown] = useState<Setting | null>(null);   // that same design in this diamond's shape
+  const [missing, setMissing] = useState(false);
+  const [ch, setCh] = useState(0);
+  const story = useRef<HTMLElement>(null), close = useRef<HTMLElement>(null), reel = useRef<HTMLVideoElement>(null);
+  const shape = d.shape === "Elongated Cushion" ? "Cushion" : d.shape;
+  const fc = fancyColorOfStone(d.fancy);
+  const pickUrl = fc ? fancySettingsUrl(fc, shape) : `/engagement-rings?style=${encodeURIComponent(shape)}&build=1`;
+
+  useEffect(() => { const read = () => setSet(loadSetting()); read(); window.addEventListener("mk-setting", read); return () => window.removeEventListener("mk-setting", read); }, []);
+  useEffect(() => {
+    let off = false; setMissing(false);
+    if (!set) { setShown(null); return; }
+    if (set.shape === d.shape) { setShown(set); return; }
+    setShown(null);
+    fetch(`/api/setting?${new URLSearchParams({ ns: set.ns, shape: d.shape, metal: set.metal, color: set.color || "" })}`).then(r => r.json())
+      .then(j => { if (off) return; if (j.item) setShown(settingFrom(set, j.item)); else setMissing(true); }).catch(() => { if (!off) setMissing(true); });
+    return () => { off = true; };
+  }, [set, d.shape]);
+
+  // the story: five chapters, chosen by how far the pinned section has been scrolled
+  useEffect(() => {
+    const el = story.current; if (!el) return; let raf = 0;
+    const upd = () => { raf = 0; const r = el.getBoundingClientRect(), span = r.height - window.innerHeight; setCh(span > 0 ? Math.min(4, Math.floor(Math.min(1, Math.max(0, -r.top / span)) * 5)) : 0); };
+    const on = () => { if (!raf) raf = requestAnimationFrame(upd); };
+    upd(); window.addEventListener("scroll", on, { passive: true }); window.addEventListener("resize", on);
+    return () => { window.removeEventListener("scroll", on); window.removeEventListener("resize", on); if (raf) cancelAnimationFrame(raf); };
+  }, []);
+  // the reel loads and plays only while it is near the screen
+  useEffect(() => {
+    const el = close.current, v = reel.current; if (!el || !v) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { if (!v.getAttribute("src")) v.setAttribute("src", "/media/brand-reel.mp4"); if (!reduce) v.play().catch(() => {}); } else v.pause();
+    }), { rootMargin: "300px 0px", threshold: 0.1 });
+    io.observe(el); return () => io.disconnect();
+  }, []);
+
+  const stone: Stone = { vendor: d.vendor, stock: d.stock, shape: d.shape, carat: d.carat, color: d.color, clarity: d.clarity, cut: d.cut, lab: d.lab, image: d.image, price: d.price, fancy: d.fancy };
+  const go = () => chooseStone(stone, { push: u => router.push(u), addRing, notify: toast });
+  const total = d.price + (shown ? shown.price : 0);
+  const ctaText = shown ? "Add the ring to the bag" : "Choose this diamond";
+  const sTitle = shown ? shown.title.replace(/^(Yellow|White|Rose) gold /i, "").replace(new RegExp(`^${shape} Diamond `, "i"), "") : "";
+  const sMetal = shown ? [shown.karat, shown.metal].filter(Boolean).join(" ") : "";
+  const n = nums(d), mmw = n.length > 1 ? Math.min(78, Math.round(n[0] * 7.5)) : 40;
+  const kind = d.fancy ? "fancy color" : "";
+
+  return (
+    <>
+      {/* 1 · build your ring */}
+      <section className="df-bd">
+        <div className="df-h"><span className="eyebrow">{d.fancy ? "Fancy color" : "Step 2 of 3"} · Your diamond</span><h1>Build your ring</h1><p className="df-s">{title(d)} · {sub(d)}</p></div>
+        <div className="df-g">
+          <div className="df-pair">
+            <div>
+              <div className="df-card"><span className="df-cap">Your diamond</span><StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} /></div>
+              <div className="df-capt"><b>{title(d)}</b>{usd(d.price)} · {d.lab} certified</div>
+            </div>
+            <div className="df-plus">+</div>
+            <div>
+              <div className="df-card">
+                <span className="df-cap">{shown ? "Your setting" : "Setting"}</span>
+                {shown && shown.image
+                  ? <Image src={shown.image} alt={shown.title} fill sizes="(max-width:767px) 44vw, 28vw" quality={75} className="df-set" />
+                  : <div className="df-none">{missing ? `That setting is not made in ${shape.toLowerCase()}.` : set ? "Finding your setting…" : "Choose a setting for this diamond"}<Link href={pickUrl} className="df-pill">{missing || !set ? "Choose a setting" : "See settings"}</Link></div>}
+              </div>
+              <div className="df-capt"><b>{shown ? sTitle : "No setting yet"}</b>{shown ? `from ${usd(shown.price)}${sMetal ? " · " + sMetal : ""}` : `For your ${shape.toLowerCase()} diamond`}</div>
+            </div>
+          </div>
+          <aside className="df-sum">
+            <h3>Your ring</h3>
+            <div className="df-ln"><span>{title(d)}<em>{sub(d)}</em></span><b>{usd(d.price)}</b></div>
+            <div className="df-ln"><span>{shown ? shown.title : "No setting yet"}<em>{shown ? `Setting${sMetal ? ", " + sMetal : ""}` : "Pick one to see the total"}</em></span><b>{shown ? usd(shown.price) : "—"}</b></div>
+            <div className="df-tot"><span>Total</span><b>{usd(total)}</b></div>
+            <button type="button" className="df-cta" onClick={go}>{ctaText}</button>
+            <Link href="/#contact" className="df-cta o">Book a private appointment</Link>
+            <div className="df-trust"><span>IGI / GIA certified, every stone</span><span>30-day free returns</span><span>Lifetime warranty</span><span>Free insured shipping</span></div>
+          </aside>
+        </div>
+      </section>
+
+      {/* 2 · the story of this stone */}
+      <section className="df-st" ref={story} aria-label="The story of this diamond">
+        <div className="df-pin">
+          <Logo className="df-bglogo" />
+          <div className={`df-stage c${ch}`}>
+            <div className="df-win" style={{ "--bgc": bg } as React.CSSProperties}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={d.image} alt="" referrerPolicy="no-referrer" />
+            </div>
+            <div className="df-ruler"><i style={{ left: `${50 - mmw / 2}%`, right: `${50 - mmw / 2}%` }} /><span>{n.length > 1 ? `${n[0]} × ${n[1]} mm` : ""}</span></div>
+          </div>
+          <div className="df-txt">
+            <div className={`df-ch${ch === 0 ? " on" : ""}`}><span className="df-n">01 / 05 · THE STORY OF THIS STONE</span><h2>{d.carat.toFixed(2)} carats.</h2><p>{n.length > 1 ? `About ${n[0]} × ${n[1]} mm face-up. ` : ""}A {d.shape.toLowerCase()} cut, {d.carat >= 2 ? "a substantial stone" : d.carat >= 1 ? "a generous stone" : "a delicate stone"}.</p><div className="df-gg"><div className="df-row"><span>Shape</span><b>{d.shape}</b></div><div className="df-row"><span>Ratio</span><b>{d.ratio || "—"}</b></div></div></div>
+            <div className={`df-ch${ch === 1 ? " on" : ""}`}><span className="df-n">02 / 05</span><h2>{d.fancy ? `${d.fancy.replace(/^Fancy /, "")}.` : `${d.color} colour.`}</h2><p>{d.fancy ? "A saturated fancy colour, grown in a lab." : ["D", "E", "F"].includes(d.color || "") ? "Colourless: pure white in any setting." : "Near-colourless: it reads as white in any setting."}</p>{!d.fancy && <div className="df-gg"><div className="df-scale">{COL.map(c => <i key={c} className={c === d.color ? "on" : ""}>{c}</i>)}</div></div>}</div>
+            <div className={`df-ch${ch === 2 ? " on" : ""}`}><span className="df-n">03 / 05</span><h2>{d.clarity} clarity.</h2><p>{/SI|I1/.test(d.clarity || "") ? "Tiny characteristics you can see up close." : "Eye-clean: any tiny characteristics are only visible under 10× magnification."}</p><div className="df-gg"><div className="df-scale sm">{CLR.map(c => <i key={c} className={c === d.clarity ? "on" : ""}>{c}</i>)}</div></div></div>
+            <div className={`df-ch${ch === 3 ? " on" : ""}`}><span className="df-n">04 / 05</span><h2>{d.cut || d.polish || "Finished"}.</h2><p>How well it was cut, polished and made symmetrical decides how it catches the light.</p><div className="df-gg">{([["Cut", d.cut], ["Polish", d.polish], ["Symmetry", d.symmetry], ["Table", d.table && d.table + "%"], ["Depth", d.depth && d.depth + "%"]] as [string, string | null][]).filter(r => r[1]).map(([k, v]) => <div key={k} className="df-row"><span>{k}</span><b>{v}</b></div>)}</div></div>
+            <div className={`df-ch${ch === 4 ? " on" : ""}`}><span className="df-n">05 / 05</span><h2>Certified.</h2><div className="df-gg"><div className="df-cert"><b>{d.lab} {d.cert}</b><span>Independently graded. {perCarat(d)}.</span><a href={d.certUrl} target="_blank" rel="noopener noreferrer">View the certificate →</a></div><button type="button" className="df-cta" onClick={go}>{shown ? `Add the ring · ${usd(total)}` : `Choose this diamond · ${usd(d.price)}`}</button></div></div>
+          </div>
+          <div className="df-rail" aria-hidden="true">{[0, 1, 2, 3, 4].map(i => <i key={i} className={i === ch ? "on" : ""} />)}</div>
+        </div>
+      </section>
+
+      {/* 3 · the ending */}
+      {similar.length > 0 && (
+        <section className="df-sec">
+          <span className="eyebrow">Similar stones</span><h2>Other {shape.toLowerCase()} {kind && kind + " "}diamonds you may like</h2>
+          <div className="df-sim">
+            {similar.map(x => {
+              const dc = x.carat - d.carat, dp = x.price - d.price;
+              return (
+                <Link key={`${x.vendor}-${x.stock}`} href={`/diamonds/${x.vendor}-${encodeURIComponent(x.stock)}`}>
+                  <div className="im" style={{ "--bgc": x.bg } as React.CSSProperties}>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={x.image} alt={`${x.carat.toFixed(2)} carat ${x.shape} diamond`} referrerPolicy="no-referrer" loading="lazy" /></div>
+                  <div className="tx"><b>{x.carat.toFixed(2)} ct</b><span>{x.fancy || `${x.color} · ${x.clarity}`} · {x.lab}</span><span className="pr">{usd(x.price)}</span><em>{dc >= 0 ? "+" : "−"}{Math.abs(dc).toFixed(2)} ct · {dp >= 0 ? "+" : "−"}{usd(Math.abs(dp))}</em></div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      <section className="df-sec">
+        <div className="df-see">
+          <Image src={showroomImage} alt="The Meekitaz showroom" width={900} height={900} sizes="(max-width:767px) 100vw, 50vw" quality={75} />
+          <div className="tx">
+            <span className="eyebrow">See it first</span><h2>Come and see it, or have us show you on camera.</h2>
+            <div className="addr">Fifth Avenue, New York</div>
+            <p>By appointment, with the stone and the settings in front of you. Or a virtual appointment: we hold it up to the camera and talk you through it.</p>
+            <div className="btns"><Link href="/#contact" className="df-cta">Book a private appointment</Link><Link href="/#contact" className="df-cta o">Virtual appointment</Link></div>
+          </div>
+        </div>
+      </section>
+
+      <section className="df-sec">
+        <div className="df-band">
+          <Logo className="df-bandlogo" />
+          <div><span className="eyebrow">Your ring</span><h2>Ready when you are.</h2><p>{title(d)}{shown ? ` in the ${sTitle}${sMetal ? ", " + sMetal : ""}` : ""}</p></div>
+          <div className="r"><div className="big">{usd(total)}</div><button type="button" className="df-cta" onClick={go}>{ctaText}</button><small>Free insured shipping · 30-day free returns · Lifetime warranty</small></div>
+        </div>
+        <div className="df-icons"><div><b>IGI / GIA</b>Every stone independently certified</div><div><b>30 days</b>Free returns</div><div><b>For life</b>Warranty on every piece</div><div><b>Free</b>Insured shipping</div></div>
+      </section>
+
+      <section className="df-close" ref={close} aria-label="Meekitaz">
+        <div><Logo className="df-closelogo" /><p>Serious diamonds, worn lightly.</p></div>
+        <div className="vid"><video ref={reel} muted loop playsInline preload="none" poster="/media/brand-reel-poster.jpg" aria-label="Meekitaz, a short film" /></div>
+      </section>
+
+      {/* phone: the total and the button stay in reach */}
+      <div className="df-sbar"><b>{usd(total)}</b><button type="button" className="df-cta" onClick={go}>{shown ? "Add the ring" : "Choose diamond"}</button></div>
+    </>
+  );
+}
