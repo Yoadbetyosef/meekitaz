@@ -48,7 +48,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
   const [shown, setShown] = useState<Setting | null>(null);   // that same design in this diamond's shape
   const [missing, setMissing] = useState(false);
   const [ch, setCh] = useState(0);
-  const cards = useRef<HTMLDivElement>(null), close = useRef<HTMLElement>(null), reel = useRef<HTMLVideoElement>(null);
+  const track = useRef<HTMLDivElement>(null), drag = useRef<{ x: number; y: number; t: number; lock: boolean } | null>(null), swallow = useRef(false), chRef = useRef(0), close = useRef<HTMLElement>(null), reel = useRef<HTMLVideoElement>(null);
   const [hint, setHint] = useState(true);
   const shape = d.shape === "Elongated Cushion" ? "Cushion" : d.shape;
   const fc = fancyColorOfStone(d.fancy);
@@ -65,19 +65,30 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
     return () => { off = true; };
   }, [set, d.shape]);
 
-  // the story: five cards you swipe sideways; the photograph follows the card in view
-  useEffect(() => {
-    const el = cards.current; if (!el) return; let raf = 0;
-    const upd = () => {
-      raf = 0; const mid = el.scrollLeft + el.clientWidth / 2; let best = 0, bd = 1e9;
-      Array.from(el.children).forEach((c, k) => { const h = c as HTMLElement, dd = Math.abs(h.offsetLeft + h.offsetWidth / 2 - mid); if (dd < bd) { bd = dd; best = k; } });
-      setCh(best); if (best > 0) setHint(false);
-    };
-    const on = () => { if (!raf) raf = requestAnimationFrame(upd); };
-    upd(); el.addEventListener("scroll", on, { passive: true }); window.addEventListener("resize", on);
-    return () => { el.removeEventListener("scroll", on); window.removeEventListener("resize", on); if (raf) cancelAnimationFrame(raf); };
-  }, []);
-  const slide = (k: number) => { const el = cards.current; if (!el) return; const c = el.children[Math.max(0, Math.min(4, k))] as HTMLElement; el.scrollTo({ left: c.offsetLeft - (el.clientWidth - c.offsetWidth) / 2, behavior: "smooth" }); };
+  // the story: five cards. One swipe moves exactly one card; the card follows the finger and settles at the left edge, under the photograph
+  const place = (i: number, dx = 0, animate = true) => {
+    const t = track.current; if (!t) return;
+    const step = t.children.length > 1 ? (t.children[1] as HTMLElement).offsetLeft - (t.children[0] as HTMLElement).offsetLeft : 0;
+    t.style.transition = animate ? "transform .5s cubic-bezier(.2,.8,.2,1)" : "none"; t.style.transform = `translate3d(${-i * step + dx}px,0,0)`;
+  };
+  const slide = (k: number) => { const n = Math.max(0, Math.min(4, k)); chRef.current = n; setCh(n); if (n > 0) setHint(false); place(n); };
+  useEffect(() => { chRef.current = ch; place(ch); }, [ch]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { const on = () => place(chRef.current, 0, false); window.addEventListener("resize", on); return () => window.removeEventListener("resize", on); }, []);
+  const onDown = (e: React.PointerEvent) => { if (e.pointerType === "mouse" && e.button !== 0) return; drag.current = { x: e.clientX, y: e.clientY, t: Date.now(), lock: false }; };
+  const onMove = (e: React.PointerEvent) => {
+    const g = drag.current; if (!g) return; const dx = e.clientX - g.x, dy = e.clientY - g.y;
+    if (!g.lock) {
+      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.2) { g.lock = true; try { (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); } catch { /* ignore */ } }
+      else { if (Math.abs(dy) > 10) drag.current = null; return; }
+    }
+    const i = chRef.current; place(i, (i === 0 && dx > 0) || (i === 4 && dx < 0) ? dx * 0.3 : dx, false);
+  };
+  const onUp = (e: React.PointerEvent) => {
+    const g = drag.current; drag.current = null; if (!g || !g.lock) return;
+    swallow.current = true; setTimeout(() => { swallow.current = false; }, 80);
+    const dx = e.clientX - g.x, v = Math.abs(dx) / Math.max(1, Date.now() - g.t), i = chRef.current;
+    slide(dx < -40 || (dx < -14 && v > 0.4) ? i + 1 : dx > 40 || (dx > 14 && v > 0.4) ? i - 1 : i);
+  };
   // the reel loads and plays only while it is near the screen
   useEffect(() => {
     const el = close.current, v = reel.current; if (!el || !v) return;
@@ -148,12 +159,14 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
             <div className="df-cwrap">
               <button type="button" className="df-arr l" aria-label="Previous" onClick={() => slide(ch - 1)} disabled={ch === 0}>‹</button>
               <button type="button" className="df-arr r" aria-label="Next" onClick={() => slide(ch + 1)} disabled={ch === 4}>›</button>
-              <div className="df-cards" ref={cards} role="region" aria-label="The five chapters of this diamond, swipe sideways" tabIndex={0}>
+              <div className="df-cards" role="region" aria-label="The five chapters of this diamond, swipe sideways" tabIndex={0} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={() => { drag.current = null; place(chRef.current); }} onClickCapture={e => { if (swallow.current) { e.preventDefault(); e.stopPropagation(); } }} onKeyDown={e => { if (e.key === "ArrowRight") slide(ch + 1); if (e.key === "ArrowLeft") slide(ch - 1); }}>
+                <div className="df-track" ref={track}>
                 <div className="df-ccard">{hint && <span className="df-swipe">Swipe →</span>}<span className="df-n">01 / 05 · THE STORY OF THIS STONE</span><h2>{d.carat.toFixed(2)} carats.</h2><p>{n.length > 1 ? `About ${n[0]} × ${n[1]} mm face-up. ` : ""}A {d.shape.toLowerCase()} cut, {d.carat >= 2 ? "a substantial stone" : d.carat >= 1 ? "a generous stone" : "a delicate stone"}.</p><div className="df-gg"><div className="df-row"><span>Shape</span><b>{d.shape}</b></div><div className="df-row"><span>Ratio</span><b>{d.ratio || "—"}</b></div></div></div>
                 <div className="df-ccard"><span className="df-n">02 / 05</span><h2>{d.fancy ? `${d.fancy.replace(/^Fancy /, "")}.` : `${d.color} colour.`}</h2><p>{d.fancy ? "A saturated fancy colour, grown in a lab." : ["D", "E", "F"].includes(d.color || "") ? "Colourless: pure white in any setting." : "Near-colourless: it reads as white in any setting."}</p>{!d.fancy && <div className="df-gg"><div className="df-scale">{COL.map(c => <i key={c} className={c === d.color ? "on" : ""}>{c}</i>)}</div></div>}</div>
                 <div className="df-ccard"><span className="df-n">03 / 05</span><h2>{d.clarity} clarity.</h2><p>{/SI|I1/.test(d.clarity || "") ? "Tiny characteristics you can see up close." : "Eye-clean: any tiny characteristics are only visible under 10× magnification."}</p><div className="df-gg"><div className="df-scale sm">{CLR.map(c => <i key={c} className={c === d.clarity ? "on" : ""}>{c}</i>)}</div></div></div>
                 <div className="df-ccard"><span className="df-n">04 / 05</span><h2>{d.cut || d.polish || "Finished"}.</h2><p>How well it was cut, polished and made symmetrical decides how it catches the light.</p><div className="df-gg">{([["Cut", d.cut], ["Polish", d.polish], ["Symmetry", d.symmetry], ["Table", d.table && d.table + "%"], ["Depth", d.depth && d.depth + "%"]] as [string, string | null][]).filter(r => r[1]).map(([k, v]) => <div key={k} className="df-row"><span>{k}</span><b>{v}</b></div>)}</div></div>
                 <div className="df-ccard"><span className="df-n">05 / 05</span><h2>Certified.</h2><div className="df-gg"><div className="df-cert"><b>{d.lab} {d.cert}</b><span>Independently graded. {perCarat(d)}.</span><a href={d.certUrl} target="_blank" rel="noopener noreferrer">View the certificate →</a></div><button type="button" className="df-cta" onClick={go}>{shown ? `Add the ring · ${usd(total)}` : `Choose this diamond · ${usd(d.price)}`}</button></div></div>
+                </div>
               </div>
             </div>
             <div className="df-dots">{[0, 1, 2, 3, 4].map(i => <button key={i} type="button" aria-label={`Chapter ${i + 1}`} className={i === ch ? "on" : ""} onClick={() => slide(i)} />)}</div>
