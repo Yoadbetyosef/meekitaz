@@ -23,8 +23,8 @@ function looksLikePhoto(el: HTMLImageElement): boolean | null {
   } catch { return null; }
 }
 
-export default function ImmersiveHero({ title, bigTitle, images, model, stone, steps, price, metal, rows, cta, appt, onVisible }: {
-  title: string; bigTitle: string; images: Img[]; model?: string; stone?: string;
+export default function ImmersiveHero({ title, bigTitle, images, model, stone, steps, summary, price, metal, rows, cta, appt, onVisible }: {
+  title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; summary?: string[];
   steps?: ReactNode; price: ReactNode; metal?: ReactNode; rows?: ReactNode; cta: ReactNode; appt?: ReactNode; onVisible?: (on: boolean) => void;
 }) {
   const slides = useMemo<Slide[]>(() => {
@@ -36,6 +36,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   }, [images, model]);
   const N = slides.length;
   const [i, setI] = useState(0);
+  const [open, setOpen] = useState(false); // phone: the sheet at the bottom, folded (title, what is chosen, price, button) or open (every choice)
   const [modes, setModes] = useState<Record<string, "photo" | "piece">>({});
   const box = useRef<HTMLElement>(null), vid = useRef<HTMLVideoElement>(null), vis = useRef(true);
   const cur = Math.min(i, N - 1);
@@ -43,21 +44,18 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const go = useCallback((k: number) => setI(((k % N) + N) % N), [N]);
   useEffect(() => { setI(x => Math.min(x, N - 1)); }, [N]);
 
-  // phone: the piece sits in the middle of the free space between the headline and the choices, however tall either of them is
+  // phone: where the folded sheet starts, so the picture can fill everything above it and carry on behind it
   const fit = useCallback(() => {
     const el = box.current; if (!el) return;
-    if (window.innerWidth > 767) { el.style.removeProperty("--pct"); el.style.removeProperty("--pch"); return; }
-    const hr = el.getBoundingClientRect(), tt = el.querySelector(".ih-tt")?.getBoundingClientRect(), bot = el.querySelector(".ih-bot")?.getBoundingClientRect();
-    if (!tt || !bot) return;
-    const top = tt.bottom - hr.top + 8, bottom = bot.top - hr.top - 8;
-    el.style.setProperty("--pct", `${Math.round(top)}px`);
-    el.style.setProperty("--pch", `${Math.round(Math.max(bottom - top, 170))}px`);
+    if (window.innerWidth > 767) { el.style.removeProperty("--sht"); return; }
+    const ctl = el.querySelector(".ih-ctl"); if (!ctl || el.classList.contains("open")) return;
+    el.style.setProperty("--sht", `${Math.round(ctl.getBoundingClientRect().top - el.getBoundingClientRect().top)}px`);
   }, []);
   useEffect(() => {
     fit();
-    const ro = new ResizeObserver(fit); [".ih-tt", ".ih-bot"].forEach(q => { const n = box.current?.querySelector(q); if (n) ro.observe(n); });
+    const ro = new ResizeObserver(fit); const c = box.current?.querySelector(".ih-ctl"); if (c) ro.observe(c);
     window.addEventListener("resize", fit); return () => { ro.disconnect(); window.removeEventListener("resize", fit); };
-  }, [fit, cur, rows]);
+  }, [fit, cur, rows, open]);
 
   // the film loads when it is near, plays only while it is the slide on screen and the hero is on screen
   useEffect(() => {
@@ -76,7 +74,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
     const key = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement | null; if (t && /^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName)) return;
       if (!vis.current) return;
-      if (e.key === "ArrowRight") go(cur + 1); else if (e.key === "ArrowLeft") go(cur - 1);
+      if (e.key === "ArrowRight") go(cur + 1); else if (e.key === "ArrowLeft") go(cur - 1); else if (e.key === "Escape") setOpen(false);
     };
     window.addEventListener("keydown", key); return () => window.removeEventListener("keydown", key);
   }, [cur, go]);
@@ -98,7 +96,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const diamond = DIAMOND[stone || ""] || DIAMOND.White;
   const src = (u: string, w: number, k: number) => photoSrc(u, w, title, k);
   return (
-    <section className="ih" ref={box} data-mode={mode} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
+    <section className={`ih${open ? " open" : ""}`} ref={box} data-mode={mode} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
       <div className="ih-slides">
         {slides.map((sl, k) => {
           const m = modeOf(sl), on = k === cur;
@@ -114,6 +112,10 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
         })}
       </div>
       <div className="ih-shade" />
+      {open && <div className="ih-scrim" onClick={() => setOpen(false)} />}
+      <span className="ih-cnt" aria-hidden="true">{String(cur + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}</span>
+      <button type="button" className="ih-ar l" aria-label="Previous photo" onClick={() => go(cur - 1)}><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" /></svg></button>
+      <button type="button" className="ih-ar r" aria-label="Next photo" onClick={() => go(cur + 1)}><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" /></svg></button>
       <div className="ih-segs" aria-hidden="true">{slides.map((_, k) => <i key={k} className={k === cur ? "on" : ""} />)}</div>
 
       <div className="ih-tt">
@@ -138,6 +140,12 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
       </div>
 
       <div className="ih-ctl">
+        <button type="button" className="ih-hdl" aria-label={open ? "Fold the choices" : "Open the choices"} aria-expanded={open} onClick={() => setOpen(o => !o)}><i /></button>
+        <div className="ih-pk">
+          {steps}
+          <h2 className="ih-st" onClick={() => setOpen(o => !o)}>{bigTitle}</h2>
+          {summary && summary.length > 0 && <div className="ih-pills" onClick={() => setOpen(o => !o)}>{summary.map((t, k) => <span key={k}>{t}</span>)}<span className="m">{open ? "Done ▾" : "Change ▴"}</span></div>}
+        </div>
         {(metal || steps) && <div className="ih-top">{steps}{metal}</div>}
         <div className="ih-bot">
           <div className="ih-pa"><div className="ih-price">{price}</div><div className="ih-cta">{cta}</div></div>

@@ -122,6 +122,9 @@ export default function ProductView({ product: p, siblings, related, ring, optio
 
   const heroTitle = (t: string) => t.replace(/^(yellow gold|white gold|rose gold|silver|platinum)\s+/i, "").replace(/^\d+K\s+/i, "");
   const hasMetal = Boolean((ring && cv) || (!ring && ((karatOn && siblings.length > 0) || (hasOpts && siblings.length > 0) || (!karatOn && !hasOpts && siblings.length > 1))));
+  const metalWord = nm(metalNow || "").replace(/\s*gold$/i, "");
+  const purity = hasOpts ? (osel["Gold Purity"] || "") : kLabel;
+  const summary = [[purity, metalWord].filter(Boolean).join(" "), ...(ring && cv ? [cv.shape, ring.color || "White"] : []), ...(hasOpts ? rows.filter(r => r.name !== "Gold Purity").map(r => String(osel[r.name] || "").replace(/ Carat$/i, " ct")) : []), ...real.map(o => sel[o.name] || "")].filter(Boolean);
   const priceNode = <div className="pp-price"><b>{usd(price)}</b>{compareAt > 0 && <><s>{usd(compareAt)}</s><i>{ring ? "Setting only" : `Save ${usd(compareAt - price)}`}</i></>}</div>;
   // the metal (and its colour) sit apart from the other choices: on a phone they are the slim bar at the top
   const metalNode = (
@@ -218,6 +221,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
     <main className="pp ih-on">
       <ImmersiveHero title={title} bigTitle={heroTitle(title)} images={imgs} model={p.modelImage || undefined} stone={ring?.color || ""}
         steps={ring ? <RingSteps step={1} onDiamond={cv ? chooseSetting : undefined} /> : null}
+        summary={summary}
         price={priceNode} metal={hasMetal ? metalNode : null} rows={rowsNode} cta={ctaNode} appt={apptNode} onVisible={setHeroOn} />
       <div className="wrap">
         <section className="pp-below">
