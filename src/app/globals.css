@@ -813,4 +813,3 @@ a.rp-mt{text-decoration:none}
 @media(prefers-reduced-motion:reduce){.rp-mt.on .rp-gem::after{animation:none;opacity:0}}
 
 @media(max-width:767px){.sc-row{flex-wrap:nowrap;gap:6px;justify-content:space-between}.rp-sw.rp-gem{width:52px;height:52px}.sc-row .rp-mt{font-size:11px;letter-spacing:.04em}}
-@media(hover:hover){.pcard-flip{display:none!important}}
