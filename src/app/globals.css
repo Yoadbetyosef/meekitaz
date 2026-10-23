@@ -807,3 +807,6 @@ a.rp-mt{text-decoration:none}
 /* choosing a metal must show the ring in that metal: while the pointer is on the metal circles, and after a click until the pointer leaves the card, the worn photo steps aside */
 @media(hover:hover){.pcard:has(.pc-metals:hover) .pcard-img.has-model .pcard-model{opacity:0}}
 
+/* shape pickers: room around the circles so the lift on hover, the red ring on the chosen one and the shadow are never cut off by the scrolling row; circles a touch smaller */
+.sp-row{padding:22px 12px 14px;margin:-22px -12px -8px}
+.sp-img{width:92%}
