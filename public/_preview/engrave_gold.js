@@ -381,11 +381,12 @@ function cleanTiny(data, gray, W, H) {
  *  A mark counts when it is small, near-black and has gold all around it (diamonds, white background and shadows do not); a handful of them close together
  *  is a word. They are painted out from the gold around them. Returns false when there is nothing like that. */
 function cleanGoldInk(data, gray, W, H) {
-    const sc = W / 1000, N = W * H, gold = new Uint8Array(N), ink = new Uint8Array(N);
+    const sc = W / 1000, N = W * H, gold = new Uint8Array(N), ink = new Uint8Array(N), strong = new Uint8Array(N);
     for (let i = 0; i < N; i++) {
         const r = data[i * 3], g = data[i * 3 + 1], b = data[i * 3 + 2];
         gold[i] = r > g && g > b + 14 && gray[i] > 100 ? 1 : 0;
         ink[i] = gray[i] < 105 ? 1 : 0;
+        strong[i] = gray[i] < 62 ? 1 : 0;
     }
     const lab = new Int32Array(N), comps = [];
     for (let p = 0; p < N; p++) {
@@ -434,15 +435,22 @@ function cleanGoldInk(data, gray, W, H) {
             }
         c.gf = t ? g / t : 0;
         near.push(c);
-        if (c.gf >= 0.8)
+        let st = 0;
+        for (const q of c.pts)
+            st += strong[q];
+        // a letter: tall enough, solid, and its core is near-black (the dark crevices of hinges and clasps are dark gold, not black)
+        if (c.gf >= 0.85 && h >= 9 * sc && c.n >= 30 * sc * sc && st >= 0.35 * c.n)
             cand.push(c);
     }
     // a word: marks with several other marks close by
-    const keep = cand.filter(c => cand.reduce((k, d) => k + (d !== c && Math.abs((d.x0 + d.x1) / 2 - (c.x0 + c.x1) / 2) < 42 * sc && Math.abs((d.y0 + d.y1) / 2 - (c.y0 + c.y1) / 2) < 42 * sc ? 1 : 0), 0) >= 3);
-    if (keep.length < 5)
+    const hts = (c) => c.y1 - c.y0 + 1;
+    const keep = cand.filter(c => { let k = 0; for (const d of cand)
+        if (d !== c && Math.abs((d.x0 + d.x1) / 2 - (c.x0 + c.x1) / 2) < 45 * sc && Math.abs((d.y0 + d.y1) / 2 - (c.y0 + c.y1) / 2) < 45 * sc && hts(d) / hts(c) > 0.55 && hts(d) / hts(c) < 1.8)
+            k++; return k >= 3; });
+    if (keep.length < 6)
         return false;
     // the last bits of the letters (their soft edges, parts hidden behind a stone) are fainter: take any small dark mark right next to the word, with gold mostly around it
-    const grown = near.filter(c => !keep.includes(c) && c.gf >= 0.45 && keep.some(k => Math.abs((k.x0 + k.x1) / 2 - (c.x0 + c.x1) / 2) < 30 * sc && Math.abs((k.y0 + k.y1) / 2 - (c.y0 + c.y1) / 2) < 30 * sc));
+    const grown = near.filter(c => !keep.includes(c) && c.gf >= 0.45 && keep.some(k => Math.abs((k.x0 + k.x1) / 2 - (c.x0 + c.x1) / 2) < 22 * sc && Math.abs((k.y0 + k.y1) / 2 - (c.y0 + c.y1) / 2) < 22 * sc));
     keep.push(...grown);
     const er = new Uint8Array(N);
     for (const c of keep)
