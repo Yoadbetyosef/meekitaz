@@ -189,15 +189,15 @@ function cleanGoldInk(data: Uint8Array, gray: Float32Array, W: number, H: number
     const id = comps.length + 1, c = { n: 0, x0: W, x1: 0, y0: H, y1: 0, pts: [] as number[], gf: 0 }, st = [p]; lab[p] = id;
     while (st.length) {
       const q = st.pop()!, qx = q % W, qy = (q / W) | 0; c.n++; c.pts.push(q); c.x0 = Math.min(c.x0, qx); c.x1 = Math.max(c.x1, qx); c.y0 = Math.min(c.y0, qy); c.y1 = Math.max(c.y1, qy);
-      if (c.n > 4000) break;
+      if (c.n > 9000) break;
       for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) { const nx = qx + i, ny = qy + j; if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue; const nq = ny * W + nx; if (ink[nq] && !lab[nq]) { lab[nq] = id; st.push(nq); } }
     }
     comps.push(c);
   }
-  const rr = Math.max(3, Math.round(5 * sc)), cand: typeof comps = [], near: typeof comps = [];
+  const rr = Math.max(3, Math.round(5 * sc)), cand: typeof comps = [], near: typeof comps = [], seeds: typeof comps = [];
   for (const c of comps) {
     const h = c.y1 - c.y0 + 1, w = c.x1 - c.x0 + 1;
-    if (c.n < 6 * sc * sc || c.n > 420 * sc * sc || h > 34 * sc || w > 40 * sc) continue;
+    if (c.n < 6 * sc * sc || c.n > 1600 * sc * sc || h > 48 * sc || w > 90 * sc) continue;   // letters that touch each other make one larger mark
     let g = 0, t = 0;
     for (let y = Math.max(0, c.y0 - rr); y <= Math.min(H - 1, c.y1 + rr); y++) for (let x = Math.max(0, c.x0 - rr); x <= Math.min(W - 1, c.x1 + rr); x++) {
       const q = y * W + x; if (ink[q]) continue; t++; if (gold[q]) g++;
@@ -206,14 +206,17 @@ function cleanGoldInk(data: Uint8Array, gray: Float32Array, W: number, H: number
     near.push(c);
     let st = 0; for (const q of c.pts) st += strong[q];
     // a letter: tall enough, solid, and its core is near-black (the dark crevices of hinges and clasps are dark gold, not black)
-    if (c.gf >= 0.85 && h >= 9 * sc && c.n >= 30 * sc * sc && st >= 0.35 * c.n) cand.push(c);
+    if (c.gf >= 0.85 && h >= 11 * sc && c.n >= 40 * sc * sc && st >= 0.35 * c.n) seeds.push(c);   // bold letters of the back plate; the tiny print of a screw-back is not touched
+    if (c.gf >= 0.8) cand.push(c);
   }
   // a word: marks with several other marks close by
   const hts = (c: (typeof comps)[number]) => c.y1 - c.y0 + 1;
-  const keep = cand.filter(c => { let k = 0; for (const d of cand) if (d !== c && Math.abs((d.x0 + d.x1) / 2 - (c.x0 + c.x1) / 2) < 45 * sc && Math.abs((d.y0 + d.y1) / 2 - (c.y0 + c.y1) / 2) < 45 * sc && hts(d) / hts(c) > 0.55 && hts(d) / hts(c) < 1.8) k++; return k >= 2; });
-  if (keep.length < 5) return false;
-  // the last bits of the letters (their soft edges, parts hidden behind a stone) are fainter: take any small dark mark right next to the word, with gold mostly around it
-  const grown = near.filter(c => !keep.includes(c) && c.gf >= 0.45 && keep.some(k => Math.abs((k.x0 + k.x1) / 2 - (c.x0 + c.x1) / 2) < 22 * sc && Math.abs((k.y0 + k.y1) / 2 - (c.y0 + c.y1) / 2) < 22 * sc));
+  // is there an engraving at all? a row of letter-sized, near-black, solid marks on gold (hinges, clasps and gem gaps do not look like that)
+  const sure = seeds.filter(c => { let k = 0; for (const d of seeds) if (d !== c && Math.abs((d.x0 + d.x1) / 2 - (c.x0 + c.x1) / 2) < 45 * sc && Math.abs((d.y0 + d.y1) / 2 - (c.y0 + c.y1) / 2) < 45 * sc && hts(d) / hts(c) > 0.55 && hts(d) / hts(c) < 1.8) k++; return k >= 2; });
+  if (sure.length < 5) return false;
+  // if so, paint out all of the word: every small dark mark in the neighbourhood of the sure ones that sits on gold, and then the faint ones next to those
+  const keep = cand.filter(c => sure.includes(c) || sure.some(k => Math.abs((k.x0 + k.x1) / 2 - (c.x0 + c.x1) / 2) < 170 * sc && Math.abs((k.y0 + k.y1) / 2 - (c.y0 + c.y1) / 2) < 110 * sc));   // the pair: the same word is on both earrings
+  const grown = near.filter(c => !keep.includes(c) && c.gf >= 0.45 && keep.some(k => Math.abs((k.x0 + k.x1) / 2 - (c.x0 + c.x1) / 2) < 26 * sc && Math.abs((k.y0 + k.y1) / 2 - (c.y0 + c.y1) / 2) < 26 * sc));
   keep.push(...grown);
   const er = new Uint8Array(N);
   for (const c of keep) for (const q of c.pts) { const qx = q % W, qy = (q / W) | 0; for (let j = -4; j <= 4; j++) for (let i = -4; i <= 4; i++) { const nx = qx + i, ny = qy + j; if (nx >= 0 && ny >= 0 && nx < W && ny < H) er[ny * W + nx] = 1; } }
