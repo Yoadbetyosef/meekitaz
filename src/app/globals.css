@@ -1290,3 +1290,17 @@ a.rp-mt{text-decoration:none}
   .ih-ph2 .ih-fgw .ih-fg{object-fit:cover;object-position:50% 50%}
 }
 
+/* ===== product hero on a laptop and desktop: the piece takes the free area above the title and left of the panel (nothing can touch), a smaller title, the product's own film as a contained slide ===== */
+@media(min-width:768px){
+  .ih-pager{bottom:36px}
+  .ih-tt{display:grid;grid-template-columns:auto 1fr;column-gap:12px;row-gap:8px;align-items:baseline;gap:8px 12px}
+  .ih-tt .eyebrow{grid-column:1;grid-row:1}.ih-tt .ih-cap{grid-column:2;grid-row:1;font-size:17px}.ih-tt h1{grid-column:1/-1;grid-row:2}
+  .ih[data-mode] .ih-tt h1[class]{font-size:clamp(24px,2.2vw,34px);line-height:1}
+  .ih[data-mode=piece] .ih-tt{left:118px;bottom:98px;max-width:calc(100% - 118px - 3.2% - 388px)}
+  .ih[data-mode=piece] .ih-tt h1[class]{font-size:clamp(20px,1.83vw,28px)}
+  .ih-pc,.ih-pc.st{left:118px;right:calc(3.2% + 388px);top:134px;bottom:calc(100% - var(--ttop,560px) + 14px);width:auto;height:auto;aspect-ratio:auto;transform:scale(.96);transform-origin:50% 50%}
+  .ih-sl.on .ih-pc,.ih-sl.on .ih-pc.st{transform:scale(1)}
+  .ih-pc.clip{mix-blend-mode:normal;display:grid;place-items:center}
+  .ih-pc.clip video{position:static;height:100%;width:auto;aspect-ratio:1;max-width:100%;border-radius:28px;object-fit:cover;background:#15110f;box-shadow:0 30px 60px -30px rgba(0,0,0,.55)}
+}
+

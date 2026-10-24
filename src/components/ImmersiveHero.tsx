@@ -8,7 +8,7 @@ import { stonePicture } from "@/lib/stonePicture";
  *  A photo turns the page dark with white type; a product shot on white turns it warm cream with dark type, so the piece is always seen properly.
  *  Desktop: one glass card on the right. Phone: metal in a slim bar at the top, everything else with the price and the button in a panel at the bottom, all on screen at once. */
 type Img = { url: string; alt: string };
-type Slide = { kind: "img" | "stone" | "film"; url?: string; alt: string; label: string };
+type Slide = { kind: "img" | "stone" | "film" | "clip"; url?: string; alt: string; label: string };
 const VIEW_NAMES = ["The piece", "Another view", "Detail", "Detail", "Detail", "Detail"];
 
 /** Looks at a picture: is it a photograph (dark page) rather than a product shot on white (cream page)? And is its lower part, which sits behind the sheet on a phone, dark or light?
@@ -47,26 +47,46 @@ function washOf(el: HTMLImageElement, frame: number): Wash | null {
 }
 const washGrad = (cols: string[], v: boolean) => `linear-gradient(${v ? 90 : 180}deg,${cols.map((c, k) => `${c} ${Math.round(k * 100 / 6)}%`).join(",")})`;
 
-export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, film, steps, summary, price, metal, rows, cta, appt, onVisible }: {
-  title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; stoneShape?: string; film?: { src: string; poster: string }; summary?: string[];
+/** Where the piece is on a product shot: the shots are squares with a lot of white around the piece, so the piece looks small. The box around what is not white, as fractions of the picture. */
+type Trim = { x0: number; y0: number; x1: number; y1: number; r: number };
+function trimOf(el: HTMLImageElement): Trim | null {
+  try {
+    const nw = el.naturalWidth, nh = el.naturalHeight; if (!nw || !nh) return null;
+    const W = 160, H = Math.max(40, Math.round(160 * nh / nw));
+    const c = document.createElement("canvas"); c.width = W; c.height = H;
+    const x = c.getContext("2d", { willReadFrequently: true }); if (!x) return null;
+    x.drawImage(el, 0, 0, W, H);
+    const d = x.getImageData(0, 0, W, H).data; let x0 = W, x1 = 0, y0 = H, y1 = 0;
+    for (let y = 0; y < H; y++) for (let xx = 0; xx < W; xx++) { const i = (y * W + xx) * 4; if (d[i + 3] > 20 && (d[i] < 238 || d[i + 1] < 238 || d[i + 2] < 238)) { if (xx < x0) x0 = xx; if (xx > x1) x1 = xx; if (y < y0) y0 = y; if (y > y1) y1 = y; } }
+    if (x1 <= x0 || y1 <= y0) return null;
+    const pad = Math.max(x1 - x0, y1 - y0) * 0.06;
+    return { x0: Math.max(0, x0 - pad) / W, x1: Math.min(W, x1 + pad) / W, y0: Math.max(0, y0 - pad) / H, y1: Math.min(H, y1 + pad) / H, r: nw / nh };
+  } catch { return null; }
+}
+
+export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, film, clip, steps, summary, price, metal, rows, cta, appt, onVisible }: {
+  title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; stoneShape?: string; film?: { src: string; poster: string }; clip?: { src: string; poster: string }; summary?: string[];
   steps?: ReactNode; price: ReactNode; metal?: ReactNode; rows?: ReactNode; cta: ReactNode; appt?: ReactNode; onVisible?: (on: boolean) => void;
 }) {
+  const clipSrc = clip?.src;
   const slides = useMemo<Slide[]>(() => {
     const list: Slide[] = images.map(im => ({ kind: "img" as const, url: im.url, alt: im.alt, label: "" }));
     const m = model ? list.findIndex(s => s.url === model) : -1;
     if (m > 0) { const [x] = list.splice(m, 1); list.unshift(x); } // the worn photo opens the page
     let n = 0; list.forEach(s => { s.label = s.url === model ? "Worn" : VIEW_NAMES[Math.min(n++, VIEW_NAMES.length - 1)]; });
-    return [...list, { kind: "stone", alt: "The stone", label: "The stone" }, { kind: "film", alt: "Meekitaz, a short film", label: "The film" }];
-  }, [images, model]);
+    return [...list, ...(clipSrc ? [{ kind: "clip" as const, alt: "The piece in motion", label: "In motion" }] : []), { kind: "stone", alt: "The stone", label: "The stone" }, { kind: "film", alt: "Meekitaz, a short film", label: "The film" }];
+  }, [images, model, clipSrc]);
   const N = slides.length;
   const [i, setI] = useState(0);
   const [open, setOpen] = useState(false); // phone: the sheet at the bottom, folded (title, what is chosen, price, button) or open (every choice)
   const [modes, setModes] = useState<Record<string, "photo" | "piece">>({});
   const [tones, setTones] = useState<Record<string, "dark" | "light">>({});
   const [washes, setWashes] = useState<Record<string, Wash>>({});
-  const box = useRef<HTMLElement>(null), vid = useRef<HTMLVideoElement>(null), vis = useRef(true);
+  const [trims, setTrims] = useState<Record<string, Trim>>({});
+  const [pcBox, setPcBox] = useState({ w: 0, h: 0 });
+  const box = useRef<HTMLElement>(null), vid = useRef<HTMLVideoElement>(null), cvid = useRef<HTMLVideoElement>(null), vis = useRef(true);
   const cur = Math.min(i, N - 1);
-  const modeOf = useCallback((s: Slide): "photo" | "piece" => s.kind === "film" ? "photo" : s.kind === "stone" ? "piece" : (modes[s.url || ""] ?? (s.url === model ? "photo" : "piece")), [modes, model]);
+  const modeOf = useCallback((s: Slide): "photo" | "piece" => s.kind === "film" ? "photo" : s.kind === "stone" || s.kind === "clip" ? "piece" : (modes[s.url || ""] ?? (s.url === model ? "photo" : "piece")), [modes, model]);
   const go = useCallback((k: number) => setI(((k % N) + N) % N), [N]);
   useEffect(() => { setI(x => Math.min(x, N - 1)); }, [N]);
 
@@ -91,9 +111,30 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
     if (near && !v.getAttribute("src")) v.setAttribute("src", filmSrc);
     if (slides[cur]?.kind === "film" && vis.current && !reduce) v.play().catch(() => {}); else v.pause();
   }, [cur, slides, N]);
+  // the product's own film: contained in the piece area, plays only while it is the slide on screen
+  useEffect(() => {
+    const v = cvid.current; if (!v || !clip) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const near = slides[cur]?.kind === "clip" || slides[(cur + 1) % N]?.kind === "clip" || slides[(cur - 1 + N) % N]?.kind === "clip";
+    if (near && !v.getAttribute("src")) v.setAttribute("src", clip.src);
+    if (slides[cur]?.kind === "clip" && vis.current && !reduce) v.play().catch(() => {}); else v.pause();
+  }, [cur, slides, N, clip]);
+  // laptop and desktop: where the title starts (the piece takes everything above it), and how big the piece area is (to scale the piece up to it)
+  useEffect(() => {
+    const el = box.current; const tt = el?.querySelector<HTMLElement>(".ih-tt"); if (!el || !tt) return;
+    const set = () => {
+      el.style.setProperty("--ttop", `${tt.offsetTop}px`);
+      const pc = el.querySelector<HTMLElement>(".ih-pc");
+      if (window.innerWidth < 768 || !pc) { setPcBox(b => (b.w === 0 && b.h === 0 ? b : { w: 0, h: 0 })); return; }
+      const w = Math.round(pc.offsetWidth), h = Math.round(pc.offsetHeight);
+      setPcBox(b => (b.w === w && b.h === h ? b : { w, h }));
+    };
+    set(); const ro = new ResizeObserver(set); ro.observe(tt); ro.observe(el);
+    window.addEventListener("resize", set); return () => { ro.disconnect(); window.removeEventListener("resize", set); };
+  }, [cur, slides]);
   useEffect(() => {
     const el = box.current; if (!el) return;
-    const io = new IntersectionObserver(es => es.forEach(e => { vis.current = e.isIntersecting; onVisible?.(e.isIntersecting); const v = vid.current; if (v && !e.isIntersecting) v.pause(); }), { threshold: 0.12 });
+    const io = new IntersectionObserver(es => es.forEach(e => { vis.current = e.isIntersecting; onVisible?.(e.isIntersecting); const v = vid.current; if (v && !e.isIntersecting) v.pause(); const c = cvid.current; if (c && !e.isIntersecting) c.pause(); }), { threshold: 0.12 });
     io.observe(el); return () => io.disconnect();
   }, [onVisible]);
   useEffect(() => {
@@ -115,6 +156,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   };
   const onImg = (url: string) => (e: React.SyntheticEvent<HTMLImageElement>) => {
     const r = measure(e.currentTarget);
+    const tr = trimOf(e.currentTarget); if (tr) setTrims(m => (m[url] ? m : { ...m, [url]: tr }));
     if (url !== model && r.photo !== null) setModes(m => (m[url] === (r.photo ? "photo" : "piece") ? m : { ...m, [url]: r.photo ? "photo" : "piece" }));
     if (r.dark !== null) setTones(t => (t[url] === (r.dark ? "dark" : "light") ? t : { ...t, [url]: r.dark ? "dark" : "light" }));
   };
@@ -123,6 +165,13 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
     onImg(url)(e);
     const f = box.current ? box.current.clientWidth / Math.max(1, box.current.clientHeight) : 1.78;
     const w = washOf(e.currentTarget, f); if (w) setWashes(m => (m[url] ? m : { ...m, [url]: w }));
+  };
+  // a piece photo is scaled and moved so the piece (not the white around it) fills the piece area
+  const trimStyle = (url?: string): CSSProperties | undefined => {
+    const t = url ? trims[url] : undefined; if (!t || !pcBox.w || !pcBox.h) return undefined;
+    const dw = t.r >= pcBox.w / pcBox.h ? pcBox.w : pcBox.h * t.r, dh = dw / t.r;
+    const bw = (t.x1 - t.x0) * dw, bh = (t.y1 - t.y0) * dh, sc = Math.min(1.9, Math.max(1, Math.min(pcBox.w / bw, pcBox.h / bh)));
+    return { transform: `translate(${((0.5 - (t.x0 + t.x1) / 2) * dw * sc).toFixed(1)}px, ${((0.5 - (t.y0 + t.y1) / 2) * dh * sc).toFixed(1)}px) scale(${sc.toFixed(3)})` };
   };
   const s = slides[cur], mode = modeOf(s);
   // on a phone the sheet sits over the lower part of the picture: white type when that part is dark, dark type when it is light
@@ -145,8 +194,9 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
                     {w && <div className="ih-wash" aria-hidden="true"><i className="a" /><i className="b" /></div>}
                     <div className="ih-fgw"><Image className="ih-fg" src={src(sl.url, 1500, k)} alt={sl.alt} fill sizes="100vw" quality={78} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1500, k))} onLoad={onFg(sl.url)} /></div>
                   </div>); })()
-                : <div className="ih-pc"><Image className="ih-pi" src={src(sl.url, 1400, k)} alt={sl.alt} fill sizes="(max-width:767px) 92vw, 820px" quality={80} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1400, k))} onLoad={onImg(sl.url)} /></div>)}
+                : <div className="ih-pc"><Image className="ih-pi" src={src(sl.url, 1400, k)} alt={sl.alt} fill sizes="(max-width:767px) 92vw, 820px" quality={80} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1400, k))} onLoad={onImg(sl.url)} style={trimStyle(sl.url)} /></div>)}
               {sl.kind === "stone" && <div className="ih-pc st"><Image src={diamond} alt="" fill sizes="(max-width:767px) 70vw, 560px" quality={80} /></div>}
+              {sl.kind === "clip" && clip && <div className="ih-pc clip"><video ref={cvid} muted loop playsInline preload="none" poster={clip.poster} aria-label={sl.alt} /></div>}
               {sl.kind === "film" && <video ref={vid} muted loop playsInline preload="none" poster={filmPoster} aria-label={sl.alt} />}
             </div>
           );
@@ -169,6 +219,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
         <button key={k} type="button" className={k === cur ? "on" : ""} aria-label={sl.label} aria-current={k === cur} onClick={() => go(k)}>
           {sl.kind === "img" && sl.url && <Image src={src(sl.url, 160, k)} alt="" width={64} height={64} quality={60} unoptimized={isCleaned(src(sl.url, 160, k))} />}
           {sl.kind === "stone" && <Image src={diamond} alt="" width={64} height={64} quality={60} />}
+          {sl.kind === "clip" && clip && <><Image src={clip.poster} alt="" width={64} height={64} quality={60} /><span className="pl">▶</span></>}
           {sl.kind === "film" && <><Image src={filmPoster} alt="" width={64} height={64} quality={60} /><span className="pl">▶</span></>}
         </button>))}
       </div>
