@@ -1354,3 +1354,11 @@ a.rp-mt{text-decoration:none}
 .ih[data-mode=piece]{background:#F3ECE2}
 .ih[data-clip]{background:#000}
 
+/* the product hero must never make the browser repaint the whole page (the bug where the pinned footer showed through for a moment while switching photographs):
+   the multiply blend of a piece photograph is kept inside its own slide instead of the whole page, and slides that are not on screen are not painted at all */
+.ih{isolation:isolate;contain:paint}
+.ih-sl{isolation:isolate;visibility:hidden;transition:opacity .9s ease,visibility 0s .9s}
+.ih-sl.on{visibility:visible;transition:opacity .9s ease,visibility 0s}
+.ih-wash i{filter:none;transform:none}
+@media(prefers-reduced-motion:reduce){.ih-sl,.ih-sl.on{transition:none}}
+
