@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import Image from "next/image";
+import LoopFilm from "@/components/LoopFilm";
 import StoneImg from "./StoneImg";
 import RingSteps from "./RingSteps";
 import ImmersiveHero from "./ImmersiveHero";
@@ -254,9 +255,18 @@ export default function ProductView({ product: p, siblings, related, ring, optio
           <div className="pp-trust">{TRUST.map(([d, t]) => <div key={t}><Ic d={d} />{t}</div>)}</div>
         </section>
 
-        <section className="pp-box" aria-label="How your piece arrives">
-          <Image src={BOX_IMG} alt="Meekitaz presentation box with velvet ring box and certificate drawer" width={1024} height={1024} sizes="(max-width:767px) 100vw, 760px" quality={80} />
-          <div className="pp-box-card"><small className="eyebrow">How it arrives</small><h2>Velvet on top. Certificate below.</h2><p>Every piece ships gift-ready in our signature pink box.</p></div>
+        <section className="pp-film" aria-label="How your piece arrives">
+          <div className="pf-in">
+            <div className="pf-st" aria-hidden="true">
+              <svg viewBox="0 0 100 100"><defs><path id="pfring" d="M50,50 m-40,0 a40,40 0 1,1 80,0 a40,40 0 1,1 -80,0" /></defs><text><textPath href="#pfring" textLength="250" lengthAdjust="spacing">OPEN ME · OPEN ME · OPEN ME · OPEN ME ·</textPath></text></svg>
+              <i className="mkm" />
+            </div>
+            <div className="pf-vid"><LoopFilm src="/media/unboxing.mp4" poster="/media/unboxing-poster.jpg" label="Our pink box opening, with a ring, a pouch and sunglasses laid out beside it" /></div>
+            <div className="pf-tx">
+              <div><small className="eyebrow">How it arrives</small><h2>Small box. Big feelings.</h2></div>
+              <p>Every piece comes gift-ready in our signature pink box. Open it slowly.</p>
+            </div>
+          </div>
         </section>
 
         {related.length > 0 && (

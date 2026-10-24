@@ -1405,3 +1405,20 @@ a.rp-mt{text-decoration:none}
 @media(max-width:767px){.cv-seal .five{font-size:24px}.cv-seal .st svg{width:8px;height:8px}.cv-seal .yr{font-size:20px}.cv-seal .tr{font-size:5.4px}}
 @media(prefers-reduced-motion:reduce){.cv-seal .rg{animation:none}.cv-seal .fa{animation:none;opacity:1}.cv-seal .fb{animation:none;opacity:0}}
 
+/* How it arrives: the unboxing film (silent, looping, no controls), a turning OPEN ME sticker on its corner, one italic line beneath */
+.pp-film{margin:56px auto 10px}
+.pf-in{max-width:900px;margin:0 auto;padding:0 24px;position:relative}
+.pf-vid{position:relative;overflow:hidden;border-radius:22px;aspect-ratio:16/9;background:#d9cdbd}
+.pf-vid video{display:block;width:100%;height:100%;object-fit:cover}
+.pf-st{position:absolute;right:6px;top:-30px;width:112px;height:112px;border-radius:50%;background:var(--butter,#F7E9A8);color:var(--ink);transform:rotate(10deg);display:grid;place-items:center;box-shadow:0 18px 30px -14px rgba(0,0,0,.5);z-index:4}
+.pf-st svg{position:absolute;inset:0;width:100%;height:100%;animation:pfspin 18s linear infinite}
+.pf-st text{font:700 8.4px var(--body);fill:var(--ink)}
+.pf-st .mkm{width:34px}
+@keyframes pfspin{to{transform:rotate(360deg)}}
+.pf-tx{margin-top:22px;display:flex;gap:24px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+.pf-tx .eyebrow{display:block;margin-bottom:8px}
+.pf-tx h2{font:italic 500 44px/1.05 var(--sub);margin:0;max-width:560px}
+.pf-tx p{font:15px/1.55 var(--body);margin:0;max-width:300px}
+@media(max-width:767px){.pf-in{padding:0 16px}.pf-st{width:86px;height:86px;right:10px;top:-34px}.pf-st .mkm{width:26px}.pf-tx h2{font-size:32px}.pp-film{margin-top:50px}}
+@media(prefers-reduced-motion:reduce){.pf-st svg{animation:none}}
+
