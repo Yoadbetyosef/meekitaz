@@ -1356,23 +1356,15 @@ a.rp-mt{text-decoration:none}
 
 /* the product hero must never make the browser repaint the whole page (the bug where the pinned footer showed through for a moment while switching photographs):
    the multiply blend of a piece photograph is kept inside its own slide instead of the whole page, and slides that are not on screen are not painted at all */
-.ih{isolation:isolate;contain:paint}
-.ih-sl{isolation:isolate;visibility:hidden;transition:opacity .9s ease,visibility 0s .9s}
-.ih-sl.on{visibility:visible;transition:opacity .9s ease,visibility 0s}
+.ih-sl{isolation:isolate;visibility:hidden;transition:opacity .35s ease,visibility 0s .35s}
+.ih-sl.on{visibility:visible;transition:opacity .35s ease,visibility 0s}
 .ih-wash i{filter:none;transform:none}
 @media(prefers-reduced-motion:reduce){.ih-sl,.ih-sl.on{transition:none}}
 
-/* switching between a photograph and a piece: everything that changes with it (type colour, glass, glass blur, the base, the title) now changes smoothly over the same time as the fade of the picture, instead of snapping at once while the picture is still fading */
-@property --fg{syntax:"<color>";inherits:true;initial-value:#ffffff}
-@property --glass{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.2)}
-@property --gb{syntax:"<color>";inherits:true;initial-value:rgba(255,255,255,.42)}
-@property --bb{syntax:"<number>";inherits:true;initial-value:.74}
-.ih{--bb:.74;transition:--fg .9s ease,--glass .9s ease,--gb .9s ease,--bb .9s ease,background-color .9s ease}
-.ih[data-mode=piece]{--bb:1}
+/* the product hero, kept cheap for the browser to paint: one glass blur only (the panel), no mask inside it, a short fade between slides, and the title in the same place and size for every slide */
 @media(min-width:768px){
-  .ih .ih-ctl,.ih .ih-top,.ih .ih-bot{-webkit-backdrop-filter:blur(22px) saturate(1.2) brightness(var(--bb));backdrop-filter:blur(22px) saturate(1.2) brightness(var(--bb))}
+  .ih[data-mode] .ih-top,.ih[data-mode] .ih-bot{-webkit-backdrop-filter:none;backdrop-filter:none}
+  .ih-scr{-webkit-mask-image:none;mask-image:none;padding-bottom:18px}
   .ih[data-mode] .ih-tt{left:118px;bottom:98px;max-width:calc(100% - 118px - 3.2% - 388px)}
   .ih[data-mode=photo] .ih-tt h1[class],.ih[data-mode=piece] .ih-tt h1[class],.ih[data-clip] .ih-tt h1[class]{font-size:clamp(20px,1.9vw,28px)}
 }
-@media(prefers-reduced-motion:reduce){.ih{transition:none}}
-
