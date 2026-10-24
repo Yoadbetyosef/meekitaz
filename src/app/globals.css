@@ -1236,6 +1236,7 @@ a.rp-mt{text-decoration:none}
 .cover .cv-pill{background:#fff !important;color:var(--ink) !important;border:0 !important}
 .cv-claims{display:flex;flex-wrap:wrap;gap:6px 22px;margin:0;padding:0;list-style:none;font:600 10px var(--body);letter-spacing:.16em;text-transform:uppercase;text-shadow:0 1px 10px rgba(0,0,0,.4)}
 .cv-claims li::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--butter,#F7E9A8);margin-right:8px;vertical-align:middle}
+@media(min-width:768px){.cv-bars{top:134px}.cv-mast{top:156px}}
 .cv-seal{position:absolute;right:4vw;bottom:calc(5vh + 6px);z-index:4;width:132px;height:132px;border-radius:50%;background:var(--butter,#F7E9A8);color:var(--ink);display:grid;place-items:center;text-align:center;transform:rotate(10deg);box-shadow:0 18px 30px -14px rgba(0,0,0,.5);pointer-events:none}
 .cv-seal b{display:block;font:400 40px/1 var(--display)}.cv-seal span{display:block;font:700 9px var(--body);letter-spacing:.14em;text-transform:uppercase;line-height:1.4;margin-top:2px}
 @media(max-width:767px){
