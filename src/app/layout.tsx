@@ -6,6 +6,7 @@ import DesignLabGate from "@/components/DesignLabGate";
 import Footer from "@/components/Footer";
 import Toast from "@/components/Toast";
 import FreeStuds from "@/components/FreeStuds";
+import MiaChat from "@/components/MiaChat";
 import PressFx from "@/components/PressFx";
 import CartProvider from "@/components/CartProvider";
 import CartDrawer from "@/components/CartDrawer";
@@ -34,6 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Footer />
           <Toast />
           <FreeStuds />
+          <MiaChat />
           <PressFx />
           <CartDrawer />
           <DesignLabGate />
