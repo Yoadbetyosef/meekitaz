@@ -125,7 +125,7 @@ export async function removeCartLine(cartId: string, lineId: string): Promise<Ca
 export type ProductVariant = { id: string; title: string; available: boolean; price: number; compareAt: number; selected: { name: string; value: string }[]; imageUrl?: string };
 export type ProductFull = {
   id: string; handle: string; title: string; description: string; descriptionHtml: string; productType: string; tags: string[];
-  options: { name: string; values: string[] }[]; images: { url: string; alt: string; width: number; height: number }[]; modelImage?: string; variants: ProductVariant[]; currency: string; seoTitle?: string; seoDescription?: string;
+  options: { name: string; values: string[] }[]; images: { url: string; alt: string; width: number; height: number }[]; modelImage?: string; videoUrl?: string; variants: ProductVariant[]; currency: string; seoTitle?: string; seoDescription?: string;
 };
 export type Sibling = { handle: string; title: string; metal: string; image?: string; modelImage?: string };
 export type Related = { handle: string; title: string; price: number; compareAt: number; image?: string };
@@ -137,16 +137,16 @@ export const designCode = (tags: string[]) => tags.find(t => /^NS-\d+$/i.test(t)
 export async function getProductByHandle(handle: string): Promise<ProductFull | null> {
   const d = await sf<{ product: null | { id: string; handle: string; title: string; description: string; descriptionHtml: string; productType: string; tags: string[];
     seo: { title?: string; description?: string }; options: { name: string; values: string[] }[];
-    images: { edges: { node: { url: string; altText?: string; width: number; height: number } }[] }; model?: { value: string } | null;
+    images: { edges: { node: { url: string; altText?: string; width: number; height: number } }[] }; model?: { value: string } | null; film?: { value: string } | null;
     variants: { edges: { node: { id: string; title: string; availableForSale: boolean; price: { amount: string; currencyCode: string }; compareAtPrice?: { amount: string } | null; selectedOptions: { name: string; value: string }[]; image?: { url: string } | null } }[] } } }>(
     `query($handle:String!){ product(handle:$handle){ id handle title description descriptionHtml productType tags seo{ title description } options{ name values }
-      images(first:20){ edges{ node{ url altText width height } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value }
+      images(first:20){ edges{ node{ url altText width height } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value } film: metafield(namespace:"meekitaz", key:"video"){ value }
       variants(first:60){ edges{ node{ id title availableForSale price{ amount currencyCode } compareAtPrice{ amount } selectedOptions{ name value } image{ url } } } } } }`, { handle });
   const p = d?.product; if (!p) return null;
   const vs = p.variants.edges.map(({ node: v }) => ({ id: v.id, title: v.title, available: v.availableForSale, price: +v.price.amount, compareAt: v.compareAtPrice && +v.compareAtPrice.amount > +v.price.amount ? +v.compareAtPrice.amount : 0, selected: v.selectedOptions, imageUrl: v.image?.url }));
   return {
     id: p.id, handle: p.handle, title: p.title, description: p.description, descriptionHtml: p.descriptionHtml, productType: p.productType, tags: p.tags,
-    options: p.options, images: p.images.edges.filter(({ node: i }) => !isSupplierImage(i.url, p.tags)).map(({ node: i }) => ({ url: i.url, alt: i.altText || p.title, width: i.width, height: i.height })), modelImage: p.model?.value || undefined, variants: vs,
+    options: p.options, images: p.images.edges.filter(({ node: i }) => !isSupplierImage(i.url, p.tags)).map(({ node: i }) => ({ url: i.url, alt: i.altText || p.title, width: i.width, height: i.height })), modelImage: p.model?.value || undefined, videoUrl: p.film?.value || undefined, variants: vs,
     currency: p.variants.edges[0]?.node.price.currencyCode || "USD", seoTitle: p.seo?.title || undefined, seoDescription: p.seo?.description || undefined,
   };
 }
