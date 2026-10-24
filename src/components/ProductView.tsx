@@ -48,7 +48,7 @@ function Material({ ns, metals, metal, karat, onMetal, onKarat, karats, steps }:
         <button key={i.id} type="button" className={i.on ? "on" : ""} aria-pressed={i.on} onClick={i.go}>{i.id}{steps && steps[i.id] ? <small>+{usd(steps[i.id])}</small> : null}</button>))}</div>
       <div className="mk-lbl">Colour <em>{gold ? metal : "Natural white"}</em></div>
       <div className="mk-cols">{golds.map(g => (
-        <button key={g} type="button" className={`mk-col${gold && metal === g ? " on" : ""}${gold ? "" : " off"}`} aria-pressed={gold && metal === g} disabled={!gold} onClick={() => onMetal(g)}>
+        <button key={g} type="button" title={g} className={`mk-col${gold && metal === g ? " on" : ""}${gold ? "" : " off"}`} aria-pressed={gold && metal === g} disabled={!gold} onClick={() => onMetal(g)}>
           <span style={{ "--lc": METAL_LINE[g] } as CSSProperties} />{g.replace(" gold", "")}</button>))}</div>
       <p className="mk-hint">{FACTS[picked]}</p>
     </>
@@ -198,11 +198,21 @@ export default function ProductView({ product: p, siblings, related, ring, optio
             {hasOpts && rows.filter(r => r.name !== "Gold Purity").map(r => (
               <div key={r.name} className="po-row">
                 <span className="pp-lbl">{r.name} · <em>{osel[r.name]}</em></span>
-                <div className="po-vals">{r.values.map(v => {
+                <div className={`po-vals${/weight/i.test(r.name) && r.values.length > 5 ? " wt" : r.values.length <= 4 ? " seg" : ""}`}>{r.values.map(v => {
                   const on = osel[r.name] === v.label;
                   const diff = v.price - (r.values.find(x => x.label === osel[r.name])?.price || 0);
                   return <button key={v.label} type="button" className={`po-v${on ? " on" : ""}`} aria-pressed={on} onClick={() => setRawSel(x => ({ ...x, [r.name]: v.label }))}>{v.label.replace(/ Carat$/i, " ct")}{!on && diff !== 0 && <small>{diff > 0 ? "+" : "−"}{usd(Math.abs(diff))}</small>}</button>;
                 })}</div>
+                {/weight/i.test(r.name) && r.values.length > 5 && (() => {
+                  const idx = Math.max(0, r.values.findIndex(x => x.label === osel[r.name])), L = (x: string) => x.replace(/ Carat$/i, " ct");
+                  return (
+                    <div className="po-rng">
+                      <div className="po-big">{L(r.values[idx].label)}</div>
+                      <input type="range" min={0} max={r.values.length - 1} step={1} value={idx} aria-label={r.name} aria-valuetext={L(r.values[idx].label)} onChange={e => { const v = r.values[+e.target.value]; setRawSel(x => ({ ...x, [r.name]: v.label })); }} />
+                      <div className="tk">{[0, .25, .5, .75, 1].map(f => { const k = Math.round(f * (r.values.length - 1)); return <span key={k}>{L(r.values[k].label)}</span>; })}</div>
+                    </div>
+                  );
+                })()}
               </div>
             ))}
             {real.map(o => (

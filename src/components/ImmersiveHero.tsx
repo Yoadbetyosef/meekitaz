@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import Image from "next/image";
 import { photoSrc, isCleaned } from "@/lib/img";
 import { stonePicture } from "@/lib/stonePicture";
@@ -26,6 +26,27 @@ function measure(el: HTMLImageElement): { photo: boolean | null; dark: boolean |
   } catch { return { photo: null, dark: null }; }
 }
 
+/** The colours a photograph has along its outer edges, so the part of the screen the photograph does not reach can be filled with them (seven colours along each of two opposite edges).
+ *  The photograph is narrower than the screen: the left and right edges. It is wider: the top and bottom edges. Null when the browser will not let us look. */
+type Wash = { ar: number; v: boolean; a: string[]; b: string[] };
+function washOf(el: HTMLImageElement, frame: number): Wash | null {
+  try {
+    const nw = el.naturalWidth, nh = el.naturalHeight; if (!nw || !nh) return null;
+    const ar = nw / nh, v = ar > frame, W = 48, H = Math.max(10, Math.round(48 / ar));
+    const c = document.createElement("canvas"); c.width = W; c.height = H;
+    const x = c.getContext("2d", { willReadFrequently: true }); if (!x) return null;
+    x.drawImage(el, 0, 0, W, H);
+    const avg = (x0: number, y0: number, w: number, h: number) => { const d = x.getImageData(x0, y0, w, h).data; let r = 0, g = 0, b = 0, n = 0; for (let k = 0; k < d.length; k += 4) { r += d[k]; g += d[k + 1]; b += d[k + 2]; n++; } return `rgb(${Math.round(r / n)},${Math.round(g / n)},${Math.round(b / n)})`; };
+    const a: string[] = [], b: string[] = [];
+    for (let k = 0; k < 7; k++) {
+      if (!v) { const y0 = Math.floor(k * H / 7), h = Math.max(1, Math.floor((k + 1) * H / 7) - y0); a.push(avg(0, y0, 2, h)); b.push(avg(W - 2, y0, 2, h)); }
+      else { const x0 = Math.floor(k * W / 7), w = Math.max(1, Math.floor((k + 1) * W / 7) - x0); a.push(avg(x0, 0, w, 2)); b.push(avg(x0, H - 2, w, 2)); }
+    }
+    return { ar, v, a, b };
+  } catch { return null; }
+}
+const washGrad = (cols: string[], v: boolean) => `linear-gradient(${v ? 90 : 180}deg,${cols.map((c, k) => `${c} ${Math.round(k * 100 / 6)}%`).join(",")})`;
+
 export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, film, steps, summary, price, metal, rows, cta, appt, onVisible }: {
   title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; stoneShape?: string; film?: { src: string; poster: string }; summary?: string[];
   steps?: ReactNode; price: ReactNode; metal?: ReactNode; rows?: ReactNode; cta: ReactNode; appt?: ReactNode; onVisible?: (on: boolean) => void;
@@ -42,6 +63,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const [open, setOpen] = useState(false); // phone: the sheet at the bottom, folded (title, what is chosen, price, button) or open (every choice)
   const [modes, setModes] = useState<Record<string, "photo" | "piece">>({});
   const [tones, setTones] = useState<Record<string, "dark" | "light">>({});
+  const [washes, setWashes] = useState<Record<string, Wash>>({});
   const box = useRef<HTMLElement>(null), vid = useRef<HTMLVideoElement>(null), vis = useRef(true);
   const cur = Math.min(i, N - 1);
   const modeOf = useCallback((s: Slide): "photo" | "piece" => s.kind === "film" ? "photo" : s.kind === "stone" ? "piece" : (modes[s.url || ""] ?? (s.url === model ? "photo" : "piece")), [modes, model]);
@@ -96,6 +118,12 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
     if (url !== model && r.photo !== null) setModes(m => (m[url] === (r.photo ? "photo" : "piece") ? m : { ...m, [url]: r.photo ? "photo" : "piece" }));
     if (r.dark !== null) setTones(t => (t[url] === (r.dark ? "dark" : "light") ? t : { ...t, [url]: r.dark ? "dark" : "light" }));
   };
+  // the photograph's own image: besides the usual look, its edge colours fill the sides it does not reach (laptop and desktop)
+  const onFg = (url: string) => (e: React.SyntheticEvent<HTMLImageElement>) => {
+    onImg(url)(e);
+    const f = box.current ? box.current.clientWidth / Math.max(1, box.current.clientHeight) : 1.78;
+    const w = washOf(e.currentTarget, f); if (w) setWashes(m => (m[url] ? m : { ...m, [url]: w }));
+  };
   const s = slides[cur], mode = modeOf(s);
   // on a phone the sheet sits over the lower part of the picture: white type when that part is dark, dark type when it is light
   const tone: "dark" | "light" = s.kind === "film" ? "dark" : mode === "photo" && s.url ? (tones[s.url] ?? "light") : "light";
@@ -111,7 +139,12 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
           return (
             <div key={`${sl.kind}-${sl.url || k}`} className={`ih-sl ${m}${on ? " on" : ""}`} aria-hidden={!on}>
               {sl.kind === "img" && sl.url && (m === "photo"
-                ? <div className={`ih-ph2${sl.url === model ? " mdl" : ""}`}><Image className="ih-bk" src={src(sl.url, 300, k)} alt="" fill sizes="30vw" quality={40} unoptimized={isCleaned(src(sl.url, 300, k))} /><Image className="ih-fg" src={src(sl.url, 1500, k)} alt={sl.alt} fill sizes="100vw" quality={78} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1500, k))} onLoad={onImg(sl.url)} /></div>
+                ? (() => { const w = washes[sl.url || ""]; return (
+                  <div className={`ih-ph2${sl.url === model ? " mdl" : ""}${w ? ` ws${w.v ? " wv" : ""}` : ""}`} style={w ? ({ "--ar": w.ar, "--wa": washGrad(w.a, w.v), "--wb": washGrad(w.b, w.v) } as CSSProperties) : undefined}>
+                    <Image className="ih-bk" src={src(sl.url, 300, k)} alt="" fill sizes="30vw" quality={40} unoptimized={isCleaned(src(sl.url, 300, k))} />
+                    {w && <div className="ih-wash" aria-hidden="true"><i className="a" /><i className="b" /></div>}
+                    <div className="ih-fgw"><Image className="ih-fg" src={src(sl.url, 1500, k)} alt={sl.alt} fill sizes="100vw" quality={78} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1500, k))} onLoad={onFg(sl.url)} /></div>
+                  </div>); })()
                 : <div className="ih-pc"><Image className="ih-pi" src={src(sl.url, 1400, k)} alt={sl.alt} fill sizes="(max-width:767px) 92vw, 820px" quality={80} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1400, k))} onLoad={onImg(sl.url)} /></div>)}
               {sl.kind === "stone" && <div className="ih-pc st"><Image src={diamond} alt="" fill sizes="(max-width:767px) 70vw, 560px" quality={80} /></div>}
               {sl.kind === "film" && <video ref={vid} muted loop playsInline preload="none" poster={filmPoster} aria-label={sl.alt} />}
@@ -155,12 +188,15 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
           <h2 className="ih-st" onClick={() => setOpen(o => !o)}>{bigTitle}</h2>
           {summary && summary.length > 0 && <div className="ih-pills" onClick={() => setOpen(o => !o)}>{summary.map((t, k) => <span key={k}>{t}</span>)}<span className="m">{open ? "Done ▾" : "Change ▴"}</span></div>}
         </div>
-        {(metal || steps) && <div className="ih-top">{steps}{metal}</div>}
-        <div className="ih-bot">
-          <div className="ih-pa"><div className="ih-price">{price}</div><div className="ih-cta">{cta}</div></div>
-          {rows && <div className="ih-rows">{rows}</div>}
-          {appt && <div className="ih-appt">{appt}</div>}
+        <div className="ih-scr">
+          {(metal || steps) && <div className="ih-top">{steps}{metal}</div>}
+          <div className="ih-bot">
+            <div className="ih-pa"><div className="ih-price">{price}</div><div className="ih-cta">{cta}</div></div>
+            {rows && <div className="ih-rows">{rows}</div>}
+            {appt && <div className="ih-appt">{appt}</div>}
+          </div>
         </div>
+        <div className="ih-foot">{cta}</div>
       </div>
     </section>
   );
