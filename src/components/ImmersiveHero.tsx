@@ -181,7 +181,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const filmSrc = film?.src || "/media/brand-reel.mp4", filmPoster = film?.poster || "/media/brand-reel-poster.jpg";
   const src = (u: string, w: number, k: number) => photoSrc(u, w, title, k);
   return (
-    <section className={`ih${open ? " open" : ""}`} ref={box} data-mode={mode} data-tone={tone} data-clip={s.kind === "clip" ? "1" : undefined} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
+    <section className={`ih${open ? " open" : ""}`} ref={box} data-mode={mode} data-tone={tone} data-clip={s.kind === "clip" ? "1" : undefined} data-box={s.kind === "box" ? "1" : undefined} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
       <div className="ih-slides">
         {slides.map((sl, k) => {
           const m = modeOf(sl), on = k === cur;

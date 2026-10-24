@@ -1422,3 +1422,6 @@ a.rp-mt{text-decoration:none}
 @media(max-width:767px){.pf-in{padding:0 16px}.pf-st{width:86px;height:86px;right:10px;top:-34px}.pf-st .mkm{width:26px}.pf-tx h2{font-size:32px}.pp-film{margin-top:50px}}
 @media(prefers-reduced-motion:reduce){.pf-st svg{animation:none}}
 
+/* the box slide on a laptop: the picture is the whole point, so the product title steps aside and the picture gets the room it frees */
+@media(min-width:768px){.ih[data-box] .ih-tt h1{display:none}}
+
