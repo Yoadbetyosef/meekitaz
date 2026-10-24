@@ -1260,21 +1260,21 @@ a.rp-mt{text-decoration:none}
 .ih-fgw{position:absolute;inset:0}
 .po-rng{display:none}
 @media(min-width:768px){
-  .ih-ctl{top:138px;bottom:auto;right:3.2%;transform:none;height:auto;max-height:calc(100% - 174px);padding:0;overflow:hidden;display:flex;flex-direction:column}
-  .ih-scr{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;overflow:auto;scrollbar-width:none;padding:22px 24px 30px;-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 28px),transparent)}
+  .ih-ctl{top:134px;bottom:auto;right:3.2%;transform:none;height:auto;max-height:calc(100% - 168px);padding:0;overflow:hidden;display:flex;flex-direction:column}
+  .ih-scr{display:flex;flex-direction:column;flex:1 1 auto;min-height:0;overflow:auto;scrollbar-width:none;padding:18px 24px 26px;-webkit-mask-image:linear-gradient(180deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(180deg,#000 calc(100% - 28px),transparent)}
   .ih-scr::-webkit-scrollbar{display:none}
   .ih-scr .ih-cta,.ih-scr .ih-appt{display:none}
-  .ih-foot{display:block;flex:none;padding:12px 24px 22px;border-top:1px solid var(--gb)}.ih-foot .pp-add{width:100%}
+  .ih-foot{display:block;flex:none;padding:10px 24px 18px;border-top:1px solid var(--gb)}.ih-foot .pp-add{width:100%}
   /* compact choices: the colour names live in the swatches, the hints go, the weight is a slider, short rows are segmented */
   .ih .mk-hint{display:none}
   .ih .mk-cols{gap:12px}.ih .mk-col{font-size:0;gap:0}.ih .mk-col span{width:34px;height:34px;border-width:2px}.ih .mk-col.on span{transform:scale(1.1)}
   .ih .mk-seg button{padding:9px 4px}
-  .ih .pp-lbl{margin:12px 0 7px}.ih .mk-lbl{margin:12px 0 7px}.ih .po-row{margin-bottom:0}.ih .pp-price{margin:0 0 2px}
+  .ih .pp-lbl{margin:10px 0 6px}.ih .mk-lbl{margin:10px 0 6px}.ih .po-row{margin-bottom:0}.ih .pp-price{margin:0 0 2px}
   .ih .po-vals.wt{display:none}
   .ih .po-vals.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:2px;border:1px solid var(--gb);border-radius:999px;padding:4px}
   .ih .po-vals.seg .po-v{justify-content:center;flex-direction:column;align-items:center;gap:0;border:0;padding:9px 6px;text-align:center}.ih .po-vals.seg .po-v small{display:block}
   .ih .po-vals.seg .po-v.on{background:var(--ink);color:#fff}
-  .po-rng{display:block;padding:0 2px}.po-rng .po-big{font:400 26px/1 var(--display);margin:0 0 6px}
+  .po-rng{display:block;padding:0 2px}.po-rng .po-big{display:none}
   .po-rng input{width:100%;margin:0;accent-color:#fff;cursor:pointer}.ih[data-mode=piece] .po-rng input{accent-color:var(--ink)}
   .po-rng .tk{display:flex;justify-content:space-between;font:600 10px var(--body);opacity:.7;margin-top:3px}
   /* the photograph carries on at its sides in its own edge colours (the left and right, or the top and bottom) and melts into them */
