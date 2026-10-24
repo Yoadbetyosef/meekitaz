@@ -298,3 +298,11 @@ export async function findByOldHandle(old: string): Promise<string | null> {
   const d = await sf<{ products: { edges: { node: { handle: string } }[] } }>(`query($q:String!){ products(first:1, query:$q){ edges{ node{ handle } } } }`, { q: `tag:oldhandle-${old}` });
   return d?.products.edges[0]?.node.handle ?? null;
 }
+
+/** Puts discount codes on a cart (replaces the codes already on it). */
+export async function setCartDiscountCodes(cartId: string, codes: string[]): Promise<Cart | null> {
+  const d = await sf<{ cartDiscountCodesUpdate: CartPayload }>(
+    `mutation($cartId:ID!,$codes:[String!]!){ cartDiscountCodesUpdate(cartId:$cartId,discountCodes:$codes){ cart{ ${CART_FIELDS} } userErrors{ message } } }`,
+    { cartId, codes }, { fresh: true });
+  return d?.cartDiscountCodesUpdate.cart ? shapeCart(d.cartDiscountCodesUpdate.cart) : null;
+}

@@ -1425,3 +1425,48 @@ a.rp-mt{text-decoration:none}
 /* the box slide on a laptop: the picture is the whole point, so the product title steps aside and the picture gets the room it frees */
 @media(min-width:768px){.ih[data-box] .ih-tt h1{display:none}}
 
+
+/* Free studs welcome pop-up + sticker (FreeStuds.tsx) */
+.fs-dim{position:fixed;inset:0;z-index:80;background:rgba(253,248,243,.28);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:fsFade .4s both}
+@keyframes fsFade{from{opacity:0}}
+.fs-pos{position:fixed;z-index:81}
+.fs-d{left:50%;top:50%;transform-origin:center}
+.fs-pop{position:relative;overflow:hidden;border-radius:24px;box-shadow:0 24px 60px rgba(43,32,36,.28);color:#fff;isolation:isolate}
+.fs-bg{position:absolute;inset:-30px;background:url(/media/free-studs-diner.jpg) center/cover;filter:blur(18px) saturate(1.15) brightness(.85)}
+.fs-ph{position:absolute;top:0;left:0;bottom:0;background:url(/media/free-studs-diner.jpg) 0 50%/auto 100% no-repeat}
+.fs-x{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.75);font:18px/1 var(--body);cursor:pointer;z-index:4;color:var(--ink)}
+.fs-tx{position:absolute;z-index:3;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.28);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border-radius:20px;padding:24px 22px;text-shadow:0 1px 10px rgba(0,0,0,.25)}
+.fs-tx h2{font-family:var(--display);font-weight:400;margin:0;color:#fff}
+.fs-eb{display:block;font:700 10px/1 var(--body);letter-spacing:.3em;text-transform:uppercase;color:#F7E9A8;margin-bottom:12px}
+.fs-tx p{font:15px/1.5 var(--body);margin:10px 0 0}
+.fs-tx form{display:flex;flex-direction:column;gap:9px;margin-top:18px}
+.fs-tx input{border:0;border-radius:999px;padding:14px 18px;font:16px var(--body);background:#fffffff2;color:var(--ink);text-shadow:none}
+.fs-btn{display:block;width:100%;border:0;border-radius:999px;padding:14px 20px;font:700 12px var(--body);letter-spacing:.16em;text-transform:uppercase;background:#F7E9A8;color:var(--ink);cursor:pointer;text-shadow:none;margin-top:16px}
+.fs-tx form .fs-btn{margin-top:0}.fs-btn:disabled{opacity:.7;cursor:default}
+.fs-code{display:inline-block;font:700 .62em/1 var(--body);letter-spacing:.18em;background:#F7E9A8;color:var(--ink);padding:.45em .7em;border-radius:999px;vertical-align:middle;text-shadow:none}
+.fs-err{color:#FFE1E1}
+.fs-fine{font-size:11px!important;line-height:1.4!important;opacity:.85;margin-top:12px!important}
+/* desktop: 1020×500 design, shown small (scaled in JS), drops in and bounces */
+.fs-d .fs-pop{width:1020px;height:500px;animation:fsDrop .9s cubic-bezier(.2,1.5,.4,1) both}
+.fs-d .fs-ph{width:893px;-webkit-mask:linear-gradient(90deg,#000 0,#000 745px,transparent 860px);mask:linear-gradient(90deg,#000 0,#000 745px,transparent 860px)}
+.fs-d .fs-tx{right:22px;top:50%;transform:translateY(-50%);width:238px}
+.fs-d h2{font-size:31px;line-height:1.06}
+@keyframes fsDrop{0%{transform:translateY(-120vh) rotate(-2deg)}70%{transform:translateY(10px) rotate(.5deg)}100%{transform:none}}
+/* phone: bottom sheet, rises with the same bounce */
+.fs-m{left:0;right:0;bottom:0}
+.fs-m .fs-pop{width:100%;height:min(560px,88vh);border-radius:26px 26px 0 0;animation:fsRise .8s cubic-bezier(.2,1.35,.4,1) both;padding-bottom:env(safe-area-inset-bottom)}
+.fs-m .fs-pop::before{content:"";position:absolute;top:8px;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:9px;background:#fff9;z-index:5}
+.fs-m .fs-ph{right:0;bottom:auto;height:270px;background-size:500px auto;background-position:-120px 0;-webkit-mask:linear-gradient(180deg,#000 0,#000 190px,transparent 270px);mask:linear-gradient(180deg,#000 0,#000 190px,transparent 270px)}
+.fs-m .fs-tx{left:14px;right:14px;bottom:calc(16px + env(safe-area-inset-bottom))}
+.fs-m h2{font-size:28px;line-height:1.06}
+@keyframes fsRise{0%{transform:translateY(105%)}70%{transform:translateY(-8px)}100%{transform:none}}
+/* sticker */
+.fs-stk{position:fixed;left:20px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:58;width:96px;height:96px;animation:fsStk .6s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes fsStk{from{opacity:0;transform:translateY(16px) scale(.85)}}
+.fs-stk-b{position:relative;width:100%;height:100%;border:0;padding:0;background:none;cursor:pointer;filter:drop-shadow(0 8px 18px rgba(43,32,36,.18))}
+.fs-stk-b svg{position:absolute;inset:0;width:100%;height:100%;animation:fsSpin 14s linear infinite}
+@keyframes fsSpin{to{transform:rotate(360deg)}}
+.fs-stk-b span{position:absolute;inset:20px;border-radius:50%;background:#F7E9A8;display:grid;place-items:center;font:400 15px/1 var(--display);color:var(--ink)}
+.fs-stk-x{position:absolute;top:-4px;right:-4px;width:22px;height:22px;border-radius:50%;border:0;background:var(--ink);color:#fff;font:12px/1 var(--body);cursor:pointer}
+@media(max-width:767px){.fs-stk{left:12px;width:76px;height:76px}.fs-stk-b span{inset:16px;font-size:13px}}
+@media(prefers-reduced-motion:reduce){.fs-pop,.fs-stk,.fs-stk-b svg{animation:none!important}}

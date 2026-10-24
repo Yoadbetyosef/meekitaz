@@ -1,7 +1,7 @@
 import { arrivalLabel } from "@/lib/arrival";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { addCartLines, addToCart, createCart, createCartWithLines, getCart, removeCartLine, removeCartLines, shopifyConfigured, updateCartLine, updateLineAttributes, type Cart } from "@/lib/shopify";
+import { addCartLines, addToCart, createCart, createCartWithLines, getCart, removeCartLine, removeCartLines, setCartDiscountCodes, shopifyConfigured, updateCartLine, updateLineAttributes, type Cart } from "@/lib/shopify";
 import { getDiamond, vdbConfigured } from "@/lib/vdb";
 import { adminConfigured, ensureConfiguredVariant, ensureKaratVariant, ensureStoneVariant, getProductOptions } from "@/lib/shopifyAdmin";
 import { addonFor, completeSel, selLabel } from "@/lib/options";
@@ -9,6 +9,8 @@ import { addonFor, completeSel, selLabel } from "@/lib/options";
 const SIZES = new Set(Array.from({ length: 21 }, (_, i) => String(3 + i * 0.5)));
 
 const COOKIE = "meekitaz_cart";
+const FREE_STUDS_VARIANT = "gid://shopify/ProductVariant/67828260569325";
+const FREE_STUDS_CODE = "FREESTUDS";
 const opts = { httpOnly: true, sameSite: "lax" as const, secure: process.env.NODE_ENV === "production", path: "/", maxAge: 60 * 60 * 24 * 30 };
 
 export async function GET() {
@@ -77,6 +79,13 @@ export async function POST(req: Request) {
     cart = updates.length ? await updateLineAttributes(id, updates) : cur;
   } else if (id && body.action === "removeRing" && Array.isArray(body.lineIds)) {
     cart = await removeCartLines(id, (body.lineIds as unknown[]).map(String));
+  } else if (body.action === "freeStuds") {
+    // Welcome offer from the pop-up: 0.5 ct silver round studs, free with a $1,000+ first order (Shopify code FREESTUDS)
+    const studs = FREE_STUDS_VARIANT;
+    const base = id ? await getCart(id) : null;
+    const has = base?.lines.some(l => l.handle === "silver-round-diamond-solitaire-stud-earrings");
+    const withStuds = base ? (has ? base : await addToCart(base.id, studs, 1)) : await createCart(studs, 1);
+    cart = withStuds ? (await setCartDiscountCodes(withStuds.id, [FREE_STUDS_CODE])) ?? withStuds : null;
   } else if (id && body.action === "update" && typeof body.lineId === "string") {
     cart = await updateCartLine(id, body.lineId, Math.max(0, Math.min(10, +body.quantity || 0)));
   } else if (id && body.action === "remove" && typeof body.lineId === "string") {
