@@ -446,8 +446,8 @@ function cleanGoldInk(data, gray, W, H) {
     const hts = (c) => c.y1 - c.y0 + 1;
     const keep = cand.filter(c => { let k = 0; for (const d of cand)
         if (d !== c && Math.abs((d.x0 + d.x1) / 2 - (c.x0 + c.x1) / 2) < 45 * sc && Math.abs((d.y0 + d.y1) / 2 - (c.y0 + c.y1) / 2) < 45 * sc && hts(d) / hts(c) > 0.55 && hts(d) / hts(c) < 1.8)
-            k++; return k >= 3; });
-    if (keep.length < 6)
+            k++; return k >= 2; });
+    if (keep.length < 5)
         return false;
     // the last bits of the letters (their soft edges, parts hidden behind a stone) are fainter: take any small dark mark right next to the word, with gold mostly around it
     const grown = near.filter(c => !keep.includes(c) && c.gf >= 0.45 && keep.some(k => Math.abs((k.x0 + k.x1) / 2 - (c.x0 + c.x1) / 2) < 22 * sc && Math.abs((k.y0 + k.y1) / 2 - (c.y0 + c.y1) / 2) < 22 * sc));
