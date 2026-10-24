@@ -26,6 +26,7 @@ export default function FreeStuds() {
   const [adding, setAdding] = useState(false);
   const [mobile, setMobile] = useState(false);
   const [scale, setScale] = useState(0.9);
+  const [pastCover, setPastCover] = useState(true);
   const inputRef = useRef<HTMLInputElement>(null);
   const shownRef = useRef(false);
   const skip = SKIP.some(r => r.test(path));
@@ -34,6 +35,13 @@ export default function FreeStuds() {
     const fit = () => { const m = window.innerWidth < 768; setMobile(m); setScale(Math.min(0.9, (window.innerWidth - 48) / 1020, (window.innerHeight - 80) / 500)); };
     fit(); window.addEventListener("resize", fit); return () => window.removeEventListener("resize", fit);
   }, []);
+
+  // On the home page the sticker waits until the cover is scrolled past, so it never sits on the cover's buttons.
+  useEffect(() => {
+    if (path !== "/") { setPastCover(true); return; }
+    const on = () => setPastCover(window.scrollY > window.innerHeight * 0.85);
+    on(); window.addEventListener("scroll", on, { passive: true }); return () => window.removeEventListener("scroll", on);
+  }, [path]);
 
   const open = useCallback(() => { shownRef.current = true; ss.set(S_SHOWN); setSticker(false); setShow(true); setTimeout(() => inputRef.current?.focus({ preventScroll: true }), 650); }, []);
 
@@ -119,7 +127,7 @@ export default function FreeStuds() {
           </div>
         </div>
       )}
-      {sticker && !show && !bagOpen && !skip && !/^\/diamonds/.test(path) && (
+      {sticker && pastCover && !show && !bagOpen && !skip && !/^\/diamonds/.test(path) && (
         <div className="fs-stk">
           <button className="fs-stk-b" onClick={open} aria-label="Free diamond studs offer">
             <svg viewBox="0 0 108 108" aria-hidden="true"><defs><path id="fs-c" d="M54,54 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0" /></defs><circle cx="54" cy="54" r="54" fill="#EFC5CA" /><text fontFamily="var(--body)" fontWeight="700" fontSize="9.5" letterSpacing="3.1" fill="#1C1A1B"><textPath href="#fs-c">FREE DIAMOND STUDS • FIRST ORDER • </textPath></text></svg>
