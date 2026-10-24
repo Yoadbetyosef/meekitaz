@@ -13,13 +13,13 @@ function makeMask(hex: string, w: number, h: number): Mask {
 const SERIF = makeMask("00000000000001f000000000001e1800000000003f800000381c03e300300000000c3000000703807c600600000001c0040000e0700fcc79f773f3e03e0fc7cfdcce21bd9b38ee7eec03f1dddcfb99cfb3b36319ce1dc03f31931c7019b63e0c6338c3b011e630630e8367c3c58c631870020cc66c61f86ff879b18ce70e006198d98e3b0d83077f79fce1f80fe3bbb9c773b9706fe71f9c1e0178743778ef73ee000000000000000c0000000638000000000000000180000000000000000000000000780000000000", 107, 15);
 const CAPS = makeMask("f0e0000000000000003000000009c3fbe3838ff10000000000c0007c18e70e0f8e1e3fee1df87f03e7e1c3fc631c383f386c1fb867f1fc3f9fef0e319870f6eee1b070e198e7b0e661bc38c641c3fb9b8ce1c386639807018698e31e070e0e7e61870e198c7e0f061a63b8781c3838f9fe1c3067e1f81e1dd9cfe1f070e3e3effc70c19f87201e7cff39c6e1ffff87b871c38e67180039c3fee799c7ffe00ec0e70ffb8e7018e71c3b8e639c000000039c1fce39fc7f9c707e19800000000000001c1877f0fc6180800000000000000000000000000180000000000000", 126, 14);
 
-type Cfg = { mask: Mask; variants: V[]; minW: number; aspect: [number, number]; hbs: number[]; gap: number; minInk: number; dice: number; dark: number };
+type Cfg = { mask: Mask; variants: V[]; minW: number; aspect: [number, number]; hbs: number[]; gap: number; minInk: number; dice: number; dark: number; minH?: number };   // minH: the least height of a line of text (at 1000 px wide)
 const FLAT_ANCHOR = [0.30, 0.28, 0.70, 0.60];   // x0, y0, x1, y1 as fractions of the picture
 const TILT_ANCHOR = [0.20, 0.45, 0.95, 0.97];
 const CAPS_ANCHOR = [0.12, 0.28, 0.88, 0.97];
-const SERIF_FLAT: Cfg = { mask: SERIF, variants: ["up", "rot", "flipv"], minW: 0.07, aspect: [5, 10.5], hbs: [12, 15, 19, 24], gap: 16, minInk: 22, dice: 0.55, dark: 55 }; // real ~0.7 / ~70; look-alikes <= 0.63 / ~46
+const SERIF_FLAT: Cfg = { mask: SERIF, variants: ["up", "rot", "flipv"], minW: 0.07, aspect: [5, 10.5], hbs: [12, 15, 19, 24], gap: 16, minInk: 22, dice: 0.55, dark: 55, minH: 8 }; // real ~0.7 / ~70; look-alikes <= 0.63 / ~46
 const SERIF_TILT: Cfg = { ...SERIF_FLAT, minW: 0.06, dice: 0.56, dark: 40 };                                                                         // tilted text is a bit distorted
-const CAPS_CFG: Cfg = { mask: CAPS, variants: ["up", "rot"], minW: 0.10, aspect: [5.5, 12], hbs: [22, 28, 34, 42], gap: 22, minInk: 30, dice: 0.57, dark: 42 }; // real ~0.6-0.76 / 45-70
+const CAPS_CFG: Cfg = { mask: CAPS, variants: ["up", "rot"], minW: 0.10, aspect: [5.5, 12], hbs: [22, 28, 34, 42], gap: 22, minInk: 30, dice: 0.57, dark: 42, minH: 16 };   // a thin dark edge under a stone is not lettering // real ~0.6-0.76 / 45-70
 const SERIF_ANGLES = [-20, -10, 0, 10, 20, 30];  // the angled renders tilt the text about 20 degrees
 const CAPS_ANGLES = [0, 10, 20, 30];
 
@@ -45,7 +45,7 @@ function searchBands(dark: Uint8Array, dev: Float32Array, w: number, h: number, 
     const bw = g[1] - g[0] + 1; let y0 = -1, y1 = -1;
     for (let yy = y; yy < y + hb; yy++) { let hit = 0; for (let x = g[0]; x <= g[1]; x++) hit |= dark[yy * w + x]; if (hit) { if (y0 < 0) y0 = yy; y1 = yy + 1; } }
     const bh = y1 - y0;
-    if (bh < 4 || bw < c.minW * 1000 * sc || bw / bh < c.aspect[0] || bw / bh > c.aspect[1]) continue;
+    if (bh < Math.max(4, (c.minH || 0) * sc) || bw < c.minW * 1000 * sc || bw / bh < c.aspect[0] || bw / bh > c.aspect[1]) continue;
     for (const v of c.variants) {
       const tpl = mask.v[v];
       for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
