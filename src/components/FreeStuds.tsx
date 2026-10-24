@@ -5,7 +5,7 @@ import { useCart } from "./CartProvider";
 
 /* Welcome offer pop-up: free 0.5 ct studs with a $1,000+ first order (Shopify code FREESTUDS).
    When: desktop after 10 s, 40% scroll or exit intent; phone after 12 s or 50% scroll. Once per visit.
-   Closed once → back after 7 days; closed again → 30 days; signed up → never. Never over the open bag.
+   Shows on every visit (once per visit) until she signs up. Never over the open bag.
    After closing, a turning "Free" sticker stays bottom-left to reopen it (its × hides it for the visit). */
 
 const KEY = "mk_fs", S_SHOWN = "mk_fs_shown", S_NOSTICK = "mk_fs_nosticker";
@@ -55,7 +55,7 @@ export default function FreeStuds() {
   useEffect(() => {
     if (skip) return;
     const s = load();
-    if (s.signed || (s.until && Date.now() < s.until) || ss.get(S_SHOWN) || shownRef.current) return;
+    if (s.signed || ss.get(S_SHOWN) || shownRef.current) return;
     const m = window.innerWidth < 768;
     const fire = () => { if (shownRef.current || document.querySelector(".cdrawer.on, .menu.on, .menu.open")) return; open(); cleanup(); };
     const t = window.setTimeout(fire, m ? 12000 : 10000);
@@ -71,7 +71,7 @@ export default function FreeStuds() {
     setShow(false);
     if (phase === "done") return;
     const s = load(); const closes = (s.closes || 0) + 1;
-    save({ ...s, closes, until: Date.now() + (closes >= 2 ? 30 : 7) * 864e5 });
+    save({ ...s, closes });
     if (!ss.get(S_NOSTICK)) setSticker(true);
   }, [phase]);
 
