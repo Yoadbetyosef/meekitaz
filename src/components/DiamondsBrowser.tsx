@@ -18,8 +18,6 @@ const parseF = (sp: URLSearchParams): DFilters => ({
   color: pair(sp.get("col"), 0, 5, DEF.color, true), clarity: pair(sp.get("cl"), 0, 5, DEF.clarity, true),
 });
 const same = (a: [number, number], b: [number, number]) => a[0] === b[0] && a[1] === b[1];
-/** One honest sticker per stone, or none: the lowest price in this list, a colourless stone (D to F), or one that is clean to the eye (VVS or better). */
-const tagFor = (d: Item, n: number, sort: string) => d.fancy ? "" : n === 0 && sort === "price_asc" ? "Lowest price" : d.color && "DEF".includes(d.color) ? "Colourless" : d.clarity && ["FL", "IF", "VVS1", "VVS2"].includes(d.clarity) ? "Eye-clean" : "";
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 
 export default function DiamondsBrowser() {
@@ -115,7 +113,7 @@ export default function DiamondsBrowser() {
           {state === "ready" && (
             <>
               <div className="pgrid">{items.flatMap((d, n) => {
-                const cells = [<StoneCard key={d.id} d={d} tag={tagFor(d, n, sort)} playing={playing === d.id} setPlaying={setPlaying} onOpen={remember} />];
+                const cells = [<StoneCard key={d.id} d={d} playing={playing === d.id} setPlaying={setPlaying} onOpen={remember} />];
                 if ((n + 1) % 8 === 0 && n < items.length - 1) cells.push(<StoneInterlude key={`i${n}`} k={(n + 1) / 8 - 1} />);
                 return cells;
               })}</div>
