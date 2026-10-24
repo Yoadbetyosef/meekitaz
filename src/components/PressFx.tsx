@@ -37,7 +37,8 @@ export default function PressFx() {
       const b = bar.current; if (!b) return;
       finish(); b.classList.remove("go", "done"); void b.offsetWidth; b.classList.add("go");
       const card = a.closest(PRESS) || a; card.classList.add("fx-loading"); loading.current = card;
-      veilTimer.current = window.setTimeout(() => veil.current?.classList.add("on"), 450); // a page that takes a moment: the mark breathes on pink
+      // a page that takes a moment: the mark breathes on pink. Never from a product page: there, moving between pieces, colours and photographs must not look like a page loading.
+      if (!location.pathname.startsWith("/products/")) veilTimer.current = window.setTimeout(() => veil.current?.classList.add("on"), 700);
       timer.current = window.setTimeout(finish, 9000); // never leave it hanging
     };
     window.addEventListener("pointerdown", down, true); window.addEventListener("pointerup", up, true); window.addEventListener("pointercancel", up, true); document.addEventListener("click", click);
