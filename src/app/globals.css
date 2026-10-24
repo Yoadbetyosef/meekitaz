@@ -1446,7 +1446,7 @@ a.rp-mt{text-decoration:none}
 .fs-code{display:inline-block;font:700 .62em/1 var(--body);letter-spacing:.18em;background:#F7E9A8;color:var(--ink);padding:.45em .7em;border-radius:999px;vertical-align:middle;text-shadow:none}
 .fs-err{color:#FFE1E1}
 .fs-fine{font-size:11px!important;line-height:1.4!important;opacity:.85;margin-top:12px!important}
-/* desktop: 1020×500 design, shown small (scaled in JS), drops in and bounces */
+/* desktop: 1020×500 design, shown medium (scaled in JS), drops in and bounces */
 .fs-d .fs-pop{width:1020px;height:500px;animation:fsDrop .9s cubic-bezier(.2,1.5,.4,1) both}
 .fs-d .fs-ph{width:893px;-webkit-mask:linear-gradient(90deg,#000 0,#000 745px,transparent 860px);mask:linear-gradient(90deg,#000 0,#000 745px,transparent 860px)}
 .fs-d .fs-tx{right:22px;top:50%;transform:translateY(-50%);width:238px}

@@ -25,13 +25,13 @@ export default function FreeStuds() {
   const [err, setErr] = useState("");
   const [adding, setAdding] = useState(false);
   const [mobile, setMobile] = useState(false);
-  const [scale, setScale] = useState(0.78);
+  const [scale, setScale] = useState(0.9);
   const inputRef = useRef<HTMLInputElement>(null);
   const shownRef = useRef(false);
   const skip = SKIP.some(r => r.test(path));
 
   useEffect(() => {
-    const fit = () => { const m = window.innerWidth < 768; setMobile(m); setScale(Math.min(0.78, (window.innerWidth - 48) / 1020, (window.innerHeight - 80) / 500)); };
+    const fit = () => { const m = window.innerWidth < 768; setMobile(m); setScale(Math.min(0.9, (window.innerWidth - 48) / 1020, (window.innerHeight - 80) / 500)); };
     fit(); window.addEventListener("resize", fit); return () => window.removeEventListener("resize", fit);
   }, []);
 
