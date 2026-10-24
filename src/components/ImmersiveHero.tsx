@@ -86,7 +86,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const [pcBox, setPcBox] = useState({ w: 0, h: 0 });
   const box = useRef<HTMLElement>(null), vid = useRef<HTMLVideoElement>(null), cvid = useRef<HTMLVideoElement>(null), vis = useRef(true);
   const cur = Math.min(i, N - 1);
-  const modeOf = useCallback((s: Slide): "photo" | "piece" => s.kind === "film" ? "photo" : s.kind === "stone" || s.kind === "clip" ? "piece" : (modes[s.url || ""] ?? (s.url === model ? "photo" : "piece")), [modes, model]);
+  const modeOf = useCallback((s: Slide): "photo" | "piece" => s.kind === "film" || s.kind === "clip" ? "photo" : s.kind === "stone" ? "piece" : (modes[s.url || ""] ?? (s.url === model ? "photo" : "piece")), [modes, model]);
   const go = useCallback((k: number) => setI(((k % N) + N) % N), [N]);
   useEffect(() => { setI(x => Math.min(x, N - 1)); }, [N]);
 
@@ -175,13 +175,13 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   };
   const s = slides[cur], mode = modeOf(s);
   // on a phone the sheet sits over the lower part of the picture: white type when that part is dark, dark type when it is light
-  const tone: "dark" | "light" = s.kind === "film" ? "dark" : mode === "photo" && s.url ? (tones[s.url] ?? "light") : "light";
+  const tone: "dark" | "light" = s.kind === "film" || s.kind === "clip" ? "dark" : mode === "photo" && s.url ? (tones[s.url] ?? "light") : "light";
   const len = bigTitle.length, sz = len <= 22 ? "l1" : len <= 40 ? "l2" : "l3";
   const diamond = stonePicture(stoneShape, stone); // the stone slide shows the shape the customer is looking at
   const filmSrc = film?.src || "/media/brand-reel.mp4", filmPoster = film?.poster || "/media/brand-reel-poster.jpg";
   const src = (u: string, w: number, k: number) => photoSrc(u, w, title, k);
   return (
-    <section className={`ih${open ? " open" : ""}`} ref={box} data-mode={mode} data-tone={tone} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
+    <section className={`ih${open ? " open" : ""}`} ref={box} data-mode={mode} data-tone={tone} data-clip={s.kind === "clip" ? "1" : undefined} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
       <div className="ih-slides">
         {slides.map((sl, k) => {
           const m = modeOf(sl), on = k === cur;
