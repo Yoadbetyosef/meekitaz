@@ -196,7 +196,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
                   </div>); })()
                 : <div className="ih-pc"><Image className="ih-pi" src={src(sl.url, 1400, k)} alt={sl.alt} fill sizes="(max-width:767px) 92vw, 820px" quality={80} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1400, k))} onLoad={onImg(sl.url)} style={trimStyle(sl.url)} /></div>)}
               {sl.kind === "stone" && <div className="ih-pc st"><Image src={diamond} alt="" fill sizes="(max-width:767px) 70vw, 560px" quality={80} /></div>}
-              {sl.kind === "box" && boxPic && <div className="ih-pc box"><Image className="ih-pi" src={boxPic.src} alt={sl.alt} fill sizes="(max-width:767px) 100vw, 60vw" quality={80} /></div>}
+              {sl.kind === "box" && boxPic && <div className="ih-pc box"><Image className="ih-pi" src={boxPic.src} alt={sl.alt} fill sizes="(max-width:767px) 100vw, 60vw" quality={80} onLoad={e => { const tr = trimOf(e.currentTarget); if (tr) setTrims(m => (m[boxPic.src] ? m : { ...m, [boxPic.src]: tr })); }} style={trimStyle(boxPic.src)} /></div>}
               {sl.kind === "clip" && clip && <div className="ih-pc clip"><video ref={cvid} muted loop playsInline preload="none" poster={clip.poster} aria-label={sl.alt} /></div>}
               {sl.kind === "film" && <video ref={vid} muted loop playsInline preload="none" poster={filmPoster} aria-label={sl.alt} />}
             </div>
