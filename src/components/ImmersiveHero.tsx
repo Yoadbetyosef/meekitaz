@@ -8,7 +8,7 @@ import { stonePicture } from "@/lib/stonePicture";
  *  A photo turns the page dark with white type; a product shot on white turns it warm cream with dark type, so the piece is always seen properly.
  *  Desktop: one glass card on the right. Phone: metal in a slim bar at the top, everything else with the price and the button in a panel at the bottom, all on screen at once. */
 type Img = { url: string; alt: string };
-type Slide = { kind: "img" | "stone" | "film" | "clip"; url?: string; alt: string; label: string };
+type Slide = { kind: "img" | "stone" | "film" | "clip" | "box"; url?: string; alt: string; label: string };
 const VIEW_NAMES = ["The piece", "Another view", "Detail", "Detail", "Detail", "Detail"];
 
 /** Looks at a picture: is it a photograph (dark page) rather than a product shot on white (cream page)? And is its lower part, which sits behind the sheet on a phone, dark or light?
@@ -64,18 +64,18 @@ function trimOf(el: HTMLImageElement): Trim | null {
   } catch { return null; }
 }
 
-export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, film, clip, steps, summary, price, metal, rows, cta, appt, onVisible }: {
-  title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; stoneShape?: string; film?: { src: string; poster: string }; clip?: { src: string; poster: string }; summary?: string[];
+export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, film, clip, boxPic, steps, summary, price, metal, rows, cta, appt, onVisible }: {
+  title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; stoneShape?: string; film?: { src: string; poster: string }; clip?: { src: string; poster: string }; boxPic?: { src: string; alt: string }; summary?: string[];
   steps?: ReactNode; price: ReactNode; metal?: ReactNode; rows?: ReactNode; cta: ReactNode; appt?: ReactNode; onVisible?: (on: boolean) => void;
 }) {
-  const clipSrc = clip?.src;
+  const clipSrc = clip?.src, boxSrc = boxPic?.src;
   const slides = useMemo<Slide[]>(() => {
     const list: Slide[] = images.map(im => ({ kind: "img" as const, url: im.url, alt: im.alt, label: "" }));
     const m = model ? list.findIndex(s => s.url === model) : -1;
     if (m > 0) { const [x] = list.splice(m, 1); list.unshift(x); } // the worn photo opens the page
     let n = 0; list.forEach(s => { s.label = s.url === model ? "Worn" : VIEW_NAMES[Math.min(n++, VIEW_NAMES.length - 1)]; });
-    return [...list, ...(clipSrc ? [{ kind: "clip" as const, alt: "The piece in motion", label: "In motion" }] : []), { kind: "stone", alt: "The stone", label: "The stone" }, { kind: "film", alt: "Meekitaz, a short film", label: "The film" }];
-  }, [images, model, clipSrc]);
+    return [...list, ...(clipSrc ? [{ kind: "clip" as const, alt: "The piece in motion", label: "In motion" }] : []), ...(boxSrc ? [{ kind: "box" as const, alt: boxPic?.alt || "How it arrives", label: "How it arrives" }] : []), { kind: "stone", alt: "The stone", label: "The stone" }, { kind: "film", alt: "Meekitaz, a short film", label: "The film" }];
+  }, [images, model, clipSrc, boxSrc]);
   const N = slides.length;
   const [i, setI] = useState(0);
   const [open, setOpen] = useState(false); // phone: the sheet at the bottom, folded (title, what is chosen, price, button) or open (every choice)
@@ -86,7 +86,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const [pcBox, setPcBox] = useState({ w: 0, h: 0 });
   const box = useRef<HTMLElement>(null), vid = useRef<HTMLVideoElement>(null), cvid = useRef<HTMLVideoElement>(null), vis = useRef(true);
   const cur = Math.min(i, N - 1);
-  const modeOf = useCallback((s: Slide): "photo" | "piece" => s.kind === "film" || s.kind === "clip" ? "photo" : s.kind === "stone" ? "piece" : (modes[s.url || ""] ?? (s.url === model ? "photo" : "piece")), [modes, model]);
+  const modeOf = useCallback((s: Slide): "photo" | "piece" => s.kind === "film" || s.kind === "clip" ? "photo" : s.kind === "stone" || s.kind === "box" ? "piece" : (modes[s.url || ""] ?? (s.url === model ? "photo" : "piece")), [modes, model]);
   const go = useCallback((k: number) => setI(((k % N) + N) % N), [N]);
   useEffect(() => { setI(x => Math.min(x, N - 1)); }, [N]);
 
@@ -196,6 +196,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
                   </div>); })()
                 : <div className="ih-pc"><Image className="ih-pi" src={src(sl.url, 1400, k)} alt={sl.alt} fill sizes="(max-width:767px) 92vw, 820px" quality={80} priority={k === 0} unoptimized={isCleaned(src(sl.url, 1400, k))} onLoad={onImg(sl.url)} style={trimStyle(sl.url)} /></div>)}
               {sl.kind === "stone" && <div className="ih-pc st"><Image src={diamond} alt="" fill sizes="(max-width:767px) 70vw, 560px" quality={80} /></div>}
+              {sl.kind === "box" && boxPic && <div className="ih-pc box"><Image className="ih-pi" src={boxPic.src} alt={sl.alt} fill sizes="(max-width:767px) 100vw, 60vw" quality={80} /></div>}
               {sl.kind === "clip" && clip && <div className="ih-pc clip"><video ref={cvid} muted loop playsInline preload="none" poster={clip.poster} aria-label={sl.alt} /></div>}
               {sl.kind === "film" && <video ref={vid} muted loop playsInline preload="none" poster={filmPoster} aria-label={sl.alt} />}
             </div>
@@ -219,6 +220,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
         <button key={k} type="button" className={k === cur ? "on" : ""} aria-label={sl.label} aria-current={k === cur} onClick={() => go(k)}>
           {sl.kind === "img" && sl.url && <Image src={src(sl.url, 160, k)} alt="" width={64} height={64} quality={60} unoptimized={isCleaned(src(sl.url, 160, k))} />}
           {sl.kind === "stone" && <Image src={diamond} alt="" width={64} height={64} quality={60} />}
+          {sl.kind === "box" && boxPic && <Image src={boxPic.src} alt="" width={64} height={64} quality={60} />}
           {sl.kind === "clip" && clip && <><Image src={clip.poster} alt="" width={64} height={64} quality={60} /><span className="pl">▶</span></>}
           {sl.kind === "film" && <><Image src={filmPoster} alt="" width={64} height={64} quality={60} /><span className="pl">▶</span></>}
         </button>))}

@@ -1368,3 +1368,9 @@ a.rp-mt{text-decoration:none}
   .ih[data-mode] .ih-tt{left:118px;bottom:98px;max-width:calc(100% - 118px - 3.2% - 388px)}
   .ih[data-mode=photo] .ih-tt h1[class],.ih[data-mode=piece] .ih-tt h1[class],.ih[data-clip] .ih-tt h1[class]{font-size:clamp(20px,1.9vw,28px)}
 }
+
+/* the Meekitaz box: a transparent picture, so it needs no rectangle, no rounded corners and no blending */
+.ih-pc.box{mix-blend-mode:normal}
+.pp-box img{border-radius:0}
+@media(max-width:767px){.pp-box img{border-radius:0}}
+

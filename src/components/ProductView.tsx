@@ -63,6 +63,9 @@ const TRUST = [
   ["M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 17.5h.01M17 17.5h.01", "Free insured shipping"],
 ];
 
+/** The Meekitaz box on a transparent background, so it sits on any page colour with no rectangle around it. */
+const BOX_IMG = "/media/meekitaz-box.webp";
+
 export default function ProductView({ product: p, siblings, related, ring, options }: { product: ProductFull; siblings: Sibling[]; related: Related[]; ring?: RingProp; options?: ProductOptions | null }) {
   const { add, busy, addRing, addConfigured } = useCart();
   // pieces with an option tree (weight / colour / clarity / purity / extras): the picks, with defaults filled in
@@ -232,7 +235,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
 
   return (
     <main className="pp ih-on">
-      <ImmersiveHero title={title} bigTitle={heroTitle(title)} images={imgs} model={worn || undefined} stone={ring?.color || ""} stoneShape={ring && cv ? cv.shape : undefined} film={ring ? { src: "/media/rings-film.mp4", poster: "/media/rings-film-poster.jpg" } : undefined} clip={PRODUCT_VIDEOS[ns] ?? (p.videoUrl ? { src: p.videoUrl, poster: worn || base[0]?.url || "" } : undefined)}
+      <ImmersiveHero boxPic={{ src: BOX_IMG, alt: "Meekitaz presentation box with velvet ring box and certificate drawer" }} title={title} bigTitle={heroTitle(title)} images={imgs} model={worn || undefined} stone={ring?.color || ""} stoneShape={ring && cv ? cv.shape : undefined} film={ring ? { src: "/media/rings-film.mp4", poster: "/media/rings-film-poster.jpg" } : undefined} clip={PRODUCT_VIDEOS[ns] ?? (p.videoUrl ? { src: p.videoUrl, poster: worn || base[0]?.url || "" } : undefined)}
         steps={ring ? <RingSteps step={1} onDiamond={cv ? chooseSetting : undefined} /> : null}
         summary={summary}
         price={priceNode} metal={hasMetal ? metalNode : null} rows={rowsNode} cta={ctaNode} appt={apptNode} onVisible={setHeroOn} />
@@ -252,7 +255,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
         </section>
 
         <section className="pp-box" aria-label="How your piece arrives">
-          <Image src="https://cdn.shopify.com/s/files/1/0841/2905/4957/files/meekitaz-packaging.png?v=1792853444" alt="Meekitaz presentation box with velvet ring box and certificate drawer" width={1024} height={1024} sizes="(max-width:767px) 100vw, 760px" quality={80} />
+          <Image src={BOX_IMG} alt="Meekitaz presentation box with velvet ring box and certificate drawer" width={1024} height={1024} sizes="(max-width:767px) 100vw, 760px" quality={80} />
           <div className="pp-box-card"><small className="eyebrow">How it arrives</small><h2>Velvet on top. Certificate below.</h2><p>Every piece ships gift-ready in our signature pink box.</p></div>
         </section>
 
