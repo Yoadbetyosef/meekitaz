@@ -1171,8 +1171,7 @@ a.rp-mt{text-decoration:none}
 }
 
 /* ===== the diamonds list: the gallery look (grey-lavender with the wordmark behind, white cards, stickers, cards between the stones) ===== */
-.dm-gal{--dg-bg:#ABAFBF;--dg-s1:#F7D3DA;--dg-s2:#D6E4C8;position:relative;overflow:hidden;background:var(--dg-bg) url(/brand/wordmark-tile.svg) repeat-y 50% 220px/116% auto}
-@media(min-width:768px){.dm-gal{background-size:78% auto}}
+.dm-gal{--dg-s1:#F7D3DA;--dg-s2:#D6E4C8;position:relative;overflow:hidden}
 .dm-gal .wrap{position:relative;z-index:2}
 .dm-gal .dres h2{color:var(--ink)}.dm-gal .dcount{opacity:.8}
 .dm-gal .dsort select{border:0;box-shadow:0 10px 20px -14px rgba(0,0,0,.4)}
@@ -1199,8 +1198,7 @@ a.rp-mt{text-decoration:none}
 }
 @media(prefers-reduced-motion:reduce){.dm-blk{transform:none!important}}
 
-/* the diamonds page: the grey runs from the end of the picture down to the last stone; the cards and the Choose button are a little bigger on a phone */
-.dm-page{background:#ABAFBF}
+/* the diamonds page: the same cream as the engagement rings; the cards and the Choose button are a little bigger on a phone */
 @media(max-width:767px){
   .dm-gal .wrap{padding-left:12px;padding-right:12px}
   .dm-gal .pgrid{gap:12px 8px}
