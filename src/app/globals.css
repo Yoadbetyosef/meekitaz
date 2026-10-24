@@ -1316,3 +1316,27 @@ a.rp-mt{text-decoration:none}
   .ih-pc.clip video{height:100%;width:auto;border-radius:28px}
 }
 
+/* ===== the Meekitaz mark (public/brand/meekitaz-mark.png): a shape that takes the colour of the text around it ===== */
+.mkm{display:inline-block;aspect-ratio:1;background:currentColor;-webkit-mask:url(/brand/meekitaz-mark.png) center/contain no-repeat;mask:url(/brand/meekitaz-mark.png) center/contain no-repeat;vertical-align:middle;flex:none}
+/* the footer: the mark, big and quiet, behind her */
+.foot-mark{position:absolute;z-index:1;left:50%;top:6%;width:min(70vw,860px);aspect-ratio:1;transform:translateX(-50%);color:#fff;opacity:.5;background:currentColor;-webkit-mask:url(/brand/meekitaz-mark.png) center/contain no-repeat;mask:url(/brand/meekitaz-mark.png) center/contain no-repeat;pointer-events:none}
+@media(max-width:767px){.foot-mark{left:64%;top:4%;width:132vw}}
+/* opening a page that takes a moment: pink, with the mark breathing (the bar and the dimmed card stay) */
+.nav-load{position:fixed;inset:0;z-index:199;background:#EFC5CA;display:grid;place-items:center;color:#fff;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .35s,visibility 0s .35s}
+.nav-load.on{opacity:1;visibility:visible;transition:opacity .35s}
+.nav-load .mkm{width:clamp(72px,16vw,110px);animation:nlbr 1.6s ease-in-out infinite}
+@keyframes nlbr{50%{transform:scale(.86);opacity:.6}}
+@media(prefers-reduced-motion:reduce){.nav-load .mkm{animation:none}}
+/* the empty bag */
+.cd-empty .mkm{display:block;width:96px;margin:0 auto 16px;color:var(--red)}
+.cd-empty small{display:block;font:400 14px/1.5 var(--body);color:#777;margin:-6px 0 24px}
+/* the panel on a laptop: a line of proof above the button */
+.ih-hm{display:none}
+@media(min-width:768px){
+  .ih-hm{display:flex;align-items:center;gap:10px;margin:0 0 10px;font:500 11px/1.35 var(--body);opacity:.95}
+  .ih-hm .mkm{width:24px;color:var(--red)}.ih[data-mode=photo] .ih-hm .mkm{color:#fff}
+  .ih-hm b{font-weight:700}
+  .ih-scr{padding:14px 24px 22px}
+  .ih .pp-lbl{margin:9px 0 5px}.ih .mk-lbl{margin:9px 0 5px}
+}
+

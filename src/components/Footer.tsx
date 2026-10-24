@@ -10,6 +10,7 @@ export default function Footer() {
   return (
     <footer className="mkfoot" id="mkfoot">
       <div className="mkfoot-in" id="mkfoot-in">
+        <div className="foot-mark" aria-hidden="true" />
         <div className="hush-ph"><Image src={hushCard.img} alt="A woman with a finger to her lips, wearing yellow cushion diamond studs, a tennis necklace and an oval diamond ring" fill sizes="(max-width:767px) 130vw, 40vw" quality={80} /></div>
         <section className="hush" aria-label="Quiet flex">
           <h2>Shhh.</h2>

@@ -68,7 +68,7 @@ export default function CartDrawer() {
         </div>
         <div className="cd-body">
           {empty ? (
-            <div className="cd-empty"><p>Your bag is empty. For now.</p><Link href="/engagement-rings" onClick={() => setOpen(false)}>Shop engagement rings</Link></div>
+            <div className="cd-empty"><i className="mkm" aria-hidden="true" /><p>Nothing here yet.</p><small>Serious diamonds, worn lightly.</small><Link href="/" onClick={() => setOpen(false)}>Shop the collection</Link></div>
           ) : (<>
             {rings.map(r => (
               <div className="cd-ring cd-one" key={r.id} style={{ opacity: busy ? .6 : 1 }}>

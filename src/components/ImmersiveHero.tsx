@@ -247,7 +247,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
             {appt && <div className="ih-appt">{appt}</div>}
           </div>
         </div>
-        <div className="ih-foot">{cta}</div>
+        <div className="ih-foot"><div className="ih-hm"><i className="mkm" aria-hidden="true" /><span><b>Hallmarked by Meekitaz.</b> Graded by IGI or GIA. Warranted for life.</span></div>{cta}</div>
       </div>
     </section>
   );
