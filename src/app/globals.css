@@ -1341,6 +1341,11 @@ a.rp-mt{text-decoration:none}
 }
 
 
-/* Meekitaz box image on every product page */
-.pp-box{margin:30px auto 10px;max-width:760px}.pp-box img{width:100%;height:auto;border-radius:18px;display:block}
-@media (max-width:767px){.pp-box{margin:20px 0 10px}.pp-box img{border-radius:0}}
+/* Meekitaz box on every product page: photo with a floating card */
+.pp-box{position:relative;margin:30px auto 10px;max-width:760px}
+.pp-box img{width:100%;height:auto;border-radius:20px;display:block}
+.pp-box-card{position:absolute;left:24px;bottom:24px;max-width:320px;background:var(--ivory);border-radius:16px;padding:20px 22px;box-shadow:0 12px 30px rgba(0,0,0,.12)}
+.pp-box-card .eyebrow{font-size:10px}
+.pp-box-card h2{font:400 24px/1.15 var(--display);margin:0 0 8px}
+.pp-box-card p{font:14px/1.5 var(--body);margin:0}
+@media (max-width:767px){.pp-box{margin:20px 0 10px}.pp-box img{border-radius:0}.pp-box-card{position:relative;left:auto;bottom:auto;max-width:none;margin:-46px 16px 0}}

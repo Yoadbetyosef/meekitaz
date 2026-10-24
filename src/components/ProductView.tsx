@@ -251,8 +251,9 @@ export default function ProductView({ product: p, siblings, related, ring, optio
           <div className="pp-trust">{TRUST.map(([d, t]) => <div key={t}><Ic d={d} />{t}</div>)}</div>
         </section>
 
-        <section className="pp-box" aria-label="The Meekitaz box">
+        <section className="pp-box" aria-label="How your piece arrives">
           <Image src="https://cdn.shopify.com/s/files/1/0841/2905/4957/files/meekitaz-packaging.png?v=1792853444" alt="Meekitaz presentation box with velvet ring box and certificate drawer" width={1024} height={1024} sizes="(max-width:767px) 100vw, 760px" quality={80} />
+          <div className="pp-box-card"><small className="eyebrow">How it arrives</small><h2>Velvet on top. Certificate below.</h2><p>Every piece ships gift-ready in our signature pink box.</p></div>
         </section>
 
         {related.length > 0 && (
