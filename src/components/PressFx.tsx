@@ -10,10 +10,10 @@ export const CHOICE = ".sp-row > *, .rp-sw, .rp-shapes button, .rp-metals button
 
 export default function PressFx() {
   const path = usePathname();
-  const bar = useRef<HTMLDivElement>(null), veil = useRef<HTMLDivElement>(null), loading = useRef<Element | null>(null), timer = useRef(0), veilTimer = useRef(0);
+  const bar = useRef<HTMLDivElement>(null), loading = useRef<Element | null>(null), timer = useRef(0);
 
   const finish = () => {
-    const b = bar.current; window.clearTimeout(timer.current); window.clearTimeout(veilTimer.current); veil.current?.classList.remove("on");
+    const b = bar.current; window.clearTimeout(timer.current);
     if (loading.current) { loading.current.classList.remove("fx-loading"); loading.current = null; }
     if (!b || !b.classList.contains("go")) return;
     b.classList.add("done"); window.setTimeout(() => { b.classList.remove("go", "done"); }, 700);
@@ -37,13 +37,11 @@ export default function PressFx() {
       const b = bar.current; if (!b) return;
       finish(); b.classList.remove("go", "done"); void b.offsetWidth; b.classList.add("go");
       const card = a.closest(PRESS) || a; card.classList.add("fx-loading"); loading.current = card;
-      // a page that takes a moment: the mark breathes on pink. Never from a product page: there, moving between pieces, colours and photographs must not look like a page loading.
-      if (!location.pathname.startsWith("/products/")) veilTimer.current = window.setTimeout(() => veil.current?.classList.add("on"), 700);
       timer.current = window.setTimeout(finish, 9000); // never leave it hanging
     };
     window.addEventListener("pointerdown", down, true); window.addEventListener("pointerup", up, true); window.addEventListener("pointercancel", up, true); document.addEventListener("click", click);
     return () => { window.removeEventListener("pointerdown", down, true); window.removeEventListener("pointerup", up, true); window.removeEventListener("pointercancel", up, true); document.removeEventListener("click", click); };
   }, []);
 
-  return <><div className="fx-bar" ref={bar} aria-hidden="true"><i /></div><div className="nav-load" ref={veil} aria-hidden="true"><i className="mkm" /></div></>;
+  return <div className="fx-bar" ref={bar} aria-hidden="true"><i /></div>;
 }
