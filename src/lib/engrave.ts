@@ -97,6 +97,86 @@ function sample(dark: Uint8Array, dev: Float32Array, W: number, H: number, ang: 
   return { rd, rv, aw, ah, ax0, ay0 };
 }
 
+/** Paints the masked pixels of a region from the untouched pixels around them (nearest counting most). A wide stroke has no untouched pixel within
+ *  reach of its middle, so the paint works in from the edges in several rounds, each round treating what was just painted as known. */
+function fillMasked(data: Uint8Array, W: number, rx: number, ry: number, rw: number, rh: number, er2: Uint8Array, usable?: Uint8Array) {
+  const R = 9, Kw = new Float32Array((2 * R + 1) * (2 * R + 1));
+  for (let j = -R; j <= R; j++) for (let i = -R; i <= R; i++) Kw[(j + R) * (2 * R + 1) + i + R] = i === 0 && j === 0 ? 0 : 1 / Math.pow(i * i + j * j + 1, 1.5);
+  const reg = new Float32Array(rw * rh * 3), known = new Uint8Array(rw * rh), pend = new Uint8Array(rw * rh);
+  for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) { const o = ((ry + y) * W + rx + x) * 3, o2 = (y * rw + x) * 3; reg[o2] = data[o]; reg[o2 + 1] = data[o + 1]; reg[o2 + 2] = data[o + 2]; known[y * rw + x] = er2[y * rw + x] || (usable && !usable[y * rw + x]) ? 0 : 1; pend[y * rw + x] = er2[y * rw + x]; }
+  for (let round = 0; round < 8; round++) {
+    const upd: number[] = [];
+    for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) {
+      if (!pend[y * rw + x]) continue;
+      let s0 = 0, s1 = 0, s2 = 0, n = 0;
+      for (let j = -R; j <= R; j++) for (let i = -R; i <= R; i++) {
+        const qx = x + i, qy = y + j;
+        if (qx < 0 || qy < 0 || qx >= rw || qy >= rh || !known[qy * rw + qx]) continue;
+        const wgt = Kw[(j + R) * (2 * R + 1) + i + R], o2 = (qy * rw + qx) * 3; s0 += wgt * reg[o2]; s1 += wgt * reg[o2 + 1]; s2 += wgt * reg[o2 + 2]; n += wgt;
+      }
+      if (n) upd.push(y * rw + x, s0 / n, s1 / n, s2 / n);
+    }
+    if (!upd.length) break;
+    for (let u = 0; u < upd.length; u += 4) { const p = upd[u], o2 = p * 3; reg[o2] = upd[u + 1]; reg[o2 + 1] = upd[u + 2]; reg[o2 + 2] = upd[u + 3]; known[p] = 1; pend[p] = 0; }
+  }
+  for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) if (er2[y * rw + x] && !pend[y * rw + x]) {
+    const o = ((ry + y) * W + rx + x) * 3, o2 = (y * rw + x) * 3; data[o] = reg[o2]; data[o + 1] = reg[o2 + 1]; data[o + 2] = reg[o2 + 2];
+  }
+}
+
+/** The small engraving along the inside of the band in the front-on photo: a row of tiny dark-gold marks on a smooth gold band. Looks for that row
+ *  (many small marks, in a line, wide enough to be a word) and paints the marks out. Returns false when there is no such row. */
+function cleanTiny(data: Uint8Array, gray: Float32Array, W: number, H: number): boolean {
+  const sc = W / 1000, ax0 = Math.round(0.30 * W), ax1 = Math.round(0.70 * W), ay0 = Math.round(0.66 * H), ay1 = Math.round(0.92 * H), rw = ax1 - ax0, rh = ay1 - ay0;
+  const g0 = new Float32Array(rw * rh), gold = new Uint8Array(rw * rh);
+  for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) {
+    const o = ((ay0 + y) * W + ax0 + x) * 3, r = data[o], g = data[o + 1], b = data[o + 2];
+    g0[y * rw + x] = gray[(ay0 + y) * W + ax0 + x]; gold[y * rw + x] = r > g && g > b + 14 ? 1 : 0;   // the band: a saturated yellow
+  }
+  const cr = Math.max(2, Math.round(3 * sc));
+  const filt = (src: Float32Array, mx: boolean) => {
+    const t = new Float32Array(rw * rh), d2 = new Float32Array(rw * rh);
+    for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) { let v = mx ? -1 : 999; for (let i = -cr; i <= cr; i++) { const q = Math.min(rw - 1, Math.max(0, x + i)), b = src[y * rw + q]; v = mx ? Math.max(v, b) : Math.min(v, b); } t[y * rw + x] = v; }
+    for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) { let v = mx ? -1 : 999; for (let j = -cr; j <= cr; j++) { const q = Math.min(rh - 1, Math.max(0, y + j)), b = t[q * rw + x]; v = mx ? Math.max(v, b) : Math.min(v, b); } d2[y * rw + x] = v; }
+    return d2;
+  };
+  const clo = filt(filt(g0, true), false), mark = new Uint8Array(rw * rh);
+  for (let i = 0; i < rw * rh; i++) mark[i] = clo[i] - g0[i] > 14 && (gold[i] || g0[i] < 70) ? 1 : 0;   // dark gold, or the near-black of a deep cut
+  // connected marks
+  const lab = new Int32Array(rw * rh), comps: { x0: number; x1: number; y0: number; y1: number; n: number; pts: number[] }[] = [];
+  for (let p = 0; p < rw * rh; p++) {
+    if (!mark[p] || lab[p]) continue;
+    const id = comps.length + 1, c = { x0: rw, x1: 0, y0: rh, y1: 0, n: 0, pts: [] as number[] }, st = [p]; lab[p] = id;
+    while (st.length) {
+      const q = st.pop()!, qx = q % rw, qy = (q / rw) | 0; c.n++; c.pts.push(q); c.x0 = Math.min(c.x0, qx); c.x1 = Math.max(c.x1, qx); c.y0 = Math.min(c.y0, qy); c.y1 = Math.max(c.y1, qy);
+      for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) { const nx = qx + i, ny = qy + j; if (nx < 0 || ny < 0 || nx >= rw || ny >= rh) continue; const nq = ny * rw + nx; if (mark[nq] && !lab[nq]) { lab[nq] = id; st.push(nq); } }
+    }
+    comps.push(c);
+  }
+  const small = comps.filter(c => c.n >= 5 * sc * sc && c.n <= 500 * sc * sc && c.y1 - c.y0 + 1 <= 28 * sc && c.y1 - c.y0 + 1 >= 5 * sc && c.x1 - c.x0 + 1 <= 34 * sc);
+  if (small.length < 7) return false;
+  // the row: the most marks within a band that follows a gentle curve (the baseline may bend by a few pixels per letter)
+  let best: typeof small = [];
+  for (const seed of small) {
+    const cy = (seed.y0 + seed.y1) / 2, cx = (seed.x0 + seed.x1) / 2, grp = small.filter(c => Math.abs((c.y0 + c.y1) / 2 - cy) <= 18 * sc + Math.abs((c.x0 + c.x1) / 2 - cx) * 0.06);
+    if (grp.length > best.length) best = grp;
+  }
+  if (best.length < 7) return false;
+  const xs0 = Math.min(...best.map(c => c.x0)), xs1 = Math.max(...best.map(c => c.x1)), ys0 = Math.min(...best.map(c => c.y0)), ys1 = Math.max(...best.map(c => c.y1));
+  if (xs1 - xs0 < 60 * sc || xs1 - xs0 > 300 * sc) return false;   // a word, not a line of gems or an edge
+  const er = new Uint8Array(rw * rh), prot = new Uint8Array(rw * rh);
+  for (const c of comps) if (!small.includes(c) && c.x1 - c.x0 > 150 * sc) for (const q of c.pts) { const qx = q % rw, qy = (q / rw) | 0; prot[qy * rw + qx] = 1; }   // the long edges of the band stay
+  for (const c of best) for (const q of c.pts) { const qx = q % rw, qy = (q / rw) | 0; for (let j = -3; j <= 3; j++) for (let i = -3; i <= 3; i++) { const nx = qx + i, ny = qy + j; if (nx >= 0 && ny >= 0 && nx < rw && ny < rh) er[ny * rw + nx] = 1; } }
+  // the last letters of a line are often fainter against the bright edge of the band: along the line (a little beyond its ends) paint fainter marks too
+  const wx0 = Math.max(0, xs0 - 10), wx1 = Math.min(rw - 1, xs1 + Math.round(80 * sc)), wy0 = Math.max(0, ys0 - Math.round(8 * sc)), wy1 = Math.min(rh - 1, ys1 + Math.round(10 * sc));
+  for (let y = wy0; y <= wy1; y++) for (let x = wx0; x <= wx1; x++) {
+    const p = y * rw + x; if (prot[p] || g0[p] >= 110 || clo[p] - g0[p] <= 10) continue;   // only what is really ink-dark
+    for (let j = -2; j <= 2; j++) for (let i = -2; i <= 2; i++) { const nx = x + i, ny = y + j; if (nx >= 0 && ny >= 0 && nx < rw && ny < rh && !prot[ny * rw + nx]) er[ny * rw + nx] = 1; }
+  }
+  fillMasked(data, W, ax0, ay0, rw, rh, er, gold);   // paint from gold only, never from the white behind the ring
+  return true;
+}
+
 /** Returns a cleaned JPEG, or null when the picture has no engraving. `slot` is the photo's place in the gallery (0 = main). */
 export async function cleanImage(input: Buffer, slot = 0): Promise<Buffer | null> {
   const sharp = (await import("sharp").catch(() => null))?.default;
@@ -126,7 +206,10 @@ export async function cleanImage(input: Buffer, slot = 0): Promise<Buffer | null
     for (const th of CAPS_ANGLES) { const s = sample(m2.dark, m2.dev, sw, sh, th, CAPS_ANCHOR), f = searchBands(s.rd, s.rv, s.aw, s.ah, sw / 1000, CAPS_CFG); if (f && (!bf || f.dice > bf.dice)) { bf = f; ba = th; bo = [s.ax0, s.ay0]; } }
     if (bf) { box = { x: (bo[0] + bf.x) * f0, y: (bo[1] + bf.y) * (H / sh), w: bf.w * f0, h: bf.h * (H / sh) }; ang = ba; guide = { mask: CAPS, v: bf.v }; }
   }
-  if (!box) return null;
+  if (!box) {
+    if (slot >= 2 && slot <= 5 && cleanTiny(data, gray, W, H)) return sharp(data, { raw: { width: W, height: H, channels: 3 } }).jpeg({ quality: 90 }).toBuffer();
+    return null;
+  }
 
   // erase mask: thin dark strokes (the letters) inside the turned box; wide dark areas and deep shadows are left alone
   const a = (ang * Math.PI) / 180, al = Math.cos(a), be = Math.sin(a), pad = 4;
@@ -145,43 +228,38 @@ export async function cleanImage(input: Buffer, slot = 0): Promise<Buffer | null
     return dst;
   };
   const blob = morph(morph(dk, true), false);
+  // thin dark strokes by a second route: how much darker a pixel is than the same place with everything thinner than the letters filled in (a grey closing)
+  const cr = Math.max(4, Math.round(8 * sc)), g0 = new Float32Array(rw * rh);
+  for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) g0[y * rw + x] = gray[(ry + y) * W + rx + x];
+  const filt = (src: Float32Array, mx: boolean) => {
+    const t = new Float32Array(rw * rh), d2 = new Float32Array(rw * rh);
+    for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) { let v = mx ? -1 : 999; for (let i = -cr; i <= cr; i++) { const q = Math.min(rw - 1, Math.max(0, x + i)), b = src[y * rw + q]; v = mx ? Math.max(v, b) : Math.min(v, b); } t[y * rw + x] = v; }
+    for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) { let v = mx ? -1 : 999; for (let j = -cr; j <= cr; j++) { const q = Math.min(rh - 1, Math.max(0, y + j)), b = t[q * rw + x]; v = mx ? Math.max(v, b) : Math.min(v, b); } d2[y * rw + x] = v; }
+    return d2;
+  };
+  const clo = filt(filt(g0, true), false), dk2 = new Uint8Array(rw * rh);
+  for (let i = 0; i < rw * rh; i++) dk2[i] = dk[i] || clo[i] - g0[i] > 24 ? 1 : 0;
   const er = new Uint8Array(rw * rh);
   for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) {
-    if (!dk[y * rw + x] || (!guide && blob[y * rw + x])) continue; // plain mode: thin strokes only; guided mode: the template decides
+    if (!dk2[y * rw + x] || (!guide && blob[y * rw + x])) continue; // plain mode: thin strokes only; guided mode: the template decides, plus any thin stroke left inside the text box
     const px = rx + x, py = ry + y;
-    if (mean(px - 7, py - 7, px + 8, py + 8) <= 100) continue; // deep shadow: leave it
+    if (mean(px - 7, py - 7, px + 8, py + 8) <= 100 && gray[py * W + px] > 50) continue; // deep shadow: leave it (but a near-black pixel is ink, even in the middle of a bold letter)
     const dx = cx + al * (px - cx) + be * (py - cy), dy = cy - be * (px - cx) + al * (py - cy);
     if (!(dx >= box.x - pad && dx < box.x + box.w + pad && dy >= box.y - pad && dy < box.y + box.h + pad)) continue;
     if (guide) { // capital text can sit against gems: only paint where a letter of the template is (a little grown)
       let near = 0;
-      for (let j = -3; j <= 3 && !near; j += 3) for (let i = -3; i <= 3 && !near; i += 3) {
+      for (let j = -6; j <= 6 && !near; j += 3) for (let i = -6; i <= 6 && !near; i += 3) {
         const ux = Math.floor(((dx + i - box.x) / box.w) * guide.mask.w), uy = Math.floor(((dy + j - box.y) / box.h) * guide.mask.h);
         if (ux >= 0 && uy >= 0 && ux < guide.mask.w && uy < guide.mask.h && guide.mask.v[guide.v][uy * guide.mask.w + ux]) near = 1;
       }
-      if (!near) continue;
+      if (!near && blob[y * rw + x] && gray[py * W + px] > 70) continue; // anything near-black inside the text box is ink
     }
     er[y * rw + x] = 1;
   }
   const er2 = new Uint8Array(rw * rh);
-  for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) if (er[y * rw + x]) for (let j = -2; j <= 2; j++) for (let i = -2; i <= 2; i++) {
+  for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) if (er[y * rw + x]) for (let j = -3; j <= 3; j++) for (let i = -3; i <= 3; i++) {
     const qx = x + i, qy = y + j; if (qx >= 0 && qy >= 0 && qx < rw && qy < rh) er2[qy * rw + qx] = 1;
   }
-  // paint: nearby untouched pixels, nearest ones counting most
-  const R = 9, Kw = new Float32Array((2 * R + 1) * (2 * R + 1));
-  for (let j = -R; j <= R; j++) for (let i = -R; i <= R; i++) Kw[(j + R) * (2 * R + 1) + i + R] = i === 0 && j === 0 ? 0 : 1 / Math.pow(i * i + j * j + 1, 1.5);
-  const out = new Uint8Array(rw * rh * 3);
-  for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) {
-    if (!er2[y * rw + x]) continue;
-    let s0 = 0, s1 = 0, s2 = 0, n = 0;
-    for (let j = -R; j <= R; j++) for (let i = -R; i <= R; i++) {
-      const qx = x + i, qy = y + j;
-      if (qx < 0 || qy < 0 || qx >= rw || qy >= rh || er2[qy * rw + qx]) continue;
-      const wgt = Kw[(j + R) * (2 * R + 1) + i + R], o = ((ry + qy) * W + rx + qx) * 3; s0 += wgt * data[o]; s1 += wgt * data[o + 1]; s2 += wgt * data[o + 2]; n += wgt;
-    }
-    const o2 = (y * rw + x) * 3; if (n) { out[o2] = s0 / n; out[o2 + 1] = s1 / n; out[o2 + 2] = s2 / n; } else er2[y * rw + x] = 0;
-  }
-  for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) if (er2[y * rw + x]) {
-    const o = ((ry + y) * W + rx + x) * 3, o2 = (y * rw + x) * 3; data[o] = out[o2]; data[o + 1] = out[o2 + 1]; data[o + 2] = out[o2 + 2];
-  }
+  fillMasked(data, W, rx, ry, rw, rh, er2);
   return sharp(data, { raw: { width: W, height: H, channels: 3 } }).jpeg({ quality: 90 }).toBuffer();
 }

@@ -179,7 +179,9 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const len = bigTitle.length, sz = len <= 22 ? "l1" : len <= 40 ? "l2" : "l3";
   const diamond = stonePicture(stoneShape, stone); // the stone slide shows the shape the customer is looking at
   const filmSrc = film?.src || "/media/brand-reel.mp4", filmPoster = film?.poster || "/media/brand-reel-poster.jpg";
-  const src = (u: string, w: number, k: number) => photoSrc(u, w, title, k);
+  // the cleaner needs the photo's place among the Shopify photos, and the worn photo (which opens the page) is not one of them
+  const slotOff = model && slides[0]?.url === model ? 1 : 0;
+  const src = (u: string, w: number, k: number) => photoSrc(u, w, title, Math.max(0, k - slotOff));
   return (
     <section className={`ih${open ? " open" : ""}`} ref={box} data-mode={mode} data-tone={tone} data-clip={s.kind === "clip" ? "1" : undefined} data-box={s.kind === "box" ? "1" : undefined} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
       <div className="ih-slides">

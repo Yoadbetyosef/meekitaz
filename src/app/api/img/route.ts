@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cleanImage } from "@/lib/engrave";
 
+export const maxDuration = 30; // cleaning a photo takes a few seconds the first time; the result is then cached for a year
+
 // Serves a Shopify product photo, with the supplier's engraving painted out when the photo has one.
 export async function GET(req: NextRequest) {
   const u = req.nextUrl.searchParams.get("u") || "";
