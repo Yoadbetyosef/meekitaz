@@ -1374,3 +1374,11 @@ a.rp-mt{text-decoration:none}
 .pp-box img{border-radius:0}
 @media(max-width:767px){.pp-box img{border-radius:0}}
 
+/* the box block, design D: the picture large on the left, the card on the empty floor at the right, centred, so it never covers the box (a phone keeps the card under the picture) */
+@media(min-width:768px){
+  .pp-box{max-width:980px;padding:0 20px;display:flex;align-items:center}
+  .pp-box img{width:68%;margin:0}
+  .pp-box-card{left:auto;right:20px;bottom:auto;top:50%;transform:translateY(-50%);max-width:340px;padding:26px 28px;border-radius:22px;background:#fff;box-shadow:0 14px 36px rgba(0,0,0,.09)}
+  .pp-box-card h2{font-size:28px}
+}
+
