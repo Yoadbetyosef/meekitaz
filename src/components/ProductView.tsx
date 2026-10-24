@@ -251,6 +251,10 @@ export default function ProductView({ product: p, siblings, related, ring, optio
           <div className="pp-trust">{TRUST.map(([d, t]) => <div key={t}><Ic d={d} />{t}</div>)}</div>
         </section>
 
+        <section className="pp-box" aria-label="The Meekitaz box">
+          <Image src="https://cdn.shopify.com/s/files/1/0841/2905/4957/files/meekitaz-packaging.png?v=1792853444" alt="Meekitaz presentation box with velvet ring box and certificate drawer" width={1024} height={1024} sizes="(max-width:767px) 100vw, 760px" quality={80} />
+        </section>
+
         {related.length > 0 && (
           <section className="pp-look">
             <small className="eyebrow">Complete the look</small><h2>You may also like</h2>

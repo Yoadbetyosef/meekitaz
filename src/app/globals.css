@@ -1340,3 +1340,7 @@ a.rp-mt{text-decoration:none}
   .ih .pp-lbl{margin:9px 0 5px}.ih .mk-lbl{margin:9px 0 5px}
 }
 
+
+/* Meekitaz box image on every product page */
+.pp-box{margin:30px auto 10px;max-width:760px}.pp-box img{width:100%;height:auto;border-radius:18px;display:block}
+@media (max-width:767px){.pp-box{margin:20px 0 10px}.pp-box img{border-radius:0}}
