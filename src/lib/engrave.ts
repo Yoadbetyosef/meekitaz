@@ -177,14 +177,63 @@ function cleanTiny(data: Uint8Array, gray: Float32Array, W: number, H: number): 
   return true;
 }
 
+/** Engraving on the back plates and posts of earrings (and on anything else that is gold): black or dark-brown marks sitting right on gold, in a cluster.
+ *  A mark counts when it is small, near-black and has gold all around it (diamonds, white background and shadows do not); a handful of them close together
+ *  is a word. They are painted out from the gold around them. Returns false when there is nothing like that. */
+function cleanGoldInk(data: Uint8Array, gray: Float32Array, W: number, H: number): boolean {
+  const sc = W / 1000, N = W * H, gold = new Uint8Array(N), ink = new Uint8Array(N), strong = new Uint8Array(N);
+  for (let i = 0; i < N; i++) { const r = data[i * 3], g = data[i * 3 + 1], b = data[i * 3 + 2]; gold[i] = r > g && g > b + 14 && gray[i] > 100 ? 1 : 0; ink[i] = gray[i] < 105 ? 1 : 0; strong[i] = gray[i] < 62 ? 1 : 0; }
+  const lab = new Int32Array(N), comps: { n: number; x0: number; x1: number; y0: number; y1: number; pts: number[]; gf: number }[] = [];
+  for (let p = 0; p < N; p++) {
+    if (!ink[p] || lab[p]) continue;
+    const id = comps.length + 1, c = { n: 0, x0: W, x1: 0, y0: H, y1: 0, pts: [] as number[], gf: 0 }, st = [p]; lab[p] = id;
+    while (st.length) {
+      const q = st.pop()!, qx = q % W, qy = (q / W) | 0; c.n++; c.pts.push(q); c.x0 = Math.min(c.x0, qx); c.x1 = Math.max(c.x1, qx); c.y0 = Math.min(c.y0, qy); c.y1 = Math.max(c.y1, qy);
+      if (c.n > 4000) break;
+      for (let j = -1; j <= 1; j++) for (let i = -1; i <= 1; i++) { const nx = qx + i, ny = qy + j; if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue; const nq = ny * W + nx; if (ink[nq] && !lab[nq]) { lab[nq] = id; st.push(nq); } }
+    }
+    comps.push(c);
+  }
+  const rr = Math.max(3, Math.round(5 * sc)), cand: typeof comps = [], near: typeof comps = [];
+  for (const c of comps) {
+    const h = c.y1 - c.y0 + 1, w = c.x1 - c.x0 + 1;
+    if (c.n < 6 * sc * sc || c.n > 420 * sc * sc || h > 34 * sc || w > 40 * sc) continue;
+    let g = 0, t = 0;
+    for (let y = Math.max(0, c.y0 - rr); y <= Math.min(H - 1, c.y1 + rr); y++) for (let x = Math.max(0, c.x0 - rr); x <= Math.min(W - 1, c.x1 + rr); x++) {
+      const q = y * W + x; if (ink[q]) continue; t++; if (gold[q]) g++;
+    }
+    c.gf = t ? g / t : 0;
+    near.push(c);
+    let st = 0; for (const q of c.pts) st += strong[q];
+    // a letter: tall enough, solid, and its core is near-black (the dark crevices of hinges and clasps are dark gold, not black)
+    if (c.gf >= 0.85 && h >= 9 * sc && c.n >= 30 * sc * sc && st >= 0.35 * c.n) cand.push(c);
+  }
+  // a word: marks with several other marks close by
+  const hts = (c: (typeof comps)[number]) => c.y1 - c.y0 + 1;
+  const keep = cand.filter(c => { let k = 0; for (const d of cand) if (d !== c && Math.abs((d.x0 + d.x1) / 2 - (c.x0 + c.x1) / 2) < 45 * sc && Math.abs((d.y0 + d.y1) / 2 - (c.y0 + c.y1) / 2) < 45 * sc && hts(d) / hts(c) > 0.55 && hts(d) / hts(c) < 1.8) k++; return k >= 2; });
+  if (keep.length < 5) return false;
+  // the last bits of the letters (their soft edges, parts hidden behind a stone) are fainter: take any small dark mark right next to the word, with gold mostly around it
+  const grown = near.filter(c => !keep.includes(c) && c.gf >= 0.45 && keep.some(k => Math.abs((k.x0 + k.x1) / 2 - (c.x0 + c.x1) / 2) < 22 * sc && Math.abs((k.y0 + k.y1) / 2 - (c.y0 + c.y1) / 2) < 22 * sc));
+  keep.push(...grown);
+  const er = new Uint8Array(N);
+  for (const c of keep) for (const q of c.pts) { const qx = q % W, qy = (q / W) | 0; for (let j = -4; j <= 4; j++) for (let i = -4; i <= 4; i++) { const nx = qx + i, ny = qy + j; if (nx >= 0 && ny >= 0 && nx < W && ny < H) er[ny * W + nx] = 1; } }
+  // paint region by region (each cluster's bounding box, a little larger)
+  const x0 = Math.max(0, Math.min(...keep.map(c => c.x0)) - 12), x1 = Math.min(W, Math.max(...keep.map(c => c.x1)) + 12), y0 = Math.max(0, Math.min(...keep.map(c => c.y0)) - 12), y1 = Math.min(H, Math.max(...keep.map(c => c.y1)) + 12);
+  const rw = x1 - x0, rh = y1 - y0, e2 = new Uint8Array(rw * rh), use = new Uint8Array(rw * rh);
+  for (let y = 0; y < rh; y++) for (let x = 0; x < rw; x++) { const q = (y0 + y) * W + x0 + x; e2[y * rw + x] = er[q]; use[y * rw + x] = gold[q] && !er[q] ? 1 : 0; }
+  fillMasked(data, W, x0, y0, rw, rh, e2, use);
+  return true;
+}
+
 /** Returns a cleaned JPEG, or null when the picture has no engraving. `slot` is the photo's place in the gallery (0 = main). */
-export async function cleanImage(input: Buffer, slot = 0): Promise<Buffer | null> {
+export async function cleanImage(input: Buffer, slot = 0, mode: "ring" | "gold" = "ring"): Promise<Buffer | null> {
   const sharp = (await import("sharp").catch(() => null))?.default;
   if (!sharp) return null; // never break the picture: no cleaner available means the original is shown
   const { data, info } = await sharp(input).removeAlpha().raw().toBuffer({ resolveWithObject: true });
   const W = info.width, H = info.height, sc = W / 1000, cx = W / 2, cy = H / 2;
   const gray = new Float32Array(W * H);
   for (let i = 0; i < W * H; i++) gray[i] = 0.299 * data[i * 3] + 0.587 * data[i * 3 + 1] + 0.114 * data[i * 3 + 2];
+  if (mode === "gold") return cleanGoldInk(data, gray, W, H) ? sharp(data, { raw: { width: W, height: H, channels: 3 } }).jpeg({ quality: 90 }).toBuffer() : null;
   const { dev, dark, mean } = maps(gray, W, H, 15, 25);
 
   let box: { x: number; y: number; w: number; h: number } | null = null, ang = 0, guide: { mask: Mask; v: V } | null = null;

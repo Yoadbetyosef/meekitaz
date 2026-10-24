@@ -16,7 +16,8 @@ export async function GET(req: NextRequest) {
     if (!r.ok) return NextResponse.redirect(src, 302);
     const buf = Buffer.from(await r.arrayBuffer());
     const slot = Math.max(0, Math.min(9, Number(req.nextUrl.searchParams.get("s")) || 0));
-    const cleaned = await cleanImage(buf, slot).catch(() => null);
+    const mode = req.nextUrl.searchParams.get("m") === "gold" ? "gold" : "ring";
+    const cleaned = await cleanImage(buf, slot, mode).catch(() => null);
     const headers = { "Cache-Control": "public, max-age=31536000, s-maxage=31536000, immutable" };
     if (cleaned) return new NextResponse(new Uint8Array(cleaned), { headers: { ...headers, "Content-Type": "image/jpeg" } });
     return new NextResponse(new Uint8Array(buf), { headers: { ...headers, "Content-Type": r.headers.get("content-type") || "image/webp" } });
