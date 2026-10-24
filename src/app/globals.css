@@ -1382,3 +1382,28 @@ a.rp-mt{text-decoration:none}
   .pp-box-card h2{font-size:28px}
 }
 
+/* the cover as seen through a camera: four corners that snap in on every new photograph, like an autofocus finding its subject */
+.cv-vf{position:absolute;inset:0;z-index:5;pointer-events:none;--ki:clamp(12px,1.5vw,22px);--ks:clamp(30px,3.2vw,46px)}
+.cv-vf .k{position:absolute;width:var(--ks);height:var(--ks);border:2px solid rgba(255,255,255,.92);filter:drop-shadow(0 1px 3px rgba(0,0,0,.45));animation:cvlock 2s ease-out both}
+.cv-vf .tl{left:var(--ki);top:var(--ki);border-right:0;border-bottom:0;transform-origin:0 0}
+.cv-vf .tr{right:var(--ki);top:var(--ki);border-left:0;border-bottom:0;transform-origin:100% 0}
+.cv-vf .bl{left:var(--ki);bottom:var(--ki);border-right:0;border-top:0;transform-origin:0 100%}
+.cv-vf .br{right:var(--ki);bottom:var(--ki);border-left:0;border-top:0;transform-origin:100% 100%}
+@keyframes cvlock{0%{transform:scale(1.55);opacity:.15;border-color:#fff}45%{transform:scale(.93);opacity:1;border-color:var(--butter,#F7E9A8)}62%{transform:scale(1)}100%{transform:scale(1);opacity:1;border-color:rgba(255,255,255,.92)}}
+@media(max-width:767px){.cv-vf{--ki:8px;--ks:26px}}
+@media(prefers-reduced-motion:reduce){.cv-vf .k{animation:none}}
+/* the yellow circle: a ring of text turning round the edge, and in the middle 5 with stars, then 2026 */
+.cv-seal .rg{position:absolute;inset:0;width:100%;height:100%;animation:cvspin 22s linear infinite}
+.cv-seal .rg text{font:700 8.2px var(--body);fill:var(--ink)}
+.cv-seal .fc{position:absolute;inset:18%;display:grid;place-items:center;text-align:center}
+.cv-seal .fa{animation:cvfa 5.6s infinite}.cv-seal .fb{animation:cvfb 5.6s infinite}
+.cv-seal .five{font:400 clamp(34px,3.3vw,44px)/1 var(--display)}
+.cv-seal .st{display:flex;gap:3px;justify-content:center;margin-top:4px}.cv-seal .st svg{width:10px;height:10px;fill:var(--ink)}
+.cv-seal .yr{font:400 clamp(24px,2.4vw,30px)/1 var(--display)}
+.cv-seal .tr{font:700 7px var(--body);letter-spacing:.2em;text-transform:uppercase;margin-top:3px}
+@keyframes cvspin{to{transform:rotate(360deg)}}
+@keyframes cvfa{0%,44%{opacity:1}50%,94%{opacity:0}100%{opacity:1}}
+@keyframes cvfb{0%,44%{opacity:0}50%,94%{opacity:1}100%{opacity:0}}
+@media(max-width:767px){.cv-seal .five{font-size:28px}.cv-seal .st svg{width:8px;height:8px}.cv-seal .yr{font-size:20px}.cv-seal .tr{font-size:5.4px}}
+@media(prefers-reduced-motion:reduce){.cv-seal .rg{animation:none}.cv-seal .fa{animation:none;opacity:1}.cv-seal .fb{animation:none;opacity:0}}
+
