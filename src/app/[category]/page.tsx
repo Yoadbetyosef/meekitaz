@@ -46,7 +46,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
         </picture>
         <div className="wrap"><h1><small>{p.small}</small>{p.title}</h1></div>
       </section>
-      <div className="catbody">
+      <div className={`catbody${p.slug === "diamonds" ? " dm-page" : ""}`}>
         {p.slug === "diamonds" && <RingSteps step={2} />}
         {p.slug === "diamonds" && <Suspense fallback={null}><SettingBar /></Suspense>}
         {p.slug === "engagement-rings" && <Suspense fallback={null}><StoneBar /></Suspense>}

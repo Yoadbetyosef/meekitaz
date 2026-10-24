@@ -1200,3 +1200,18 @@ a.rp-mt{text-decoration:none}
 }
 @media(prefers-reduced-motion:reduce){.dm-blk{transform:none!important}}
 
+/* the diamonds page: the grey runs from the end of the picture down to the last stone; the cards and the Choose button are a little bigger on a phone */
+.dm-page{background:#ABAFBF}
+@media(max-width:767px){
+  .dm-gal .wrap{padding-left:12px;padding-right:12px}
+  .dm-gal .pgrid{gap:12px 8px}
+  .dm-gal .dcard-wrap{border-radius:28px;padding:10px 10px 14px}
+  .dm-gal .pcard-img{border-radius:20px}
+  .dm-gal .pcard-txt{padding:12px 6px 0}
+  .dm-gal .pcard-txt b{font-size:21px}
+  .dm-gal .pcard-txt p{font-size:13px;line-height:1.35}
+  .dm-gal .pcard-txt .price{font-size:15px}
+  .dm-gal .dcard-cta{margin:10px 4px 0;width:calc(100% - 8px);font-size:clamp(8.4px,2.62vw,10.6px);letter-spacing:.05em;padding:15px 0}
+}
+@media(max-width:340px){.dm-gal .dcard-cta{letter-spacing:.02em}}
+
