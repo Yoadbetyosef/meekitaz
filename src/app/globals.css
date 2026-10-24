@@ -1350,10 +1350,7 @@ a.rp-mt{text-decoration:none}
 .pp-box-card p{font:14px/1.5 var(--body);margin:0}
 @media (max-width:767px){.pp-box{margin:20px 0 10px}.pp-box img{border-radius:0}.pp-box-card{position:relative;left:auto;bottom:auto;max-width:none;margin:-46px 16px 0}}
 
-/* switching between photographs: the one leaving stays solid until the one arriving has fully faded in on top of it, so nothing from behind (the dark base of the hero) ever shows through, and the base takes the colour of the slide */
-.ih-sl{z-index:1;transition:opacity 0s linear .9s}
-.ih-sl.on{z-index:2;transition:opacity .9s ease}
+/* switching between photographs: the same soft fade as it always was; only the base behind the fading slides takes the colour of the slide (cream for a piece, black for the film), so nothing dark ever shows through the fade */
 .ih[data-mode=piece]{background:#F3ECE2}
 .ih[data-clip]{background:#000}
-@media(prefers-reduced-motion:reduce){.ih-sl,.ih-sl.on{transition:none}}
 
