@@ -28,11 +28,14 @@ export default function DesignCard({ p }: { p: Product }) {
   const title = (p.variants && p.variants.length > 1) ? cur.title.replace(/^(Rose gold|Yellow gold|White gold|Platinum|Silver) /i, "") : cur.title;
   return (
     <Link href={`/products/${cur.handle}`} className="pcard" onMouseLeave={() => setHeld(false)}>
-      <div className={`pcard-img${model ? " has-model" : ""}${onModel || (!cur.image && model) ? " on-model" : ""}${held ? " hold" : ""}`} onTouchStart={model ? swipeStart : undefined} onTouchEnd={model ? swipeEnd : undefined}>{model && <Image className="pcard-model" src={model} alt={`${cur.title} worn`} width={800} height={1000} sizes="(max-width:767px) 50vw, 380px" quality={78} />}{model && <button type="button" className="pcard-flip" aria-label={onModel ? "Show the piece" : "Show it worn"} onClick={e => { e.preventDefault(); e.stopPropagation(); setOnModel(v => !v); }}><i /><i /></button>}{cur.image ? <Image src={photoSrc(cur.image.url, 700, cur.title)} alt={cur.image.alt} width={800} height={800} sizes="(max-width:767px) 50vw, 380px" quality={75} unoptimized={isCleaned(photoSrc(cur.image.url, 700, cur.title))} /> : <Gem />}</div>
+      <div className={`pcard-img${model ? " has-model" : ""}${onModel || (!cur.image && model) ? " on-model" : ""}${held ? " hold" : ""}`} onTouchStart={model ? swipeStart : undefined} onTouchEnd={model ? swipeEnd : undefined}>{model && <Image className="pcard-model" src={model} alt={`${cur.title} worn`} width={800} height={1000} sizes="(max-width:767px) 50vw, 380px" quality={78} />}{model && <button type="button" className="pcard-flip" aria-label={onModel ? "Show the piece" : "Show it worn"} onClick={e => { e.preventDefault(); e.stopPropagation(); setOnModel(v => !v); }}><i /><i /></button>}{cur.image ? (metals.length > 1
+          // every metal's photo is in the card (loaded lazily with it), stacked: a dot only changes which one shows, so the swap is instant
+          ? metals.filter(v => v.image).map(v => { const src = photoSrc(v.image!.url, 700, v.title); return <Image key={v.metal} className={`pc-mimg${v.metal === cur.metal ? " on" : ""}`} src={src} alt={v.metal === cur.metal ? v.image!.alt : ""} aria-hidden={v.metal !== cur.metal} width={800} height={800} sizes="(max-width:767px) 50vw, 380px" quality={75} unoptimized={isCleaned(src)} />; })
+          : <Image src={photoSrc(cur.image.url, 700, cur.title)} alt={cur.image.alt} width={800} height={800} sizes="(max-width:767px) 50vw, 380px" quality={75} unoptimized={isCleaned(photoSrc(cur.image.url, 700, cur.title))} />) : <Gem />}</div>
       <div className="pcard-txt">
         <b>{title}</b>
         {metals.length > 1 && (
-          <span className="pc-metals" aria-label="Metal">
+          <span className="pc-metals" aria-label="Metal" onClick={e => { e.preventDefault(); e.stopPropagation(); }}>
             {metals.map(v => <i key={v.metal} className={v.metal === metal ? "on" : ""} style={{ "--lc": METAL_LINE[v.metal] || "#B3B8C0" } as React.CSSProperties} title={v.metal} onClick={e => { e.preventDefault(); e.stopPropagation(); setMetal(v.metal); setHeld(true); setOnModel(false); }} />)}
           </span>
         )}

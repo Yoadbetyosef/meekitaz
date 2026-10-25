@@ -1760,3 +1760,8 @@ a.rp-mt{text-decoration:none}
 /* the home page only: a softer grey-blue ("Mist") instead of the sky blue; every other page keeps --blue-light as it was */
 body:has(.home-page){--blue-light:#E4E8EC}
 
+/* ring cards: all metal photos stacked, the dot just shows another one (no reload); bigger tap area on phones */
+.pcard-img .pc-mimg{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .25s ease}
+.pcard-img .pc-mimg.on{position:relative;opacity:1}
+.pcard-img:has(.pc-mimg){position:relative}
+@media(hover:none){.pc-metals{gap:6px;margin:6px -6px 4px}.pc-metals i{width:36px;height:36px;border-width:0;background:none;position:relative}.pc-metals i::after{content:"";position:absolute;inset:7px;border-radius:50%;border:2px solid var(--lc)}.pc-metals i.on::after{background:var(--lc)}}
