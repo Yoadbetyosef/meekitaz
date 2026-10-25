@@ -10,14 +10,15 @@ export type Item = { fancy: string | null; id: string; vendor: number; stock: st
 export const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 const isTouch = () => typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
 
-export default function StoneCard({ d, playing, setPlaying, onOpen }: { d: Item; playing: boolean; setPlaying: (id: string | null) => void; onOpen: () => void }) {
+export default function StoneCard({ d, playing, setPlaying, onOpen, pick }: { d: Item; playing: boolean; setPlaying: (id: string | null) => void; onOpen: () => void; pick?: number }) {
   const router = useRouter();
   const { addRing } = useCart();
   const notify = toast;
   const t = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stop = () => { if (t.current) clearTimeout(t.current); t.current = null; };
   return (
-    <div className="dcard-wrap">
+    <div className={`dcard-wrap${pick ? " ai-pick" : ""}`}>
+    {pick ? <span className="ai-rib" aria-label={`Top 3 AI pick number ${pick}`}><i>{pick}</i><b>✦</b> Top 3 AI pick</span> : null}
     <Link href={`/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}`} className={`pcard dcard${playing ? " playing" : ""}`} onClick={e => { if (!e.defaultPrevented) onOpen(); }}>
       <div
         className="pcard-img"
