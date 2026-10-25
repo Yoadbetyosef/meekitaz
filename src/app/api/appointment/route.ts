@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { recordLead } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 // Appointment / contact requests from the "Private clients" form. They are emailed to sales@meekitaz.com (override with CONTACT_TO).
@@ -13,6 +14,7 @@ export async function POST(req: Request) {
   const way = body.way === "virtual" ? "Virtual appointment (Google Meet or Zoom)" : "Showroom, Fifth Avenue";
   if (!name || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return NextResponse.json({ ok: false, error: "invalid" }, { status: 400 });
   console.log("[appointment]", { name, email, looking, way });
+  await recordLead({ channel: "appointment", name, email, temp: "hot", summary: `${way}: ${looking || "appointment request"}`.slice(0, 200), details: `Appointment request (${way}). Looking for: ${looking || "(not said)"}` });
 
   const subject = `New appointment request: ${name}`;
   const text = `Name: ${name}\nEmail: ${email}\nAppointment: ${way}\nLooking for: ${looking || "(not said)"}\n\nReply to this email to answer ${name} directly.`;

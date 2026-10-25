@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { adminConfigured, adminGraphql } from "@/lib/shopifyAdmin";
+import { recordLead } from "@/lib/db";
 
 // Free-studs pop-up sign-up: saves the email as a subscribed Shopify customer tagged "free-studs",
 // then emails the code through Resend (when RESEND_API_KEY is set). The code is also shown in the pop-up.
@@ -45,6 +46,6 @@ export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
   const email = String(body.email || "").trim().toLowerCase();
   if (!ok(email)) return NextResponse.json({ error: "invalid_email" }, { status: 400 });
-  const [saved, sent] = await Promise.all([saveCustomer(email), sendCode(email)]);
+  const [saved, sent] = await Promise.all([saveCustomer(email), sendCode(email), recordLead({ channel: "popup", email, summary: "Pop-up sign-up · free studs code FREESTUDS", details: "Signed up in the free diamond studs pop-up (code FREESTUDS sent)." })]);
   return NextResponse.json({ ok: true, code: CODE, saved, sent });
 }

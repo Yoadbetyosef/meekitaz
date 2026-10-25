@@ -146,7 +146,7 @@ export async function GET(req: NextRequest) {
   await ensureSchema();
   const conv = await sql!`SELECT status FROM conversations WHERE id=${id}`;
   if (!conv.length) return NextResponse.json({ messages: [] });
-  const msgs = (await history(id)).filter(m => m.role !== "system").map(m => ({ role: m.role, content: m.content, meta: m.meta }));
+  const msgs = (await history(id)).filter(m => m.role === "user" || m.role === "assistant" || m.role === "agent").map(m => ({ role: m.role, content: m.content, meta: m.meta }));
   return NextResponse.json({ messages: msgs, status: conv[0].status });
 }
 

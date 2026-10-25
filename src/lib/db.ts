@@ -24,6 +24,20 @@ export function ensureSchema(): Promise<void> {
       created_at TIMESTAMPTZ NOT NULL DEFAULT now())`;
     await sql`CREATE INDEX IF NOT EXISTS messages_conv_idx ON messages(conversation_id, id)`;
     await sql`CREATE INDEX IF NOT EXISTS conversations_upd_idx ON conversations(updated_at DESC)`;
+    await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS stage TEXT NOT NULL DEFAULT 'new'`; // CRM: new | contacted | appointment | proposal | won | lost
+    await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS summary TEXT`; // one line shown in the CRM list
   })().catch(e => { ready = null; throw e; });
   return ready;
+}
+
+/** Saves a lead that didn't come through the chat (pop-up, appointment form…) as a conversation the CRM shows. */
+export async function recordLead(l: { channel: string; name?: string; email?: string; phone?: string; summary: string; kind?: "sales" | "care"; temp?: "hot" | "warm" | "cold"; details?: string }) {
+  if (!sql) return;
+  try {
+    await ensureSchema();
+    const id = (globalThis.crypto?.randomUUID?.() || Math.random().toString(36).slice(2) + Date.now().toString(36));
+    await sql`INSERT INTO conversations (id, channel, status, kind, temp, name, email, phone, summary, unread)
+      VALUES (${id}, ${l.channel}, 'human', ${l.kind || "sales"}, ${l.temp || "warm"}, ${l.name || null}, ${l.email || null}, ${l.phone || null}, ${l.summary}, TRUE)`;
+    await sql`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'user', ${l.details || l.summary})`;
+  } catch (e) { console.error("[recordLead]", e); }
 }
