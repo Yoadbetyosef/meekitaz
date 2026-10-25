@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
-import { sql, ensureSchema, dbConfigured } from "@/lib/db";
+import { sql, ensureSchema, dbConfigured, openTicket } from "@/lib/db";
 import { runSearch } from "@/lib/searchRun";
 import { searchDiamonds, getDiamond, SHAPES, COLORS, CLARITIES } from "@/lib/vdb";
 import { getProductsByQuery, getRingFamily, getProductByHandle } from "@/lib/shopify";
@@ -279,10 +279,12 @@ export async function POST(req: NextRequest) {
           await sql!`UPDATE conversations SET kind=COALESCE(${(inp.kind as string) || null}, kind), temp=COALESCE(${(inp.temperature as string) || null}, temp),
             name=COALESCE(${(inp.name as string) || null}, name), email=COALESCE(${(inp.email as string) || null}, email), phone=COALESCE(${(inp.phone as string) || null}, phone),
             lead = lead || ${JSON.stringify(lead)}::jsonb, updated_at=now(), unread=TRUE WHERE id=${id}`;
+          let ticket: number | null = null;
+          if (inp.kind === "care") ticket = await openTicket(id, { orderName: (inp.order_number as string) || undefined, silent: isTest });
           const hot = inp.temperature === "hot" || inp.kind === "care";
           if (hot && !isTest) await notify(`${inp.kind === "care" ? "Care request" : "🔥 Hot lead"} from Mia: ${esc(inp.name || inp.email || "visitor")}`,
             `<p>${Object.entries(inp).map(([k, v]) => `<b>${esc(k)}</b>: ${esc(v)}`).join("<br>")}</p><p>Conversation: ${id}</p>`);
-          out = "Saved. Tell them warmly that the team has their details.";
+          out = ticket ? `Saved as Customer Care ticket #C-${ticket}. Give them this number and say the care team replies within 24 hours (they also get an email receipt).` : "Saved. Tell them warmly that the team has their details.";
         } else if (u.name === "request_human") {
           handoff = true;
           await sql!`UPDATE conversations SET status='human', unread=TRUE, updated_at=now() WHERE id=${id}`;

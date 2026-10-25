@@ -3,19 +3,20 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import CrmChrome from "./CrmChrome";
 import OrdersBoard from "./OrdersBoard";
 import TodayView from "./TodayView";
+import CareView from "./CareView";
 
 type Conv = { id: string; channel: string; status: string; kind: string | null; temp: string | null; stage: string; name: string | null; email: string | null; phone: string | null;
   lead: Record<string, string>; summary: string | null; unread: boolean; created_at: string; updated_at: string; last: string | null; first: string | null };
 type Msg = { id: number; role: string; content: string; meta: { cards?: { title: string; price: string; url: string }[] }; created_at: string };
 
 const CH: Record<string, [string, string]> = { chat: ["Site chat", "ch-chat"], popup: ["Pop-up", "ch-pop"], appointment: ["Appointment", "ch-appt"], contact: ["Contact form", "ch-site"], email: ["Email", "ch-email"], sms: ["SMS", "ch-sms"], insta: ["Instagram", "ch-insta"] };
-const TABS: [string, string][] = [["all", "All"], ["hot", "Hot"], ["chat", "Site chat"], ["popup", "Pop-up"], ["appointment", "Appointments"], ["human", "Waiting for you"], ["care", "Moved to care"]];
+const TABS: [string, string][] = [["all", "All"], ["hot", "Hot"], ["chat", "Site chat"], ["popup", "Pop-up"], ["appointment", "Appointments"], ["human", "Waiting for you"]];
 const ago = (d: string) => { const s = (Date.now() - new Date(d).getTime()) / 1000; return s < 60 ? "now" : s < 3600 ? `${Math.floor(s / 60)}m` : s < 86400 ? `${Math.floor(s / 3600)}h` : `${Math.floor(s / 86400)}d`; };
 const who = (c: Conv) => c.name || c.email || c.phone || "Website visitor";
 const want = (c: Conv) => c.lead?.interest || c.summary || c.first || "";
 
 export default function CrmApp() {
-  const [view, setView] = useState<"closers" | "orders" | "today">("closers");
+  const [view, setView] = useState<"closers" | "orders" | "today" | "care">("closers");
   const [openOrder, setOpenOrder] = useState<string | null>(null);
   const [items, setItems] = useState<Conv[]>([]);
   const [tab, setTab] = useState("all");
@@ -55,11 +56,12 @@ export default function CrmApp() {
           <button className={view === "closers" ? "on" : ""} onClick={() => setView("closers")}>Closers <span>{closers.filter(x => x.unread).length || ""}</span></button>
           <button className={view === "today" ? "on" : ""} onClick={() => setView("today")}>Today</button>
           <button className={view === "orders" ? "on" : ""} onClick={() => { setOpenOrder(null); setView("orders"); }}>Orders</button>
-          <button disabled title="Next">Customer Care <em>soon</em></button>
+          <button className={view === "care" ? "on" : ""} onClick={() => setView("care")}>Customer Care <span>{items.filter(x => x.kind === "care" && x.unread).length || ""}</span></button>
         </nav>
         <button className="crm-out" onClick={async () => { await fetch("/api/crm/login", { method: "DELETE" }); location.reload(); }}>Log out</button>
       </aside>
-      {view === "today" ? <main className="crm-main"><div className="crm-top"><h1>Today</h1></div><TodayView openOrder={id => { setOpenOrder(id); setView("orders"); }} /></main> :
+      {view === "care" ? <main className="crm-main"><div className="crm-top"><h1>Customer Care</h1></div><CareView openOrder={id => { setOpenOrder(id); setView("orders"); }} /></main> :
+       view === "today" ? <main className="crm-main"><div className="crm-top"><h1>Today</h1></div><TodayView openOrder={id => { setOpenOrder(id); setView("orders"); }} /></main> :
        view === "orders" ? <main className="crm-main"><div className="crm-top"><h1>Orders</h1></div><OrdersBoard key={openOrder || "board"} initial={openOrder} /></main> :
       <main className="crm-main">
         <div className="crm-top"><h1>Closers</h1><input placeholder="Search name, email, ring…" value={q} onChange={e => setQ(e.target.value)} /></div>

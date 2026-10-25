@@ -1685,3 +1685,7 @@ a.rp-mt{text-decoration:none}
 .op-conv small{opacity:.55;white-space:nowrap}.op-muted{font:13px var(--body);opacity:.6;margin:0}
 .td{flex:1;overflow:auto;max-width:760px}
 @media(max-width:1000px){.op-grid{grid-template-columns:1fr}}
+/* CRM · Customer Care */
+.cv-sla{font:700 11px var(--body);color:#2E7D4F}.cv-sla.late{color:#B3261E}
+.cv-ord{border:1px solid rgba(28,26,27,.14);border-radius:999px;padding:5px 10px;font:13px var(--body);width:110px}
+.cv-via{border:1px solid rgba(28,26,27,.14);border-radius:999px;padding:11px 10px;font:600 12px var(--body);background:#fff}

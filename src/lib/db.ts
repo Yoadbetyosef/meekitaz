@@ -29,6 +29,14 @@ export function ensureSchema(): Promise<void> {
     await sql`CREATE TABLE IF NOT EXISTS order_stages (
       order_id TEXT PRIMARY KEY, name TEXT, stage TEXT NOT NULL DEFAULT 'new', tracking TEXT, carrier TEXT, note TEXT,
       stage_at TIMESTAMPTZ NOT NULL DEFAULT now(), updated_at TIMESTAMPTZ NOT NULL DEFAULT now())`;
+    await sql`CREATE SEQUENCE IF NOT EXISTS care_ticket_seq START 1001`;
+    await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS ticket_no BIGINT`;
+    await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS care_cat TEXT`;
+    await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS care_status TEXT`;
+    await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS order_name TEXT`;
+    await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS care_at TIMESTAMPTZ`;
+    await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS first_reply_at TIMESTAMPTZ`;
+    await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS solved_at TIMESTAMPTZ`;
     await sql`CREATE TABLE IF NOT EXISTS order_events (
       id BIGSERIAL PRIMARY KEY, order_id TEXT NOT NULL, kind TEXT NOT NULL, text TEXT NOT NULL, author TEXT, created_at TIMESTAMPTZ NOT NULL DEFAULT now())`;
     await sql`CREATE INDEX IF NOT EXISTS order_events_idx ON order_events(order_id, id)`;
@@ -50,3 +58,40 @@ export async function recordLead(l: { channel: string; name?: string; email?: st
     await sql`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'user', ${l.details || l.summary})`;
   } catch (e) { console.error("[recordLead]", e); }
 }
+
+/* ---------- Customer Care tickets ---------- */
+export const CARE_CATS = ["resize", "repair", "return", "shipping", "certificate", "warranty", "payment", "other"] as const;
+export function guessCareCat(t: string): string {
+  const s = t.toLowerCase();
+  return /resiz|size|too big|too small/.test(s) ? "resize" : /return|refund|exchange|cancel/.test(s) ? "return" : /where is|track|ship|deliver/.test(s) ? "shipping"
+    : /certif|igi|gia|report/.test(s) ? "certificate" : /fell out|loose|broke|prong|repair|bent|scratch|yellow/.test(s) ? "repair" : /warrant|care package/.test(s) ? "warranty" : /card|pay|charge|affirm|klarna/.test(s) ? "payment" : "other";
+}
+async function careMail(to: string, subject: string, html: string) {
+  if (!process.env.RESEND_API_KEY || !to) return false;
+  const r = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ from: process.env.CONTACT_FROM || "Meekitaz <sales@meekitaz.com>", to: [to], reply_to: process.env.CONTACT_TO || "sales@meekitaz.com", subject, html }) }).catch(() => null);
+  return !!r?.ok;
+}
+const wrap = (eyebrow: string, title: string, body: string) => `<div style="font-family:Georgia,serif;color:#1C1A1B;max-width:520px;margin:auto;padding:32px;background:#FDF8F3">
+<p style="font:700 11px Arial;letter-spacing:.3em;text-transform:uppercase;color:#7E0508;margin:0 0 14px">${eyebrow}</p><h1 style="font-weight:400;font-size:30px;margin:0 0 14px">${title}</h1>
+<div style="font:15px/1.6 Arial">${body}</div><p style="margin-top:24px;font-style:italic">Meekitaz Customer Care</p></div>`;
+
+/** Makes a conversation a Customer Care ticket (number, category, 24-hour clock) and emails the customer a receipt once. */
+export async function openTicket(id: string, opts: { category?: string; orderName?: string; silent?: boolean } = {}) {
+  if (!sql) return null;
+  await ensureSchema();
+  const c = (await sql`SELECT * FROM conversations WHERE id=${id}`)[0]; if (!c) return null;
+  if (c.ticket_no) return Number(c.ticket_no);
+  const first = (await sql`SELECT content FROM messages WHERE conversation_id=${id} AND role='user' ORDER BY id LIMIT 3`).map(r => String(r.content)).join(" ");
+  const cat = opts.category && (CARE_CATS as readonly string[]).includes(opts.category) ? opts.category : guessCareCat(first + " " + JSON.stringify(c.lead || {}));
+  const no = Number((await sql`SELECT nextval('care_ticket_seq') AS n`)[0].n);
+  await sql`UPDATE conversations SET kind='care', ticket_no=${no}, care_cat=${cat}, care_status='new', care_at=now(), order_name=COALESCE(${opts.orderName || null}, order_name), unread=TRUE, updated_at=now() WHERE id=${id}`;
+  await sql`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'system', ${`Customer Care ticket #C-${no} opened (${cat})`})`;
+  if (!opts.silent && c.email && !String(c.visitor_id || "").startsWith("test-"))
+    await careMail(String(c.email), `We've got your request (#C-${no})`, wrap("Customer care", "We've got it.", `<p>Thanks for writing to us. Your request number is <b>#C-${no}</b> and you'll hear from us within 24 hours.</p>${cat === "resize" ? "<p><b>Resizing?</b> Tell us the size you need and we'll send a free insured shipping label.</p>" : ""}`));
+  return no;
+}
+export async function solvedMail(to: string, no: number) {
+  return careMail(to, `All done (#C-${no})`, wrap("Customer care", "All done.", `<p>Your request <b>#C-${no}</b> is complete. If anything else comes up, just reply to this email.</p><p>How did we do? Reply with a number from 1 to 5. We read every one.</p>`));
+}
+export { careMail };

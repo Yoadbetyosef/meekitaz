@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sql, ensureSchema, dbConfigured } from "@/lib/db";
+import { sql, ensureSchema, dbConfigured, openTicket } from "@/lib/db";
 import { crmAuthed } from "@/lib/crmAuth";
 
 export const dynamic = "force-dynamic";
@@ -48,6 +48,7 @@ export async function POST(req: NextRequest) {
     await sql!`UPDATE conversations SET kind=COALESCE(${kind}, kind), temp=COALESCE(${temp}, temp), stage=COALESCE(${stage}, stage), status=COALESCE(${status}, status), updated_at=now() WHERE id=${id}`;
     const what = [kind && `moved to ${kind === "care" ? "Customer Care" : "Closers"}`, temp && `marked ${temp}`, stage && `stage: ${stage}`, status && (status === "ai" ? "handed back to Mia" : status === "human" ? "taken over by the team" : "closed")].filter(Boolean).join(", ");
     if (what) await sql!`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'system', ${what})`;
+    if (kind === "care") await openTicket(id);
   }
   return NextResponse.json({ ok: true });
 }
