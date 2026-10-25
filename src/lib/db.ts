@@ -25,7 +25,10 @@ export function ensureSchema(): Promise<void> {
     await sql`CREATE INDEX IF NOT EXISTS messages_conv_idx ON messages(conversation_id, id)`;
     await sql`CREATE INDEX IF NOT EXISTS conversations_upd_idx ON conversations(updated_at DESC)`;
     await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS stage TEXT NOT NULL DEFAULT 'new'`; // CRM: new | contacted | appointment | proposal | won | lost
-    await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS summary TEXT`; // one line shown in the CRM list
+    await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS summary TEXT`;
+    await sql`CREATE TABLE IF NOT EXISTS order_stages (
+      order_id TEXT PRIMARY KEY, name TEXT, stage TEXT NOT NULL DEFAULT 'new', tracking TEXT, carrier TEXT, note TEXT,
+      stage_at TIMESTAMPTZ NOT NULL DEFAULT now(), updated_at TIMESTAMPTZ NOT NULL DEFAULT now())`; // one line shown in the CRM list
   })().catch(e => { ready = null; throw e; });
   return ready;
 }

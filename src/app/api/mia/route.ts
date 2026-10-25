@@ -8,6 +8,7 @@ import { ringQuery, RING_STYLES, RING_METALS } from "@/lib/ringfilters";
 import { karatStep, isGoldMetal } from "@/lib/karat";
 import type { Setting, Stone } from "@/lib/setting";
 import { FAQ_TEXT } from "@/lib/faq";
+import { orderStatusFor, STAGE_LABEL } from "@/lib/orders";
 
 // Mia, the Meekitaz diamond assistant. Each turn: load the conversation, ask Claude (with tools), store both sides.
 export const maxDuration = 60;
@@ -65,7 +66,7 @@ Shipping
 - Needed by a date: say we'll do everything we can, that ready-made pieces ship fastest, and that the team confirms the exact delivery date by email right after the order; take their email and the date (save_lead, notes: deadline). Never guarantee a date yourself.
 - Express shipping, split shipments, gift cards, rush CAD, deposits, Zelle or wire, declined cards: hand off to a person.
 - Office delivery: yes, a signature is required. Showroom pickup: yes, by appointment. International: yes; customs are paid by the customer and international orders are final sale. Packaging is discreet with no jewelry marks outside.
-- "Where is my order?": take order number and email, open a care request (save_lead kind care).
+- "Where is my order?": ask for the order number and the email on the order, call order_status, and tell them where it is (with tracking if shipped). If it can't be found, open a care request (save_lead kind care).
 Returns & care
 - Returns: open a care request with order number and email; the team replies by email. Offer an exchange as an option. Proposal didn't go well: be kind and offer store credit. Custom piece returns, cancellations: hand off (urgent for cancellations). Lost certificate: return is possible minus $100.
 - Stone fell out: open a care request and explain what's covered. White gold looking yellow: rhodium wears; re-plating is in the care packages, otherwise paid. Insurance: we don't provide it; mention the Lifetime Care package. Care packages can be added up to 30 days after purchase. Warranty applies abroad too; return shipping is paid by the customer. Upgrade program: yes, a person gives details.
@@ -112,6 +113,8 @@ const TOOLS = [
   { name: "add_to_bag", description: "Put a regular product (not a setting+diamond ring) in the visitor's bag, by its handle from search_products.",
     input_schema: { type: "object", properties: { handle: { type: "string" } }, required: ["handle"] } },
   { name: "open_checkout", description: "Open the visitor's bag so they can check out.", input_schema: { type: "object", properties: {} } },
+  { name: "order_status", description: "Look up an existing order's status. Needs the order number and the email used on the order (they must match).",
+    input_schema: { type: "object", properties: { order_number: { type: "string" }, email: { type: "string" } }, required: ["order_number", "email"] } },
   { name: "save_lead", description: "Save the visitor's details for the team (sales lead or care request). Call when you have an email or phone, and again if you learn more.",
     input_schema: { type: "object", properties: {
       kind: { type: "string", enum: ["sales", "care"] }, temperature: { type: "string", enum: ["hot", "warm", "cold"] },
@@ -266,6 +269,11 @@ export async function POST(req: NextRequest) {
           else { actions.push({ type: "add", variantId: vr.id }); out = `Added ${p.title} ($${Math.round(vr.price).toLocaleString("en-US")}) to the bag.`; }
         } else if (u.name === "open_checkout") {
           actions.push({ type: "open_bag" }); out = "The bag is open; they can check out from there.";
+        } else if (u.name === "order_status") {
+          const o = await orderStatusFor(String(inp.order_number), String(inp.email));
+          const human: Record<string, string> = { new: "received, being prepared for production", cad: "in design: our team is preparing the 3D CAD", factory: "being made by our jewelers", ready: "finished and passing final quality check, shipping very soon", shipped: "shipped", refund: "a refund request is being handled", upgrade: "an upgrade request is being handled" };
+          out = o ? JSON.stringify({ order: o.name, status: human[o.stage] || STAGE_LABEL[o.stage], since: o.stageAt.slice(0, 10), tracking: o.tracking ? `${o.carrier || ""} ${o.tracking}`.trim() : null, items: o.items.map(i => i.title) })
+            : "No order found with that number and email. Ask them to double-check both; if it still doesn't match, open a care request (save_lead kind care).";
         } else if (u.name === "save_lead") {
           const lead = Object.fromEntries(Object.entries(inp).filter(([k]) => !["name", "email", "phone", "kind", "temperature"].includes(k)));
           await sql!`UPDATE conversations SET kind=COALESCE(${(inp.kind as string) || null}, kind), temp=COALESCE(${(inp.temperature as string) || null}, temp),
