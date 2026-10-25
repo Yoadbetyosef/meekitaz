@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
       const fam = await getRingFamily(p.code);
       const v = fam.find(x => x.shape === base && (!metal || x.metal === metal)); if (!v) continue;
       const k = karat && isGoldMetal(v.metal) ? karat : "";
-      out.push({ ns: p.code, handle: v.handle, variantId: v.variantId, title: v.title, shape: v.shape, metal: v.metal, price: v.price + (k ? karatStep(p.code, k) : 0), image: v.images[0] || "", karat: k || undefined });
+      out.push({ ns: p.code, handle: v.handle, variantId: v.variantId, title: v.title, shape: v.shape, metal: v.metal, price: v.price + (k ? karatStep(p.code, k) : 0), image: v.images[0] || "", images: v.images.slice(0, 8), karat: k || undefined });
       if (out.length >= 16) break;
     }
     return NextResponse.json({ items: out }, { headers: { "Cache-Control": "s-maxage=600, stale-while-revalidate=3600" } });
