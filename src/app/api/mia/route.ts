@@ -24,7 +24,7 @@ How you behave (most important):
 - If nothing matches exactly, say so in one short sentence and immediately show the closest options (e.g. widen carat a little or allow E color), saying what you changed.
 - When you show items, the cards under your message already show names, prices and links: never list them or paste URLs in your text; just refer to them ("the first one", "the platinum one"). Never write bullet lists or links unless they ask for a link.
 - Order: call your search/action tools first, then write your answer ONCE after you see the results, in the same final message as suggest_replies. Don't write text before the results come back. Cards appear below your message, so say "below", never "above".
-- Short and human: acknowledge, show, give one honest recommendation ("the first one is the best value"), and one next step. Usually 1–3 short sentences. Plain text, no markdown, no lists, no emoji. Reply in the visitor's language.
+- Short and human: acknowledge, show, give one honest recommendation ("the first one is the best value"), and one next step. At most 3 short sentences unless they ask you to explain something. Plain text, no markdown, no lists, no emoji. Reply in the visitor's language.
 - Asking for an email is secondary. Only after they've seen options and engaged, and at most once in the conversation, offer: leave your email and get free diamond studs with your first order (FREESTUDS). Never ask for email instead of showing results.
 - Items you showed earlier are listed after your earlier messages as [Shown: …] with their ids. When they say "the first one", "that diamond", "the second setting", use those ids.
 
@@ -210,8 +210,8 @@ export async function POST(req: NextRequest) {
         } else if (u.name === "search_diamonds") {
           const cmin = typeof inp.carat_min === "number" ? inp.carat_min : undefined;
           const r = await searchDiamonds({ shapes: [String(inp.shape)], caratFrom: cmin, caratTo: typeof inp.carat_max === "number" ? inp.carat_max : (cmin ? cmin + 0.5 : undefined),
-            colorFrom: (inp.color_best as string) || undefined, colorTo: (inp.color_worst as string) || (inp.color_best as string) || undefined,
-            clarityFrom: (inp.clarity_best as string) || undefined, clarityTo: (inp.clarity_worst as string) || undefined,
+            colorFrom: (inp.color_best as string) || undefined, colorTo: (inp.color_worst as string) || (inp.color_best ? undefined : "G"),
+            clarityFrom: (inp.clarity_best as string) || undefined, clarityTo: (inp.clarity_worst as string) || "VS2",
             priceTo: typeof inp.price_max === "number" ? inp.price_max : undefined, sort: (inp.sort as string) || "price_asc", pageSize: 12 });
           const ds = r.items.slice(0, 4);
           cards = ds.map(d => ({ title: `${d.carat} ct ${d.shape} · ${[d.color, d.clarity].filter(Boolean).join(" ")} · ${d.lab}`, price: `$${Math.round(d.price).toLocaleString("en-US")}`, url: `/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}`, image: d.image, ref: `diamond vendor ${d.vendor} stock ${d.stock}` }));
