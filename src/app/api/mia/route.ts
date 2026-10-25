@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { sql, ensureSchema, dbConfigured } from "@/lib/db";
 import { runSearch } from "@/lib/searchRun";
-import { searchDiamonds, getDiamond, SHAPES } from "@/lib/vdb";
+import { searchDiamonds, getDiamond, SHAPES, COLORS, CLARITIES } from "@/lib/vdb";
 import { getProductsByQuery, getRingFamily, getProductByHandle } from "@/lib/shopify";
 import { ringQuery, RING_STYLES, RING_METALS } from "@/lib/ringfilters";
 import { karatStep, isGoldMetal } from "@/lib/karat";
@@ -18,20 +18,19 @@ const SYSTEM = `You are Mia, the friendly diamond assistant on meekitaz.com, cha
 About Meekitaz: a New York fine-jewelry brand (showroom on Fifth Avenue, by appointment) selling diamond jewelry: engagement rings, wedding bands, earrings, necklaces, bracelets. Mostly lab-grown diamonds, natural diamonds available on request. Center diamonds graded by GIA or IGI. Metals: silver, 10K/14K/18K yellow, white and rose gold, platinum. Every order arrives in the signature pink Meekitaz box with a velvet ring box and the certificate in a drawer.
 Key links: engagement rings https://www.meekitaz.com/engagement-rings · diamonds https://www.meekitaz.com/diamonds · FAQ https://www.meekitaz.com/faq · warranty https://www.meekitaz.com/warranty · returns https://www.meekitaz.com/return-policy · shipping https://www.meekitaz.com/shipping-policy
 
-How you talk: warm, short, light, a little playful, like a stylish friend who knows diamonds. 1–3 short sentences per reply. One question at a time. Plain text, no markdown, no lists. At most one emoji, rarely. Reply in the visitor's language. Always say yes to what we can do, then guide to the next step.
+How you behave (most important):
+- You are a real, warm, sharp sales assistant who DOES things. When the visitor asks to see something, show it right away with your tools in the same reply. Never answer a request with a question or with a promise that "the team will send options".
+- Remember everything they told you in this conversation (shape, carat, color, clarity, metal, style, budget, size) and apply ALL of it to every search until they change it. If they say "D color VVS", search diamonds with color D and clarity VVS1–VVS2, keeping the shape and carat from before.
+- If nothing matches exactly, say so in one short sentence and immediately show the closest options (e.g. widen carat a little or allow E color), saying what you changed.
+- Short and human: acknowledge, show, give one honest recommendation ("the first one is the best value"), and one next step. 1–3 short sentences. Plain text, no markdown, no lists, at most one emoji. Reply in the visitor's language.
+- Asking for an email is secondary. Only after they've seen options and engaged, and at most once in the conversation, you may offer: "Want a specialist to hand-pick more? Leave your email." Never ask for email instead of showing results, and never repeat the ask.
+- Items you showed earlier are listed after your earlier messages as [Shown: …] with their ids. When they say "the first one", "that diamond", "the second setting", use those ids.
 
-How you sell:
-- When someone describes a ring, call search_products and mention 1–3 matches (cards appear under your message automatically).
-- When someone wants a specific or big center stone (e.g. "4 carat radiant"), the answer is yes: they choose any setting and add the diamond. Ask which setting style they like (solitaire, hidden halo, pavé, three-stone…) or show settings with search_products, and call search_diamonds to send real stones (cards appear automatically). Offer to pair a stone with a setting.
-- Custom changes, combining two rings, thicker/thinner bands: always yes. Explain we send a 3D CAD model for approval and they can request changes until they love it; then they order and we make it. For band width, they just write it in the order notes, free.
-- Natural diamonds: yes, invite them to book an appointment with a diamond specialist (showroom or video) and collect their email.
-- Engagement-ring or high-value interest is a sales lead: gently learn shape, metal, budget, timeline (proposal or wedding date) and ring size, and ask for their email so a specialist can send hand-picked options. As soon as you have an email or phone, call save_lead with everything. Temperature hot if they gave budget, timeline, a specific stone, or want an appointment; warm otherwise.
+What you can do on the site (do it, don't explain how):
+- search_products for jewelry; search_diamonds for loose stones (shape, carat, color, clarity, price); search_settings for engagement-ring settings in the diamond's exact shape with their design words (e.g. words "hidden halo").
+- add_ring_to_bag to pair a chosen diamond with a chosen setting as one ring (default 10K unless they ask 14K/18K); add_to_bag for any other piece; open_checkout when they're ready. After adding a ring, remind them to pick their ring size in the bag.
 - Never invent products, prices, stock or delivery dates; prices come only from tool results or the FAQ.
-
-You act on the site for the visitor. You can do anything a shopper can do here: search pieces, search diamonds, show settings, pair a diamond with a setting, put things in their bag, and take them to checkout. When they ask you to do something on the site, do it with your tools instead of explaining how.
-- To pair a stone with a setting: when they've picked or liked a diamond (from search_diamonds) and ask for a setting, call search_settings with that diamond's exact shape and the design words they used (e.g. words: "hidden halo"), plus metal if known, show the options, and when they choose (or say "that one", "add it"), call add_ring_to_bag with the setting's handle and code and the diamond's vendor and stock. Default gold is 10K unless they ask for 14K/18K.
-- For any other piece (earrings, bands, necklaces…) call add_to_bag with the product handle from search_products.
-- After adding, say it's in their bag, remind them to choose their ring size in the bag if it's a ring, and offer checkout. If they say they're ready, call open_checkout.
+- Engagement or high-value interest is a lead: when you naturally have their email or phone, call save_lead with everything you know (hot if budget, timeline, a specific stone, or appointment).
 
 Customer care (existing order, resizing, repair, return, shipping status, certificate, warranty claim): be kind, answer from the FAQ, collect order number and email, call save_lead with kind "care", and say the care team will reply within 24 hours.
 If they ask for a person, are upset, ask for a discount you can't give, or it needs a human (payment problems, special pricing), call request_human and say a real person will join or email them shortly.
@@ -46,8 +45,11 @@ ${FAQ_TEXT}`;
 const TOOLS = [
   { name: "search_products", description: "Search the Meekitaz catalog. Use simple shopper words, e.g. 'oval engagement ring platinum', 'tennis bracelet', 'studs'.",
     input_schema: { type: "object", properties: { query: { type: "string" }, max_price: { type: "number" } }, required: ["query"] } },
-  { name: "search_diamonds", description: "Search loose certified diamonds that can be set in any setting. Use for requests about a center stone (shape, carat, budget).",
-    input_schema: { type: "object", properties: { shape: { type: "string", enum: SHAPES }, carat_min: { type: "number" }, carat_max: { type: "number" }, price_max: { type: "number" } }, required: ["shape"] } },
+  { name: "search_diamonds", description: "Search loose certified diamonds (lab-grown) to set in any setting. Apply every requirement the visitor gave.",
+    input_schema: { type: "object", properties: { shape: { type: "string", enum: SHAPES }, carat_min: { type: "number" }, carat_max: { type: "number" },
+      color_best: { type: "string", enum: COLORS, description: "Best color wanted (D is best)" }, color_worst: { type: "string", enum: COLORS },
+      clarity_best: { type: "string", enum: CLARITIES, description: "Best clarity wanted (FL is best)" }, clarity_worst: { type: "string", enum: CLARITIES },
+      price_max: { type: "number" }, sort: { type: "string", enum: ["price_asc", "price_desc", "carat_desc"] } }, required: ["shape"] } },
   { name: "search_settings", description: "Search engagement-ring settings for a diamond shape. Results always show the setting made for that exact shape. Use 'words' for design words from the visitor (e.g. 'hidden halo', 'pave', 'three stone', 'bezel'). Returns handle + code needed for add_ring_to_bag.",
     input_schema: { type: "object", properties: { shape: { type: "string", enum: SHAPES }, words: { type: "string", description: "Design words to match in the setting name, e.g. 'hidden halo'" }, style: { type: "string", enum: RING_STYLES.map(s => s.label) }, metal: { type: "string", enum: RING_METALS.map(m => m.label) }, max_price: { type: "number" } }, required: ["shape"] } },
   { name: "add_ring_to_bag", description: "Put a complete engagement ring (a setting + a loose diamond) in the visitor's bag.",
@@ -68,7 +70,7 @@ const TOOLS = [
     input_schema: { type: "object", properties: { options: { type: "array", items: { type: "string" }, maxItems: 3 } }, required: ["options"] } },
 ];
 
-type Card = { title: string; price: string; url: string; image?: string };
+type Card = { title: string; price: string; url: string; image?: string; ref?: string };
 type Block = { type: string; text?: string; id?: string; name?: string; input?: Record<string, unknown> };
 
 async function notify(subject: string, html: string) {
@@ -118,7 +120,10 @@ export async function POST(req: NextRequest) {
   if (status === "human") return NextResponse.json({ id, reply: null, products: [], chips: [], human: true });
 
   const msgs: { role: "user" | "assistant"; content: unknown }[] = [];
-  for (const m of past) if (m.role === "user" || m.role === "assistant" || m.role === "agent") msgs.push({ role: m.role === "user" ? "user" : "assistant", content: m.content });
+  for (const m of past) if (m.role === "user" || m.role === "assistant" || m.role === "agent") {
+    const shown = ((m.meta?.cards as Card[] | undefined) || []).map((c, i) => `#${i + 1} ${c.title} ${c.price}${c.ref ? ` (${c.ref})` : ""}`).join("; ");
+    msgs.push({ role: m.role === "user" ? "user" : "assistant", content: m.content + (shown ? `\n[Shown: ${shown}]` : "") });
+  }
   msgs.push({ role: "user", content: text });
   // merge consecutive same-role turns (the API wants them alternating)
   const turns: typeof msgs = [];
@@ -148,15 +153,17 @@ export async function POST(req: NextRequest) {
           const s = await runSearch(String(inp.query || ""), 12);
           const max = typeof inp.max_price === "number" ? inp.max_price : undefined;
           const found = (s.designs || []).filter(p => !max || Number(p.price) <= max).slice(0, 3);
-          cards = found.map(p => ({ title: p.title, price: `$${Math.round(Number(p.price)).toLocaleString("en-US")}`, url: `/products/${p.handle}`, image: p.image?.url }));
+          cards = found.map(p => ({ title: p.title, price: `$${Math.round(Number(p.price)).toLocaleString("en-US")}`, url: `/products/${p.handle}`, image: p.image?.url, ref: `product handle ${p.handle}` }));
           out = found.length ? JSON.stringify(found.map(p => ({ title: p.title, price: Math.round(Number(p.price)), url: `https://www.meekitaz.com/products/${p.handle}` }))) : "No matches. Suggest a nearby alternative or ask one clarifying question.";
         } else if (u.name === "search_diamonds") {
           const cmin = typeof inp.carat_min === "number" ? inp.carat_min : undefined;
           const r = await searchDiamonds({ shapes: [String(inp.shape)], caratFrom: cmin, caratTo: typeof inp.carat_max === "number" ? inp.carat_max : (cmin ? cmin + 0.5 : undefined),
-            priceTo: typeof inp.price_max === "number" ? inp.price_max : undefined, sort: "price_asc", pageSize: 6 });
+            colorFrom: (inp.color_best as string) || undefined, colorTo: (inp.color_worst as string) || (inp.color_best as string) || undefined,
+            clarityFrom: (inp.clarity_best as string) || undefined, clarityTo: (inp.clarity_worst as string) || undefined,
+            priceTo: typeof inp.price_max === "number" ? inp.price_max : undefined, sort: (inp.sort as string) || "price_asc", pageSize: 12 });
           const ds = r.items.slice(0, 3);
-          cards = ds.map(d => ({ title: `${d.carat} ct ${d.shape} · ${[d.color, d.clarity].filter(Boolean).join(" ")} · ${d.lab}`, price: `$${Math.round(d.price).toLocaleString("en-US")}`, url: `/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}`, image: d.image }));
-          out = ds.length ? JSON.stringify(ds.map(d => ({ vendor: d.vendor, stock: d.stock, carat: d.carat, shape: d.shape, color: d.color, clarity: d.clarity, lab: d.lab, price: Math.round(d.price) }))) + ` (${r.total} matching stones in total)` : "No stones match. Suggest widening the carat range or budget.";
+          cards = ds.map(d => ({ title: `${d.carat} ct ${d.shape} · ${[d.color, d.clarity].filter(Boolean).join(" ")} · ${d.lab}`, price: `$${Math.round(d.price).toLocaleString("en-US")}`, url: `/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}`, image: d.image, ref: `diamond vendor ${d.vendor} stock ${d.stock}` }));
+          out = ds.length ? JSON.stringify(ds.map(d => ({ vendor: d.vendor, stock: d.stock, carat: d.carat, shape: d.shape, color: d.color, clarity: d.clarity, lab: d.lab, price: Math.round(d.price) }))) + ` (${r.total} matching stones in total)` : "No stones match all of these. Tell them briefly, then search again with the closest relaxation and say what you changed.";
         } else if (u.name === "search_settings") {
           const shape = String(inp.shape), metal = inp.metal ? String(inp.metal) : "";
           const max = typeof inp.max_price === "number" ? inp.max_price : undefined;
@@ -174,7 +181,7 @@ export async function POST(req: NextRequest) {
             if (v) picks.push({ v, code: p.code });
             if (picks.length >= 3) break;
           }
-          cards = picks.map(({ v }) => ({ title: v.title, price: `$${Math.round(v.price).toLocaleString("en-US")}`, url: `/products/${v.handle}`, image: v.images[0] }));
+          cards = picks.map(({ v, code }) => ({ title: v.title, price: `$${Math.round(v.price).toLocaleString("en-US")}`, url: `/products/${v.handle}`, image: v.images[0], ref: `setting handle ${v.handle} code ${code}` }));
           out = picks.length ? JSON.stringify(picks.map(({ v, code }) => ({ handle: v.handle, code, title: v.title, metal: v.metal, shape: v.shape, setting_price_10k: Math.round(v.price) }))) + " (setting price only; the diamond is added on top)" : "No settings match. Try fewer design words or no metal.";
         } else if (u.name === "add_ring_to_bag") {
           const fam = await getRingFamily(String(inp.setting_code));
