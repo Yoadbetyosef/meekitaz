@@ -108,7 +108,7 @@ export default function DiamondsBrowser() {
           {state === "empty" && <><p className="dmsg">No diamonds match these filters. Try widening carat, price, color or clarity.</p>{f.carat[0] > 0.5 && <div className="dmore"><button type="button" onClick={() => setF({ ...f, carat: [0.5, f.carat[1]] })}>Show all sizes</button></div>}</>}
           {state === "ready" && (
             <>
-              {items.length > 0 && <div className="ai-head"><span className="ai-mia" aria-hidden="true" /><div><b>Top 3 AI picks</b><span>Mia&rsquo;s best value in your search</span></div></div>}
+              {items.length > 0 && <div className="ai-head"><span className="ai-mia" aria-hidden="true"><i /><i /></span><div><b>Top 3 AI picks</b><span>Mia&rsquo;s best value in your search</span></div></div>}
               <div className="pgrid">{items.flatMap((d, n) => {
                 const cells = [<StoneCard key={d.id} d={d} playing={playing === d.id} setPlaying={setPlaying} onOpen={remember} pick={n < 3 ? n + 1 : undefined} />];
                 if ((n + 1) % 8 === 0 && n < items.length - 1) cells.push(<StoneInterlude key={`i${n}`} k={(n + 1) / 8 - 1} />);

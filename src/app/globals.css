@@ -1699,7 +1699,13 @@ a.rp-mt{text-decoration:none}
 @media(max-width:767px){.dct{flex-wrap:nowrap;overflow-x:auto;margin:14px -24px 0;padding:0 24px 2px;scrollbar-width:none}.dct::-webkit-scrollbar{display:none}.dct button{flex:none}}
 /* diamonds: Top 3 AI picks — iridescent frame (painted once, no per-frame repaint), one light sweep on arrival, rank tag */
 .ai-head{display:flex;align-items:center;gap:12px;margin:0 0 18px}
-.ai-mia{width:42px;height:42px;border-radius:50%;flex:none;background:#EFC5CA url(https://cdn.shopify.com/s/files/1/0841/2905/4957/files/meekitaz-mia.png?v=1792885749) 50% 18%/cover;box-shadow:0 6px 16px rgba(126,5,8,.15)}
+.ai-mia{position:relative;width:62px;height:62px;border-radius:50%;flex:none;overflow:hidden;background:#FDF8F3;box-shadow:0 8px 20px rgba(126,5,8,.16)}
+.ai-mia i{position:absolute;inset:0;background:url(https://cdn.shopify.com/s/files/1/0841/2905/4957/files/meekitaz-mia.png?v=1792885749) 50% 30%/150% no-repeat;will-change:opacity,transform}
+.ai-mia i+i{background-image:url(https://cdn.shopify.com/s/files/1/0841/2905/4957/files/meekitaz-mia-curtsy.png?v=1792941875);opacity:0}
+/* Mia curtsies every few seconds: a soft dip while the curtsy pose fades in, then back up */
+.ai-mia i:first-child{animation:miaStand 4.5s ease-in-out infinite}.ai-mia i+i{animation:miaBow 4.5s ease-in-out infinite}
+@keyframes miaStand{0%,48%{opacity:1;transform:none}58%,78%{opacity:0;transform:translateY(3px)}90%,100%{opacity:1;transform:none}}
+@keyframes miaBow{0%,48%{opacity:0;transform:translateY(-2px)}58%,78%{opacity:1;transform:translateY(3px) scale(.98)}90%,100%{opacity:0;transform:none}}
 .ai-head b{display:block;font:400 26px/1.1 var(--display)}.ai-head span{font:italic 18px var(--sub);opacity:.8}
 /* the colored light: a big conic gradient spun with transform only (runs on the GPU, no repaints), clipped to a 4px frame, plus a soft pastel glow */
 .dm-gal .dcard-wrap.ai-pick{isolation:isolate;overflow:hidden;background:transparent;padding:14px 14px 18px;
@@ -1717,4 +1723,4 @@ a.rp-mt{text-decoration:none}
 .ai-rib b{color:var(--red);font-weight:400}
 .ai-pick .b360{left:auto;right:12px}
 @media(max-width:767px){.ai-rib{top:20px;left:20px;padding:4px 9px 4px 4px;font-size:8px;letter-spacing:.12em}.ai-rib i{width:18px;height:18px;font-size:10px}.dm-gal .dcard-wrap.ai-pick{padding:12px 12px 15px}.dm-gal .dcard-wrap.ai-pick::after{border-radius:22px}.ai-head b{font-size:22px}.ai-head span{font-size:16px}}
-@media(prefers-reduced-motion:reduce){.ai-pick .pcard-img::after,.dm-gal .dcard-wrap.ai-pick::before{animation:none!important}}
+@media(prefers-reduced-motion:reduce){.ai-pick .pcard-img::after,.dm-gal .dcard-wrap.ai-pick::before,.ai-mia i{animation:none!important}}
