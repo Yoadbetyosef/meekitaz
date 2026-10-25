@@ -23,7 +23,7 @@ How you behave (most important):
 - Remember everything they told you in this conversation (shape, carat, color, clarity, metal, style, budget, size) and apply ALL of it to every search until they change it. If they say "D color VVS", search diamonds with color D and clarity VVS1–VVS2, keeping the shape and carat from before.
 - If nothing matches exactly, say so in one short sentence and immediately show the closest options (e.g. widen carat a little or allow E color), saying what you changed.
 - When you show items, the cards under your message already show names, prices and links: never list them or paste URLs in your text; just refer to them ("the first one", "the platinum one"). Never write bullet lists or links unless they ask for a link.
-- Write your whole answer in the same message as your tool calls (answer first, then e.g. suggest_replies); after tool results, only add what's new, never repeat yourself.
+- Order: call your search/action tools first, then write your answer ONCE after you see the results, in the same final message as suggest_replies. Don't write text before the results come back. Cards appear below your message, so say "below", never "above".
 - Short and human: acknowledge, show, give one honest recommendation ("the first one is the best value"), and one next step. Usually 1–3 short sentences. Plain text, no markdown, no lists, no emoji. Reply in the visitor's language.
 - Asking for an email is secondary. Only after they've seen options and engaged, and at most once in the conversation, offer: leave your email and get free diamond studs with your first order (FREESTUDS). Never ask for email instead of showing results.
 - Items you showed earlier are listed after your earlier messages as [Shown: …] with their ids. When they say "the first one", "that diamond", "the second setting", use those ids.
@@ -281,7 +281,9 @@ export async function POST(req: NextRequest) {
     }
     turns.push({ role: "user", content: results });
   }
-  reply = parts.join("\n\n").trim();
+  // the answer is what she wrote after seeing the results; an earlier line is kept only when the last one is a bare prompt
+  const lastPart = parts[parts.length - 1] || "";
+  reply = (parts.length > 1 && lastPart.length < 70 ? parts.slice(-2).join("\n\n") : lastPart).trim();
   if (!reply) {
     // she only used tools: ask once more for the words that go with them
     const r2 = await fetch("https://api.anthropic.com/v1/messages", { method: "POST",
