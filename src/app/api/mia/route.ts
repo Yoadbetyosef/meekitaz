@@ -22,6 +22,7 @@ How you behave (most important):
 - You are a real, warm, sharp sales assistant who DOES things. When the visitor asks to see something, show it right away with your tools in the same reply. Never answer a request with a question or with a promise that "the team will send options".
 - Remember everything they told you in this conversation (shape, carat, color, clarity, metal, style, budget, size) and apply ALL of it to every search until they change it. If they say "D color VVS", search diamonds with color D and clarity VVS1–VVS2, keeping the shape and carat from before.
 - If nothing matches exactly, say so in one short sentence and immediately show the closest options (e.g. widen carat a little or allow E color), saying what you changed.
+- Write your whole answer in the same message as your tool calls (answer first, then e.g. suggest_replies); after tool results, only add what's new, never repeat yourself.
 - Short and human: acknowledge, show, give one honest recommendation ("the first one is the best value"), and one next step. Usually 1–3 short sentences. Plain text, no markdown, no lists, no emoji. Reply in the visitor's language.
 - Asking for an email is secondary. Only after they've seen options and engaged, and at most once in the conversation, offer: leave your email and get free diamond studs with your first order (FREESTUDS). Never ask for email instead of showing results.
 - Items you showed earlier are listed after your earlier messages as [Shown: …] with their ids. When they say "the first one", "that diamond", "the second setting", use those ids.
@@ -181,6 +182,7 @@ export async function POST(req: NextRequest) {
 
   let cards: Card[] = [], chips: string[] = [], handoff = false, reply = "";
   const actions: Record<string, unknown>[] = [];
+  const parts: string[] = []; // every bit of text Mia writes across tool steps, so nothing she said gets lost
   for (let step = 0; step < 8; step++) {
     const last = step === 7;
     const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST",
@@ -189,7 +191,7 @@ export async function POST(req: NextRequest) {
     if (!r.ok) { const err = await r.text().catch(() => ""); console.error("[mia] api", r.status, err); await sql!`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'system', ${"[error] model " + r.status + " " + err.slice(0, 500)})`.catch(() => {}); break; }
     const d = await r.json() as { content: Block[]; stop_reason: string };
     const said = d.content.filter(b => b.type === "text").map(b => b.text).join("").trim();
-    if (said) reply = said;
+    if (said && !parts.includes(said)) parts.push(said);
     const uses = d.content.filter(b => b.type === "tool_use");
     if (d.stop_reason !== "tool_use" || !uses.length) break;
     turns.push({ role: "assistant", content: d.content });
@@ -278,7 +280,16 @@ export async function POST(req: NextRequest) {
     }
     turns.push({ role: "user", content: results });
   }
-  if (!reply) reply = actions.length ? "Done, it's in your bag." : "Sorry, could you say that again?";
+  reply = parts.join("\n\n").trim();
+  if (!reply) {
+    // she only used tools: ask once more for the words that go with them
+    const r2 = await fetch("https://api.anthropic.com/v1/messages", { method: "POST",
+      headers: { "x-api-key": process.env.ANTHROPIC_API_KEY!, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+      body: JSON.stringify({ model: MODEL, max_tokens: 400, system: SYSTEM, tools: TOOLS, tool_choice: { type: "none" }, messages: turns }) }).catch(() => null);
+    const d2 = r2 && r2.ok ? await r2.json() as { content: Block[] } : null;
+    reply = (d2?.content || []).filter(x => x.type === "text").map(x => x.text).join("").trim();
+  }
+  if (!reply) reply = actions.length ? "Done, it's in your bag." : cards.length ? "Here are some options." : "Sorry, could you say that again?";
   await sql!`INSERT INTO messages (conversation_id, role, content, meta) VALUES (${id}, 'assistant', ${reply}, ${JSON.stringify({ cards, chips })}::jsonb)`;
   return NextResponse.json({ id, reply, products: cards, chips, handoff, actions });
 }
