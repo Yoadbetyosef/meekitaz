@@ -153,6 +153,7 @@ export async function POST(req: NextRequest) {
   if (!dbConfigured || !process.env.ANTHROPIC_API_KEY) return NextResponse.json({ error: "not_configured" }, { status: 503 });
   const body = await req.json().catch(() => ({}));
   const text = String(body.message || "").trim().slice(0, 1000);
+  const isTest = String(body.visitorId || "").startsWith("test-"); // scripted test runs never email the team
   if (!text) return NextResponse.json({ error: "empty" }, { status: 400 });
   await ensureSchema();
 
@@ -265,14 +266,14 @@ export async function POST(req: NextRequest) {
             name=COALESCE(${(inp.name as string) || null}, name), email=COALESCE(${(inp.email as string) || null}, email), phone=COALESCE(${(inp.phone as string) || null}, phone),
             lead = lead || ${JSON.stringify(lead)}::jsonb, updated_at=now(), unread=TRUE WHERE id=${id}`;
           const hot = inp.temperature === "hot" || inp.kind === "care";
-          if (hot) await notify(`${inp.kind === "care" ? "Care request" : "🔥 Hot lead"} from Mia: ${esc(inp.name || inp.email || "visitor")}`,
+          if (hot && !isTest) await notify(`${inp.kind === "care" ? "Care request" : "🔥 Hot lead"} from Mia: ${esc(inp.name || inp.email || "visitor")}`,
             `<p>${Object.entries(inp).map(([k, v]) => `<b>${esc(k)}</b>: ${esc(v)}`).join("<br>")}</p><p>Conversation: ${id}</p>`);
           out = "Saved. Tell them warmly that the team has their details.";
         } else if (u.name === "request_human") {
           handoff = true;
           await sql!`UPDATE conversations SET status='human', unread=TRUE, updated_at=now() WHERE id=${id}`;
           await sql!`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'system', ${"Mia asked for a person: " + String(inp.reason || "")})`;
-          await notify("💬 A visitor wants a person (Mia chat)", `<p>${esc(inp.reason)}</p><p>Last message: ${esc(text)}</p><p>Conversation: ${id}</p>`);
+          if (!isTest) await notify("💬 A visitor wants a person (Mia chat)", `<p>${esc(inp.reason)}</p><p>Last message: ${esc(text)}</p><p>Conversation: ${id}</p>`);
           out = "A team member has been notified. Tell the visitor a real person will join here or email them shortly.";
         } else if (u.name === "suggest_replies") {
           chips = (Array.isArray(inp.options) ? inp.options : []).map(String).slice(0, 3);
