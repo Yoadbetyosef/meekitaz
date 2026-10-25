@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import CrmChrome from "./CrmChrome";
 
 type Conv = { id: string; channel: string; status: string; kind: string | null; temp: string | null; stage: string; name: string | null; email: string | null; phone: string | null;
   lead: Record<string, string>; summary: string | null; unread: boolean; created_at: string; updated_at: string; last: string | null; first: string | null };
@@ -43,6 +44,7 @@ export default function CrmApp() {
 
   return (
     <div className="crm">
+      <CrmChrome />
       <aside className="crm-side">
         <div className="crm-brand">Meekitaz<small>CRM</small></div>
         <nav>
@@ -62,14 +64,14 @@ export default function CrmApp() {
               <div key={x.id} className={`crm-row${x.unread ? " new" : ""}${x.id === sel ? " on" : ""}`} onClick={() => open(x.id)}>
                 <div className="a">{who(x)}<span>{ago(x.updated_at)}</span></div>
                 <div className="b">{want(x)}</div>
-                <div className="c"><span className={`pill ${CH[x.channel]?.[1] || "ch-site"}`}>{CH[x.channel]?.[0] || x.channel}</span>{x.temp && <span className={`pill t-${x.temp}`}>{x.temp}</span>}{x.status === "human" && <span className="pill t-you">you</span>}</div>
+                <div className="c"><span className={`crm-pill ${CH[x.channel]?.[1] || "ch-site"}`}>{CH[x.channel]?.[0] || x.channel}</span>{x.temp && <span className={`crm-pill t-${x.temp}`}>{x.temp}</span>}{x.status === "human" && <span className="crm-pill t-you">you</span>}</div>
               </div>
             ))}
           </div>
           <div className="crm-pane">
             {!c ? <p className="crm-empty">Pick a conversation.</p> : (<>
               <div className="ph">
-                <div className="who"><span className={`pill ${CH[c.channel]?.[1] || "ch-site"}`}>{CH[c.channel]?.[0] || c.channel}</span>
+                <div className="who"><span className={`crm-pill ${CH[c.channel]?.[1] || "ch-site"}`}>{CH[c.channel]?.[0] || c.channel}</span>
                   <h2>{who(c)}</h2><div>{[c.email, c.phone].filter(Boolean).join(" · ") || "No contact details yet"}</div></div>
                 <div className="acts">
                   {c.status === "human" ? <button onClick={() => post({ id: c.id, action: "update", patch: { status: "ai" } })}>Hand back to Mia</button> : <button onClick={() => post({ id: c.id, action: "update", patch: { status: "human" } })}>Take over from Mia</button>}
@@ -77,7 +79,7 @@ export default function CrmApp() {
                 </div>
               </div>
               <div className="facts">
-                <div><b>Heat</b>{(["hot", "warm", "cold"] as const).map(t => <button key={t} className={`pill t-${t}${c.temp === t ? " sel" : ""}`} onClick={() => post({ id: c.id, action: "update", patch: { temp: t } })}>{t}</button>)}</div>
+                <div><b>Heat</b>{(["hot", "warm", "cold"] as const).map(t => <button key={t} className={`crm-pill t-${t}${c.temp === t ? " sel" : ""}`} onClick={() => post({ id: c.id, action: "update", patch: { temp: t } })}>{t}</button>)}</div>
                 <div><b>Stage</b><select value={c.stage} onChange={e => post({ id: c.id, action: "update", patch: { stage: e.target.value } })}>{["new", "contacted", "appointment", "proposal", "won", "lost"].map(s => <option key={s}>{s}</option>)}</select></div>
                 {Object.entries(c.lead || {}).filter(([, v]) => v).map(([k, v]) => <div key={k}><b>{k.replace(/_/g, " ")}</b>{String(v)}</div>)}
               </div>

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import CrmChrome from "./CrmChrome";
 
 export default function CrmLogin() {
   const [pw, setPw] = useState(""); const [err, setErr] = useState(false); const [busy, setBusy] = useState(false);
@@ -10,6 +11,7 @@ export default function CrmLogin() {
   }
   return (
     <div className="crm crm-login">
+      <CrmChrome />
       <form onSubmit={go}>
         <div className="crm-brand">Meekitaz<small>CRM</small></div>
         <input type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="Password" autoFocus />
