@@ -22,7 +22,8 @@ export async function GET(req: NextRequest) {
   const i = Number(req.nextUrl.searchParams.get("s") || 0); const turns = S[i]; if (!turns) return NextResponse.json({ error: "range", count: S.length });
   const base = req.nextUrl.origin; let id: string | null = null; const out: string[] = [];
   for (const m of turns) {
-    const r = await fetch(base + "/api/mia", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: m, conversationId: id, visitorId: "test-claude", page: "/test" }) }).then(x => x.json()).catch(e => ({ error: String(e) }));
+    type R = { id?: string; reply?: string; error?: string; products?: { title: string; price: string }[]; chips?: string[]; actions?: unknown[] };
+    const r: R = await fetch(base + "/api/mia", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ message: m, conversationId: id, visitorId: "test-claude", page: "/test" }) }).then(x => x.json()).catch(e => ({ error: String(e) }));
     id = r.id || id;
     out.push("CUSTOMER: " + m);
     out.push("MIA: " + (r.reply ?? r.error ?? "(none)"));
