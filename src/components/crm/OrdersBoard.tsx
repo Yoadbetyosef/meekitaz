@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
 import type { OrderRow, Stage } from "@/lib/orders";
+import OrderPage from "./OrderPage";
 
 const STAGES: Stage[] = ["new", "cad", "factory", "ready", "shipped", "refund", "upgrade"];
 const LABEL: Record<Stage, string> = { new: "New order", cad: "3D CAD", factory: "Sent to factory", ready: "Ready", shipped: "Shipped", refund: "Refund request", upgrade: "Upgrade request" };
@@ -8,10 +9,11 @@ const LATE: Partial<Record<Stage, number>> = { new: 1, cad: 4, factory: 14, read
 const days = (d: string) => Math.floor((Date.now() - new Date(d).getTime()) / 86400000);
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 
-export default function OrdersBoard() {
+export default function OrdersBoard({ initial }: { initial?: string | null }) {
   const [orders, setOrders] = useState<OrderRow[] | null>(null);
   const [err, setErr] = useState("");
   const [open, setOpen] = useState<OrderRow | null>(null);
+  const [page, setPage] = useState<string | null>(initial || null);
   const [drag, setDrag] = useState<string | null>(null);
   const [ship, setShip] = useState<{ o: OrderRow; tracking: string; carrier: string; notify: boolean } | null>(null);
   const [toast, setToast] = useState("");
@@ -27,6 +29,7 @@ export default function OrdersBoard() {
     say(`${o.name} → ${LABEL[stage]}${r?.emailed ? " · tracking email sent" : ""}`); load();
   }
 
+  if (page) { const po = orders?.find(x => x.id === page); return <OrderPage id={page} onClose={() => { setPage(null); load(); }} onMove={st => po ? move(po, st) : undefined} />; }
   if (!orders) return <p className="crm-empty">Loading orders…</p>;
   return (
     <>
@@ -43,7 +46,7 @@ export default function OrdersBoard() {
               {list.map(o => {
                 const d = days(o.stageAt), late = LATE[s] != null && d > (LATE[s] as number);
                 return (
-                  <div key={o.id} className="ob-card" draggable onDragStart={() => setDrag(o.id)} onDragEnd={() => setDrag(null)} onClick={() => setOpen(o)}>
+                  <div key={o.id} className="ob-card" draggable onDragStart={() => setDrag(o.id)} onDragEnd={() => setDrag(null)} onClick={() => setPage(o.id)}>
                     <div className="t">{o.name}<span>{usd(o.total)}</span></div>
                     <div className="n">{o.customer}</div>
                     <p>{o.items.filter(i => !/care package/i.test(i.title)).map(i => i.title + (i.variant ? ` · ${i.variant}` : "")).join(" + ")}</p>

@@ -28,7 +28,13 @@ export function ensureSchema(): Promise<void> {
     await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS summary TEXT`;
     await sql`CREATE TABLE IF NOT EXISTS order_stages (
       order_id TEXT PRIMARY KEY, name TEXT, stage TEXT NOT NULL DEFAULT 'new', tracking TEXT, carrier TEXT, note TEXT,
-      stage_at TIMESTAMPTZ NOT NULL DEFAULT now(), updated_at TIMESTAMPTZ NOT NULL DEFAULT now())`; // one line shown in the CRM list
+      stage_at TIMESTAMPTZ NOT NULL DEFAULT now(), updated_at TIMESTAMPTZ NOT NULL DEFAULT now())`;
+    await sql`CREATE TABLE IF NOT EXISTS order_events (
+      id BIGSERIAL PRIMARY KEY, order_id TEXT NOT NULL, kind TEXT NOT NULL, text TEXT NOT NULL, author TEXT, created_at TIMESTAMPTZ NOT NULL DEFAULT now())`;
+    await sql`CREATE INDEX IF NOT EXISTS order_events_idx ON order_events(order_id, id)`;
+    await sql`CREATE TABLE IF NOT EXISTS reminders (
+      id BIGSERIAL PRIMARY KEY, order_id TEXT, order_name TEXT, conversation_id TEXT, who TEXT, text TEXT NOT NULL, due DATE NOT NULL,
+      done BOOLEAN NOT NULL DEFAULT FALSE, created_at TIMESTAMPTZ NOT NULL DEFAULT now())`; // one line shown in the CRM list
   })().catch(e => { ready = null; throw e; });
   return ready;
 }

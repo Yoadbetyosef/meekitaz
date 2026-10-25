@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import CrmChrome from "./CrmChrome";
 import OrdersBoard from "./OrdersBoard";
+import TodayView from "./TodayView";
 
 type Conv = { id: string; channel: string; status: string; kind: string | null; temp: string | null; stage: string; name: string | null; email: string | null; phone: string | null;
   lead: Record<string, string>; summary: string | null; unread: boolean; created_at: string; updated_at: string; last: string | null; first: string | null };
@@ -14,7 +15,8 @@ const who = (c: Conv) => c.name || c.email || c.phone || "Website visitor";
 const want = (c: Conv) => c.lead?.interest || c.summary || c.first || "";
 
 export default function CrmApp() {
-  const [view, setView] = useState<"closers" | "orders">("closers");
+  const [view, setView] = useState<"closers" | "orders" | "today">("closers");
+  const [openOrder, setOpenOrder] = useState<string | null>(null);
   const [items, setItems] = useState<Conv[]>([]);
   const [tab, setTab] = useState("all");
   const [q, setQ] = useState("");
@@ -51,12 +53,14 @@ export default function CrmApp() {
         <div className="crm-brand">Meekitaz<small>CRM</small></div>
         <nav>
           <button className={view === "closers" ? "on" : ""} onClick={() => setView("closers")}>Closers <span>{closers.filter(x => x.unread).length || ""}</span></button>
-          <button className={view === "orders" ? "on" : ""} onClick={() => setView("orders")}>Orders</button>
+          <button className={view === "today" ? "on" : ""} onClick={() => setView("today")}>Today</button>
+          <button className={view === "orders" ? "on" : ""} onClick={() => { setOpenOrder(null); setView("orders"); }}>Orders</button>
           <button disabled title="Next">Customer Care <em>soon</em></button>
         </nav>
         <button className="crm-out" onClick={async () => { await fetch("/api/crm/login", { method: "DELETE" }); location.reload(); }}>Log out</button>
       </aside>
-      {view === "orders" ? <main className="crm-main"><div className="crm-top"><h1>Orders</h1></div><OrdersBoard /></main> :
+      {view === "today" ? <main className="crm-main"><div className="crm-top"><h1>Today</h1></div><TodayView openOrder={id => { setOpenOrder(id); setView("orders"); }} /></main> :
+       view === "orders" ? <main className="crm-main"><div className="crm-top"><h1>Orders</h1></div><OrdersBoard key={openOrder || "board"} initial={openOrder} /></main> :
       <main className="crm-main">
         <div className="crm-top"><h1>Closers</h1><input placeholder="Search name, email, ring…" value={q} onChange={e => setQ(e.target.value)} /></div>
         <div className="crm-tabs">{TABS.map(([k, l]) => <button key={k} className={tab === k ? "on" : ""} onClick={() => setTab(k)}>{l}<i>{count(k)}</i></button>)}</div>
