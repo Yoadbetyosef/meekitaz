@@ -186,14 +186,15 @@ export async function POST(req: NextRequest) {
 
   let cards: Card[] = [], chips: string[] = [], handoff = false, reply = "";
   const actions: Record<string, unknown>[] = [];
-  const groups: Card[][] = []; // cards from each search in this reply
+  const groups: Card[][] = [];
+  let lastErr = ""; // cards from each search in this reply
   const parts: string[] = []; // every bit of text Mia writes across tool steps, so nothing she said gets lost
   for (let step = 0; step < 8; step++) {
     const last = step === 7;
     const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST",
       headers: { "x-api-key": process.env.ANTHROPIC_API_KEY!, "anthropic-version": "2023-06-01", "content-type": "application/json" },
       body: JSON.stringify({ model: MODEL, max_tokens: 900, system: SYSTEM, tools: TOOLS, tool_choice: last ? { type: "none" } : { type: "auto" }, messages: turns }) });
-    if (!r.ok) { const err = await r.text().catch(() => ""); console.error("[mia] api", r.status, err); await sql!`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'system', ${"[error] model " + r.status + " " + err.slice(0, 500)})`.catch(() => {}); break; }
+    if (!r.ok) { const err = await r.text().catch(() => ""); lastErr = `${r.status} ${err.slice(0, 300)}`; console.error("[mia] api", r.status, err); await sql!`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'system', ${"[error] model " + r.status + " " + err.slice(0, 500)})`.catch(() => {}); break; }
     const d = await r.json() as { content: Block[]; stop_reason: string };
     const said = d.content.filter(b => b.type === "text").map(b => b.text).join("").trim();
     if (said && !parts.includes(said)) parts.push(said);
@@ -300,7 +301,7 @@ export async function POST(req: NextRequest) {
     const d2 = r2 && r2.ok ? await r2.json() as { content: Block[] } : null;
     reply = (d2?.content || []).filter(x => x.type === "text").map(x => x.text).join("").trim();
   }
-  if (!reply) reply = actions.length ? "Done, it's in your bag." : cards.length ? "Here are some options." : "Sorry, could you say that again?";
+  if (!reply) reply = actions.length ? "Done, it's in your bag." : cards.length ? "Here are some options." : (isTest && lastErr ? "[test error] " + lastErr : "Sorry, could you say that again?");
   await sql!`INSERT INTO messages (conversation_id, role, content, meta) VALUES (${id}, 'assistant', ${reply}, ${JSON.stringify({ cards, chips, actions })}::jsonb)`;
   return NextResponse.json({ id, reply, products: cards, chips, handoff, actions });
 }
