@@ -29,7 +29,7 @@ How you sell:
 - Never invent products, prices, stock or delivery dates; prices come only from tool results or the FAQ.
 
 You act on the site for the visitor. You can do anything a shopper can do here: search pieces, search diamonds, show settings, pair a diamond with a setting, put things in their bag, and take them to checkout. When they ask you to do something on the site, do it with your tools instead of explaining how.
-- To pair a stone with a setting: when they've picked or liked a diamond (from search_diamonds) and ask for a setting, call search_settings with that diamond's shape (and their style/metal if known), show the options, and when they choose (or say "that one", "add it"), call add_ring_to_bag with the setting's handle and code and the diamond's vendor and stock. Default gold is 10K unless they ask for 14K/18K.
+- To pair a stone with a setting: when they've picked or liked a diamond (from search_diamonds) and ask for a setting, call search_settings with that diamond's exact shape and the design words they used (e.g. words: "hidden halo"), plus metal if known, show the options, and when they choose (or say "that one", "add it"), call add_ring_to_bag with the setting's handle and code and the diamond's vendor and stock. Default gold is 10K unless they ask for 14K/18K.
 - For any other piece (earrings, bands, necklaces…) call add_to_bag with the product handle from search_products.
 - After adding, say it's in their bag, remind them to choose their ring size in the bag if it's a ring, and offer checkout. If they say they're ready, call open_checkout.
 
@@ -48,8 +48,8 @@ const TOOLS = [
     input_schema: { type: "object", properties: { query: { type: "string" }, max_price: { type: "number" } }, required: ["query"] } },
   { name: "search_diamonds", description: "Search loose certified diamonds that can be set in any setting. Use for requests about a center stone (shape, carat, budget).",
     input_schema: { type: "object", properties: { shape: { type: "string", enum: SHAPES }, carat_min: { type: "number" }, carat_max: { type: "number" }, price_max: { type: "number" } }, required: ["shape"] } },
-  { name: "search_settings", description: "Search engagement-ring settings (the ring without the center diamond) by shape, optional style and metal. Returns handle + code needed for add_ring_to_bag.",
-    input_schema: { type: "object", properties: { shape: { type: "string", enum: SHAPES }, style: { type: "string", enum: RING_STYLES.map(s => s.label) }, metal: { type: "string", enum: RING_METALS.map(m => m.label) }, max_price: { type: "number" } }, required: ["shape"] } },
+  { name: "search_settings", description: "Search engagement-ring settings for a diamond shape. Results always show the setting made for that exact shape. Use 'words' for design words from the visitor (e.g. 'hidden halo', 'pave', 'three stone', 'bezel'). Returns handle + code needed for add_ring_to_bag.",
+    input_schema: { type: "object", properties: { shape: { type: "string", enum: SHAPES }, words: { type: "string", description: "Design words to match in the setting name, e.g. 'hidden halo'" }, style: { type: "string", enum: RING_STYLES.map(s => s.label) }, metal: { type: "string", enum: RING_METALS.map(m => m.label) }, max_price: { type: "number" } }, required: ["shape"] } },
   { name: "add_ring_to_bag", description: "Put a complete engagement ring (a setting + a loose diamond) in the visitor's bag.",
     input_schema: { type: "object", properties: { setting_handle: { type: "string" }, setting_code: { type: "string" }, diamond_vendor: { type: "number" }, diamond_stock: { type: "string" }, karat: { type: "string", enum: ["10K", "14K", "18K"] } }, required: ["setting_handle", "setting_code", "diamond_vendor", "diamond_stock"] } },
   { name: "add_to_bag", description: "Put a regular product (not a setting+diamond ring) in the visitor's bag, by its handle from search_products.",
@@ -158,11 +158,24 @@ export async function POST(req: NextRequest) {
           cards = ds.map(d => ({ title: `${d.carat} ct ${d.shape} · ${[d.color, d.clarity].filter(Boolean).join(" ")} · ${d.lab}`, price: `$${Math.round(d.price).toLocaleString("en-US")}`, url: `/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}`, image: d.image }));
           out = ds.length ? JSON.stringify(ds.map(d => ({ vendor: d.vendor, stock: d.stock, carat: d.carat, shape: d.shape, color: d.color, clarity: d.clarity, lab: d.lab, price: Math.round(d.price) }))) + ` (${r.total} matching stones in total)` : "No stones match. Suggest widening the carat range or budget.";
         } else if (u.name === "search_settings") {
+          const shape = String(inp.shape), metal = inp.metal ? String(inp.metal) : "";
           const max = typeof inp.max_price === "number" ? inp.max_price : undefined;
-          const r = await getProductsByQuery(ringQuery({ shapes: [String(inp.shape)], metals: inp.metal ? [String(inp.metal)] : [], styles: inp.style ? [String(inp.style)] : [], max }), { first: 6 });
-          const ps = (r?.products || []).filter(p => p.code).slice(0, 3);
-          cards = ps.map(p => ({ title: p.title, price: `$${Math.round(Number(p.price)).toLocaleString("en-US")}`, url: `/products/${p.handle}`, image: p.image?.url }));
-          out = ps.length ? JSON.stringify(ps.map(p => ({ handle: p.handle, code: p.code, title: p.title, metal: p.metal, shape: p.shape, setting_price_10k: Math.round(Number(p.price)) }))) : "No settings match. Try without a style or metal.";
+          const words = String(inp.words || "").toLowerCase().replace(/[^a-z0-9 ]/g, " ").split(/\s+/).filter(w => w.length > 2 && !["ring", "setting", "engagement", "diamond", "with"].includes(w));
+          let q = ringQuery({ shapes: [shape], metals: metal ? [metal] : [], styles: inp.style ? [String(inp.style)] : [], max });
+          if (words.length) q += " AND " + words.map(w => `title:*${w}*`).join(" AND ");
+          let r = await getProductsByQuery(q, { first: 12 });
+          if (!r?.products.length && words.length) r = await getProductsByQuery(ringQuery({ shapes: [shape], metals: metal ? [metal] : [], styles: inp.style ? [String(inp.style)] : [], max }), { first: 12 });
+          // one card per design, always the version made for this exact shape (and metal), so the photo shows the right stone
+          const seen = new Set<string>(); const picks: { v: Awaited<ReturnType<typeof getRingFamily>>[number]; code: string }[] = [];
+          for (const p of r?.products || []) {
+            if (!p.code || seen.has(p.code)) continue; seen.add(p.code);
+            const fam = await getRingFamily(p.code);
+            const v = fam.find(x => x.shape === shape && (!metal || x.metal === metal)) || fam.find(x => x.shape === shape);
+            if (v) picks.push({ v, code: p.code });
+            if (picks.length >= 3) break;
+          }
+          cards = picks.map(({ v }) => ({ title: v.title, price: `$${Math.round(v.price).toLocaleString("en-US")}`, url: `/products/${v.handle}`, image: v.images[0] }));
+          out = picks.length ? JSON.stringify(picks.map(({ v, code }) => ({ handle: v.handle, code, title: v.title, metal: v.metal, shape: v.shape, setting_price_10k: Math.round(v.price) }))) + " (setting price only; the diamond is added on top)" : "No settings match. Try fewer design words or no metal.";
         } else if (u.name === "add_ring_to_bag") {
           const fam = await getRingFamily(String(inp.setting_code));
           const d = await getDiamond(Number(inp.diamond_vendor), String(inp.diamond_stock));
