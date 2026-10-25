@@ -18,6 +18,7 @@ const parseF = (sp: URLSearchParams): DFilters => ({
   color: pair(sp.get("col"), 0, 5, DEF.color, true), clarity: pair(sp.get("cl"), 0, 5, DEF.clarity, true),
 });
 const same = (a: [number, number], b: [number, number]) => a[0] === b[0] && a[1] === b[1];
+const CT: [string, [number, number]][] = [["Any", [0.5, 20]], ["<1ct", [0.5, 0.99]], ["1ct+", [1, 20]], ["1.5ct+", [1.5, 20]], ["2ct+", [2, 20]], ["2.5ct+", [2.5, 20]], ["3ct+", [3, 20]], ["3.5ct+", [3.5, 20]], ["4ct+", [4, 20]], ["5ct+", [5, 20]]];
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 
 export default function DiamondsBrowser() {
@@ -98,13 +99,8 @@ export default function DiamondsBrowser() {
       <section className="grid-wrap dm-gal" id="results" aria-label="The collection">
         <div className="wrap">
           <div className="dres">
-            <div><h2>The collection</h2>{state === "ready" && <p className="dcount">{total.toLocaleString("en-US")} lab-grown diamonds{style ? <> · <Link href="/diamonds" scroll={false} className="dchip">{style} ×</Link></> : null}</p>}</div>
-            <label className="dsort">Sort
-              <select value={sort} onChange={e => setSort(e.target.value)}>
-                <option value="price_asc">Price: low to high</option><option value="price_desc">Price: high to low</option>
-                <option value="carat_desc">Carat: large to small</option><option value="carat_asc">Carat: small to large</option>
-              </select>
-            </label>
+            <div><h2>The collection</h2>{state === "ready" && <p className="dcount">{total.toLocaleString("en-US")} lab-grown diamonds{style ? <> · <Link href="/diamonds" scroll={false} className="dchip">{style} ×</Link></> : null}</p>}
+              <div className="dct" role="group" aria-label="Carat">{CT.map(([l, r]) => <button key={l} type="button" className={same(f.carat, r) ? "on" : ""} aria-pressed={same(f.carat, r)} onClick={() => setF({ ...f, carat: r })}>{l}</button>)}</div></div>
           </div>
           {state === "loading" && <p className="dmsg">Finding stones…</p>}
           {state === "off" && <p className="dmsg">Our diamond inventory is connecting. Please check back shortly.</p>}
