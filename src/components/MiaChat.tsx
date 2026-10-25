@@ -82,7 +82,7 @@ export default function MiaChat() {
             <button className="mia-x" onClick={() => setOpen(false)} aria-label="Close">×</button>
           </div>
           <div className="mia-body" ref={body}>
-            <div className="mia-intro"><img src={MIA} alt="" /><div><b>Hi, I&rsquo;m Mia ✨</b><span>I know every ring we make. Ask me anything — a real person can join anytime.</span></div></div>
+            <div className="mia-intro"><img src={MIA} alt="" /><div><b>Hi, I&rsquo;m Mia</b><span>I know every ring we make. Ask me anything — a real person can join anytime.</span></div></div>
             {msgs.length === 0 && <div className="mia-chips">{["Engagement rings", "Free studs offer", "Shipping & returns"].map(c => <button key={c} onClick={() => send(c)}>{c}</button>)}</div>}
             {msgs.map((m, i) => (
               <div key={i} className="mia-g">
