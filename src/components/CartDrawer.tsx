@@ -41,7 +41,7 @@ export default function CartDrawer() {
   const empty = lines.length === 0 && rings.length === 0;
   const leave = (url: string) => { setOpen(false); router.push(url); };
   const sizeBox = (id: string, value: string, onPick: (v: string) => void) => (
-    <SizePicker id={id} value={value} disabled={busy} onPick={onPick} onAppointment={() => setOpen(false)} />
+    <SizePicker id={id} value={value} disabled={busy} onPick={onPick} />
   );
 
   useEffect(() => {
