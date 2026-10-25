@@ -1472,10 +1472,10 @@ a.rp-mt{text-decoration:none}
 @media(prefers-reduced-motion:reduce){.fs-pop,.fs-stk,.fs-stk-b svg{animation:none!important}}
 
 /* Mia chat (MiaChat.tsx) · Ivory style */
-.mia-launch{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:59;width:62px;height:62px;border-radius:50%;border:0;padding:0;background:#EFC5CA;cursor:pointer;box-shadow:0 10px 26px rgba(43,32,36,.22);animation:fsStk .6s cubic-bezier(.2,1.4,.4,1) both}
+.mia-launch{position:fixed;right:20px;bottom:calc(20px + var(--mia-lift, 0px) + env(safe-area-inset-bottom));transition:transform .45s cubic-bezier(.2,.8,.2,1),bottom .35s ease,opacity .35s;z-index:59;width:62px;height:62px;border-radius:50%;border:0;padding:0;background:#EFC5CA;cursor:pointer;box-shadow:0 10px 26px rgba(43,32,36,.22);animation:fsStk .6s cubic-bezier(.2,1.4,.4,1) both}
 .mia-launch img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:50% 18%}
 .mia-launch .mia-mb{position:absolute;right:-4px;bottom:-4px;width:24px;height:24px;border-radius:50%;background:#F7E9A8;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.2)}.mia-launch .mia-mb svg{width:15px;height:15px}
-.mia-w{position:fixed;right:20px;bottom:calc(96px + env(safe-area-inset-bottom));z-index:60;width:380px;height:min(560px,calc(100vh - 130px));display:flex;flex-direction:column;overflow:hidden;border-radius:24px;background:var(--ivory);box-shadow:0 24px 60px rgba(43,32,36,.25);animation:miaIn .4s cubic-bezier(.2,1.2,.4,1) both;transform-origin:bottom right}
+.mia-w{position:fixed;right:20px;bottom:calc(96px + var(--mia-lift, 0px) + env(safe-area-inset-bottom));z-index:60;width:380px;height:min(560px,calc(100vh - 130px));display:flex;flex-direction:column;overflow:hidden;border-radius:24px;background:var(--ivory);box-shadow:0 24px 60px rgba(43,32,36,.25);animation:miaIn .4s cubic-bezier(.2,1.2,.4,1) both;transform-origin:bottom right}
 @keyframes miaIn{from{opacity:0;transform:translateY(16px) scale(.96)}}
 .mia-hd{display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;border-bottom:1px solid rgba(28,26,27,.1)}
 .mia-hd h4{margin:0;font:400 19px var(--display)}.mia-hd small{display:flex;align-items:center;gap:6px;font:12px var(--body);opacity:.7}.mia-hd small i{width:7px;height:7px;border-radius:50%;background:#3BB273}
@@ -1501,7 +1501,7 @@ a.rp-mt{text-decoration:none}
 .mia-ft input{flex:1;min-width:0;border:1px solid rgba(28,26,27,.12);background:var(--ivory);border-radius:999px;padding:12px 15px;font:16px var(--body);outline:0}
 .mia-ft button{width:42px;height:42px;border-radius:50%;border:0;background:var(--ink);color:#fff;font:16px var(--body);cursor:pointer}.mia-ft button:disabled{opacity:.4}
 .mia-legal{font:10.5px var(--body);text-align:center;opacity:.5;padding:0 0 9px;background:#fff}
-@media(max-width:767px){.mia-w{inset:0;width:auto;height:auto;border-radius:0;padding-top:env(safe-area-inset-top)}.mia-launch{right:14px;bottom:calc(14px + env(safe-area-inset-bottom));width:56px;height:56px}.mia-launch.on{display:none}}
+@media(max-width:767px){.mia-w{inset:0;width:auto;height:auto;border-radius:0;padding-top:env(safe-area-inset-top)}.mia-launch{right:12px;bottom:calc(12px + var(--mia-lift, 0px) + env(safe-area-inset-bottom));width:48px;height:48px}.mia-launch .mia-mb{width:20px;height:20px;right:-3px;bottom:-3px}.mia-launch .mia-mb svg{width:12px;height:12px}.mia-launch.on{display:none}}
 
 /* Care packages: product-page choice + bag suggestion */
 .pp-care{margin-top:18px;padding-top:16px;border-top:1px solid rgba(28,26,27,.1);display:grid;gap:8px}
@@ -1724,3 +1724,6 @@ a.rp-mt{text-decoration:none}
 .ai-pick .b360{left:auto;right:12px}
 @media(max-width:767px){.ai-rib{top:20px;left:20px;padding:4px 9px 4px 4px;font-size:8px;letter-spacing:.12em}.ai-rib i{width:18px;height:18px;font-size:10px}.dm-gal .dcard-wrap.ai-pick{padding:12px 12px 15px}.dm-gal .dcard-wrap.ai-pick::after{border-radius:22px}.ai-head b{font-size:22px}.ai-head span{font-size:16px}}
 @media(prefers-reduced-motion:reduce){.ai-pick .pcard-img::after,.dm-gal .dcard-wrap.ai-pick::before,.ai-mia i{animation:none!important}}
+
+.mia-launch.tuck{transform:translateX(calc(100% + 24px));opacity:0;pointer-events:none}
+.fs-stk{bottom:calc(20px + var(--mia-lift, 0px) + env(safe-area-inset-bottom));transition:bottom .35s ease}

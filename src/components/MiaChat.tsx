@@ -26,6 +26,35 @@ export default function MiaChat() {
   const [human, setHuman] = useState(false);
   const conv = useRef<string | null>(null);
   const body = useRef<HTMLDivElement>(null);
+  const [tucked, setTucked] = useState(false);
+
+  // 1. Lift above any bar fixed to the bottom of the screen (build-your-ring, diamond, product bars), so it never covers a buy button.
+  // 3. Slide away while scrolling down, come back when scrolling up (or near the top).
+  useEffect(() => {
+    if (!enabled) return;
+    let raf = 0, lastY = window.scrollY;
+    const measure = () => {
+      raf = 0;
+      let lift = 0;
+      const xs = [window.innerWidth * 0.5, window.innerWidth - 40, 40];
+      for (const x of xs) for (const el of document.elementsFromPoint(x, window.innerHeight - 12)) {
+        if (!(el instanceof HTMLElement) || el.closest(".mia-launch, .mia-w, .fs-stk, .cdrawer")) continue;
+        let n: HTMLElement | null = el;
+        while (n && n !== document.body) { const cs = getComputedStyle(n); if (cs.position === "fixed" || cs.position === "sticky") break; n = n.parentElement; }
+        if (n && n !== document.body) { const r = n.getBoundingClientRect(); if (r.height < window.innerHeight * 0.5 && r.top > window.innerHeight * 0.5) lift = Math.max(lift, window.innerHeight - r.top); }
+      }
+      document.documentElement.style.setProperty("--mia-lift", lift ? `${Math.round(lift)}px` : "0px");
+    };
+    const onScroll = () => {
+      const y = window.scrollY, dy = y - lastY;
+      if (Math.abs(dy) > 6) { setTucked(dy > 0 && y > 200); lastY = y; }
+      if (!raf) raf = requestAnimationFrame(measure);
+    };
+    measure();
+    const t = setInterval(measure, 1500);
+    window.addEventListener("scroll", onScroll, { passive: true }); window.addEventListener("resize", onScroll);
+    return () => { clearInterval(t); window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); if (raf) cancelAnimationFrame(raf); document.documentElement.style.removeProperty("--mia-lift"); };
+  }, [enabled, path]);
 
   useEffect(() => {
     // Live for everyone. ?mia=0 hides her in this browser (for testing), ?mia=1 brings her back.
@@ -101,7 +130,7 @@ export default function MiaChat() {
         </div>
       )}
       {!bagOpen && (
-        <button className={`mia-launch${open ? " on" : ""}`} onClick={() => setOpen(o => !o)} aria-label={open ? "Close chat" : "Chat with Mia"}>
+        <button className={`mia-launch${open ? " on" : ""}${tucked && !open ? " tuck" : ""}`} onClick={() => setOpen(o => !o)} aria-label={open ? "Close chat" : "Chat with Mia"}>
           <img src={MIA} alt="" /><span className="mia-mb"><Mark /></span>
         </button>
       )}
