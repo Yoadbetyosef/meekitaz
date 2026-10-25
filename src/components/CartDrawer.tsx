@@ -22,7 +22,7 @@ const Trust = () => (
 );
 
 export default function CartDrawer() {
-  const { cart, open, busy, setOpen, setQty, remove, rings, ringError, bagCount, setRingSize, removeRing, setCartRingSize, removeCartRing, checkout } = useCart();
+  const { cart, open, busy, setOpen, setQty, remove, rings, ringError, bagCount, setRingSize, removeRing, setCartRingSize, removeCartRing, checkout, addCare } = useCart();
   const router = useRouter();
   const lines = cart?.lines ?? [];
   // rings that already reached Shopify: a setting line (has the "Diamond" note) and its diamond line, tied by the same "Build" id
@@ -116,16 +116,27 @@ export default function CartDrawer() {
                   {l.variantTitle && <div className="cd-meta">{l.variantTitle}</div>}
                   {l.attributes.filter(a => !["Build", "Arrives by"].includes(a.key)).length > 0 && <div className="cd-meta">{l.attributes.filter(a => !["Build", "Arrives by"].includes(a.key)).map(a => a.value.replace(/ Carat$/i, " ct")).join(" · ")}</div>}
                   {l.compareAt > 0 && <span className="cd-tag">50% off · made to order</span>}
-                  <div className="cd-qty">
+                  {!l.handle.startsWith("care-package") && <div className="cd-qty">
                     <button onClick={() => setQty(l.id, l.quantity - 1)} aria-label="Decrease quantity" disabled={busy}>−</button>
                     <span>{l.quantity}</span>
                     <button onClick={() => setQty(l.id, l.quantity + 1)} aria-label="Increase quantity" disabled={busy}>+</button>
-                  </div>
+                  </div>}
                   <button className="cd-rm" onClick={() => remove(l.id)} disabled={busy}>Remove</button>
                 </div>
                 <div className="cd-pr">{money(l.price * l.quantity, cur)}{l.compareAt > 0 && <s>{money(l.compareAt * l.quantity, cur)}</s>}</div>
               </div>
             ))}
+            {(() => {
+              const hasCare = plain.some(l => l.handle.startsWith("care-package"));
+              const first = rings[0]?.setting.title || plain.find(l => !l.handle.startsWith("care-package"))?.title;
+              if (hasCare || !first) return null;
+              return (
+                <div className="cd-care">
+                  <span>✦ Keep it like new for life: resizing, cleanings, re-plating. <a href="/warranty" target="_blank" rel="noopener">Details</a></span>
+                  <div><button disabled={busy} onClick={() => addCare("life", first)}>Add Lifetime · $390</button><button className="alt" disabled={busy} onClick={() => addCare("3y", first)}>3-Year · $250</button></div>
+                </div>
+              );
+            })()}
           </>)}
         {!empty && (
           <div className="cd-foot">

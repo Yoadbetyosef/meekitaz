@@ -232,6 +232,8 @@ export const legalPages: LegalPage[] = [
 ];
 
 export const legalLinks = [
+  { href: "/faq", label: "FAQ" },
+  { href: "/warranty", label: "Warranty" },
   { href: "/terms-and-conditions", label: "Terms & Conditions" },
   { href: "/privacy-policy", label: "Privacy" },
   { href: "/shipping-policy", label: "Shipping" },

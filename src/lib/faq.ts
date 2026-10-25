@@ -57,7 +57,8 @@ export const FAQ: FaqSection[] = [
     { q: "What if my item arrives damaged or incorrect?", a: "Contact us right away and we'll arrange a return or exchange and cover the shipping." },
   ] },
   { id: "warranty", title: "Warranty & care", items: [
-    { q: "Do you offer a warranty?", a: "Yes. Every piece comes with our free lifetime Manufacturer Warranty against manufacturing defects, plus one free resize in the first year. For ongoing care (cleanings, prong tightening, rhodium re-plating, stone re-setting) we offer 3-Year and Lifetime care packages. [See the warranty](/warranty)." },
+    { q: "Do you offer a warranty?", a: "Yes. Every piece comes with our free lifetime Manufacturer Warranty against manufacturing defects, plus one free resize in the first year. For ongoing care (cleanings, prong tightening, rhodium re-plating, stone re-setting) we offer the 3-Year Care package ($250) and the Lifetime Care package ($390), one item each, chosen on the product page or in your bag. [See the warranty](/warranty)." },
+    { q: "What do the care packages cost?", a: "3-Year Care is $250 and Lifetime Care is $390, a one-time payment per piece. Add one on the product page or in your bag. Packages are final sale and non-transferable." },
     { q: "What if my jewelry needs a repair?", a: "Manufacturing defects are repaired free under our Manufacturer Warranty. Other repairs are done at cost, and we'll tell you the price before we start. Contact us to begin." },
     { q: "What if I lose a stone?", a: "Stone loss caused by a manufacturing defect is covered. Loss from normal wear can be repaired at cost, or is covered by our care packages (the Lifetime package replaces lost side stones once a year)." },
     { q: "Do you offer cleanings and inspections?", a: "Yes, free every six months with our care packages. Regular inspections keep prongs and settings secure and reduce the risk of losing a stone." },

@@ -11,6 +11,8 @@ const SIZES = new Set(Array.from({ length: 21 }, (_, i) => String(3 + i * 0.5)))
 const COOKIE = "meekitaz_cart";
 const FREE_STUDS_VARIANT = "gid://shopify/ProductVariant/67828260569325";
 const FREE_STUDS_CODE = "FREESTUDS";
+// Care packages (one item each): 3-Year $250, Lifetime $390 — hidden Shopify products, line attribute "Covers" names the piece
+const CARE: Record<string, string> = { "3y": "gid://shopify/ProductVariant/67951860285677", life: "gid://shopify/ProductVariant/67951860318445" };
 const opts = { httpOnly: true, sameSite: "lax" as const, secure: process.env.NODE_ENV === "production", path: "/", maxAge: 60 * 60 * 24 * 30 };
 
 export async function GET() {
@@ -79,6 +81,11 @@ export async function POST(req: Request) {
     cart = updates.length ? await updateLineAttributes(id, updates) : cur;
   } else if (id && body.action === "removeRing" && Array.isArray(body.lineIds)) {
     cart = await removeCartLines(id, (body.lineIds as unknown[]).map(String));
+  } else if (body.action === "care" && CARE[String(body.plan)]) {
+    const attributes = [{ key: "Covers", value: String(body.covers || "Your piece").slice(0, 200) }];
+    const line = { merchandiseId: CARE[String(body.plan)], quantity: 1, attributes };
+    cart = id ? await addCartLines(id, [line]) : null;
+    if (!cart) cart = await createCartWithLines([line]);
   } else if (body.action === "freeStuds") {
     // Welcome offer from the pop-up: 0.5 ct silver round studs, free with a $1,000+ first order (Shopify code FREESTUDS)
     const studs = FREE_STUDS_VARIANT;

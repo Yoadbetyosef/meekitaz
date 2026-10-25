@@ -223,7 +223,7 @@ export async function getProductsByQuery(query: string, opts: { first?: number; 
 /** Free-text product search, collapsed to one card per design. Storefront `search` first (relevance-ranked, tolerant of small typos, the last word matched
  *  as a prefix); if it errors or finds nothing, the same words are looked up in titles and tags with the product query the category pages already use. */
 const STOP = new Set(["the", "and", "for", "with", "a", "of", "in"]);
-const BAD_TAGS = ["Configured", "Karat variant", "Diamond"];
+const BAD_TAGS = ["Configured", "Karat variant", "Diamond", "care-package"];
 export async function searchProducts(query: string, opts: { first?: number; maxPrice?: number } = {}): Promise<Product[] | null> {
   type N = { id?: string; handle?: string; title?: string; tags?: string[]; priceRange?: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange?: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null; model?: { value: string } | null };
   const first = opts.first || 60;

@@ -68,7 +68,8 @@ const TRUST = [
 const BOX_IMG = "/media/meekitaz-box.webp";
 
 export default function ProductView({ product: p, siblings, related, ring, options }: { product: ProductFull; siblings: Sibling[]; related: Related[]; ring?: RingProp; options?: ProductOptions | null }) {
-  const { add, busy, addRing, addConfigured } = useCart();
+  const { add, busy, addRing, addConfigured, addCare } = useCart();
+  const [care, setCare] = useState<"" | "3y" | "life">("");
   // pieces with an option tree (weight / colour / clarity / purity / extras): the picks, with defaults filled in
   const qp = useSearchParams();
   const [rawSel, setRawSel] = useState<Sel>(() => { const k = qp.get("k"); const init: Sel = {}; if (k) init["Gold Purity"] = k; return init; });
@@ -225,12 +226,22 @@ export default function ProductView({ product: p, siblings, related, ring, optio
                 <div className="pp-pills">{o.values.map(val => <button key={val} type="button" className={sel[o.name] === val ? "on" : ""} onClick={() => setSel({ ...sel, [o.name]: val })}>{val}</button>)}</div>
               </div>
             ))}
+            {!(ring && cv) && p.productType !== "Care Package" && (
+              <div className="pp-care">
+                <span className="pp-lbl">Care package<a href="/warranty" target="_blank" rel="noopener">What’s covered?</a></span>
+                {([["", "Manufacturer Warranty", "Included · lifetime, defects + 1 free resize", "Free"], ["3y", "3-Year Care", "Resizing, cleanings, re-plating, stone re-setting", "+$250"], ["life", "Lifetime Care", "Everything, for life + lost side stones", "+$390"]] as const).map(([k, t, d, pr]) => (
+                  <button key={k} type="button" className={`pp-copt${care === k ? " on" : ""}`} onClick={() => setCare(k)} aria-pressed={care === k}>
+                    <i /><span><b>{t}{k === "life" && <em>Best value</em>}</b><small>{d}</small></span><strong>{pr}</strong>
+                  </button>
+                ))}
+              </div>
+            )}
     </>
   );
   const ctaNode = ring && cv ? (
     <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting<small>Next: pick your {cv.shape.toLowerCase()} diamond</small></button>
   ) : (
-    <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={async () => { const r = hasOpts ? await addConfigured(variant.id, p.handle, osel) : await add(variant.id, 1, step ? karat : ""); if (!r.ok) toast(r.error === "not_configured" ? "This option is being connected for checkout. Please book an appointment and we will complete it with you." : "We could not add this to your bag. Please try again."); }}>{!variant.available ? "Sold out" : busy ? "Adding…" : `Add to bag · ${usd(price)}`}</button>
+    <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={async () => { const r = hasOpts ? await addConfigured(variant.id, p.handle, osel) : await add(variant.id, 1, step ? karat : ""); if (r.ok && care) await addCare(care, [title, variant.title !== "Default Title" ? variant.title : "", step ? karat : ""].filter(Boolean).join(" · ")); if (!r.ok) toast(r.error === "not_configured" ? "This option is being connected for checkout. Please book an appointment and we will complete it with you." : "We could not add this to your bag. Please try again."); }}>{!variant.available ? "Sold out" : busy ? "Adding…" : `Add to bag · ${usd(price + (care === "3y" ? 250 : care === "life" ? 390 : 0))}`}</button>
   );
   const apptNode = <Link href="/#contact" className="pp-appt">Book a private appointment</Link>;
 
@@ -288,7 +299,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
       {!heroOn && (
         <div className="pp-sbar">
         <div><b>{usd(price)}</b>{compareAt > 0 && <s>{usd(compareAt)}</s>}</div>
-        {ring && cv ? <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting</button> : <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={() => (hasOpts ? addConfigured(variant.id, p.handle, osel) : add(variant.id))}>{variant.available ? `Add to bag · ${usd(price)}` : "Sold out"}</button>}
+        {ring && cv ? <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting</button> : <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={async () => { const r = await (hasOpts ? addConfigured(variant.id, p.handle, osel) : add(variant.id)); if (r.ok && care) await addCare(care, [title, variant.title !== "Default Title" ? variant.title : ""].filter(Boolean).join(" · ")); }}>{variant.available ? `Add to bag · ${usd(price)}` : "Sold out"}</button>}
       </div>
       )}
     </main>
