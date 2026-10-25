@@ -105,6 +105,8 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
     window.addEventListener("resize", fit); return () => { ro.disconnect(); window.removeEventListener("resize", fit); };
   }, [fit, cur, rows, open]);
 
+  // computers can get their own landscape film; phones keep the original
+  const filmSrc = (wideFilm && film?.srcD) || film?.src || "/media/brand-reel.mp4", filmPoster = (wideFilm && film?.posterD) || film?.poster || "/media/brand-reel-poster.jpg";
   // the film loads when it is near, plays only while it is the slide on screen and the hero is on screen
   useEffect(() => {
     const v = vid.current; if (!v) return;
@@ -180,8 +182,6 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const tone: "dark" | "light" = s.kind === "film" || s.kind === "clip" ? "dark" : mode === "photo" && s.url ? (tones[s.url] ?? "light") : "light";
   const len = bigTitle.length, sz = len <= 22 ? "l1" : len <= 40 ? "l2" : "l3";
   const diamond = stonePicture(stoneShape, stone); // the stone slide shows the shape the customer is looking at
-  // computers can get their own landscape film; phones keep the original
-  const filmSrc = (wideFilm && film?.srcD) || film?.src || "/media/brand-reel.mp4", filmPoster = (wideFilm && film?.posterD) || film?.poster || "/media/brand-reel-poster.jpg";
   // the cleaner needs the photo's place among the Shopify photos, and the worn photo (which opens the page) is not one of them
   const slotOff = model && slides[0]?.url === model ? 1 : 0;
   const src = (u: string, w: number, k: number) => photoSrc(u, w, title, Math.max(0, k - slotOff));
