@@ -161,7 +161,7 @@ export async function POST(req: NextRequest) {
   }
   const status = exists[0]?.status || "ai";
   const past = await history(id);
-  if (past.filter(m => m.role === "user").length >= MAX_USER_MSGS) return NextResponse.json({ id, reply: "Let me hand you to a person from our team — they'll email you shortly ✨", products: [], chips: [] });
+  if (past.filter(m => m.role === "user").length >= MAX_USER_MSGS) return NextResponse.json({ id, reply: "Let me hand you to a person from our team — they'll email you shortly.", products: [], chips: [] });
   await sql!`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'user', ${text})`;
   await sql!`UPDATE conversations SET updated_at=now(), unread=TRUE WHERE id=${id}`;
 
@@ -278,7 +278,7 @@ export async function POST(req: NextRequest) {
     }
     turns.push({ role: "user", content: results });
   }
-  if (!reply) reply = actions.length ? "Done ✨ It's in your bag." : "Sorry, could you say that again?";
+  if (!reply) reply = actions.length ? "Done, it's in your bag." : "Sorry, could you say that again?";
   await sql!`INSERT INTO messages (conversation_id, role, content, meta) VALUES (${id}, 'assistant', ${reply}, ${JSON.stringify({ cards, chips })}::jsonb)`;
   return NextResponse.json({ id, reply, products: cards, chips, handoff, actions });
 }
