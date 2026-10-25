@@ -24,7 +24,7 @@ How you behave (most important):
 - If nothing matches exactly, say so in one short sentence and immediately show the closest options (e.g. widen carat a little or allow E color), saying what you changed.
 - When you show items, the cards under your message already show names, prices and links: never list them or paste URLs in your text; just refer to them ("the first one", "the platinum one"). Never write bullet lists or links unless they ask for a link.
 - Quick-reply buttons: when helpful, end your message with one last line exactly like: BUTTONS: Show settings | Only D color | Different budget (2–3 short options). That line becomes tap buttons.
-- One search per reply: if they're open to several shapes, pick the best fit and offer the others as buttons.
+- Usually one search per reply (if they're open to several shapes, pick the best fit and offer the others as buttons). Best sellers or a mix: one search per category; the cards then show a few of each.
 - "N carat" means at least N carats: use carat_min N and carat_max about N + 0.3.
 - Order: call your search/action tools first, then write your answer ONCE after you see the results. Don't write text before the results come back. Cards appear below your message, so say "below", never "above".
 - Sound like a warm person, never like a form: don't repeat back what they just told you; start with the helpful part (e.g. "No problem, your first resize is free.").
@@ -55,7 +55,7 @@ Diamonds
 - Holding a stone: hand off to a person (request_human). Natural diamonds: yes, book an appointment with a specialist; never give natural prices in chat. Fancy colors: yes, search them.
 Design & custom
 - Same ring in another shape: ask which shape, find the same design in that shape (search_settings / search_products) and send the link; if it doesn't exist, offer a free 3D CAD and take their email.
-- Combine rings, copy a photo, add diamonds to the band, thinner/thicker band, engraving: always yes. CAD and changes are free, they pay only for the ring; CAD in a few days, production 2–3 weeks after approval. Band width and engraving go in the order notes, free. Photos: ask them to email them and take their email (save_lead).
+- Combine rings, copy a photo, add diamonds to the band, thinner/thicker band, engraving: always yes. CAD and changes are free, they pay only for the ring; CAD in a few days, production 2–3 weeks after approval. Band width and engraving go in the order notes, free. Photos: ask them to email them to sales@meekitaz.com and take their email (save_lead).
 - Men's engagement rings: yes, as a custom design. Birthstones: yes as a custom design, hand off. Grandmother's diamond in a new setting: hand off.
 - Ring on a hand: the model photo on the product page, a video call, or the showroom.
 - Matching wedding bands: suggest bands that match their setting.
@@ -186,6 +186,7 @@ export async function POST(req: NextRequest) {
 
   let cards: Card[] = [], chips: string[] = [], handoff = false, reply = "";
   const actions: Record<string, unknown>[] = [];
+  const groups: Card[][] = []; // cards from each search in this reply
   const parts: string[] = []; // every bit of text Mia writes across tool steps, so nothing she said gets lost
   for (let step = 0; step < 8; step++) {
     const last = step === 7;
@@ -208,7 +209,7 @@ export async function POST(req: NextRequest) {
           const s = await runSearch(String(inp.query || ""), 12);
           const max = typeof inp.max_price === "number" ? inp.max_price : undefined;
           const found = (s.designs || []).filter(p => !max || Number(p.price) <= max).slice(0, 4);
-          cards = found.map(p => ({ title: p.title, price: `$${Math.round(Number(p.price)).toLocaleString("en-US")}`, url: `/products/${p.handle}`, image: p.image?.url, ref: `product handle ${p.handle}` }));
+          cards = found.map(p => ({ title: p.title, price: `$${Math.round(Number(p.price)).toLocaleString("en-US")}`, url: `/products/${p.handle}`, image: p.image?.url, ref: `product handle ${p.handle}` })); groups.push(cards);
           out = found.length ? JSON.stringify(found.map(p => ({ title: p.title, price: Math.round(Number(p.price)), url: `https://www.meekitaz.com/products/${p.handle}` }))) : "No matches. Suggest a nearby alternative or ask one clarifying question.";
         } else if (u.name === "search_diamonds") {
           const cmin = typeof inp.carat_min === "number" ? inp.carat_min : undefined;
@@ -217,7 +218,7 @@ export async function POST(req: NextRequest) {
             clarityFrom: (inp.clarity_best as string) || undefined, clarityTo: (inp.clarity_worst as string) || "VS2",
             priceTo: typeof inp.price_max === "number" ? inp.price_max : undefined, sort: (inp.sort as string) || "price_asc", pageSize: 12 });
           const seenD = new Set<string>(); const ds = r.items.filter(d => { const k = `${d.carat}|${d.color}|${d.clarity}|${Math.round(d.price)}`; if (seenD.has(k)) return false; seenD.add(k); return true; }).slice(0, 4);
-          cards = ds.map(d => ({ title: `${d.carat} ct ${d.shape} · ${[d.color, d.clarity].filter(Boolean).join(" ")} · ${d.lab}`, price: `$${Math.round(d.price).toLocaleString("en-US")}`, url: `/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}`, image: d.image, ref: `diamond vendor ${d.vendor} stock ${d.stock}` }));
+          cards = ds.map(d => ({ title: `${d.carat} ct ${d.shape} · ${[d.color, d.clarity].filter(Boolean).join(" ")} · ${d.lab}`, price: `$${Math.round(d.price).toLocaleString("en-US")}`, url: `/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}`, image: d.image, ref: `diamond vendor ${d.vendor} stock ${d.stock}` })); groups.push(cards);
           out = ds.length ? JSON.stringify(ds.map(d => ({ vendor: d.vendor, stock: d.stock, carat: d.carat, shape: d.shape, color: d.color, clarity: d.clarity, lab: d.lab, price: Math.round(d.price) }))) + ` (${r.total} matching stones in total)` : "No stones match all of these. Tell them briefly, then search again with the closest relaxation and say what you changed.";
         } else if (u.name === "search_settings") {
           const shape = String(inp.shape), metal = inp.metal ? String(inp.metal) : "";
@@ -236,7 +237,7 @@ export async function POST(req: NextRequest) {
             if (v) picks.push({ v, code: p.code });
             if (picks.length >= 4) break;
           }
-          cards = picks.map(({ v, code }) => ({ title: v.title, price: `$${Math.round(v.price).toLocaleString("en-US")}`, url: `/products/${v.handle}`, image: v.images[0], ref: `setting handle ${v.handle} code ${code}` }));
+          cards = picks.map(({ v, code }) => ({ title: v.title, price: `$${Math.round(v.price).toLocaleString("en-US")}`, url: `/products/${v.handle}`, image: v.images[0], ref: `setting handle ${v.handle} code ${code}` })); groups.push(cards);
           out = picks.length ? JSON.stringify(picks.map(({ v, code }) => ({ handle: v.handle, code, title: v.title, metal: v.metal, shape: v.shape, setting_price_10k: Math.round(v.price) }))) + " (setting price only; the diamond is added on top)" : "No settings match. Try fewer design words or no metal.";
         } else if (u.name === "add_ring_to_bag") {
           const fam = await getRingFamily(String(inp.setting_code));
@@ -286,6 +287,8 @@ export async function POST(req: NextRequest) {
     turns.push({ role: "user", content: results });
   }
   // the answer is what she wrote after seeing the results; an earlier line is kept only when the last one is a bare prompt
+  // several searches in one reply (e.g. best sellers, stone + setting): show some of each, so the cards match what she says
+  if (groups.filter(g => g.length).length > 1) { const gs = groups.filter(g => g.length); const per = Math.max(1, Math.floor(4 / gs.length)); cards = gs.flatMap(g => g.slice(0, per)).slice(0, 4); }
   reply = parts.join("\n\n").trim();
   const bm = reply.match(/\n?\s*BUTTONS:\s*(.+)\s*$/i);
   if (bm) { chips = bm[1].split("|").map(x => x.trim()).filter(Boolean).slice(0, 3); reply = reply.slice(0, bm.index).trim(); }
