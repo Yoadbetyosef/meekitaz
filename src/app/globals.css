@@ -1697,20 +1697,21 @@ a.rp-mt{text-decoration:none}
 .dct button{border:1px solid rgba(28,26,27,.12);background:#fff;border-radius:999px;padding:7px 13px;font:500 13px var(--body);color:var(--ink);cursor:pointer;transition:border-color .15s,background .15s,color .15s}
 .dct button:hover{border-color:var(--ink)}.dct button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
 @media(max-width:767px){.dct{flex-wrap:nowrap;overflow-x:auto;margin:14px -24px 0;padding:0 24px 2px;scrollbar-width:none}.dct::-webkit-scrollbar{display:none}.dct button{flex:none}}
-/* diamonds: Top 3 AI picks (holographic frame, glass tag, light sweep) */
-@property --aip{syntax:'<angle>';initial-value:0deg;inherits:false}
+/* diamonds: Top 3 AI picks — iridescent frame (painted once, no per-frame repaint), one light sweep on arrival, rank tag */
 .ai-head{display:flex;align-items:center;gap:12px;margin:0 0 18px}
 .ai-mia{width:42px;height:42px;border-radius:50%;flex:none;background:#EFC5CA url(https://cdn.shopify.com/s/files/1/0841/2905/4957/files/meekitaz-mia.png?v=1792885749) 50% 18%/cover;box-shadow:0 6px 16px rgba(126,5,8,.15)}
 .ai-head b{display:block;font:400 26px/1.1 var(--display)}.ai-head span{font:italic 18px var(--sub);opacity:.8}
-.dm-gal .dcard-wrap.ai-pick{isolation:isolate;box-shadow:0 22px 44px -18px rgba(126,5,8,.35)}
-.dm-gal .dcard-wrap.ai-pick::before{content:"";position:absolute;inset:-3px;border-radius:33px;z-index:-1;background:conic-gradient(from var(--aip),#F7D3DA,#DCEBF4,#F7E9A8,#E9DDF3,#F7D3DA);animation:aiSpin 6s linear infinite}
-@keyframes aiSpin{to{--aip:360deg}}
-.ai-pick .pcard-img::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.5) 50%,transparent 65%);transform:translateX(-120%);animation:aiSweep 3.6s ease-in-out infinite}
-.dcard-wrap.ai-pick:nth-child(2) .pcard-img::after{animation-delay:.4s}.dcard-wrap.ai-pick:nth-child(3) .pcard-img::after{animation-delay:.8s}
-@keyframes aiSweep{0%,55%{transform:translateX(-120%)}85%,100%{transform:translateX(120%)}}
-.ai-rib{position:absolute;top:22px;left:22px;z-index:3;pointer-events:none;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-radius:999px;padding:5px 12px 5px 5px;font:800 9.5px var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--ink);box-shadow:0 6px 16px rgba(28,26,27,.12)}
+.dm-gal .dcard-wrap.ai-pick{border:3px solid transparent;padding:7px 7px 11px;
+  background:linear-gradient(#fff,#fff) padding-box,linear-gradient(120deg,#F7D3DA 0%,#DCEBF4 25%,#F7E9A8 50%,#E9DDF3 75%,#F7D3DA 100%) border-box;
+  background-size:100% 100%,300% 300%;background-position:0 0,0% 50%;transition:background-position 1.6s ease;box-shadow:0 22px 44px -20px rgba(126,5,8,.35)}
+.dm-gal .dcard-wrap.ai-pick:hover{background-position:0 0,100% 50%}
+.ai-pick .pcard-img::after{content:"";position:absolute;inset:0;pointer-events:none;will-change:transform;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);transform:translateX(-120%);animation:aiSweep 1.4s ease-out .5s 1 both}
+.dcard-wrap.ai-pick:nth-child(2) .pcard-img::after{animation-delay:.8s}.dcard-wrap.ai-pick:nth-child(3) .pcard-img::after{animation-delay:1.1s}
+.dm-gal .dcard-wrap.ai-pick:hover .pcard-img::after{animation:aiSweep 1.1s ease-out 0s 1 both}
+@keyframes aiSweep{from{transform:translateX(-120%)}to{transform:translateX(120%)}}
+.ai-rib{position:absolute;top:19px;left:19px;z-index:3;pointer-events:none;display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.94);border-radius:999px;padding:5px 12px 5px 5px;font:800 9.5px var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--ink);box-shadow:0 6px 16px rgba(28,26,27,.12)}
 .ai-rib i{width:22px;height:22px;border-radius:50%;background:var(--ink);color:#F7E9A8;display:grid;place-items:center;font:400 12px var(--display);font-style:normal;letter-spacing:0}
 .ai-rib b{color:var(--red);font-weight:400}
 .ai-pick .b360{left:auto;right:12px}
-@media(max-width:767px){.ai-rib{top:16px;left:16px;padding:4px 9px 4px 4px;font-size:8px;letter-spacing:.12em}.ai-rib i{width:18px;height:18px;font-size:10px}.dm-gal .dcard-wrap.ai-pick::before{border-radius:29px}.ai-head b{font-size:22px}.ai-head span{font-size:16px}}
-@media(prefers-reduced-motion:reduce){.dm-gal .dcard-wrap.ai-pick::before,.ai-pick .pcard-img::after{animation:none}}
+@media(max-width:767px){.ai-rib{top:14px;left:14px;padding:4px 9px 4px 4px;font-size:8px;letter-spacing:.12em}.ai-rib i{width:18px;height:18px;font-size:10px}.dm-gal .dcard-wrap.ai-pick{padding:6px 6px 9px}.ai-head b{font-size:22px}.ai-head span{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.ai-pick .pcard-img::after{animation:none!important}}
