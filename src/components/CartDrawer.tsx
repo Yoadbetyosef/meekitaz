@@ -1,4 +1,5 @@
 "use client";
+import SizePicker from "./SizePicker";
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,7 +9,6 @@ import { clearSetting, clearStone, saveSetting, saveStone } from "@/lib/setting"
 import { useCart } from "./CartProvider";
 import { arrivalLabel, installments } from "@/lib/arrival";
 
-const SIZES = Array.from({ length: 21 }, (_, i) => 3 + i * 0.5);
 const attr = (l: CartLine, k: string) => l.attributes.find(a => a.key === k)?.value;
 type CartRing = { build: string; setting: CartLine; stone: CartLine; size: string };
 const money = (n: number, cur = "USD") => new Intl.NumberFormat("en-US", { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(n);
@@ -41,13 +41,7 @@ export default function CartDrawer() {
   const empty = lines.length === 0 && rings.length === 0;
   const leave = (url: string) => { setOpen(false); router.push(url); };
   const sizeBox = (id: string, value: string, onPick: (v: string) => void) => (
-    <div className={`cd-size${value ? "" : " need"}`}>
-      <label htmlFor={`sz-${id}`}>Ring size (US)</label>
-      <select id={`sz-${id}`} value={value} disabled={busy} onChange={e => onPick(e.target.value)}>
-        <option value="">Select your size</option>{SIZES.map(z => <option key={z} value={String(z)}>{z}</option>)}
-      </select>
-      <Link href="/#contact" onClick={() => setOpen(false)}>Not sure? Book a free sizing appointment</Link>
-    </div>
+    <SizePicker id={id} value={value} disabled={busy} onPick={onPick} onAppointment={() => setOpen(false)} />
   );
 
   useEffect(() => {
