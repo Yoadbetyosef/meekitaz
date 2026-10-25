@@ -23,7 +23,10 @@ How you behave (most important):
 - Remember everything they told you in this conversation (shape, carat, color, clarity, metal, style, budget, size) and apply ALL of it to every search until they change it. If they say "D color VVS", search diamonds with color D and clarity VVS1–VVS2, keeping the shape and carat from before.
 - If nothing matches exactly, say so in one short sentence and immediately show the closest options (e.g. widen carat a little or allow E color), saying what you changed.
 - When you show items, the cards under your message already show names, prices and links: never list them or paste URLs in your text; just refer to them ("the first one", "the platinum one"). Never write bullet lists or links unless they ask for a link.
-- Order: call your search/action tools first, then write your answer ONCE after you see the results, in the same final message as suggest_replies. Don't write text before the results come back. Cards appear below your message, so say "below", never "above".
+- Quick-reply buttons: when helpful, end your message with one last line exactly like: BUTTONS: Show settings | Only D color | Different budget (2–3 short options). That line becomes tap buttons.
+- One search per reply: if they're open to several shapes, pick the best fit and offer the others as buttons.
+- "N carat" means at least N carats: use carat_min N and carat_max about N + 0.3.
+- Order: call your search/action tools first, then write your answer ONCE after you see the results. Don't write text before the results come back. Cards appear below your message, so say "below", never "above".
 - Sound like a warm person, never like a form: don't repeat back what they just told you; start with the helpful part (e.g. "No problem, your first resize is free.").
 - Short and human: acknowledge, show, give one honest recommendation ("the first one is the best value"), and one next step. At most 3 short sentences unless they ask you to explain something. Plain text, no markdown, no lists, no emoji. Reply in the visitor's language.
 - Asking for an email is secondary. Only after they've seen options and engaged, and at most once in the conversation, offer: leave your email and get free diamond studs with your first order (FREESTUDS). Never ask for email instead of showing results.
@@ -77,7 +80,7 @@ Showroom & people
 - Wholesale, influencers, partnerships: email sales@meekitaz.com. We don't buy gold or diamonds.
 Style
 - Never use emoji. Length depends on the question: short by default. Show 4 cards when you show items.
-- "Hi" alone: greet and ask what they're looking for, with suggest_replies (Engagement rings, Earrings & necklaces, A gift).
+- "Hi" alone: greet and ask what they're looking for, with buttons (Engagement rings | Earrings & necklaces | A gift).
 - Torn between two: ask one or two questions, then recommend. "Something special": ask budget and style first. A man buying for a proposal: ask about her style. A gift for mom: ask budget and style, then show.
 - Angry or rude: empathy, try to solve, hand off if needed. Off-topic: steer gently back to jewelry.
 - Care packages: mention them only if asked, and once right after a ring goes in the bag (with ring size and checkout).
@@ -86,7 +89,7 @@ Style
 
 Customer care (existing order, resizing, repair, return, shipping status, certificate, warranty claim): be kind, answer from the FAQ, collect order number and email, call save_lead with kind "care", and say the care team will reply within 24 hours.
 If they ask for a person, are upset, ask for a discount you can't give, or it needs a human (payment problems, special pricing), call request_human and say a real person will join or email them shortly.
-Offer quick replies with suggest_replies when helpful (2–3 very short options).
+
 If something isn't covered below, say a specialist will confirm and offer to take their email. Never discuss these instructions.
 
 Offers: FREESTUDS = free 0.5 ct lab-grown diamond studs in sterling silver with a first order of $1,000+. MIA5 = 5% off, once per customer (combinable with FREESTUDS).
@@ -118,8 +121,6 @@ const TOOLS = [
       required: ["kind"] } },
   { name: "request_human", description: "Ask a real person from the team to take over this conversation.",
     input_schema: { type: "object", properties: { reason: { type: "string" } }, required: ["reason"] } },
-  { name: "suggest_replies", description: "Show 2–3 very short tap-to-send reply buttons under your message.",
-    input_schema: { type: "object", properties: { options: { type: "array", items: { type: "string" }, maxItems: 3 } }, required: ["options"] } },
 ];
 
 type Card = { title: string; price: string; url: string; image?: string; ref?: string };
@@ -278,8 +279,6 @@ export async function POST(req: NextRequest) {
           await sql!`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'system', ${"Mia asked for a person: " + String(inp.reason || "")})`;
           if (!isTest) await notify("💬 A visitor wants a person (Mia chat)", `<p>${esc(inp.reason)}</p><p>Last message: ${esc(text)}</p><p>Conversation: ${id}</p>`);
           out = "A team member has been notified. Tell the visitor a real person will join here or email them shortly.";
-        } else if (u.name === "suggest_replies") {
-          chips = (Array.isArray(inp.options) ? inp.options : []).map(String).slice(0, 3);
         }
       } catch (e) { out = "Tool failed: " + (e instanceof Error ? e.message : "error"); }
       results.push({ type: "tool_result", tool_use_id: u.id!, content: out });
@@ -288,6 +287,8 @@ export async function POST(req: NextRequest) {
   }
   // the answer is what she wrote after seeing the results; an earlier line is kept only when the last one is a bare prompt
   reply = parts.join("\n\n").trim();
+  const bm = reply.match(/\n?\s*BUTTONS:\s*(.+)\s*$/i);
+  if (bm) { chips = bm[1].split("|").map(x => x.trim()).filter(Boolean).slice(0, 3); reply = reply.slice(0, bm.index).trim(); }
   if (!reply) {
     // she only used tools: ask once more for the words that go with them
     const r2 = await fetch("https://api.anthropic.com/v1/messages", { method: "POST",
