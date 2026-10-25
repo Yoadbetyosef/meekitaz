@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import RingSteps from "@/components/RingSteps";
 import DiamondFlow, { type FlowStone, type Similar } from "@/components/DiamondFlow";
-import { getDiamond, searchDiamonds, searchFancy, vdbConfigured, type Diamond } from "@/lib/vdb";
+import { getDiamond, searchDiamonds, searchFancy, vdbConfigured, SHAPES, type Diamond } from "@/lib/vdb";
 import { stoneBg } from "@/lib/stonebg";
 
 export const revalidate = 300;
@@ -25,12 +25,17 @@ const flow = (d: Diamond): FlowStone => ({
 /** The four stones closest in size: same shape, same kind (white or the same fancy colour). Quiet failure: no list rather than a broken page. */
 async function similarOf(d: Diamond): Promise<Diamond[]> {
   try {
+    // Search by the base shape the supplier understands ("Elongated Cushion" → "Cushion"), then keep only the same shape
+    const base = SHAPES.includes(d.shape) ? d.shape : SHAPES.find(s => d.shape.toLowerCase().includes(s.toLowerCase())) || d.shape;
+    const same = (x: Diamond) => x.shape === d.shape, family = (x: Diamond) => x.shape.toLowerCase().includes(base.toLowerCase());
     const lo = Math.max(0.3, +(d.carat * 0.78).toFixed(2)), hi = +(d.carat * 1.3).toFixed(2);
     const pool = d.fancy
-      ? (await searchFancy({ color: d.fancyColor || undefined, shapes: [d.shape], caratFrom: lo, caratTo: hi })).items
-      : (await searchDiamonds({ shapes: [d.shape], caratFrom: lo, caratTo: hi, sort: "price_asc", pageSize: 50 })).items.filter(x => !x.fancy);
-    return pool.filter(x => x.image && !(x.vendor === d.vendor && x.stock === d.stock))
-      .sort((a, b) => Math.abs(a.carat - d.carat) - Math.abs(b.carat - d.carat) || a.price - b.price).slice(0, 4);
+      ? (await searchFancy({ color: d.fancyColor || undefined, shapes: [base], caratFrom: lo, caratTo: hi })).items
+      : (await searchDiamonds({ shapes: [base], caratFrom: lo, caratTo: hi, sort: "price_asc", pageSize: 50 })).items.filter(x => !x.fancy);
+    const ok = pool.filter(x => x.image && !(x.vendor === d.vendor && x.stock === d.stock) && family(x));
+    const exact = ok.filter(same);
+    return (exact.length >= 4 ? exact : [...exact, ...ok.filter(x => !same(x))])
+      .sort((a, b) => Number(same(b)) - Number(same(a)) || Math.abs(a.carat - d.carat) - Math.abs(b.carat - d.carat) || a.price - b.price).slice(0, 4);
   } catch { return []; }
 }
 
