@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { crmAuthed } from "@/lib/crmAuth";
 import { sql, ensureSchema, dbConfigured, CARE_CATS, careMail, solvedMail, recordLead } from "@/lib/db";
 import { listOrders } from "@/lib/orders";
+import { gmailReply } from "@/lib/gmail";
+import { igSend } from "@/lib/instagram";
 
 export const dynamic = "force-dynamic";
 const no = () => NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -41,7 +43,15 @@ export async function POST(req: NextRequest) {
     await sql!`UPDATE conversations SET order_name=${String(b.value || "").trim() || null}, updated_at=now() WHERE id=${id}`;
   } else if (b.action === "reply") {
     const text = String(b.text || "").trim().slice(0, 6000); if (!text) return NextResponse.json({ error: "empty" }, { status: 400 });
-    if (b.via === "email") {
+    if (b.via === "instagram" && c.channel === "insta" && c.ext_thread) {
+      try { await igSend(String(c.ext_thread), text); } catch (e) { return NextResponse.json({ error: e instanceof Error ? e.message : "send failed" }, { status: 502 }); }
+      await sql!`INSERT INTO messages (conversation_id, role, content, meta) VALUES (${id}, 'agent', ${text}, ${JSON.stringify({ via: "instagram" })}::jsonb)`;
+    } else if (b.via === "email" && c.channel === "email" && c.ext_thread && c.email) {
+      const last = (await sql!`SELECT meta FROM messages WHERE conversation_id=${id} AND role='user' ORDER BY id DESC LIMIT 1`)[0]?.meta as { subject?: string; messageId?: string } | undefined;
+      try { await gmailReply({ to: String(c.email), threadId: String(c.ext_thread), subject: last?.subject || `Your request #C-${c.ticket_no}`, text, inReplyTo: last?.messageId }); }
+      catch (e) { return NextResponse.json({ error: e instanceof Error ? e.message : "send failed" }, { status: 502 }); }
+      await sql!`INSERT INTO messages (conversation_id, role, content, meta) VALUES (${id}, 'agent', ${text}, ${JSON.stringify({ via: "email" })}::jsonb)`;
+    } else if (b.via === "email") {
       if (!c.email) return NextResponse.json({ error: "no email" }, { status: 400 });
       const ok = await careMail(String(c.email), `Re: your request #C-${c.ticket_no}`, `<div style="font-family:Arial,sans-serif;color:#1C1A1B;max-width:560px;margin:auto;padding:28px;background:#FDF8F3;font-size:15px;line-height:1.6">${esc(text).replace(/\n/g, "<br>")}<p style="margin-top:24px;font-family:Georgia,serif;font-style:italic">Meekitaz Customer Care · #C-${c.ticket_no}</p></div>`);
       if (!ok) return NextResponse.json({ error: "send failed" }, { status: 502 });

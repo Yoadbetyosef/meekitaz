@@ -18,7 +18,7 @@ function sla(t: T) {
 
 export default function CareView({ openOrder }: { openOrder: (id: string) => void }) {
   const [items, setItems] = useState<T[]>([]); const [tab, setTab] = useState("open"); const [sel, setSel] = useState<string | null>(null);
-  const [msgs, setMsgs] = useState<Msg[]>([]); const [text, setText] = useState(""); const [via, setVia] = useState<"chat" | "email" | "note">("email"); const [busy, setBusy] = useState(false);
+  const [msgs, setMsgs] = useState<Msg[]>([]); const [text, setText] = useState(""); const [via, setVia] = useState<"chat" | "email" | "note" | "instagram">("email"); const [busy, setBusy] = useState(false);
   const load = useCallback(async () => { const r = await fetch("/api/crm/care").then(x => x.json()).catch(() => null); if (r?.items) setItems(r.items); }, []);
   const loadMsgs = useCallback(async (id: string) => { const r = await fetch(`/api/crm/data?id=${id}`).then(x => x.json()).catch(() => null); if (r?.messages) setMsgs(r.messages); }, []);
   useEffect(() => { load(); const t = setInterval(load, 15000); return () => clearInterval(t); }, [load]);
@@ -27,7 +27,7 @@ export default function CareView({ openOrder }: { openOrder: (id: string) => voi
     .sort((a, b) => (sla(a).late ? 0 : 1) - (sla(b).late ? 0 : 1) || +new Date(b.updated_at) - +new Date(a.updated_at)), [items, tab]);
   const t = items.find(x => x.id === sel) || null;
   const act = async (b: Record<string, unknown>) => { setBusy(true); const r = await fetch("/api/crm/care", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: sel, ...b }) }); setBusy(false); await load(); if (sel) await loadMsgs(sel); return r.ok; };
-  const pick = (x: T) => { setSel(x.id); setMsgs([]); setVia(x.email ? "email" : x.channel === "chat" ? "chat" : "note"); fetch("/api/crm/data", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: x.id, action: "read" }) }); };
+  const pick = (x: T) => { setSel(x.id); setMsgs([]); setVia(x.channel === "insta" ? "instagram" : x.email ? "email" : x.channel === "chat" ? "chat" : "note"); fetch("/api/crm/data", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: x.id, action: "read" }) }); };
   async function send(e: React.FormEvent) {
     e.preventDefault(); if (!t || !text.trim()) return;
     const ok = via === "note" ? (await fetch("/api/crm/data", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: t.id, action: "note", text }) })).ok : await act({ action: "reply", via, text });
@@ -65,11 +65,11 @@ export default function CareView({ openOrder }: { openOrder: (id: string) => voi
             </div>
             <div className="thread">
               {msgs.map(m => m.role === "system" ? <div key={m.id} className="msg sys">{m.content} · {ago(m.created_at)}</div> : (
-                <div key={m.id} className={`msg ${m.role}`}>{m.role === "assistant" && <em>Mia</em>}{m.role === "agent" && <em>You{m.meta?.via === "email" ? " · email" : " · chat"}</em>}{m.role === "note" && <em>Internal note</em>}{m.content}<small>{ago(m.created_at)}</small></div>))}
+                <div key={m.id} className={`msg ${m.role}`}>{m.role === "assistant" && <em>Mia</em>}{m.role === "agent" && <em>You · {m.meta?.via || "chat"}</em>}{m.role === "note" && <em>Internal note</em>}{m.content}<small>{ago(m.created_at)}</small></div>))}
             </div>
             <form className="reply" onSubmit={send}>
               <select value={via} onChange={e => setVia(e.target.value as typeof via)} className="cv-via">
-                {t.email && <option value="email">Email</option>}{t.channel === "chat" && <option value="chat">Site chat</option>}<option value="note">Note</option>
+                {t.email && <option value="email">Email</option>}{t.channel === "chat" && <option value="chat">Site chat</option>}{t.channel === "insta" && <option value="instagram">Instagram</option>}<option value="note">Note</option>
               </select>
               <input value={text} onChange={e => setText(e.target.value)} placeholder={via === "email" ? `Email ${t.email}…` : via === "chat" ? "Reply in the site chat…" : "Internal note…"} />
               <button disabled={busy}>{via === "note" ? "Save" : "Send"}</button>

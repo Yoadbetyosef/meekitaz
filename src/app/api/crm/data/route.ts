@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql, ensureSchema, dbConfigured, openTicket } from "@/lib/db";
 import { crmAuthed } from "@/lib/crmAuth";
+import { gmailReply } from "@/lib/gmail";
+import { igSend } from "@/lib/instagram";
 
 export const dynamic = "force-dynamic";
 const no = () => NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -34,8 +36,16 @@ export async function POST(req: NextRequest) {
   const id = String(b.id || ""); if (!id) return NextResponse.json({ error: "id" }, { status: 400 });
   if (b.action === "reply") {
     const text = String(b.text || "").trim().slice(0, 4000); if (!text) return NextResponse.json({ error: "empty" }, { status: 400 });
-    await sql!`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'agent', ${text})`;
-    await sql!`UPDATE conversations SET status='human', unread=FALSE, stage=CASE WHEN stage='new' THEN 'contacted' ELSE stage END, updated_at=now() WHERE id=${id}`;
+    const c = (await sql!`SELECT channel, ext_thread, email, summary FROM conversations WHERE id=${id}`)[0];
+    let via = "chat";
+    try {
+      if (c?.channel === "email" && c.ext_thread && c.email) {
+        const last = (await sql!`SELECT meta FROM messages WHERE conversation_id=${id} AND role='user' ORDER BY id DESC LIMIT 1`)[0]?.meta as { subject?: string; messageId?: string } | undefined;
+        await gmailReply({ to: String(c.email), threadId: String(c.ext_thread), subject: last?.subject || String(c.summary || ""), text, inReplyTo: last?.messageId }); via = "email";
+      } else if (c?.channel === "insta" && c.ext_thread) { await igSend(String(c.ext_thread), text); via = "instagram"; }
+    } catch (e) { return NextResponse.json({ error: e instanceof Error ? e.message : "send failed" }, { status: 502 }); }
+    await sql!`INSERT INTO messages (conversation_id, role, content, meta) VALUES (${id}, 'agent', ${text}, ${JSON.stringify({ via })}::jsonb)`;
+    await sql!`UPDATE conversations SET first_reply_at=COALESCE(first_reply_at, now()), status='human', unread=FALSE, stage=CASE WHEN stage='new' THEN 'contacted' ELSE stage END, updated_at=now() WHERE id=${id}`;
   } else if (b.action === "note") {
     const text = String(b.text || "").trim().slice(0, 4000); if (!text) return NextResponse.json({ error: "empty" }, { status: 400 });
     await sql!`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'note', ${text})`;

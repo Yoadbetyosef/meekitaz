@@ -37,6 +37,10 @@ export function ensureSchema(): Promise<void> {
     await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS care_at TIMESTAMPTZ`;
     await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS first_reply_at TIMESTAMPTZ`;
     await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS solved_at TIMESTAMPTZ`;
+    await sql`ALTER TABLE conversations ADD COLUMN IF NOT EXISTS ext_thread TEXT`; // Gmail thread id / Instagram user id
+    await sql`CREATE INDEX IF NOT EXISTS conversations_ext_idx ON conversations(channel, ext_thread)`;
+    await sql`CREATE TABLE IF NOT EXISTS integrations (name TEXT PRIMARY KEY, data JSONB NOT NULL DEFAULT '{}'::jsonb, updated_at TIMESTAMPTZ NOT NULL DEFAULT now())`;
+    await sql`CREATE TABLE IF NOT EXISTS ext_seen (id TEXT PRIMARY KEY, created_at TIMESTAMPTZ NOT NULL DEFAULT now())`;
     await sql`CREATE TABLE IF NOT EXISTS order_events (
       id BIGSERIAL PRIMARY KEY, order_id TEXT NOT NULL, kind TEXT NOT NULL, text TEXT NOT NULL, author TEXT, created_at TIMESTAMPTZ NOT NULL DEFAULT now())`;
     await sql`CREATE INDEX IF NOT EXISTS order_events_idx ON order_events(order_id, id)`;
@@ -95,3 +99,37 @@ export async function solvedMail(to: string, no: number) {
   return careMail(to, `All done (#C-${no})`, wrap("Customer care", "All done.", `<p>Your request <b>#C-${no}</b> is complete. If anything else comes up, just reply to this email.</p><p>How did we do? Reply with a number from 1 to 5. We read every one.</p>`));
 }
 export { careMail };
+
+/* ---------- Connected accounts (Gmail, Instagram) ---------- */
+export async function getIntegration<T = Record<string, unknown>>(name: string): Promise<T | null> {
+  if (!sql) return null; await ensureSchema();
+  const r = await sql`SELECT data FROM integrations WHERE name=${name}`; return r[0] ? (r[0].data as T) : null;
+}
+export async function setIntegration(name: string, data: Record<string, unknown> | null) {
+  if (!sql) return; await ensureSchema();
+  if (!data) { await sql`DELETE FROM integrations WHERE name=${name}`; return; }
+  await sql`INSERT INTO integrations (name, data) VALUES (${name}, ${JSON.stringify(data)}::jsonb) ON CONFLICT (name) DO UPDATE SET data=EXCLUDED.data, updated_at=now()`;
+}
+/** True the first time an external message id is seen. */
+export async function firstSeen(id: string) {
+  const r = await sql!`INSERT INTO ext_seen (id) VALUES (${id}) ON CONFLICT DO NOTHING RETURNING id`; return r.length > 0;
+}
+/** Adds an incoming message from an outside channel to its conversation (one per thread), creating it the first time. */
+export async function inbound(m: { channel: string; thread: string; name?: string | null; email?: string | null; text: string; subject?: string | null; meta?: Record<string, unknown> }) {
+  await ensureSchema();
+  let c = (await sql!`SELECT id, kind FROM conversations WHERE channel=${m.channel} AND ext_thread=${m.thread} ORDER BY created_at DESC LIMIT 1`)[0];
+  if (!c) {
+    const id = (globalThis.crypto?.randomUUID?.() || Math.random().toString(36).slice(2) + Date.now().toString(36));
+    const care = guessCareCat((m.subject || "") + " " + m.text) !== "other";
+    await sql!`INSERT INTO conversations (id, channel, ext_thread, status, kind, temp, name, email, summary, unread)
+      VALUES (${id}, ${m.channel}, ${m.thread}, 'human', 'sales', 'warm', ${m.name || null}, ${m.email || null}, ${(m.subject || m.text).slice(0, 160)}, TRUE)`;
+    c = { id, kind: "sales" };
+    await sql!`INSERT INTO messages (conversation_id, role, content, meta) VALUES (${id}, 'user', ${m.text}, ${JSON.stringify(m.meta || {})}::jsonb)`;
+    if (care) await openTicket(id, { silent: true });
+    return id;
+  }
+  await sql!`INSERT INTO messages (conversation_id, role, content, meta) VALUES (${c.id}, 'user', ${m.text}, ${JSON.stringify(m.meta || {})}::jsonb)`;
+  await sql!`UPDATE conversations SET unread=TRUE, updated_at=now(), name=COALESCE(name, ${m.name || null}), email=COALESCE(email, ${m.email || null}),
+    care_status=CASE WHEN care_status='waiting' THEN 'in_progress' ELSE care_status END WHERE id=${c.id}`;
+  return c.id as string;
+}
