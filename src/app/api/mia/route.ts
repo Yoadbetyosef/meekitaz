@@ -215,7 +215,7 @@ export async function POST(req: NextRequest) {
             colorFrom: (inp.color_best as string) || undefined, colorTo: (inp.color_worst as string) || (inp.color_best ? undefined : "G"),
             clarityFrom: (inp.clarity_best as string) || undefined, clarityTo: (inp.clarity_worst as string) || "VS2",
             priceTo: typeof inp.price_max === "number" ? inp.price_max : undefined, sort: (inp.sort as string) || "price_asc", pageSize: 12 });
-          const ds = r.items.slice(0, 4);
+          const seenD = new Set<string>(); const ds = r.items.filter(d => { const k = `${d.carat}|${d.color}|${d.clarity}|${Math.round(d.price)}`; if (seenD.has(k)) return false; seenD.add(k); return true; }).slice(0, 4);
           cards = ds.map(d => ({ title: `${d.carat} ct ${d.shape} · ${[d.color, d.clarity].filter(Boolean).join(" ")} · ${d.lab}`, price: `$${Math.round(d.price).toLocaleString("en-US")}`, url: `/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}`, image: d.image, ref: `diamond vendor ${d.vendor} stock ${d.stock}` }));
           out = ds.length ? JSON.stringify(ds.map(d => ({ vendor: d.vendor, stock: d.stock, carat: d.carat, shape: d.shape, color: d.color, clarity: d.clarity, lab: d.lab, price: Math.round(d.price) }))) + ` (${r.total} matching stones in total)` : "No stones match all of these. Tell them briefly, then search again with the closest relaxation and say what you changed.";
         } else if (u.name === "search_settings") {
@@ -249,14 +249,17 @@ export async function POST(req: NextRequest) {
               const k = isGoldMetal(v.metal) && ["14K", "18K"].includes(String(inp.karat)) ? String(inp.karat) : (isGoldMetal(v.metal) ? "10K" : "");
               const setting: Setting = { ns: String(inp.setting_code), handle: v.handle, variantId: v.variantId, title: v.title, shape: v.shape, metal: v.metal, price: v.price + (k ? karatStep(String(inp.setting_code), k) : 0), image: v.images[0] || "", karat: k || undefined };
               const stone: Stone = { vendor: d.vendor, stock: d.stock, shape: d.shape, carat: d.carat, color: d.color, clarity: d.clarity, cut: d.cut, lab: d.lab, image: d.image, price: d.price, fancy: d.fancy };
-              actions.push({ type: "add_ring", setting, stone });
-              out = `Added to the bag: ${setting.title}${k ? " " + k : ""} with a ${d.carat} ct ${d.shape} ${[d.color, d.clarity].filter(Boolean).join(" ")} ${d.lab}, total $${Math.round(setting.price + d.price).toLocaleString("en-US")}. They choose ring size in the bag.`;
+              const already = past.some(m => ((m.meta?.actions as { type: string; setting?: { handle: string }; stone?: { stock: string } }[] | undefined) || []).some(x => x.type === "add_ring" && x.setting?.handle === setting.handle && x.stone?.stock === stone.stock));
+              if (already) out = "This exact ring is already in their bag. Don't add it again; just confirm.";
+              else { actions.push({ type: "add_ring", setting, stone });
+              out = `Added to the bag: ${setting.title}${k ? " " + k : ""} with a ${d.carat} ct ${d.shape} ${[d.color, d.clarity].filter(Boolean).join(" ")} ${d.lab}, total $${Math.round(setting.price + d.price).toLocaleString("en-US")}. They choose ring size in the bag.`; }
             }
           }
         } else if (u.name === "add_to_bag") {
           const p = await getProductByHandle(String(inp.handle));
           const vr = p?.variants.find(x => x.available) || p?.variants[0];
           if (!p || !vr) out = "Product not found.";
+          else if (past.some(m => ((m.meta?.actions as { type: string; variantId?: string }[] | undefined) || []).some(x => x.type === "add" && x.variantId === vr.id))) out = "Already in their bag. Don't add it again; just confirm.";
           else { actions.push({ type: "add", variantId: vr.id }); out = `Added ${p.title} ($${Math.round(vr.price).toLocaleString("en-US")}) to the bag.`; }
         } else if (u.name === "open_checkout") {
           actions.push({ type: "open_bag" }); out = "The bag is open; they can check out from there.";
@@ -284,8 +287,7 @@ export async function POST(req: NextRequest) {
     turns.push({ role: "user", content: results });
   }
   // the answer is what she wrote after seeing the results; an earlier line is kept only when the last one is a bare prompt
-  const lastPart = parts[parts.length - 1] || "";
-  reply = (parts.length > 1 && lastPart.length < 70 ? parts.slice(-2).join("\n\n") : lastPart).trim();
+  reply = parts.join("\n\n").trim();
   if (!reply) {
     // she only used tools: ask once more for the words that go with them
     const r2 = await fetch("https://api.anthropic.com/v1/messages", { method: "POST",
@@ -295,6 +297,6 @@ export async function POST(req: NextRequest) {
     reply = (d2?.content || []).filter(x => x.type === "text").map(x => x.text).join("").trim();
   }
   if (!reply) reply = actions.length ? "Done, it's in your bag." : cards.length ? "Here are some options." : "Sorry, could you say that again?";
-  await sql!`INSERT INTO messages (conversation_id, role, content, meta) VALUES (${id}, 'assistant', ${reply}, ${JSON.stringify({ cards, chips })}::jsonb)`;
+  await sql!`INSERT INTO messages (conversation_id, role, content, meta) VALUES (${id}, 'assistant', ${reply}, ${JSON.stringify({ cards, chips, actions })}::jsonb)`;
   return NextResponse.json({ id, reply, products: cards, chips, handoff, actions });
 }
