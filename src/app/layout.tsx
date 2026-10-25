@@ -6,6 +6,8 @@ import DesignLabGate from "@/components/DesignLabGate";
 import Footer from "@/components/Footer";
 import Toast from "@/components/Toast";
 import FreeStuds from "@/components/FreeStuds";
+import ShareSheet from "@/components/ShareSheet";
+import DreamList from "@/components/DreamList";
 import MiaChat from "@/components/MiaChat";
 import PressFx from "@/components/PressFx";
 import CartProvider from "@/components/CartProvider";
@@ -36,6 +38,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Toast />
           <FreeStuds />
           <MiaChat />
+          <ShareSheet />
+          <DreamList />
           <PressFx />
           <CartDrawer />
           <DesignLabGate />

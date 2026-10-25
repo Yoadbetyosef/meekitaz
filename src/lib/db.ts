@@ -41,6 +41,8 @@ export function ensureSchema(): Promise<void> {
     await sql`CREATE INDEX IF NOT EXISTS conversations_ext_idx ON conversations(channel, ext_thread)`;
     await sql`CREATE TABLE IF NOT EXISTS integrations (name TEXT PRIMARY KEY, data JSONB NOT NULL DEFAULT '{}'::jsonb, updated_at TIMESTAMPTZ NOT NULL DEFAULT now())`;
     await sql`CREATE TABLE IF NOT EXISTS ext_seen (id TEXT PRIMARY KEY, created_at TIMESTAMPTZ NOT NULL DEFAULT now())`;
+    await sql`CREATE TABLE IF NOT EXISTS wishlists (id TEXT PRIMARY KEY, name TEXT, items JSONB NOT NULL DEFAULT '[]'::jsonb, created_at TIMESTAMPTZ NOT NULL DEFAULT now(), updated_at TIMESTAMPTZ NOT NULL DEFAULT now())`;
+    await sql`CREATE TABLE IF NOT EXISTS wish_votes (list_id TEXT NOT NULL, handle TEXT NOT NULL, voter TEXT NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT now(), PRIMARY KEY (list_id, voter))`;
     await sql`CREATE TABLE IF NOT EXISTS order_events (
       id BIGSERIAL PRIMARY KEY, order_id TEXT NOT NULL, kind TEXT NOT NULL, text TEXT NOT NULL, author TEXT, created_at TIMESTAMPTZ NOT NULL DEFAULT now())`;
     await sql`CREATE INDEX IF NOT EXISTS order_events_idx ON order_events(order_id, id)`;

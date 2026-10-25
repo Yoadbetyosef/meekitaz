@@ -64,7 +64,8 @@ function trimOf(el: HTMLImageElement): Trim | null {
   } catch { return null; }
 }
 
-export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, film, clip, boxPic, steps, summary, price, metal, rows, cta, appt, onVisible }: {
+export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, film, clip, boxPic, steps, summary, price, metal, rows, cta, appt, onVisible, actions }: {
+  actions?: React.ReactNode;
   title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; stoneShape?: string; film?: { src: string; poster: string; srcD?: string; posterD?: string }; clip?: { src: string; poster: string }; boxPic?: { src: string; alt: string }; summary?: string[];
   steps?: ReactNode; price: ReactNode; metal?: ReactNode; rows?: ReactNode; cta: ReactNode; appt?: ReactNode; onVisible?: (on: boolean) => void;
 }) {
@@ -216,6 +217,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
       </div>
 
       <div className="ih-tt">
+        {actions && <div className="ih-acts">{actions}</div>}
         <small className="eyebrow">Lab-grown · IGI certified</small>
         <h1 aria-label={title} className={sz}>{bigTitle}</h1>
         <span className="ih-cap" aria-live="polite">{s.label}</span>

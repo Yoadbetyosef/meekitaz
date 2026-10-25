@@ -11,6 +11,8 @@ import SearchPalette from "./SearchPalette";
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const [searching, setSearching] = useState(false);
+  const [wishN, setWishN] = useState(0);
+  useEffect(() => { const r = () => { try { setWishN(JSON.parse(localStorage.getItem("mk_wish") || "[]").length); } catch { setWishN(0); } }; r(); window.addEventListener("mk-wish", r); return () => window.removeEventListener("mk-wish", r); }, []);
   const pathname = usePathname();
   const { bagCount, setOpen: openCart } = useCart();
   const count = bagCount;
@@ -26,6 +28,10 @@ export default function Nav() {
       <nav className="nav" aria-label="Main">
         <Link href="/" className="brand" aria-label="Meekitaz, home"><Logo className="brand-logo" /></Link>
         <div className="nav-r">
+          <button className="nav-wish" aria-label={`My Dream list${wishN ? `, ${wishN} saved` : ""}`} onClick={() => { setOpen(false); openCart(false); window.dispatchEvent(new Event("mk-dream-open")); }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 8 3.6 4.6 7 4.6c2 0 3.4 1.1 5 3 1.6-1.9 3-3 5-3 3.4 0 5.6 3.4 4.3 6.7-1.8 4.6-9.3 9.2-9.3 9.2z" /></svg>
+            {wishN > 0 && <b>{wishN}</b>}
+          </button>
           <button className="nav-search" aria-label="Search" onClick={() => { setOpen(false); openCart(false); setSearching(true); }}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" /></svg>
           </button>

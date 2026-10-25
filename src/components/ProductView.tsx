@@ -13,6 +13,7 @@ import { ringMetalOf, type ProductFull, type Related, type Sibling } from "@/lib
 import { metalOf } from "@/lib/shopify";
 import type { RingVariant } from "@/lib/shopify";
 import { saveSetting, diamondsUrl, loadStone } from "@/lib/setting";
+import WishHeart, { ShareArrow } from "./WishHeart";
 import { fancyColorOf } from "@/lib/fancy";
 import { METAL_LINE } from "@/lib/designs";
 import { addonFor, completeSel, optionRows, type ProductOptions, type Sel } from "@/lib/options";
@@ -79,6 +80,10 @@ export default function ProductView({ product: p, siblings, related, ring, optio
   const hasOpts = rows.length > 0;
   const router = useRouter();
   const [rh, setRh] = useState(p.handle);
+  // a shared "drop a hint" link: ?hint=…&size=6.25 shows the note on top
+  const [hint, setHint] = useState<{ text: string; size: string } | null>(null);
+  useEffect(() => { const t = qp.get("hint"); if (!t) return; const z = Number(qp.get("size")); const w = Math.floor(z), f = Math.round((z - w) * 100);
+    setHint({ text: t.slice(0, 160), size: z ? `${w}${f === 25 ? "¼" : f === 50 ? "½" : f === 75 ? "¾" : ""}` : "" }); }, [qp]);
   const ns = ring?.ns || p.tags.find(t => /^NS-\d+$/.test(t)) || "";
   const karatOn = hasKarat(ns) && !hasOpts; // the option tree carries its own Gold Purity prices
   const [karatPick, setKarat] = useState("10K");
@@ -103,6 +108,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
   const kLabel = karatOn && isGoldMetal(metalNow) ? karat : "";
   const baseP = cv ? cv.price : variant.price, baseC = cv ? cv.compareAt : variant.compareAt;
   const title = cv ? cv.title : p.title, price = baseP + step + addon, compareAt = baseC > 0 ? baseC + 2 * step + 2 * addon : 0;
+  const wishItem = { handle: cv ? cv.handle : p.handle, title: cv ? cv.title : p.title, image: (cv ? cv.images[0] : base[0]?.url) || "", price: Number(price) || 0 };
   const shapesHere = ring ? ring.shapes.filter(s => ring.family.some(v => v.shape === s.label)) : [];
   const metalsHere = cv && ring ? RING_METALS.filter(m => ring.family.some(v => v.shape === cv.shape && v.metal === m)) : [];
   const pickRing = (shape: string, metal: string) => {
@@ -248,7 +254,8 @@ export default function ProductView({ product: p, siblings, related, ring, optio
 
   return (
     <main className="pp ih-on">
-      <ImmersiveHero boxPic={{ src: BOX_IMG, alt: "Meekitaz presentation box with velvet ring box and certificate drawer" }} title={title} bigTitle={heroTitle(title)} images={imgs} model={worn || undefined} stone={ring?.color || ""} stoneShape={ring && cv ? cv.shape : undefined} film={p.tags.includes("Gemstone") ? { src: "/media/gems-film.mp4", poster: "/media/gems-film-poster.jpg", srcD: "/media/gems-film-desktop.mp4", posterD: "/media/gems-film-desktop-poster.jpg" } : ring ? { src: "/media/rings-film.mp4", poster: "/media/rings-film-poster.jpg", srcD: "/media/rings-film-desktop.mp4", posterD: "/media/rings-film-desktop-poster.jpg" } : p.productType === "Earrings" ? { src: "/media/earrings-film.mp4", poster: "/media/earrings-film-poster.jpg", srcD: "/media/earrings-film-desktop.mp4", posterD: "/media/earrings-film-desktop-poster.jpg" } : /\bbands?\b/i.test(p.productType || "") ? { src: "/media/bands-film.mp4", poster: "/media/bands-film-poster.jpg", srcD: "/media/bands-film-desktop.mp4", posterD: "/media/bands-film-desktop-poster.jpg" } : /^necklaces?$/i.test(p.productType || "") ? { src: "/media/necklaces-film.mp4", poster: "/media/necklaces-film-poster.jpg", srcD: "/media/necklaces-film-desktop.mp4", posterD: "/media/necklaces-film-desktop-poster.jpg" } : /^bracelets?$/i.test(p.productType || "") ? { src: "/media/bracelets-film.mp4", poster: "/media/bracelets-film-poster.jpg", srcD: "/media/bracelets-film-desktop.mp4", posterD: "/media/bracelets-film-desktop-poster.jpg" } : undefined} clip={PRODUCT_VIDEOS[ns] ?? (p.videoUrl ? { src: p.videoUrl, poster: worn || base[0]?.url || "" } : undefined)}
+      {hint && <div className="hint-note" role="note"><button aria-label="Close" onClick={() => setHint(null)}>×</button><small>A note for you</small><p>“{hint.text}”</p>{hint.size && <span>Her ring size: {hint.size}</span>}</div>}
+      <ImmersiveHero actions={<><WishHeart item={wishItem} className="big" /><ShareArrow item={wishItem} className="big" /></>} boxPic={{ src: BOX_IMG, alt: "Meekitaz presentation box with velvet ring box and certificate drawer" }} title={title} bigTitle={heroTitle(title)} images={imgs} model={worn || undefined} stone={ring?.color || ""} stoneShape={ring && cv ? cv.shape : undefined} film={p.tags.includes("Gemstone") ? { src: "/media/gems-film.mp4", poster: "/media/gems-film-poster.jpg", srcD: "/media/gems-film-desktop.mp4", posterD: "/media/gems-film-desktop-poster.jpg" } : ring ? { src: "/media/rings-film.mp4", poster: "/media/rings-film-poster.jpg", srcD: "/media/rings-film-desktop.mp4", posterD: "/media/rings-film-desktop-poster.jpg" } : p.productType === "Earrings" ? { src: "/media/earrings-film.mp4", poster: "/media/earrings-film-poster.jpg", srcD: "/media/earrings-film-desktop.mp4", posterD: "/media/earrings-film-desktop-poster.jpg" } : /\bbands?\b/i.test(p.productType || "") ? { src: "/media/bands-film.mp4", poster: "/media/bands-film-poster.jpg", srcD: "/media/bands-film-desktop.mp4", posterD: "/media/bands-film-desktop-poster.jpg" } : /^necklaces?$/i.test(p.productType || "") ? { src: "/media/necklaces-film.mp4", poster: "/media/necklaces-film-poster.jpg", srcD: "/media/necklaces-film-desktop.mp4", posterD: "/media/necklaces-film-desktop-poster.jpg" } : /^bracelets?$/i.test(p.productType || "") ? { src: "/media/bracelets-film.mp4", poster: "/media/bracelets-film-poster.jpg", srcD: "/media/bracelets-film-desktop.mp4", posterD: "/media/bracelets-film-desktop-poster.jpg" } : undefined} clip={PRODUCT_VIDEOS[ns] ?? (p.videoUrl ? { src: p.videoUrl, poster: worn || base[0]?.url || "" } : undefined)}
         steps={ring ? <RingSteps step={1} onDiamond={cv ? chooseSetting : undefined} /> : null}
         summary={summary}
         price={priceNode} metal={hasMetal ? metalNode : null} rows={rowsNode} cta={ctaNode} appt={apptNode} onVisible={setHeroOn} />
