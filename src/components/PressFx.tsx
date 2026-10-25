@@ -31,6 +31,8 @@ export default function PressFx() {
     const click = (e: MouseEvent) => {
       const ch = (e.target as Element | null)?.closest?.(CHOICE); if (ch) pop(ch); // a choice springs when it is picked
       if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      // a control inside a link (metal dots, photo flip, swap buttons) that handled the click itself: no page is opening, so no loading bar or pink veil
+      if (e.defaultPrevented || (e.target as Element | null)?.closest?.(".pc-metals, .pcard-flip, [data-no-nav]")) return;
       const a = (e.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null; if (!a || a.target === "_blank" || a.hasAttribute("download")) return;
       let u: URL; try { u = new URL(a.href, location.href); } catch { return; }
       if (u.origin !== location.origin || u.pathname === location.pathname) return; // another page, not a filter or an anchor on this one
