@@ -204,7 +204,7 @@ export const faces = [
 
 export const showroomImage = "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_001140_1f7e875f-d6d9-4189-b6c6-3678c3cc5849.png";
 
-export type CategoryPage = { slug:string; nav:string; title:string; small:string; desktop:string; mobile:string; styleHead: string[] | null; styles:{img:string;label:string}[]; items:{name:string;meta:string}[]; filters:boolean; special?: string; heroPos?: string; heroZoom?: number };
+export type CategoryPage = { slug:string; nav:string; title:string; small:string; desktop:string; mobile:string; styleHead: string[] | null; styles:{img:string;label:string}[]; items:{name:string;meta:string}[]; filters:boolean; special?: string; heroPos?: string; heroZoom?: number; videoDesktop?: string; videoMobile?: string };
 export const categories: CategoryPage[] = [
   {
     "slug": "engagement-rings",
@@ -435,6 +435,8 @@ export const categories: CategoryPage[] = [
     "nav": "Earrings"
   },
   {
+    "videoDesktop": "/media/necklaces-hero-desktop.mp4",
+    "videoMobile": "/media/necklaces-hero-mobile.mp4",
     "slug": "necklaces",
     "title": "Necklaces.",
     "small": "Layered at the pool.",

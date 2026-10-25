@@ -1753,3 +1753,6 @@ a.rp-mt{text-decoration:none}
 .sw-use{width:100%;border:0;background:var(--ink);color:#fff;border-radius:999px;padding:16px;font:800 12px var(--body);letter-spacing:.16em;text-transform:uppercase;cursor:pointer}.sw-use:disabled{background:#fff;color:var(--ink);border:1px solid rgba(28,26,27,.16);cursor:default}
 .sw-more{display:block;text-align:center;margin:16px 0 4px;font:700 12px var(--body);letter-spacing:.08em;text-decoration:underline;color:var(--ink)}
 .sw-note{font:12.5px/1.5 var(--body);opacity:.6;text-align:center;margin:4px 0 0}
+
+.cat-hero .cat-hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--hero-pos,50% 50%);opacity:0;transition:opacity .8s ease;z-index:1}
+.cat-hero::after{z-index:1}
