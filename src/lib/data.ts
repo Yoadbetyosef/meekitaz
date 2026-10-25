@@ -494,8 +494,6 @@ export const categories: CategoryPage[] = [
     "nav": "Necklaces"
   },
   {
-    "videoDesktop": "/media/bracelets-hero-desktop.mp4",
-    "videoMobile": "/media/bracelets-hero-mobile.mp4",
     "slug": "bracelets",
     "title": "The Tennis.",
     "small": "Stacked for breakfast.",
