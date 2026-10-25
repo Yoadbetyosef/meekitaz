@@ -1756,3 +1756,7 @@ a.rp-mt{text-decoration:none}
 
 .cat-hero .cat-hero-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--hero-pos,50% 50%);opacity:0;transition:opacity .8s ease;z-index:1}
 .cat-hero::after{z-index:1}
+
+/* the home page only: a softer grey-blue ("Mist") instead of the sky blue; every other page keeps --blue-light as it was */
+body:has(.home-page){--blue-light:#E4E8EC}
+

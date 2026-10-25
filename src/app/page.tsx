@@ -10,7 +10,7 @@ import PrivateClients from "@/components/PrivateClients";
 
 export default function Home() {
   return (
-    <main>
+    <main className="home-page">
       <Hero />
       <Film />
       <Categories />
