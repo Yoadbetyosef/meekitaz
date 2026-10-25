@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export type Reveal = { tag: string; l1: string; l2: string; cta: string; href: string };
 
@@ -8,11 +8,15 @@ export type Reveal = { tag: string; l1: string; l2: string; cta: string; href: s
  *  fetched only when it comes near, so it costs nothing on pages where nobody scrolls to it.
  *  With `reveal`, the tile also opens as you scroll it to the middle of the screen (a small frame grows to full width) and closes as you leave,
  *  with a small caption on it. */
-export default function GridMood({ src, poster, reveal }: { src: string; poster: string; reveal?: Reveal }) {
+export default function GridMood({ src: srcM, poster: posterM, srcD, posterD, reveal }: { src: string; poster: string; srcD?: string; posterD?: string; reveal?: Reveal }) {
+  // computers get their own (landscape) film when one is given; phones keep the original
+  const [wide, setWide] = useState(false);
+  useEffect(() => { const m = window.matchMedia("(min-width: 768px)"); const on = () => setWide(m.matches); on(); m.addEventListener("change", on); return () => m.removeEventListener("change", on); }, []);
+  const src = wide && srcD ? srcD : srcM, poster = wide && posterD ? posterD : posterM;
   const v = useRef<HTMLVideoElement>(null), box = useRef<HTMLDivElement>(null), win = useRef<HTMLDivElement>(null), txt = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = v.current; if (!el) return;
-    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { if (!el.getAttribute("src")) el.setAttribute("src", src); el.play().catch(() => {}); } else el.pause(); }), { threshold: 0.2, rootMargin: "300px 0px" });
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { if (el.getAttribute("src") !== src) el.setAttribute("src", src); el.play().catch(() => {}); } else el.pause(); }), { threshold: 0.2, rootMargin: "300px 0px" });
     io.observe(el); return () => io.disconnect();
   }, [src]);
   useEffect(() => {
