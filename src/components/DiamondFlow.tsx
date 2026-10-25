@@ -7,6 +7,7 @@ import Logo from "./Logo";
 import { useCart } from "./CartProvider";
 import { toast } from "./Toast";
 import { loadSetting, chooseStone, settingFrom, type Setting, type Stone } from "@/lib/setting";
+import SwapDrawer from "./SwapDrawer";
 import { fancyColorOfStone, fancySettingsUrl } from "@/lib/fancy";
 import { showroomImage } from "@/lib/data";
 
@@ -56,6 +57,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
   const fc = fancyColorOfStone(d.fancy);
   const pickUrl = fc ? fancySettingsUrl(fc, shape) : `/engagement-rings?style=${encodeURIComponent(shape)}&build=1`;
 
+  const [swap, setSwap] = useState<"setting" | "stone" | null>(null);
   useEffect(() => { const read = () => setSet(loadSetting()); read(); window.addEventListener("mk-setting", read); return () => window.removeEventListener("mk-setting", read); }, []);
   useEffect(() => {
     let off = false; setMissing(false);
@@ -112,6 +114,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
 
   return (
     <>
+      <SwapDrawer mode={swap} shape={d.shape} setting={shown || null} stone={stone} onClose={() => setSwap(null)} />
       {/* 1 · build your ring */}
       <section className="df-bd">
         <div className="df-h"><span className="eyebrow">{d.fancy ? "Fancy color" : "Step 2 of 3"} · Your diamond</span><h1>Build your ring</h1><p className="df-s">{title(d)} · {sub(d)}</p></div>
@@ -119,7 +122,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
           <div className="df-pair">
             <div>
               <div className="df-card"><span className="df-cap">Your diamond</span><StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} /></div>
-              <div className="df-capt"><b>{title(d)}</b>{usd(d.price)} · {d.lab} certified</div>
+              <div className="df-capt"><b>{title(d)}</b>{usd(d.price)} · {d.lab} certified{shown && !d.fancy && <button type="button" className="df-swap" onClick={() => setSwap("stone")}>⇄ Swap diamond</button>}</div>
             </div>
             <div className="df-plus">+</div>
             <div>
@@ -129,7 +132,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
                   ? <Image src={shown.image} alt={shown.title} fill sizes="(max-width:767px) 44vw, 28vw" quality={75} className="df-set" />
                   : <div className="df-none">{missing ? `That setting is not made in ${shape.toLowerCase()}.` : set ? "Finding your setting…" : "Choose a setting for this diamond"}<Link href={pickUrl} className="df-pill">{missing || !set ? "Choose a setting" : "See settings"}</Link></div>}
               </div>
-              <div className="df-capt"><b>{shown ? sTitle : "No setting yet"}</b>{shown ? `from ${usd(shown.price)}${sMetal ? " · " + sMetal : ""}` : `For your ${shape.toLowerCase()} diamond`}</div>
+              <div className="df-capt"><b>{shown ? sTitle : "No setting yet"}</b>{shown ? `from ${usd(shown.price)}${sMetal ? " · " + sMetal : ""}` : `For your ${shape.toLowerCase()} diamond`}{shown && <button type="button" className="df-swap" onClick={() => setSwap("setting")}>⇄ Swap setting</button>}</div>
             </div>
           </div>
           <aside className="df-sum">

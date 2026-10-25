@@ -113,7 +113,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
   const chooseSetting = () => {
     if (!cv || !ring) return;
     const stone = loadStone();
-    // a diamond is already chosen: the ring is that setting in the shape of the diamond, and it goes into the bag
+    // a diamond is already chosen: the setting follows the diamond's shape
     let pick = cv;
     if (stone && stone.shape !== cv.shape) {
       const alt = ring.family.find(v => v.shape === stone.shape && v.metal === cv.metal) || ring.family.find(v => v.shape === stone.shape);
@@ -125,7 +125,8 @@ export default function ProductView({ product: p, siblings, related, ring, optio
     const setting = { ns: ring.ns, handle: pick.handle, variantId: pick.variantId, title: pick.title, shape: pick.shape, metal: pick.metal, price: pick.price + (pk ? karatStep(ring.ns, pk) : 0), image: pick.images[0] || "", karat: pk || undefined, color: fc };
     saveSetting(setting);
     if (!stone) { router.push(diamondsUrl(pick.shape, fc)); return; }
-    addRing(setting, stone);
+    // a diamond is already chosen: review the pair first (diamond + setting), not straight into the bag
+    router.push(`/diamonds/${stone.vendor}-${encodeURIComponent(stone.stock)}`);
   };
 
   const heroTitle = (t: string) => t.replace(/^(yellow gold|white gold|rose gold|silver|platinum)\s+/i, "").replace(/^\d+K\s+/i, "");
