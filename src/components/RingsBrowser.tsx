@@ -119,6 +119,8 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
             <Fragment key={p.id}>
               {/* the mood tile sits after the first two rows (6 on desktop, 4 on a phone: CSS picks the slot) */}
               {handle === "engagement-rings" && i === 4 && items.length > 4 && <GridMood src="/media/rings-mood.mp4" poster="/media/rings-mood-poster.jpg" reveal={{ tag: "Engagement rings", l1: "One stone.", l2: "The whole conversation.", cta: "Shop the look", href: "/products/yellow-gold-cushion-diamond-solitaire-engagement-ring" }} />}
+              {/* Fancy Colors: the walking film (yellow cushion on her hand), same opening as the necklaces; the crop keeps the hand in view */}
+              {handle === "fancy-colors" && i === 4 && items.length > 4 && <GridMood src="/media/fancy-mood.mp4" poster="/media/fancy-mood-poster.jpg" pos="62% 92%" reveal={{ tag: "Fancy colors", l1: "Pack light.", l2: "Wear the yellow.", cta: "Shop the look", href: "/products/yellow-gold-fancy-yellow-cushion-cut-diamond-classic-solitaire-engagement-ring" }} />}
               <DesignCard p={p} />
             </Fragment>
           ))}

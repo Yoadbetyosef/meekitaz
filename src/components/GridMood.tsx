@@ -8,7 +8,7 @@ export type Reveal = { tag: string; l1: string; l2: string; cta: string; href: s
  *  fetched only when it comes near, so it costs nothing on pages where nobody scrolls to it.
  *  With `reveal`, the tile also opens as you scroll it to the middle of the screen (a small frame grows to full width) and closes as you leave,
  *  with a small caption on it. */
-export default function GridMood({ src: srcM, poster: posterM, srcD, posterD, reveal }: { src: string; poster: string; srcD?: string; posterD?: string; reveal?: Reveal }) {
+export default function GridMood({ src: srcM, poster: posterM, srcD, posterD, reveal, pos }: { src: string; poster: string; srcD?: string; posterD?: string; reveal?: Reveal; pos?: string }) {   // pos: which part of a film shows when it is cropped to the tile (CSS object-position)
   // computers get their own (landscape) film when one is given; phones keep the original
   const [wide, setWide] = useState(false);
   useEffect(() => { const m = window.matchMedia("(min-width: 768px)"); const on = () => setWide(m.matches); on(); m.addEventListener("change", on); return () => m.removeEventListener("change", on); }, []);
@@ -42,14 +42,14 @@ export default function GridMood({ src: srcM, poster: posterM, srcD, posterD, re
   if (!reveal) {
     return (
       <div className="gmood" aria-hidden="true">
-        <video ref={v} muted loop playsInline preload="none" poster={poster} disablePictureInPicture />
+        <video ref={v} muted loop playsInline preload="none" poster={poster} disablePictureInPicture style={pos ? { objectPosition: pos } : undefined} />
       </div>
     );
   }
   return (
     <div className="gmood gmood-rv" ref={box}>
       <div className="gm-win" ref={win}>
-        <video ref={v} muted loop playsInline preload="none" poster={poster} disablePictureInPicture aria-hidden="true" />
+        <video ref={v} muted loop playsInline preload="none" poster={poster} disablePictureInPicture aria-hidden="true" style={pos ? { objectPosition: pos } : undefined} />
         <div className="gm-shade" aria-hidden="true" />
         <div className="gm-txt" ref={txt}>
           <span className="gm-tag">New in &middot; {reveal.tag}</span>
