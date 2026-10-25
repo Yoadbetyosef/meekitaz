@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useCart } from "./CartProvider";
+import type { Setting, Stone } from "@/lib/setting";
 
 /* Mia — the Meekitaz diamond assistant (AI, hands over to a person when needed). Ivory style, bottom-right.
    While testing it only shows after visiting any page with ?mia=1 (?mia=0 hides it again). */
@@ -16,7 +17,7 @@ const SKIP = [/^\/checkout/, /^\/admin/];
 
 export default function MiaChat() {
   const path = usePathname() || "/";
-  const { open: bagOpen } = useCart();
+  const { open: bagOpen, add, addRing, setOpen: setBag } = useCart();
   const [enabled, setEnabled] = useState(false);
   const [open, setOpen] = useState(false);
   const [msgs, setMsgs] = useState<Msg[]>([]);
@@ -60,6 +61,12 @@ export default function MiaChat() {
     if (r.id) { conv.current = r.id; ls.set(K_CONV, r.id); }
     if (r.human) setHuman(true);
     if (r.reply) setMsgs(x => [...x, { role: "assistant", content: r.reply, cards: r.products, chips: r.chips }]);
+    // Mia acts on the site: put a ring (setting + diamond) or a product in the bag, or open the bag for checkout.
+    for (const a of (r.actions || []) as { type: string; setting?: Setting; stone?: Stone; variantId?: string }[]) {
+      if (a.type === "add_ring" && a.setting && a.stone) addRing(a.setting, a.stone);
+      else if (a.type === "add" && a.variantId) { await add(a.variantId); setBag(true); }
+      else if (a.type === "open_bag") setBag(true);
+    }
     if (r.handoff) setHuman(true);
   }
 
