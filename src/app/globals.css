@@ -1792,10 +1792,14 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .ss-note .tx{font:italic 21px/1.25 var(--sub)}.ss-note .tx em{display:block;font-size:.8em;margin-top:4px}.ss-note .tx small{display:block;font:800 9.5px var(--body);font-style:normal;letter-spacing:.2em;text-transform:uppercase;margin-top:8px;opacity:.7}
 .ss-note::after{content:"Meekitaz";position:absolute;right:14px;bottom:10px;font:400 15px var(--display);opacity:.35}
 .ss-size{display:flex;align-items:center;gap:8px;margin-top:12px;font:13.5px var(--body)}.ss-size select{border:1px solid rgba(28,26,27,.14);border-radius:999px;padding:5px 10px;font:13px var(--body)}
-.ss-ways{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
-.ss-ways a,.ss-ways button{border:0;background:#fff;border-radius:16px;padding:11px 4px;font:600 11px var(--body);cursor:pointer;display:grid;justify-items:center;gap:6px;color:var(--ink);text-decoration:none;text-align:center}
-.ss-ways span{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:17px}
-@media(max-width:767px){.ss{left:0;bottom:0;width:100%;transform:none;border-radius:26px 26px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));animation-name:swUp}.ss-note .ph{width:88px;height:88px}.ss-note .tx{font-size:17px}.ss-ways{grid-template-columns:repeat(3,1fr)}}
+.ss-ways{display:flex;justify-content:space-between;margin-top:16px;border-top:1px solid rgba(28,26,27,.12);border-bottom:1px solid rgba(28,26,27,.12);padding:16px 4px}
+.ss-ways a,.ss-ways button{border:0;background:none;padding:0;cursor:pointer;display:grid;justify-items:center;gap:9px;color:var(--ink);text-decoration:none;font:700 9.5px var(--body);letter-spacing:.14em;text-transform:uppercase;transition:transform .2s cubic-bezier(.3,1.4,.5,1)}
+.ss-ways i{width:48px;height:48px;border-radius:50%;border:1px solid rgba(28,26,27,.22);display:grid;place-items:center;transition:background .2s,color .2s,border-color .2s}
+.ss-ways svg{width:20px;height:20px}
+@media(hover:hover){.ss-ways a:hover i,.ss-ways button:hover i{background:var(--ink);color:#fff;border-color:var(--ink)}}
+.ss-ways .fx-down i{background:var(--ink);color:#fff;border-color:var(--ink)}
+.ss-who button{display:inline-flex;align-items:center;gap:7px;transition:transform .2s}.ss-who svg{width:15px;height:15px}
+@media(max-width:767px){.ss{left:0;bottom:0;width:100%;transform:none;border-radius:26px 26px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));animation-name:swUp}.ss-note .ph{width:88px;height:88px}.ss-note .tx{font-size:17px}.ss-ways{padding:14px 0}.ss-ways i{width:44px;height:44px}.ss-ways a,.ss-ways button{font-size:8.5px;letter-spacing:.1em}}
 .dl{position:fixed;top:0;right:0;bottom:0;z-index:9999;width:min(420px,100%);background:var(--ivory);padding:26px 22px calc(26px + env(safe-area-inset-bottom));overflow:auto;box-shadow:-24px 0 60px rgba(28,26,27,.18);animation:swIn .4s cubic-bezier(.2,.8,.2,1)}
 .dl-i{display:flex;gap:12px;align-items:center;background:#fff;border-radius:18px;padding:8px;margin-bottom:8px;position:relative}
 .dl-i .im{width:66px;height:66px;border-radius:12px;background:#F7F4F0 center/86% no-repeat;flex:none}.dl-i .tx{flex:1;min-width:0}.dl-i .tx a{color:inherit;text-decoration:none}.dl-i b{display:block;font:500 13px/1.3 var(--body)}.dl-i small{font:700 12px var(--body)}

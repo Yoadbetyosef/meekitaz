@@ -4,9 +4,9 @@ import { usePathname } from "next/navigation";
 
 /** The feel of a press, everywhere: things squish under the finger and spring back with a little overshoot, and a choice pops when it is picked.
  *  And a thin bar at the top (with the tapped card dimmed) while another page is opening, so a slow page never feels like nothing happened. */
-export const PRESS = ".pill, .df-cta, .df-pill, .pp-add, .dd-choose, .dcard, .pcard, .df-sim a, .sp-row > *, .rp-sw, .rp-shapes button, .rp-metals button, .rp-colors button, .mk-seg button, .po-vals button, .ih-thumbs button, .df-dots button, .df-arr, .cd-co, .cd-qty button, .pc-way";
+export const PRESS = ".pill, .df-cta, .df-pill, .pp-add, .dd-choose, .dcard, .pcard, .df-sim a, .sp-row > *, .rp-sw, .rp-shapes button, .rp-metals button, .rp-colors button, .mk-seg button, .po-vals button, .ih-thumbs button, .df-dots button, .df-arr, .cd-co, .cd-qty button, .pc-way, .ss-ways > *, .ss-who button, .dl-share button, .wsh, .sw-c, .df-swap, .sw-chips button, .dct button, .dream-c button";
 
-export const CHOICE = ".sp-row > *, .rp-sw, .rp-shapes button, .rp-metals button, .rp-colors button, .mk-seg button, .po-vals button, .ih-thumbs button, .df-dots button, .pc-way";
+export const CHOICE = ".sp-row > *, .rp-sw, .rp-shapes button, .rp-metals button, .rp-colors button, .mk-seg button, .po-vals button, .ih-thumbs button, .df-dots button, .pc-way, .ss-who button, .sw-chips button, .dct button";
 
 export default function PressFx() {
   const path = usePathname();
