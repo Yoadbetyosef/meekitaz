@@ -1,6 +1,7 @@
 import RingSteps from "@/components/RingSteps";
 import Image, { getImageProps } from "next/image";
 import HeroVideo from "@/components/HeroVideo";
+import { DailyHeroBadge } from "@/components/DailyPrice";
 import { notFound } from "next/navigation";
 import { categories } from "@/lib/data";
 import ProductGrid from "@/components/ProductGrid";
@@ -46,7 +47,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
           <Image src={p.desktop} alt="" fill loading="eager" fetchPriority="high" sizes="100vw" quality={78} style={{ "--hero-pos": p.heroPos || "50% 50%", "--hero-zoom": p.heroZoom || 1 } as React.CSSProperties} />
         </picture>
         {(p.videoDesktop || p.videoMobile) && <HeroVideo desktop={p.videoDesktop} mobile={p.videoMobile} />}
-        <div className="wrap"><h1><small>{p.small}</small>{p.title}</h1></div>
+        <div className="wrap"><h1><small>{p.small}</small>{p.title}</h1><DailyHeroBadge /></div>
       </section>
       <div className={`catbody${p.slug === "diamonds" ? " dm-page" : ""}`}>
         {p.slug === "diamonds" && <RingSteps step={2} />}
