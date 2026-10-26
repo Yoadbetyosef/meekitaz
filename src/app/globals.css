@@ -1820,3 +1820,12 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .hint-note{position:fixed;z-index:70;left:50%;top:calc(var(--nav-h) + 26px);transform:translateX(-50%);width:min(420px,90vw);background:linear-gradient(135deg,#F7D3DA,#E9DDF3 55%,#DCEBF4);border-radius:22px;padding:16px 44px 16px 20px;box-shadow:0 20px 50px rgba(28,26,27,.2);animation:ssUp .5s cubic-bezier(.2,.9,.2,1) .4s both}
 .hint-note small{font:800 10px var(--body);letter-spacing:.22em;text-transform:uppercase;opacity:.65}.hint-note p{font:italic 22px/1.25 var(--sub);margin:4px 0 0}.hint-note span{display:inline-block;margin-top:8px;font:700 12px var(--body);background:rgba(255,255,255,.7);border-radius:999px;padding:4px 10px}
 .hint-note button{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(255,255,255,.7);cursor:pointer;font-size:15px}
+/* stone colour picker: the chosen diamond gets a thin round halo (in the text colour of its panel) and a small lift.
+   The gems never take the metal dots' square border/ring (that was the broken square). */
+.rp-mt .rp-sw.rp-gem,.ih .rp-mt .rp-sw.rp-gem,.ih .rp-mt.on .rp-sw.rp-gem,.ih[data-tone=dark] .ih-ctl .rp-sw.rp-gem{border:0!important;box-shadow:none!important;background:none!important;border-radius:50%}
+.rp-sw.rp-gem::before{content:"";position:absolute;inset:-7px;border-radius:50%;border:1.5px solid currentColor;opacity:0;transform:scale(.85);transition:opacity .3s,transform .35s cubic-bezier(.2,.9,.3,1.4);pointer-events:none}
+.rp-mt.on .rp-sw.rp-gem,.ih .rp-mt.on .rp-sw.rp-gem{transform:translateY(-2px)!important;filter:drop-shadow(0 10px 10px rgba(28,26,27,.22))}
+.rp-mt.on .rp-sw.rp-gem::before{opacity:1;transform:none}
+.rp-mt.on .rp-gem::after{display:none}
+.rp-mt:has(.rp-gem){padding-top:8px}
+@media(max-width:767px){.rp-sw.rp-gem::before{inset:-5px}}
