@@ -1978,3 +1978,23 @@ body:has(.home-page){--blue-light:#E4E8EC}
 @media(prefers-reduced-motion:reduce){.dly-mq div{animation:none}}
 .dh-vs{padding:10px 24px 50px}.dh-vs .dly-vs{font-size:14px;max-width:820px}.dh-vs .dly-own{margin-top:16px}
 @media(max-width:767px){.dly-vs{font-size:11px}.dly-vs>div{grid-template-columns:1.4fr repeat(4,1fr);padding:7px 6px}.dly-vs>div.h{font-size:7.5px;letter-spacing:.04em}}
+/* Daily: the ring dial, the home "drag through the days" section, the My ring demo */
+.ddial{position:relative;width:min(320px,80vw);aspect-ratio:1;margin:auto}.ddial svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ddial .ph{position:absolute;inset:16%;border-radius:50%;background:#fff center/78% no-repeat;box-shadow:inset 0 0 0 1px rgba(28,26,27,.08)}
+.ddial .pct{position:absolute;left:50%;bottom:-4px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:999px;padding:7px 16px;font:900 14px var(--body);white-space:nowrap}
+.dsc{background:linear-gradient(135deg,#F7D3DA,#E9DDF3 55%,#DCEBF4);padding:80px 0;text-align:center}
+.dsc h2{font:400 clamp(36px,5vw,64px)/1.02 var(--display);margin:6px 0 8px}.dsc-lead{font:italic 22px var(--sub);opacity:.85;margin:0 0 30px}
+.dsc-grid{display:grid;grid-template-columns:340px 1fr;gap:50px;align-items:center;text-align:left;max-width:960px;margin:0 auto}
+.dsc-day{font:400 72px/1 var(--display)}.dsc-day span{font:italic 26px var(--sub)}
+.dsc-msg{font:italic 24px var(--sub);margin:8px 0 14px;min-height:32px;animation:dlyIn .45s cubic-bezier(.2,.9,.2,1)}
+.dsc-sl{width:100%;accent-color:var(--ink);height:28px}
+.dsc-t{display:flex;justify-content:space-between;font:700 10px var(--body);letter-spacing:.12em;text-transform:uppercase;opacity:.6;margin-bottom:14px}
+.dsc-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}.dsc-facts div{background:#fff;border-radius:16px;padding:12px;text-align:center}.dsc-facts b{display:block;font:400 26px var(--display)}.dsc-facts small{font:700 9.5px var(--body);letter-spacing:.12em;text-transform:uppercase;opacity:.6}
+.dsc-ctas{display:flex;gap:10px;flex-wrap:wrap}.dsc .pill.dk{background:var(--ink);color:#fff;border-color:var(--ink)}
+@media(max-width:860px){.dsc{padding:54px 0}.dsc-grid{grid-template-columns:1fr;gap:26px}.dsc-day{font-size:54px}.dsc-msg{font-size:20px}}
+.dmr-banner{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--ink);color:#fff;border-radius:999px;padding:8px 8px 8px 20px;font:700 13px var(--body);margin-bottom:30px}
+.dmr-banner a{background:#F7E9A8;color:var(--ink);border-radius:999px;padding:9px 16px;font:800 11px var(--body);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;white-space:nowrap}
+.dmr-grid .ddial{margin:0}
+.dmr-feed{margin-top:20px;background:#fff;border-radius:20px;padding:16px}.dmr-feed h5{font:800 10px var(--body);letter-spacing:.2em;text-transform:uppercase;opacity:.55;margin:0 0 8px}
+.dmr-feed div{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid rgba(28,26,27,.08);font:14px var(--body)}.dmr-feed div:first-of-type{border-top:0}.dmr-feed b{color:#2E7D4F}
+@media(max-width:860px){.dmr-banner{font-size:11px}.dmr-grid .ddial{margin:auto}}
