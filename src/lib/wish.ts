@@ -1,6 +1,8 @@
 "use client";
 /* The Dream list (wishlist), kept in this browser. A shared copy lives on the server (/api/wish) so friends can vote. */
-export type WishItem = { handle: string; title: string; image: string; price: number; compareAt?: number | null };
+/** A piece, or a ring the customer designed (setting + diamond): then `url` reopens that exact pair and `stoneImage` shows the diamond on the corner. */
+export type WishItem = { handle: string; title: string; image: string; price: number; compareAt?: number | null; url?: string; stoneImage?: string; kind?: "design" };
+export const wishHref = (x: WishItem) => x.url || `/products/${x.handle}`;
 const K = "mk_wish", KID = "mk_wish_id", KNAME = "mk_wish_name";
 const read = (): WishItem[] => { try { return JSON.parse(localStorage.getItem(K) || "[]"); } catch { return []; } };
 const write = (l: WishItem[]) => { try { localStorage.setItem(K, JSON.stringify(l)); } catch { /* */ } window.dispatchEvent(new Event("mk-wish")); syncShared(l); };

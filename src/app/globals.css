@@ -1829,3 +1829,10 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .rp-mt.on .rp-gem::after{display:none}
 .rp-mt:has(.rp-gem){padding-top:8px}
 @media(max-width:767px){.rp-sw.rp-gem::before{inset:-5px}}
+/* saved/shared ring designs: the setting photo with the diamond in a little circle on its corner */
+.duo-st{position:absolute;right:-6px;bottom:-6px;width:44%;aspect-ratio:1;border-radius:50%;border:3px solid #fff;background:#B9BDC6 center/88% no-repeat;box-shadow:0 4px 10px rgba(28,26,27,.18)}
+.dl-i .im,.ss-note .ph,.dream-c .im{position:relative}
+.dream-c .im .duo-st{right:10px;bottom:10px;width:30%}
+.tag-design{display:inline-block;margin-left:8px;font:800 8.5px var(--body);letter-spacing:.16em;text-transform:uppercase;background:#F7E9A8;border-radius:999px;padding:3px 8px;vertical-align:1px}
+.df-sum{position:relative}.df-acts{position:absolute;top:18px;right:18px;display:flex;gap:8px;z-index:2}
+@media(max-width:767px){.df-acts{top:14px;right:14px}.df-acts .wh,.df-acts .wsh{width:38px;height:38px}}

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { wishList, removeWish, shareList, sharedId, wishName, type WishItem } from "@/lib/wish";
+import { wishList, removeWish, shareList, sharedId, wishName, wishHref, type WishItem } from "@/lib/wish";
 import { toast } from "./Toast";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
@@ -38,8 +38,8 @@ export default function DreamList() {
         <h3>My Dream list</h3><p className="ss-s">{items.length ? `${items.length} piece${items.length === 1 ? "" : "s"} you love` : "Tap ♡ on any piece to save it here."}</p>
         {sorted.map(x => (
           <div key={x.handle} className="dl-i">
-            <Link href={`/products/${x.handle}`} onClick={() => setOpen(false)} className="im" style={{ backgroundImage: `url(${x.image})` }} aria-label={x.title} />
-            <div className="tx"><Link href={`/products/${x.handle}`} onClick={() => setOpen(false)}><b>{x.title}</b></Link><small>{usd(x.price)}</small></div>
+            <Link href={wishHref(x)} onClick={() => setOpen(false)} className="im" style={{ backgroundImage: `url(${x.image})` }} aria-label={x.title}>{x.stoneImage && <i className="duo-st" style={{ backgroundImage: `url(${x.stoneImage})` }} />}</Link>
+            <div className="tx"><Link href={wishHref(x)} onClick={() => setOpen(false)}><b>{x.title}</b></Link><small>{usd(x.price)}</small>{x.kind === "design" && <span className="tag-design">Your design</span>}</div>
             {votes[x.handle] ? <span className={`dl-v${top?.handle === x.handle ? " top" : ""}`}>♥ {votes[x.handle]}</span> : null}
             <button className="dl-x" onClick={() => removeWish(x.handle)} aria-label={`Remove ${x.title}`}>×</button>
           </div>

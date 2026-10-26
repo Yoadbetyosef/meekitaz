@@ -8,6 +8,9 @@ import { useCart } from "./CartProvider";
 import { toast } from "./Toast";
 import { loadSetting, chooseStone, settingFrom, sameShape, baseShape, type Setting, type Stone } from "@/lib/setting";
 import SwapDrawer from "./SwapDrawer";
+import WishHeart, { ShareArrow } from "./WishHeart";
+import { saveSetting } from "@/lib/setting";
+import { isGoldMetal, karatStep } from "@/lib/karat";
 import { fancyColorOfStone, fancySettingsUrl } from "@/lib/fancy";
 import { showroomImage } from "@/lib/data";
 
@@ -58,6 +61,16 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
   const pickUrl = fc ? fancySettingsUrl(fc, shape) : `/engagement-rings?style=${encodeURIComponent(shape)}&build=1`;
 
   const [swap, setSwap] = useState<"setting" | "stone" | null>(null);
+  const [note, setNote] = useState<{ text: string; size: string } | null>(null);
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const h = q.get("setting"), k = q.get("k") || "";
+    if (h) fetch(`/api/setting?handle=${encodeURIComponent(h)}`).then(r => r.json()).then(j => {
+      if (!j.item || !j.ns) return; const it = j.item, kk = k && isGoldMetal(it.metal) ? k : "";
+      saveSetting({ ns: j.ns, handle: it.handle, variantId: it.variantId, title: it.title, shape: it.shape, metal: it.metal, price: it.price + (kk ? karatStep(j.ns, kk) : 0), image: it.images[0] || "", karat: kk || undefined });
+    }).catch(() => {});
+    const t = q.get("hint"); if (t) { const z = Number(q.get("size")); const w = Math.floor(z), f = Math.round((z - w) * 100); setNote({ text: t.slice(0, 160), size: z ? `${w}${f === 25 ? "¼" : f === 50 ? "½" : f === 75 ? "¾" : ""}` : "" }); }
+  }, []);
   useEffect(() => { const read = () => setSet(loadSetting()); read(); window.addEventListener("mk-setting", read); return () => window.removeEventListener("mk-setting", read); }, []);
   useEffect(() => {
     let off = false; setMissing(false);
@@ -114,6 +127,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
 
   return (
     <>
+      {note && <div className="hint-note" role="note"><button aria-label="Close" onClick={() => setNote(null)}>×</button><small>A note for you</small><p>“{note.text}”</p>{note.size && <span>Her ring size: {note.size}</span>}</div>}
       <SwapDrawer mode={swap} shape={d.shape} setting={shown || null} stone={stone} onClose={() => setSwap(null)} />
       {/* 1 · build your ring */}
       <section className="df-bd">
@@ -136,6 +150,8 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
             </div>
           </div>
           <aside className="df-sum">
+            {shown && (() => { const design = { kind: "design" as const, handle: `design-${shown.handle}-${d.vendor}-${String(d.stock).toLowerCase().replace(/[^a-z0-9]+/g, "-")}`.slice(0, 190), title: `${shown.title.replace(/^(Yellow gold|White gold|Rose gold|Platinum)\s+/i, "")} + ${title(d)}`, image: shown.image, stoneImage: d.image, price: total, url: `/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}?setting=${encodeURIComponent(shown.handle)}${shown.karat ? `&k=${shown.karat}` : ""}` };
+              return <div className="df-acts"><WishHeart item={design} /><ShareArrow item={design} /></div>; })()}
             <h3>Your ring</h3>
             <div className="df-ln"><span>{title(d)}<em>{sub(d)}</em></span><b>{usd(d.price)}</b></div>
             <div className="df-ln"><span>{shown ? shown.title : "No setting yet"}<em>{shown ? `Setting${sMetal ? ", " + sMetal : ""}` : "Pick one to see the total"}</em></span><b>{shown ? usd(shown.price) : "—"}</b></div>

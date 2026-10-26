@@ -4,7 +4,7 @@ import { sql, ensureSchema, dbConfigured } from "@/lib/db";
 import DreamVote from "@/components/DreamVote";
 
 export const dynamic = "force-dynamic";
-type Item = { handle: string; title: string; image: string; price: number };
+type Item = { handle: string; title: string; image: string; price: number; url?: string; stoneImage?: string; kind?: string };
 async function get(id: string) {
   if (!dbConfigured) return null; await ensureSchema();
   const l = (await sql!`SELECT id, name, items FROM wishlists WHERE id=${id}`)[0]; if (!l) return null;

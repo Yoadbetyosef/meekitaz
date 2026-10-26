@@ -37,7 +37,8 @@ export default function ShareSheet() {
   if (!it) return null;
   const w = WHO.find(x => x.k === who)!;
   const q = new URLSearchParams(); if (w.note) { q.set("hint", w.note); q.set("from", who); } if (who === "partner" && withSize) q.set("size", String(size));
-  const url = `${location.origin}/products/${it.handle}${q.toString() ? `?${q}` : ""}`;
+  const base = it.url || `/products/${it.handle}`;
+  const url = `${location.origin}${base}${q.toString() ? `${base.includes("?") ? "&" : "?"}${q}` : ""}`;
   const text = `${w.note ? w.note + "\n" : ""}${it.title}${who === "partner" && withSize ? ` (my size is ${frac(size)})` : ""}\n${url}`;
   const close = () => setIt(null);
   const copy = async () => { try { await navigator.clipboard.writeText(url); toast("Link copied ✓"); } catch { toast(url); } };
@@ -59,8 +60,8 @@ export default function ShareSheet() {
         <h3>Share this piece</h3><p className="ss-s">Who is it for?</p>
         <div className="ss-who">{WHO.map(x => <button key={x.k} className={x.k === who ? "on" : ""} onClick={() => setWho(x.k)}>{Ic[x.ic]}{x.label}</button>)}</div>
         <div className="ss-note">
-          <span className="ph" style={{ backgroundImage: `url(${it.image})` }} />
-          <div className="tx">{w.note ? <>“{w.note}”</> : it.title}{who === "partner" && withSize && <em>my size is {frac(size)} 😉</em>}<small>{it.title} · {usd(it.price)}</small></div>
+          <span className="ph" style={{ backgroundImage: `url(${it.image})` }}>{it.stoneImage && <i className="duo-st" style={{ backgroundImage: `url(${it.stoneImage})` }} />}</span>
+          <div className="tx">{w.note ? <>“{w.note}”</> : it.title}{who === "partner" && withSize && <em>my size is {frac(size)} 😉</em>}<small>{it.kind === "design" ? "My design · " : ""}{it.title} · {usd(it.price)}</small></div>
         </div>
         {who === "partner" && <label className="ss-size"><input type="checkbox" checked={withSize} onChange={e => setWithSize(e.target.checked)} /> Include my ring size {withSize && <select value={size} onChange={e => setSize(Number(e.target.value))}>{SIZES.map(s => <option key={s} value={s}>{frac(s)}</option>)}</select>}</label>}
         <div className="ss-ways">

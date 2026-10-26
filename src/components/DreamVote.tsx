@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-type Item = { handle: string; title: string; image: string; price: number };
+type Item = { handle: string; title: string; image: string; price: number; url?: string; stoneImage?: string; kind?: string };
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 /** Friends vote for one favourite on a shared Dream list (one vote per browser; voting again moves it). */
 export default function DreamVote({ id, items, votes: v0 }: { id: string; items: Item[]; votes: Record<string, number> }) {
@@ -18,8 +18,8 @@ export default function DreamVote({ id, items, votes: v0 }: { id: string; items:
     <div className="dream-grid">
       {items.map(x => (
         <div key={x.handle} className={`dream-c${mine === x.handle ? " mine" : ""}`}>
-          <Link href={`/products/${x.handle}`} className="im" style={{ backgroundImage: `url(${x.image})` }} aria-label={x.title} />
-          <b>{x.title}</b><small>{usd(x.price)}</small>
+          <Link href={x.url || `/products/${x.handle}`} className="im" style={{ backgroundImage: `url(${x.image})` }} aria-label={x.title}>{x.stoneImage && <i className="duo-st" style={{ backgroundImage: `url(${x.stoneImage})` }} />}</Link>
+          <b>{x.title}</b><small>{usd(x.price)}{x.kind === "design" ? " · her design" : ""}</small>
           <button onClick={() => vote(x.handle)} aria-pressed={mine === x.handle}>{mine === x.handle ? "♥ My favourite" : "♡ This one"}{votes[x.handle] ? <em>{votes[x.handle]}</em> : null}</button>
         </div>
       ))}
