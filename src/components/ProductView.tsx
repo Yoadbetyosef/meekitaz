@@ -240,8 +240,8 @@ export default function ProductView({ product: p, siblings, related, ring, optio
             {!(ring && cv) && p.productType !== "Care Package" && (
               <div className="pp-care">
                 <span className="pp-lbl">Care package<a href="/warranty" target="_blank" rel="noopener">What’s covered?</a></span>
-                {(daily ? [["", "Manufacturer Warranty", "Included · defects + 1 free resize", "Free"], ["life425", "Lifetime Warranty", "Everything, for life: resizing, cleanings, re-plating, lost side stones, accidental damage", "+$425"]] as const : [["", "Manufacturer Warranty", "Included · lifetime, defects + 1 free resize", "Free"], ["3y", "3-Year Care", "Resizing, cleanings, re-plating, stone re-setting", "+$250"], ["life", "Lifetime Care", "Everything, for life + lost side stones", "+$390"]] as const).map(([k, t, d, pr]) => (
-                  <button key={k} type="button" className={`pp-copt${care === k ? " on" : ""}`} onClick={() => setCare(k)} aria-pressed={care === k}>
+                {(daily ? [["life425", "Lifetime Warranty", "Everything, for life: resizing, cleanings, re-plating, lost side stones, accidental damage", "+$425"]] as const : [["", "Manufacturer Warranty", "Included · lifetime, defects + 1 free resize", "Free"], ["3y", "3-Year Care", "Resizing, cleanings, re-plating, stone re-setting", "+$250"], ["life", "Lifetime Care", "Everything, for life + lost side stones", "+$390"]] as const).map(([k, t, d, pr]) => (
+                  <button key={k} type="button" className={`pp-copt${care === k ? " on" : ""}`} onClick={() => setCare(daily && care === k ? "" : k)} aria-pressed={care === k}>
                     <i /><span><b>{t}{(k === "life" || k === "life425") && <em>Best value</em>}</b><small>{d}</small></span><strong>{pr}</strong>
                   </button>
                 ))}
