@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { saveSetting, saveStone, type Setting, type Stone } from "@/lib/setting";
 import { toast } from "./Toast";
+import { fancyColorOfStone } from "@/lib/fancy";
 
 /* "Swap setting" / "Swap diamond" on the build page: change one half of the ring and keep the other. */
 const METALS = ["Yellow gold", "White gold", "Rose gold", "Platinum"];
@@ -25,16 +26,19 @@ export default function SwapDrawer({ mode, shape, setting, stone, onClose }: { m
   useEffect(() => { document.documentElement.classList.toggle("sw-open", !!mode); return () => document.documentElement.classList.remove("sw-open"); }, [mode]);
   useEffect(() => {
     if (mode !== "setting") return; setSets(null);
-    fetch(`/api/settings-for?${new URLSearchParams({ shape, metal, karat })}`).then(r => r.json()).then(j => setSets(j.items || [])).catch(() => setSets([]));
+    fetch(`/api/settings-for?${new URLSearchParams({ shape, metal, karat, color: fancyColorOfStone(stone.fancy || null) || "" })}`).then(r => r.json()).then(j => setSets(j.items || [])).catch(() => setSets([]));
   }, [mode, shape, metal, karat]);
   useEffect(() => { if (!mode) setView(null); }, [mode]);
   useEffect(() => { if (view && sets) { const n = sets.find(x => x.ns === view.ns); if (n && n.handle !== view.handle || n && n.price !== view.price) setView(n); } }, [sets]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (mode !== "stone") return; setStones(null);
     const base = shape === "Elongated Cushion" ? "Cushion" : shape;
-    const q = new URLSearchParams({ shapes: base, caratFrom: String(ct[0]), sort: "price_asc", page: "1", ...(stone.fancy ? {} : { colorFrom: "D", colorTo: "F", clarityFrom: "FL", clarityTo: "VS1" }) });
-    if (ct[1] < 20) q.set("caratTo", String(ct[1]));
-    fetch(`/api/diamonds?${q}`).then(r => r.json()).then(j => setStones(((j.items || []) as DItem[]).filter(x => x.stock !== stone.stock).slice(0, 12))).catch(() => setStones([]));
+    const fc = fancyColorOfStone(stone.fancy || null);
+    // a fancy-colour diamond: other stones of the same colour and shape (from the saved fancy list); a white one: D–F, VS1+
+    const url = fc
+      ? `/api/fancy?${new URLSearchParams({ color: fc, shapes: base, caratFrom: String(ct[0]), ...(ct[1] < 20 ? { caratTo: String(ct[1]) } : {}), sort: "price_asc", page: "1" })}`
+      : (() => { const q = new URLSearchParams({ shapes: base, caratFrom: String(ct[0]), sort: "price_asc", page: "1", colorFrom: "D", colorTo: "F", clarityFrom: "FL", clarityTo: "VS1" }); if (ct[1] < 20) q.set("caratTo", String(ct[1])); return `/api/diamonds?${q}`; })();
+    fetch(url).then(r => r.json()).then(j => setStones(((j.items || []) as DItem[]).map(x => ({ ...x, id: x.id || `${x.vendor}-${x.stock}`, embed: x.embed ?? null })).filter(x => x.stock !== stone.stock).slice(0, 12))).catch(() => setStones([]));
   }, [mode, shape, ct, stone.stock, stone.fancy]);
 
   if (!mode) return null;
@@ -65,17 +69,17 @@ export default function SwapDrawer({ mode, shape, setting, stone, onClose }: { m
               <button key={s.handle} className={`sw-c${cur ? " cur" : ""}`} onClick={() => { setImg(0); setView(s); }}>
                 <span className="im" style={{ backgroundImage: `url(${s.image})` }} /><b>{s.title.replace(/^(Yellow gold|White gold|Rose gold|Platinum)\s+/i, "")}</b><small>{usd(s.price)}{s.karat ? ` · ${s.karat}` : ""}</small>{cur && <em>Current</em>}
               </button>); })}</div>}
-          <Link className="sw-more" href={`/engagement-rings?style=${encodeURIComponent(shape === "Elongated Cushion" ? "Cushion" : shape)}&build=1`} onClick={onClose}>Browse all {shape.toLowerCase()} settings on the site →</Link>
+          <Link className="sw-more" href={stone.fancy ? `/fancy-colors?color=${fancyColorOfStone(stone.fancy)}&style=${encodeURIComponent(shape === "Elongated Cushion" ? "Cushion" : shape)}` : `/engagement-rings?style=${encodeURIComponent(shape === "Elongated Cushion" ? "Cushion" : shape)}&build=1`} onClick={onClose}>Browse all {shape.toLowerCase()} settings on the site →</Link>
           <p className="sw-note">Your diamond stays saved while you browse; any setting you choose brings you back here to review the pair.</p>
         </>) : <>
-          <h3>Swap your diamond</h3><p>{shape} diamonds for your setting. Your setting stays.</p>
+          <h3>Swap your diamond</h3><p>{stone.fancy ? `${fancyColorOfStone(stone.fancy)} ${shape.toLowerCase()}` : shape} diamonds for your setting. Your setting stays.</p>
           <div className="sw-chips">{CT.map(([l, lo, hi]) => <button key={l} className={ct[0] === lo && ct[1] === hi ? "on" : ""} onClick={() => setCt([lo, hi])}>{l}</button>)}</div>
           {!stones ? <p className="sw-msg">Finding diamonds…</p> : !stones.length ? <p className="sw-msg">No stones in this size. Try another size.</p> :
             <div className="sw-grid">{stones.map(d => (
               <button key={d.id} className="sw-c" onClick={() => pickStone(d)}>
                 <span className="im st" style={{ backgroundImage: `url(${d.image})` }} /><b>{d.carat.toFixed(2)} ct {d.shape}</b><small>{[d.fancy || d.color, d.clarity, d.lab].filter(Boolean).join(" · ")}</small><small className="pr">{usd(d.price)}</small>
               </button>))}</div>}
-          <Link className="sw-more" href={`/diamonds?style=${encodeURIComponent(shape === "Elongated Cushion" ? "Cushion" : shape)}`} onClick={onClose}>Browse all {shape.toLowerCase()} diamonds →</Link>
+          <Link className="sw-more" href={stone.fancy ? `/diamonds?color=${fancyColorOfStone(stone.fancy)}&style=${encodeURIComponent(shape === "Elongated Cushion" ? "Cushion" : shape)}` : `/diamonds?style=${encodeURIComponent(shape === "Elongated Cushion" ? "Cushion" : shape)}`} onClick={onClose}>Browse all {shape.toLowerCase()} diamonds →</Link>
         </>}
       </aside>
     </>

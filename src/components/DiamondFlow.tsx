@@ -76,12 +76,15 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
   useEffect(() => {
     let off = false; setMissing(false);
     if (!set) { setShown(null); return; }
-    if (sameShape(set.shape, d.shape)) { setShown(set); return; }
+    // the setting follows the diamond: its shape AND its colour (a pink diamond shows the pink version of the design)
+    if (sameShape(set.shape, d.shape) && (set.color || "") === (fc || "")) { setShown(set); return; }
     setShown(null);
-    fetch(`/api/setting?${new URLSearchParams({ ns: set.ns, shape: baseShape(d.shape), metal: set.metal, color: set.color || "" })}`).then(r => r.json())
-      .then(j => { if (off) return; if (j.item) setShown(settingFrom(set, j.item)); else setMissing(true); }).catch(() => { if (!off) setMissing(true); });
+    const ask = (color: string) => fetch(`/api/setting?${new URLSearchParams({ ns: set.ns, shape: baseShape(d.shape), metal: set.metal, color })}`).then(r => r.json());
+    ask(fc || "").then(j => j.item ? { ...j, color: fc || "" } : sameShape(set.shape, d.shape) ? { item: null, keep: true } : ask(set.color || "").then(k => ({ ...k, color: set.color || "" })))
+      .then((j: { item?: unknown; keep?: boolean; color?: string }) => { if (off) return; if (j.keep) { setShown(set); return; } if (j.item) setShown({ ...settingFrom(set, j.item as Parameters<typeof settingFrom>[1]), color: j.color || undefined }); else setMissing(true); })
+      .catch(() => { if (!off) setMissing(true); });
     return () => { off = true; };
-  }, [set, d.shape]);
+  }, [set, d.shape, fc]);
 
   // the story: five cards. One swipe moves exactly one card; the card follows the finger and settles at the left edge, under the photograph
   const place = (i: number, dx = 0, animate = true) => {
@@ -137,7 +140,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
           <div className="df-pair">
             <div>
               <div className="df-card"><span className="df-cap">Your diamond</span><StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} /></div>
-              <div className="df-capt"><b>{title(d)}</b>{usd(d.price)} · {d.lab} certified<DailyLine price={d.price} className="cap" />{shown && !d.fancy && <button type="button" className="df-swap" onClick={() => setSwap("stone")}>⇄ Swap diamond</button>}</div>
+              <div className="df-capt"><b>{title(d)}</b>{usd(d.price)} · {d.lab} certified<DailyLine price={d.price} className="cap" />{shown && <button type="button" className="df-swap" onClick={() => setSwap("stone")}>⇄ Swap diamond</button>}</div>
             </div>
             <div className="df-plus">+</div>
             <div>

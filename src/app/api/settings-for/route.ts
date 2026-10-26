@@ -7,16 +7,18 @@ import { karatStep, isGoldMetal } from "@/lib/karat";
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const shape = sp.get("shape") || "Round", metal = sp.get("metal") || "", karat = sp.get("karat") || "";
+  const color = ["Yellow", "Pink", "Blue", "Green"].includes(sp.get("color") || "") ? (sp.get("color") as string) : ""; // a fancy-colour diamond gets the coloured versions
   const base = shape === "Elongated Cushion" ? "Cushion" : shape;
   try {
-    const r = await getProductsByQuery(ringQuery({ shapes: [base], metals: metal ? [metal] : [], styles: [] }), { first: 40 });
+    const q = color ? `${ringQuery({ shapes: [base], metals: metal ? [metal] : [], styles: [], fancy: color })} AND tag:'Engagement Ring'` : ringQuery({ shapes: [base], metals: metal ? [metal] : [], styles: [] });
+    const r = await getProductsByQuery(q, { first: 40 });
     const seen = new Set<string>(), out: unknown[] = [];
     for (const p of r?.products || []) {
       if (!p.code || seen.has(p.code)) continue; seen.add(p.code);
-      const fam = await getRingFamily(p.code);
+      const fam = await getRingFamily(p.code, color);
       const v = fam.find(x => x.shape === base && (!metal || x.metal === metal)); if (!v) continue;
       const k = karat && isGoldMetal(v.metal) ? karat : "";
-      out.push({ ns: p.code, handle: v.handle, variantId: v.variantId, title: v.title, shape: v.shape, metal: v.metal, price: v.price + (k ? karatStep(p.code, k) : 0), image: v.images[0] || "", images: v.images.slice(0, 8), karat: k || undefined });
+      out.push({ ns: p.code, handle: v.handle, variantId: v.variantId, title: v.title, shape: v.shape, metal: v.metal, price: v.price + (k ? karatStep(p.code, k) : 0), image: v.images[0] || "", images: v.images.slice(0, 8), karat: k || undefined, color: color || undefined });
       if (out.length >= 16) break;
     }
     return NextResponse.json({ items: out }, { headers: { "Cache-Control": "s-maxage=600, stale-while-revalidate=3600" } });
