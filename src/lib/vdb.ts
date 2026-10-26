@@ -153,14 +153,40 @@ async function harvestFancy(budgetMs = 45_000): Promise<Diamond[]> {
   return [...out.values()];
 }
 
+// The whole fancy-colour list is saved in the database by the cron (every 20 minutes), so a visitor never waits for the supplier:
+// a cold server reads the saved list (well under a second) instead of harvesting ~90 supplier pages.
 let fancyCache: { at: number; items: Diamond[] } | null = null;
 let fancyBusy: Promise<Diamond[]> | null = null;
+async function loadSnapshot(): Promise<{ at: number; items: Diamond[] } | null> {
+  try {
+    const { sql, ensureSchema } = await import("./db"); if (!sql) return null; await ensureSchema();
+    const r = await sql`SELECT data, updated_at FROM snapshots WHERE name='fancy'`;
+    return r[0] ? { at: new Date(r[0].updated_at as string).getTime(), items: r[0].data as Diamond[] } : null;
+  } catch { return null; }
+}
+/** Cron: harvest the supplier and save the list. */
+export async function refreshFancySnapshot(): Promise<number> {
+  const items = await harvestFancy(100_000);
+  const prev = fancyCache?.items.length || 0;
+  if (items.length < 20 || items.length < prev * 0.8) return items.length; // a bad run never replaces a good list
+  fancyCache = { at: Date.now(), items };
+  try {
+    const { sql, ensureSchema } = await import("./db");
+    if (sql) { await ensureSchema(); await sql`INSERT INTO snapshots (name, data, count) VALUES ('fancy', ${JSON.stringify(items)}::jsonb, ${items.length}) ON CONFLICT (name) DO UPDATE SET data=EXCLUDED.data, count=EXCLUDED.count, updated_at=now()`; }
+  } catch (e) { console.error("[fancy snapshot]", e); }
+  return items.length;
+}
 export async function getFancy(): Promise<Diamond[]> {
-  const fresh = fancyCache && Date.now() - fancyCache.at < 10 * 60 * 1000;
-  if (fresh) return fancyCache!.items;
-  if (!fancyBusy) fancyBusy = harvestFancy().then(items => { if (items.length >= (fancyCache?.items.length || 0) * 0.9 || !fancyCache) fancyCache = { at: Date.now(), items }; return fancyCache!.items; })
-    .catch(e => { if (fancyCache) return fancyCache.items; throw e; }).finally(() => { fancyBusy = null; });
-  return fancyCache ? fancyCache.items : fancyBusy; // stale list is served while the refresh runs
+  if (fancyCache && Date.now() - fancyCache.at < 10 * 60 * 1000) return fancyCache.items;
+  if (!fancyBusy) fancyBusy = (async () => {
+    const snap = await loadSnapshot();
+    if (snap && snap.items.length) { fancyCache = snap; return snap.items; }
+    // no saved list yet (first run): harvest now, as before
+    const items = await harvestFancy();
+    if (items.length) fancyCache = { at: Date.now(), items };
+    return items;
+  })().catch(e => { if (fancyCache) return fancyCache.items; throw e; }).finally(() => { fancyBusy = null; });
+  return fancyCache ? fancyCache.items : fancyBusy;
 }
 
 export type FancyQuery = { color?: string; intFrom?: number; intTo?: number; caratFrom?: number; caratTo?: number; priceFrom?: number; priceTo?: number; shapes?: string[]; sort?: string; page?: number };
