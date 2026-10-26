@@ -2,7 +2,7 @@
 import RingSteps from "./RingSteps";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { clearSetting, clearStone, loadSetting, loadStone, saveSetting, saveStone, stoneLabel, type Setting, type Stone } from "@/lib/setting";
+import { clearSetting, clearStone, loadSetting, loadStone, saveSetting, saveStone, stoneLabel, type Setting, type Stone, sameShape, baseShape } from "@/lib/setting";
 import { diamondsUrl } from "@/lib/setting";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
@@ -25,9 +25,9 @@ export default function BuildView() {
       let st = s, dm: Stone | null = d;
       // the price is checked again, and the ring follows the shape of the diamond
       try { const j = await (await fetch(`/api/diamond?vendor=${d.vendor}&stock=${encodeURIComponent(d.stock)}`)).json(); if (j.item) { dm = j.item; saveStone(j.item); } else if (j.item === null && !j.error) dm = null; } catch { /* keep what we have */ }
-      if (dm && st.shape !== dm.shape) {
+      if (dm && !sameShape(st.shape, dm.shape)) {
         try {
-          const j = await (await fetch(`/api/setting?${new URLSearchParams({ ns: st.ns, shape: dm.shape, metal: st.metal })}`)).json();
+          const j = await (await fetch(`/api/setting?${new URLSearchParams({ ns: st.ns, shape: baseShape(dm.shape), metal: st.metal })}`)).json();
           if (j.item) { st = { ns: st.ns, handle: j.item.handle, variantId: j.item.variantId, title: j.item.title, shape: j.item.shape, metal: j.item.metal, price: j.item.price, image: j.item.images[0] || "" }; saveSetting(st); }
           else setNote(`This setting is not made in ${dm.shape}. Choose a different setting for your ${dm.shape.toLowerCase()} diamond.`);
         } catch { /* ignore */ }
@@ -52,7 +52,7 @@ export default function BuildView() {
     }
   }
 
-  const mismatch = !!(setting && stone && setting.shape !== stone.shape);
+  const mismatch = !!(setting && stone && !sameShape(setting.shape, stone.shape));
   const total = (setting?.price ?? 0) + (stone?.price ?? 0);
   return (
     <main className="bd">

@@ -12,7 +12,7 @@ import { useCart } from "./CartProvider";
 import { ringMetalOf, type ProductFull, type Related, type Sibling } from "@/lib/shopify";
 import { metalOf } from "@/lib/shopify";
 import type { RingVariant } from "@/lib/shopify";
-import { saveSetting, diamondsUrl, loadStone } from "@/lib/setting";
+import { saveSetting, diamondsUrl, loadStone, clearStone, sameShape, baseShape } from "@/lib/setting";
 import WishHeart, { ShareArrow } from "./WishHeart";
 import { fancyColorOf } from "@/lib/fancy";
 import { METAL_LINE } from "@/lib/designs";
@@ -120,17 +120,18 @@ export default function ProductView({ product: p, siblings, related, ring, optio
     if (!cv || !ring) return;
     const stone = loadStone();
     // a diamond is already chosen: the setting follows the diamond's shape
-    let pick = cv;
-    if (stone && stone.shape !== cv.shape) {
-      const alt = ring.family.find(v => v.shape === stone.shape && v.metal === cv.metal) || ring.family.find(v => v.shape === stone.shape);
-      if (!alt) { toast(`This setting is not made in ${stone.shape.toLowerCase()}. Pick another setting for your ${stone.shape.toLowerCase()} diamond.`); return; }
-      pick = alt;
+    let pick = cv, keepStone = !!stone;
+    if (stone && !sameShape(stone.shape, cv.shape)) {
+      const want = baseShape(stone.shape);
+      const alt = ring.family.find(v => v.shape === want && v.metal === cv.metal) || ring.family.find(v => v.shape === want);
+      if (alt) pick = alt; // the same design in the shape of the diamond already chosen
+      else { keepStone = false; clearStone(); toast(`Now choose a ${cv.shape.toLowerCase()} diamond for this setting.`); } // this design isn't made for that diamond: this setting wins
     }
     const pk = karatOn && isGoldMetal(pick.metal) ? karat : "";
     const fc = fancyColorOf(pick.title) || undefined;
     const setting = { ns: ring.ns, handle: pick.handle, variantId: pick.variantId, title: pick.title, shape: pick.shape, metal: pick.metal, price: pick.price + (pk ? karatStep(ring.ns, pk) : 0), image: pick.images[0] || "", karat: pk || undefined, color: fc };
     saveSetting(setting);
-    if (!stone) { router.push(diamondsUrl(pick.shape, fc)); return; }
+    if (!stone || !keepStone) { router.push(diamondsUrl(pick.shape, fc)); return; }
     // a diamond is already chosen: review the pair first (diamond + setting), not straight into the bag
     router.push(`/diamonds/${stone.vendor}-${encodeURIComponent(stone.stock)}`);
   };

@@ -249,7 +249,8 @@ export async function POST(req: NextRequest) {
           let v = fam.find(x => x.handle === inp.setting_handle);
           if (!v || !d) out = !d ? "That diamond is no longer available. Offer similar stones." : "Setting not found. Search settings again.";
           else {
-            if (v.shape !== d.shape) v = fam.find(x => x.shape === d.shape && x.metal === v!.metal) || fam.find(x => x.shape === d.shape) || undefined;
+            const ds = d.shape === "Elongated Cushion" ? "Cushion" : d.shape;
+            if (v.shape !== ds) v = fam.find(x => x.shape === ds && x.metal === v!.metal) || fam.find(x => x.shape === ds) || undefined;
             if (!v) out = `This setting isn't made for a ${d.shape.toLowerCase()} diamond. Suggest another setting.`;
             else {
               const k = isGoldMetal(v.metal) && ["14K", "18K"].includes(String(inp.karat)) ? String(inp.karat) : (isGoldMetal(v.metal) ? "10K" : "");

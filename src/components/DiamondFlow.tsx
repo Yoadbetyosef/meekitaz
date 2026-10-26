@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Logo from "./Logo";
 import { useCart } from "./CartProvider";
 import { toast } from "./Toast";
-import { loadSetting, chooseStone, settingFrom, type Setting, type Stone } from "@/lib/setting";
+import { loadSetting, chooseStone, settingFrom, sameShape, baseShape, type Setting, type Stone } from "@/lib/setting";
 import SwapDrawer from "./SwapDrawer";
 import { fancyColorOfStone, fancySettingsUrl } from "@/lib/fancy";
 import { showroomImage } from "@/lib/data";
@@ -62,9 +62,9 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
   useEffect(() => {
     let off = false; setMissing(false);
     if (!set) { setShown(null); return; }
-    if (set.shape === d.shape) { setShown(set); return; }
+    if (sameShape(set.shape, d.shape)) { setShown(set); return; }
     setShown(null);
-    fetch(`/api/setting?${new URLSearchParams({ ns: set.ns, shape: d.shape, metal: set.metal, color: set.color || "" })}`).then(r => r.json())
+    fetch(`/api/setting?${new URLSearchParams({ ns: set.ns, shape: baseShape(d.shape), metal: set.metal, color: set.color || "" })}`).then(r => r.json())
       .then(j => { if (off) return; if (j.item) setShown(settingFrom(set, j.item)); else setMissing(true); }).catch(() => { if (!off) setMissing(true); });
     return () => { off = true; };
   }, [set, d.shape]);
