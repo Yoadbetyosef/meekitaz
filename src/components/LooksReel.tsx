@@ -76,14 +76,13 @@ export default function LooksReel() {
                 <div key={l.title} ref={el => { looks.current[i] = el; }} className={`lr-look${i === on ? " on" : ""}`} style={{ zIndex: i + 1, transform: i === 0 ? "none" : "translateY(104%)", ["--pos-m" as string]: l.posM }} aria-hidden={i !== on}>
                   <video ref={el => { vids.current[i] = el; }} muted loop playsInline preload="none" poster={l.poster} />
                   <div className="lr-big" aria-hidden="true">{l.title}</div>
-                  <div className="lr-cap"><small>Look {pad(i + 1)}</small><b>{l.title}</b><span>{l.line}</span><Link href={l.href} className="pill lr-go" tabIndex={i === on ? 0 : -1}>Shop the look</Link></div>
+                  <div className="lr-cap"><small>Look {pad(i + 1)}</small><b>{l.title}</b><span>{l.line}</span><Link href={l.href} className="pill lr-go" tabIndex={i === on ? 0 : -1}>Shop this piece</Link></div>
                 </div>
               ))}
               <div className="lr-segs" aria-hidden="true">{looksReel.map((l, i) => <i key={l.title} className={i === on ? "on" : ""} />)}</div>
               <div className="lr-count" aria-hidden="true">{pad(on + 1)} / {pad(N)}</div>
               <button type="button" className={`lr-next${on >= N - 1 ? " off" : ""}`} onClick={next} tabIndex={on >= N - 1 ? -1 : 0} aria-label="Next look">Next<em> &middot; {looksReel[Math.min(on + 1, N - 1)].title}</em></button>
             </div>
-            <div className="sl-cta"><Link href="/looks" className="pill sl-all">See all looks &rarr;</Link></div>
           </div>
         </div>
       </div>
