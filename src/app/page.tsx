@@ -1,6 +1,5 @@
 import Hero from "@/components/Hero";
-import { DailyMarquee } from "@/components/DailyPrice";
-import { DailyScrubber } from "@/components/DailyDemo";
+import { DailyCurtain } from "@/components/DailyDemo";
 import Film from "@/components/Film";
 import Categories from "@/components/Categories";
 import HouseCodes from "@/components/HouseCodes";
@@ -14,8 +13,7 @@ export default function Home() {
   return (
     <main className="home-page">
       <Hero />
-      <DailyMarquee />
-      <DailyScrubber />
+      <DailyCurtain />
       <Film />
       <Categories />
       <NewFancy />

@@ -1998,3 +1998,7 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .dmr-feed{margin-top:20px;background:#fff;border-radius:20px;padding:16px}.dmr-feed h5{font:800 10px var(--body);letter-spacing:.2em;text-transform:uppercase;opacity:.55;margin:0 0 8px}
 .dmr-feed div{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid rgba(28,26,27,.08);font:14px var(--body)}.dmr-feed div:first-of-type{border-top:0}.dmr-feed b{color:#2E7D4F}
 @media(max-width:860px){.dmr-banner{font-size:11px}.dmr-grid .ddial{margin:auto}}
+/* the Daily sections ride over the sticky cover like the film section (same layer, rounded top) */
+.dly-curtain{position:relative;z-index:6;border-radius:30px 30px 0 0;overflow:hidden;box-shadow:0 -24px 60px rgba(0,0,0,.18);background:var(--ink)}
+.dly-curtain + .mkfilm{border-radius:0;box-shadow:none}
+@media(max-width:767px){.dly-curtain{border-radius:28px 28px 0 0}}

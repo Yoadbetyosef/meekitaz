@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useDaily } from "./DailyMode";
 import DailyDial from "./DailyDial";
 import { dailyPlan, DAILY } from "@/lib/daily";
+import { DailyMarquee } from "./DailyPrice";
 
 const RING = "https://cdn.shopify.com/s/files/1/0841/2905/4957/files/NS-2121-5-2-0.jpg?v=1792333617";
 const PRICE = 1089;
@@ -33,4 +34,10 @@ export function DailyScrubber() {
       </div>
     </div></section>
   );
+}
+
+/** On the home page the Daily sections slide up over the sticky cover, like the film section does: one rounded "curtain". */
+export function DailyCurtain() {
+  const on = useDaily(); if (!on) return null;
+  return <div className="dly-curtain"><DailyMarquee /><DailyScrubber /></div>;
 }
