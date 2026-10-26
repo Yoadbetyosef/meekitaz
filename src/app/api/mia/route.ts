@@ -98,6 +98,7 @@ Offers: FREESTUDS = free 0.5 ct lab-grown diamond studs in sterling silver with 
 FAQ (the official answers; follow them exactly):
 ${FAQ_TEXT}`;
 
+const DAILY_NOTE = `PREVIEW MODE (this visitor sees "Meekitaz Daily"): every piece can be paid $15 a day straight from the bank, as many days as the price needs (a $1,089 ring = 73 days), never longer than 6 months (above that the daily amount goes up). Everyone is approved, no credit check (only ID + bank account). No interest: the total is exactly the price. It is made now and ships in about 3 weeks while they keep paying; it is theirs from day one, not a rental or lease; they can pay it off early any time. Lead with the daily amount when you mention prices (e.g. "$15 a day, or $1,089 in full"). The page /daily explains it. The daily checkout is not live yet: if they want to start, take their email (save_lead, notes: wants Meekitaz Daily).`;
 const TOOLS = [
   { name: "search_products", description: "Search the Meekitaz catalog. Use simple shopper words, e.g. 'oval engagement ring platinum', 'tennis bracelet', 'studs'.",
     input_schema: { type: "object", properties: { query: { type: "string" }, max_price: { type: "number" } }, required: ["query"] } },
@@ -157,7 +158,8 @@ export async function POST(req: NextRequest) {
   if (!dbConfigured || !process.env.ANTHROPIC_API_KEY) return NextResponse.json({ error: "not_configured" }, { status: 503 });
   const body = await req.json().catch(() => ({}));
   const text = String(body.message || "").trim().slice(0, 1000);
-  const isTest = String(body.visitorId || "").startsWith("test-"); // scripted test runs never email the team
+  const isTest = String(body.visitorId || "").startsWith("test-");
+  const dailyOn = (req.headers.get("cookie") || "").split("; ").includes("mk_daily=1"); // the Meekitaz Daily preview is on for this visitor // scripted test runs never email the team
   if (!text) return NextResponse.json({ error: "empty" }, { status: 400 });
   await ensureSchema();
 
@@ -196,7 +198,7 @@ export async function POST(req: NextRequest) {
     const last = step === 7;
     const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST",
       headers: { "x-api-key": process.env.ANTHROPIC_API_KEY!, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-      body: JSON.stringify({ model: MODEL, max_tokens: 900, system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }], tools: TOOLS, tool_choice: last ? { type: "none" } : { type: "auto" }, messages: turns }) });
+      body: JSON.stringify({ model: MODEL, max_tokens: 900, system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }, ...(dailyOn ? [{ type: "text", text: DAILY_NOTE }] : [])], tools: TOOLS, tool_choice: last ? { type: "none" } : { type: "auto" }, messages: turns }) });
     if (!r.ok) { const err = await r.text().catch(() => ""); lastErr = `${r.status} ${err.slice(0, 300)}`; console.error("[mia] api", r.status, err); await sql!`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'system', ${"[error] model " + r.status + " " + err.slice(0, 500)})`.catch(() => {}); break; }
     const d = await r.json() as { content: Block[]; stop_reason: string };
     const said = d.content.filter(b => b.type === "text").map(b => b.text).join("").trim();
@@ -308,7 +310,7 @@ export async function POST(req: NextRequest) {
     // she only used tools: ask once more for the words that go with them
     const r2 = await fetch("https://api.anthropic.com/v1/messages", { method: "POST",
       headers: { "x-api-key": process.env.ANTHROPIC_API_KEY!, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-      body: JSON.stringify({ model: MODEL, max_tokens: 400, system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }], tools: TOOLS, tool_choice: { type: "none" }, messages: turns }) }).catch(() => null);
+      body: JSON.stringify({ model: MODEL, max_tokens: 400, system: [{ type: "text", text: SYSTEM, cache_control: { type: "ephemeral" } }, ...(dailyOn ? [{ type: "text", text: DAILY_NOTE }] : [])], tools: TOOLS, tool_choice: { type: "none" }, messages: turns }) }).catch(() => null);
     const d2 = r2 && r2.ok ? await r2.json() as { content: Block[] } : null;
     reply = (d2?.content || []).filter(x => x.type === "text").map(x => x.text).join("").trim();
   }

@@ -1,5 +1,6 @@
 "use client";
 import SizePicker from "./SizePicker";
+import { DailyLine } from "./DailyPrice";
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -141,6 +142,7 @@ export default function CartDrawer() {
               <div className="cd-arr"><span>Arrives by</span><span>{arrivalLabel()}</span></div>
               <div><small>Taxes calculated at checkout</small></div>
               <div className="t"><span>Total</span><span>{money(subtotal, cur)}</span></div>
+              <DailyLine price={subtotal} className="bag" />
             </div>
             {ringError && <p className="cd-err">{ringError}</p>}
             {needSize ? <button className="cd-co" disabled>Select your ring size to continue</button>

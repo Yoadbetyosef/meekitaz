@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image, { getImageProps } from "next/image";
 import Link from "next/link";
+import { DailyHeroBadge } from "./DailyPrice";
 import { slides } from "@/lib/data";
 import Logo from "./Logo";
 
@@ -115,6 +116,7 @@ export default function Hero() {
         <Link href={s.href} className="cv-line"><h1><small>{s.small}</small><span className="word" ref={wordRef}>{s.big}</span></h1></Link>
         <div className="cv-row">
           <Link href="/engagement-rings" className="pill cv-pill">Shop Engagement Rings</Link>
+          <DailyHeroBadge />
           <ul className="cv-claims"><li>30-day free returns</li><li>Lifetime warranty</li><li>IGI / GIA certified</li></ul>
         </div>
       </div>

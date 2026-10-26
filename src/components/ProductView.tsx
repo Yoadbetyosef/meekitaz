@@ -14,7 +14,7 @@ import { metalOf } from "@/lib/shopify";
 import type { RingVariant } from "@/lib/shopify";
 import { saveSetting, diamondsUrl, loadStone, clearStone, sameShape, baseShape } from "@/lib/setting";
 import WishHeart, { ShareArrow } from "./WishHeart";
-import { DailyBlock } from "./DailyPrice";
+import { DailyBlock, DailyLine } from "./DailyPrice";
 import { fancyColorOf } from "@/lib/fancy";
 import { METAL_LINE } from "@/lib/designs";
 import { addonFor, completeSel, optionRows, type ProductOptions, type Sel } from "@/lib/options";
@@ -308,7 +308,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
 
       {!heroOn && (
         <div className="pp-sbar">
-        <div><b>{usd(price)}</b>{compareAt > 0 && <s>{usd(compareAt)}</s>}</div>
+        <div><b className="pp-sb-full">{usd(price)}</b>{compareAt > 0 && <s className="pp-sb-full">{usd(compareAt)}</s>}<DailyLine price={price} className="sb" /></div>
         {ring && cv ? <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting</button> : <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={async () => { const r = await (hasOpts ? addConfigured(variant.id, p.handle, osel) : add(variant.id)); if (r.ok && care) await addCare(care, [title, variant.title !== "Default Title" ? variant.title : ""].filter(Boolean).join(" · ")); }}>{variant.available ? `Add to bag · ${usd(price)}` : "Sold out"}</button>}
       </div>
       )}
