@@ -14,6 +14,7 @@ import { metalOf } from "@/lib/shopify";
 import type { RingVariant } from "@/lib/shopify";
 import { saveSetting, diamondsUrl, loadStone, clearStone, sameShape, baseShape } from "@/lib/setting";
 import WishHeart, { ShareArrow } from "./WishHeart";
+import { DailyBlock } from "./DailyPrice";
 import { fancyColorOf } from "@/lib/fancy";
 import { METAL_LINE } from "@/lib/designs";
 import { addonFor, completeSel, optionRows, type ProductOptions, type Sel } from "@/lib/options";
@@ -141,7 +142,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
   const metalWord = nm(metalNow || "").replace(/\s*gold$/i, "");
   const purity = hasOpts ? (osel["Gold Purity"] || "") : kLabel;
   const summary = [[purity, metalWord].filter(Boolean).join(" "), ...(ring && cv ? [cv.shape, ...(ring.color ? [`${ring.color} diamond`] : [])] : []) /* an engagement ring is the setting only: the diamond is chosen in step 2, so a colour is named only on the fancy-colour designs */, ...(hasOpts ? rows.filter(r => r.name !== "Gold Purity").map(r => String(osel[r.name] || "").replace(/ Carat$/i, " ct")) : []), ...real.map(o => sel[o.name] || "")].filter(Boolean);
-  const priceNode = <div className="pp-price"><b>{usd(price)}</b>{compareAt > 0 && <><s>{usd(compareAt)}</s><i>{ring ? "Setting only" : `Save ${usd(compareAt - price)}`}</i></>}</div>;
+  const priceNode = <><DailyBlock price={price} /><div className="pp-price"><b>{usd(price)}</b>{compareAt > 0 && <><s>{usd(compareAt)}</s><i>{ring ? "Setting only" : `Save ${usd(compareAt - price)}`}</i></>}</div></>;
   // the metal (and its colour) sit apart from the other choices: on a phone they are the slim bar at the top
   const metalNode = (
     <>

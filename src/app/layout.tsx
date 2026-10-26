@@ -7,6 +7,8 @@ import Footer from "@/components/Footer";
 import Toast from "@/components/Toast";
 import FreeStuds from "@/components/FreeStuds";
 import ShareSheet from "@/components/ShareSheet";
+import DailyMode from "@/components/DailyMode";
+import { DailyBar } from "@/components/DailyPrice";
 import DreamList from "@/components/DreamList";
 import MiaChat from "@/components/MiaChat";
 import PressFx from "@/components/PressFx";
@@ -30,7 +32,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable} ${didact.variable}`}>
       <body>
+        <DailyMode>
         <CartProvider>
+          <DailyBar />
           <Nav />
           <HeroWarm map={Object.fromEntries(categories.map(c => [c.slug, { d: c.desktop, m: c.mobile }]))} />
           <div className="mk-page" id="mk-page">{children}</div>
@@ -44,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CartDrawer />
           <DesignLabGate />
         </CartProvider>
+        </DailyMode>
       </body>
     </html>
   );

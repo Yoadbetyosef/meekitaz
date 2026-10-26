@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState } from "react";
 import WishHeart, { ShareArrow } from "./WishHeart";
+import { DailyCardPrice } from "./DailyPrice";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/shopify";
@@ -40,6 +41,7 @@ export default function DesignCard({ p }: { p: Product }) {
             {metals.map(v => <i key={v.metal} className={v.metal === metal ? "on" : ""} style={{ "--lc": METAL_LINE[v.metal] || "#B3B8C0" } as React.CSSProperties} title={v.metal} onClick={e => { e.preventDefault(); e.stopPropagation(); setMetal(v.metal); setHeld(true); setOnModel(false); }} />)}
           </span>
         )}
+        <DailyCardPrice price={Number(cur.price)} />
         <span className="price">{usd(cur.price, p.currency)}{cur.compareAt ? <s className="was">{usd(cur.compareAt, p.currency)}</s> : null}</span>
       </div>
     </Link>
