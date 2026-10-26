@@ -9,6 +9,7 @@ import { karatStep, isGoldMetal } from "@/lib/karat";
 import type { Setting, Stone } from "@/lib/setting";
 import { FAQ_TEXT } from "@/lib/faq";
 import { orderStatusFor, STAGE_LABEL } from "@/lib/orders";
+import { DAILY } from "@/lib/daily";
 
 // Mia, the Meekitaz diamond assistant. Each turn: load the conversation, ask Claude (with tools), store both sides.
 export const maxDuration = 60;
@@ -159,7 +160,7 @@ export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => ({}));
   const text = String(body.message || "").trim().slice(0, 1000);
   const isTest = String(body.visitorId || "").startsWith("test-");
-  const dailyOn = (req.headers.get("cookie") || "").split("; ").includes("mk_daily=1"); // the Meekitaz Daily preview is on for this visitor // scripted test runs never email the team
+  const dailyOn = DAILY.enabled && (req.headers.get("cookie") || "").split("; ").includes("mk_daily=1"); // the Meekitaz Daily preview is on for this visitor // scripted test runs never email the team
   if (!text) return NextResponse.json({ error: "empty" }, { status: 400 });
   await ensureSchema();
 

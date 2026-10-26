@@ -8,6 +8,7 @@ export const useDaily = () => useContext(Ctx);
 export default function DailyMode({ children }: { children: React.ReactNode }) {
   const [on, setOn] = useState(false);
   useEffect(() => {
+    if (!DAILY.enabled) { document.cookie = `${DAILY.cookie}=; path=/; max-age=0`; setOn(false); return; } // parked: nobody sees it
     const q = new URLSearchParams(location.search).get("daily");
     const read = () => setOn(document.cookie.split("; ").some(c => c === `${DAILY.cookie}=1`));
     if (q === "off") { document.cookie = `${DAILY.cookie}=; path=/; max-age=0`; read(); return; }
