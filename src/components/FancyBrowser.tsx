@@ -26,6 +26,14 @@ export default function FancyBrowser({ embedded = false }: { embedded?: boolean 
     carat: pair(sp.get("c"), 0.5, 20, DEF.carat), price: pair(sp.get("p"), 100, 50000, DEF.price), inten: pair(sp.get("int"), 0, 5, DEF.inten, true),
     shapes: (sp.get("sh") || sp.get("style") || "").split(",").filter(x => SHAPES.includes(x)),
   }));
+  // the "Start with the stone" row above writes ?style=…; follow it, so a shape picked there filters the coloured stones too
+  const styleParam = sp.get("style") || "";
+  const firstStyle = useRef(true);
+  useEffect(() => {
+    if (firstStyle.current) { firstStyle.current = false; return; }
+    const sh = styleParam.split(",").filter(x => SHAPES.includes(x));
+    setF(x => (x.shapes.join(",") === sh.join(",") ? x : { ...x, shapes: sh }));
+  }, [styleParam]);
   const [sort, setSort] = useState(() => (["price_asc", "price_desc", "carat_desc", "intensity_desc"].includes(sp.get("sort") || "") ? (sp.get("sort") as string) : "price_asc"));
   const [items, setItems] = useState<Item[]>([]);
   const [facets, setFacets] = useState<Facet[]>([]);
@@ -41,7 +49,7 @@ export default function FancyBrowser({ embedded = false }: { embedded?: boolean 
     const q = new URLSearchParams(window.location.search);
     const put = (k: string, v: string | null) => (v === null ? q.delete(k) : q.set(k, v));
     put("c", same(f.carat, DEF.carat) ? null : f.carat.join("-")); put("p", same(f.price, DEF.price) ? null : f.price.join("-"));
-    put("int", same(f.inten, DEF.inten) ? null : f.inten.join("-")); put("sh", f.shapes.length ? f.shapes.join(",") : null);
+    put("int", same(f.inten, DEF.inten) ? null : f.inten.join("-")); put("sh", f.shapes.length ? f.shapes.join(",") : null); put("style", f.shapes.length === 1 ? f.shapes[0] : null);
     put("sort", sort === "price_asc" ? null : sort);
     const next = window.location.pathname + (q.toString() ? "?" + q : "");
     if (next !== window.location.pathname + window.location.search) window.history.replaceState(window.history.state, "", next);
