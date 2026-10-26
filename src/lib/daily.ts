@@ -3,7 +3,7 @@
 export const DAILY = {
   perDay: 15,        // the headline: $15 a day
   maxDays: 180,      // never longer than 6 months; above that the daily amount goes up
-  shipDay: 21,       // the piece ships after ~3 weeks of payments
+  shipDay: 0,        // message: it ships right away
   cookie: "mk_daily",
 };
 /** Days and daily amount for a price: $15 a day, as many days as it takes (so cheaper pieces finish sooner), capped at 180 days. */

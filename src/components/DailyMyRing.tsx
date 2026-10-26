@@ -25,7 +25,7 @@ export default function DailyMyRing() {
           <p className="dh-lead">{usd(paid)} paid · {usd(price - paid)} to go · ${d.perDay} a day</p>
           <div className="dmr-steps">
             <div className="done"><em>✓</em><div>Made for you<small>Cast and set in New York</small></div></div>
-            <div className="done"><em>✓</em><div>Shipped, insured<small>FedEx · arrived on day 24</small></div></div>
+            <div className="done"><em>✓</em><div>Shipped right away, insured<small>FedEx · arrived on day 3</small></div></div>
             <div className="now"><em>3</em><div>All yours<small>Paid off on day {d.days}, or earlier, any time</small></div></div>
           </div>
           <div className="dmr-pay"><button className="pill dk">Pay ahead</button><button className="pill">Pay it off · {usd(price - paid)}</button><button className="pill">Bank & schedule</button></div>
