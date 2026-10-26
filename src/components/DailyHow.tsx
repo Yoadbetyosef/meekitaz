@@ -3,6 +3,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useDaily } from "./DailyMode";
 import { dailyPlan, DAILY } from "@/lib/daily";
+import { DailyVs, DailyOwn } from "./DailyPrice";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 const STEPS = [
@@ -40,6 +41,7 @@ export default function DailyHow() {
           <p className="dh-note">That&rsquo;s less than a coffee and a croissant, for something you&rsquo;ll wear forever.</p></div>
       </section>
       <section className="wrap dh-promise"><h2>It&rsquo;s yours from day one.</h2><p>Not a rental. Not a lease. Not a loan with surprises. You choose it, you wear it right away, and you finish paying ${DAILY.perDay} a day.</p></section>
+      <section className="wrap dh-vs"><small className="eyebrow">Why it&rsquo;s different</small><h2>Not layaway. Not a rental.<br />Yours, today.</h2><DailyVs /><DailyOwn /></section>
       <section className="wrap dh-faq"><h2>Questions</h2>{FAQ.map(([q, a]) => <details key={q}><summary>{q}</summary><p>{a}</p></details>)}</section>
     </main>
   );

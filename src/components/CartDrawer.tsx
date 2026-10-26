@@ -1,6 +1,6 @@
 "use client";
 import SizePicker from "./SizePicker";
-import { DailyLine } from "./DailyPrice";
+import { DailyLine, DailyOwn, DailyArrival } from "./DailyPrice";
 import { useDaily } from "./DailyMode";
 import { dailyPlan } from "@/lib/daily";
 import { useEffect } from "react";
@@ -152,6 +152,7 @@ export default function CartDrawer() {
               <div><small>Taxes calculated at checkout</small></div>
               <div className="t"><span>Total</span><span>{money(subtotal, cur)}</span></div>
               <DailyLine price={subtotal} className="bag" />
+              {daily && <div className="cd-dly"><DailyArrival express={express} /><DailyOwn compact /></div>}
             </div>
             {ringError && <p className="cd-err">{ringError}</p>}
             {daily && !needSize ? <Link className="cd-co" href="/daily/checkout" onClick={() => setOpen(false)}>Start my plan · ${dailyPlan(subtotal).perDay} a day</Link> : null}

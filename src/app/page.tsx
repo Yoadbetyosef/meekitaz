@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import { DailyMarquee } from "@/components/DailyPrice";
 import Film from "@/components/Film";
 import Categories from "@/components/Categories";
 import HouseCodes from "@/components/HouseCodes";
@@ -12,6 +13,7 @@ export default function Home() {
   return (
     <main className="home-page">
       <Hero />
+      <DailyMarquee />
       <Film />
       <Categories />
       <NewFancy />

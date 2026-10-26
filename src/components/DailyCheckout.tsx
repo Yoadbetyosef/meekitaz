@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useCart } from "./CartProvider";
 import { useDaily } from "./DailyMode";
 import { dailyPlan } from "@/lib/daily";
+import { DailyOwn, DailyArrival, DailyLess } from "./DailyPrice";
 
 /* Meekitaz Daily checkout (preview): everything in the bag, the plan, the schedule and the two steps to start. Payment is the next build. */
 const usd = (n: number) => "$" + (Math.round(n * 100) / 100).toLocaleString("en-US", { maximumFractionDigits: 2 });
@@ -41,6 +42,9 @@ export default function DailyCheckout() {
           <small>Your plan</small>
           <div className="dly-big"><b className="dly-holo">${d.perDay}</b><span>a day</span></div>
           <p>{d.days} days · {usd(total)} total · no interest · everyone&rsquo;s approved</p>
+          <DailyLess />
+          <DailyArrival express={lines.some(l => l.handle === "express-shipping-3-5-days")} />
+          <DailyOwn />
           <div className="dly-meter"><i style={{ width: `${Math.max(6, Math.round(100 / d.days))}%` }} /></div>
           <div className="dly-mt"><span>Today · ${d.perDay}</span><span>Ships now</span><span>{day(end)} · all yours</span></div>
           <h4>Your first week</h4>
