@@ -12,7 +12,9 @@ const COOKIE = "meekitaz_cart";
 const FREE_STUDS_VARIANT = "gid://shopify/ProductVariant/67828260569325";
 const FREE_STUDS_CODE = "FREESTUDS";
 // Care packages (one item each): 3-Year $250, Lifetime $390 — hidden Shopify products, line attribute "Covers" names the piece
-const CARE: Record<string, string> = { "3y": "gid://shopify/ProductVariant/67951860285677", life: "gid://shopify/ProductVariant/67951860318445" };
+const CARE: Record<string, string> = { "3y": "gid://shopify/ProductVariant/67951860285677", life: "gid://shopify/ProductVariant/67951860318445", life425: "gid://shopify/ProductVariant/67957023539437" };
+// Meekitaz Daily preview only: express delivery (3–5 days), one line per bag
+const EXPRESS = "gid://shopify/ProductVariant/67957023506669";
 const opts = { httpOnly: true, sameSite: "lax" as const, secure: process.env.NODE_ENV === "production", path: "/", maxAge: 60 * 60 * 24 * 30 };
 
 export async function GET() {
@@ -86,6 +88,11 @@ export async function POST(req: Request) {
     const line = { merchandiseId: CARE[String(body.plan)], quantity: 1, attributes };
     cart = id ? await addCartLines(id, [line]) : null;
     if (!cart) cart = await createCartWithLines([line]);
+  } else if (body.action === "express") {
+    const cur = id ? await getCart(id) : null; const line = cur?.lines.find(l => l.handle === "express-shipping-3-5-days");
+    if (body.on && !line) { cart = id ? await addCartLines(id, [{ merchandiseId: EXPRESS, quantity: 1 }]) : null; if (!cart) cart = await createCartWithLines([{ merchandiseId: EXPRESS, quantity: 1 }]); }
+    else if (!body.on && line && id) cart = await removeCartLine(id, line.id);
+    else cart = cur;
   } else if (body.action === "freeStuds") {
     // Welcome offer from the pop-up: 0.5 ct silver round studs, free with a $1,000+ first order (Shopify code FREESTUDS)
     const studs = FREE_STUDS_VARIANT;

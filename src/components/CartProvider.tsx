@@ -23,7 +23,9 @@ type Ctx = {
   /** Sends the rings in the bag to Shopify and goes to checkout. */
   checkout: () => Promise<void>;
   /** Adds a care package (3y = 3-Year $250, life = Lifetime $390) for one piece. */
-  addCare: (plan: "3y" | "life", covers: string) => Promise<{ ok: boolean; error?: string }>;
+  addCare: (plan: "3y" | "life" | "life425", covers: string) => Promise<{ ok: boolean; error?: string }>;
+  /** Meekitaz Daily preview: express delivery on/off. */
+  setExpress: (on: boolean) => Promise<void>;
   /** Pop-up welcome offer: adds the free 0.5 ct studs and the FREESTUDS code to the bag. */
   freeStuds: () => Promise<{ ok: boolean; error?: string }>;
 };
@@ -80,6 +82,7 @@ export default function CartProvider({ children }: { children: React.ReactNode }
     })(),
     add: async (variantId, quantity = 1, karat) => { const r = await run({ action: "add", variantId, quantity, karat: karat || "" }, true); return { ok: !!r.cart, error: r.error }; },
     addConfigured: async (variantId, handle, sel) => { const r = await run({ action: "configure", variantId, handle, sel }, true); return { ok: !!r.cart, error: r.error }; },
+    setExpress: async on => { await run({ action: "express", on }, false); },
     addCare: async (plan, covers) => { const r = await run({ action: "care", plan, covers }, true); return { ok: !!r.cart, error: r.error }; },
     freeStuds: async () => { const r = await run({ action: "freeStuds" }, true); return { ok: !!r.cart, error: r.error }; },
     setQty: (lineId, quantity) => run({ action: "update", lineId, quantity }).then(() => undefined),

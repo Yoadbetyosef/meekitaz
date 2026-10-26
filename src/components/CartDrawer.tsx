@@ -1,6 +1,7 @@
 "use client";
 import SizePicker from "./SizePicker";
 import { DailyLine } from "./DailyPrice";
+import { useDaily } from "./DailyMode";
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,7 +24,8 @@ const Trust = () => (
 );
 
 export default function CartDrawer() {
-  const { cart, open, busy, setOpen, setQty, remove, rings, ringError, bagCount, setRingSize, removeRing, setCartRingSize, removeCartRing, checkout, addCare } = useCart();
+  const { cart, open, busy, setOpen, setQty, remove, rings, ringError, bagCount, setRingSize, removeRing, setCartRingSize, removeCartRing, checkout, addCare, setExpress } = useCart();
+  const daily = useDaily();
   const router = useRouter();
   const lines = cart?.lines ?? [];
   // rings that already reached Shopify: a setting line (has the "Diamond" note) and its diamond line, tied by the same "Build" id
@@ -34,7 +36,8 @@ export default function CartDrawer() {
     return { build, setting, stone, size: attr(setting, "Ring size") || attr(stone, "Ring size") || "" };
   });
   const inRing = new Set(cartRings.flatMap(r => [r.setting.id, r.stone.id]));
-  const plain = lines.filter(l => !inRing.has(l.id));
+  const express = lines.some(l => l.handle === "express-shipping-3-5-days");
+  const plain = lines.filter(l => !inRing.has(l.id) && !(daily && l.handle === "express-shipping-3-5-days")); // in Daily the express line lives in the shipping switch
   const needSize = rings.some(r => !r.size) || cartRings.some(r => !r.size);
   const ringsTotal = rings.reduce((t, r) => t + r.setting.price + r.stone.price, 0);
   const subtotal = (cart?.subtotal ?? 0) + ringsTotal;
@@ -122,13 +125,13 @@ export default function CartDrawer() {
               </div>
             ))}
             {(() => {
-              const hasCare = plain.some(l => l.handle.startsWith("care-package"));
+              const hasCare = plain.some(l => l.handle.startsWith("care-package") && l.handle !== "express-shipping-3-5-days");
               const first = rings[0]?.setting.title || plain.find(l => !l.handle.startsWith("care-package"))?.title;
               if (hasCare || !first) return null;
               return (
                 <div className="cd-care">
                   <span>✦ Keep it like new for life: resizing, cleanings, re-plating. <a href="/warranty" target="_blank" rel="noopener">Details</a></span>
-                  <div><button disabled={busy} onClick={() => addCare("life", first)}>Add Lifetime · $390</button><button className="alt" disabled={busy} onClick={() => addCare("3y", first)}>3-Year · $250</button></div>
+                  <div>{daily ? <button disabled={busy} onClick={() => addCare("life425", first)}>Add Lifetime Warranty · $425</button> : <><button disabled={busy} onClick={() => addCare("life", first)}>Add Lifetime · $390</button><button className="alt" disabled={busy} onClick={() => addCare("3y", first)}>3-Year · $250</button></>}</div>
                 </div>
               );
             })()}
@@ -138,8 +141,13 @@ export default function CartDrawer() {
             <div className="cd-sum">
               <div><span>Subtotal</span><span>{money(subtotal, cur)}</span></div>
               {(cart?.savings ?? 0) > 0 && <div className="save"><span>You save</span><span>−{money(cart!.savings, cur)}</span></div>}
+              {daily ? <>
+                <label className="cd-exp"><input type="checkbox" checked={express} disabled={busy} onChange={e => setExpress(e.target.checked)} /><span><b>Express shipping</b><small>Insured, arrives in 3–5 business days</small></span><em>$150</em></label>
+                <div><span>Shipping</span><span>{express ? "Express · $150" : "Free · insured"}</span></div>
+                <div className="cd-arr"><span>Arrives</span><span>{express ? "in 3–5 business days" : arrivalLabel()}</span></div>
+              </> : <>
               <div><span>Shipping</span><span>Free · insured</span></div>
-              <div className="cd-arr"><span>Arrives by</span><span>{arrivalLabel()}</span></div>
+              <div className="cd-arr"><span>Arrives by</span><span>{arrivalLabel()}</span></div></>}
               <div><small>Taxes calculated at checkout</small></div>
               <div className="t"><span>Total</span><span>{money(subtotal, cur)}</span></div>
               <DailyLine price={subtotal} className="bag" />

@@ -1901,3 +1901,9 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .dmr-steps .done em{background:var(--ink);color:#fff}.dmr-steps .now{outline:2px solid #E8738A}.dmr-steps small{display:block;opacity:.6;font-size:12.5px}
 .dmr-pay{display:flex;gap:8px;flex-wrap:wrap}.dmr-demo{font:12px var(--body);opacity:.5;margin-top:14px}
 @media(max-width:860px){.dmr-grid{grid-template-columns:1fr;justify-items:center}.dmr-ring{width:250px;height:250px}}
+/* Daily: express delivery switch in the bag */
+.cd-exp{display:flex!important;align-items:center;gap:12px;background:#fff;border:1.5px solid rgba(28,26,27,.12);border-radius:16px;padding:11px 14px;margin:2px 0 6px;cursor:pointer;transition:border-color .2s}
+.cd-exp:has(input:checked){border-color:var(--ink)}
+.cd-exp input{width:18px;height:18px;accent-color:var(--ink);flex:none}
+.cd-exp span{flex:1;display:block}.cd-exp b{display:block;font:700 13.5px var(--body)}.cd-exp small{display:block;font:12px var(--body);opacity:.65}
+.cd-exp em{font:800 14px var(--body);font-style:normal}
