@@ -2,6 +2,7 @@
 import SizePicker from "./SizePicker";
 import { DailyLine } from "./DailyPrice";
 import { useDaily } from "./DailyMode";
+import { dailyPlan } from "@/lib/daily";
 import { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -153,7 +154,9 @@ export default function CartDrawer() {
               <DailyLine price={subtotal} className="bag" />
             </div>
             {ringError && <p className="cd-err">{ringError}</p>}
-            {needSize ? <button className="cd-co" disabled>Select your ring size to continue</button>
+            {daily && !needSize ? <Link className="cd-co" href="/daily/checkout" onClick={() => setOpen(false)}>Start my plan · ${dailyPlan(subtotal).perDay} a day</Link> : null}
+            {daily && !needSize ? <a className="cd-co cd-full" href={rings.length ? undefined : cart?.checkoutUrl} onClick={rings.length ? () => checkout() : undefined}>or pay in full · {money(subtotal, cur)}</a>
+            : needSize ? <button className="cd-co" disabled>Select your ring size to continue</button>
               : rings.length > 0 ? <button className="cd-co" disabled={busy} onClick={checkout}>{busy ? "One moment…" : "Checkout"}</button>
               : <a className="cd-co" href={cart!.checkoutUrl}>Checkout</a>}
             {installments(subtotal) && <p className="cd-inst">{installments(subtotal)}</p>}

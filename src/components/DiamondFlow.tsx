@@ -9,7 +9,7 @@ import { toast } from "./Toast";
 import { loadSetting, chooseStone, settingFrom, sameShape, baseShape, type Setting, type Stone } from "@/lib/setting";
 import SwapDrawer from "./SwapDrawer";
 import WishHeart, { ShareArrow } from "./WishHeart";
-import { DailyLine } from "./DailyPrice";
+import { DailyLine, DailyTotal } from "./DailyPrice";
 import { saveSetting } from "@/lib/setting";
 import { isGoldMetal, karatStep } from "@/lib/karat";
 import { fancyColorOfStone, fancySettingsUrl } from "@/lib/fancy";
@@ -137,7 +137,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
           <div className="df-pair">
             <div>
               <div className="df-card"><span className="df-cap">Your diamond</span><StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} /></div>
-              <div className="df-capt"><b>{title(d)}</b>{usd(d.price)} · {d.lab} certified{shown && !d.fancy && <button type="button" className="df-swap" onClick={() => setSwap("stone")}>⇄ Swap diamond</button>}</div>
+              <div className="df-capt"><b>{title(d)}</b>{usd(d.price)} · {d.lab} certified<DailyLine price={d.price} className="cap" />{shown && !d.fancy && <button type="button" className="df-swap" onClick={() => setSwap("stone")}>⇄ Swap diamond</button>}</div>
             </div>
             <div className="df-plus">+</div>
             <div>
@@ -157,7 +157,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
             <div className="df-ln"><span>{title(d)}<em>{sub(d)}</em></span><b>{usd(d.price)}</b></div>
             <div className="df-ln"><span>{shown ? shown.title : "No setting yet"}<em>{shown ? `Setting${sMetal ? ", " + sMetal : ""}` : "Pick one to see the total"}</em></span><b>{shown ? usd(shown.price) : "—"}</b></div>
             <div className="df-tot"><span>Total</span><b>{usd(total)}</b></div>
-            {shown && <DailyLine price={total} className="tot" />}
+            <DailyTotal price={total} label={shown ? "Your ring" : "Your diamond"} />
             <button type="button" className="df-cta" onClick={go}>{ctaText}</button>
             <Link href="/#contact" className="df-cta o">Book a private appointment</Link>
             <div className="df-trust"><span>IGI / GIA certified, every stone</span><span>30-day free returns</span><span>Lifetime warranty</span><span>Free insured shipping</span></div>
@@ -242,7 +242,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
       </section>
 
       {/* phone: the total and the button stay in reach */}
-      <div className="df-sbar"><b>{usd(total)}{shown && <DailyLine price={total} className="sb" />}</b><button type="button" className="df-cta" onClick={go}>{shown ? "Add to bag" : "Choose diamond"}</button></div>
+      <div className="df-sbar"><b>{usd(total)}<DailyLine price={total} className="sb" /></b><button type="button" className="df-cta" onClick={go}>{shown ? "Add to bag" : "Choose diamond"}</button></div>
     </>
   );
 }

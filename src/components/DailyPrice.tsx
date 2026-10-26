@@ -47,7 +47,6 @@ export function DailyBlock({ price, onFull }: { price: number; onFull?: () => vo
         <div className="dly-meter"><i style={{ width: `${Math.max(6, Math.round(100 / d.days))}%` }} /></div>
         <div className="dly-mt"><span>Today · ${d.perDay}</span><span>Now · it ships</span><span>Day {d.days} · all yours</span></div>
         <div className="dly-yours"><b>It&rsquo;s yours from day one.</b> Not a rental, not a lease. It ships right away and you wear it now; ${d.perDay} a day straight from your bank until it&rsquo;s paid off. Pay it off early any time.</div>
-        <button type="button" className="dly-go" onClick={() => alert("Preview only: the daily checkout (bank connection + daily plan) is the next step to build.")}>Start for ${d.perDay} today</button>
         <Link href="/daily" className="dly-more">How Meekitaz Daily works →</Link>
         <p className="dly-fine">Example: {usd(price)} over {d.days} days at ${d.perDay} a day; the last payment is ${d.last}. Charged each business day from your bank account. Full terms at checkout.</p>
       </>}
@@ -59,4 +58,10 @@ export function DailyBlock({ price, onFull }: { price: number; onFull?: () => vo
 export function DailyStoneNote() {
   const on = useDaily(); if (!on) return null;
   return <span className="dly-line stone"><i />As your ring, from <b>${DAILY.perDay} a day</b></span>;
+}
+
+/** "Your ring" total on the build page: the daily number leads, the full price underneath. */
+export function DailyTotal({ price, label = "Your ring" }: { price: number; label?: string }) {
+  const on = useDaily(); if (!on || !price) return null; const d = dailyPlan(price);
+  return <div className="dly-tot"><small>{label}</small><div className="dly-big"><b className="dly-holo">${d.perDay}</b><span>a day</span></div><p>{d.days} days · {usd(price)} total · no interest</p></div>;
 }

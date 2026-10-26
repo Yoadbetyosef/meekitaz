@@ -16,6 +16,7 @@ import { saveSetting, diamondsUrl, loadStone, clearStone, sameShape, baseShape }
 import WishHeart, { ShareArrow } from "./WishHeart";
 import { DailyBlock, DailyLine } from "./DailyPrice";
 import { useDaily } from "./DailyMode";
+import { dailyPlan } from "@/lib/daily";
 import { fancyColorOf } from "@/lib/fancy";
 import { METAL_LINE } from "@/lib/designs";
 import { addonFor, completeSel, optionRows, type ProductOptions, type Sel } from "@/lib/options";
@@ -250,9 +251,9 @@ export default function ProductView({ product: p, siblings, related, ring, optio
     </>
   );
   const ctaNode = ring && cv ? (
-    <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting<small>Next: pick your {cv.shape.toLowerCase()} diamond</small></button>
+    <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting<small>{daily ? `From $${dailyPlan(price).perDay} a day · next: your ${cv.shape.toLowerCase()} diamond` : `Next: pick your ${cv.shape.toLowerCase()} diamond`}</small></button>
   ) : (
-    <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={async () => { const r = hasOpts ? await addConfigured(variant.id, p.handle, osel) : await add(variant.id, 1, step ? karat : ""); if (r.ok && care) await addCare(care, [title, variant.title !== "Default Title" ? variant.title : "", step ? karat : ""].filter(Boolean).join(" · ")); if (!r.ok) toast(r.error === "not_configured" ? "This option is being connected for checkout. Please book an appointment and we will complete it with you." : "We could not add this to your bag. Please try again."); }}>{!variant.available ? "Sold out" : busy ? "Adding…" : `Add to bag · ${usd(price + (care === "3y" ? 250 : care === "life" ? 390 : care === "life425" ? 425 : 0))}`}</button>
+    <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={async () => { const r = hasOpts ? await addConfigured(variant.id, p.handle, osel) : await add(variant.id, 1, step ? karat : ""); if (r.ok && care) await addCare(care, [title, variant.title !== "Default Title" ? variant.title : "", step ? karat : ""].filter(Boolean).join(" · ")); if (!r.ok) toast(r.error === "not_configured" ? "This option is being connected for checkout. Please book an appointment and we will complete it with you." : "We could not add this to your bag. Please try again."); }}>{!variant.available ? "Sold out" : busy ? "Adding…" : (daily ? `Add to bag · $${dailyPlan(price + (care === "life425" ? 425 : 0)).perDay} a day` : `Add to bag · ${usd(price + (care === "3y" ? 250 : care === "life" ? 390 : care === "life425" ? 425 : 0))}`)}</button>
   );
   const apptNode = <Link href="/#contact" className="pp-appt">Book a private appointment</Link>;
 
