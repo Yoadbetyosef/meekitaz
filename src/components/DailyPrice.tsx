@@ -118,6 +118,7 @@ export function DailyHeroHeadline() {
     <div className="dly-hh">
       <p className="dly-hh-tag">Any piece up to $4,500 — <s>{usd(price)}</s></p>
       <h1 className="dly-hh-big"><b>${amt}</b><span>a day</span></h1>
+      <p className="dly-hh-own"><s>Rent it</s><s>Lease it</s><b>Own it. From day one.</b></p>
       <div className="dly-hh-dials">
         <label className="dly-hh-dial"><span>Piece</span><i>{usd(price)}</i><input type="range" min={300} max={4500} step={50} value={price} onChange={e => { setPrice(Number(e.target.value)); setDays(null); }} aria-label="Price of the piece" /></label>
         <label className="dly-hh-dial"><span>For</span><i>{d} days</i><input type="range" min={minDays} max={maxDays} step={1} value={d} onChange={e => setDays(Number(e.target.value))} aria-label="How many days" /></label>
