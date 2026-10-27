@@ -1867,6 +1867,24 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .daily-on .cv-claims{opacity:.7}
 .daily-on .cover .cv-pill{background:rgba(28,26,27,.86) !important}
 @media(max-width:767px){.dly-hh-logo{width:78vw;margin-bottom:10px}}
+/* Daily cover · style C (pink pop) + bigger number */
+.daily-on .dly-hh-tag{opacity:1;color:rgba(28,26,27,.65)}
+.daily-on .dly-hh-tag b{display:inline-block;background:#EFC5CA;color:var(--ink);font:600 13px var(--body);font-style:normal;letter-spacing:.06em;border-radius:999px;padding:3px 10px;vertical-align:4px}
+.daily-on .dly-hh-big b{font-size:clamp(80px,9.4vw,140px);background:linear-gradient(100deg,#1C1A1B 0 55%,#C24E6A 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.daily-on .dly-hh-own s{opacity:.38}
+.daily-on .dly-hh-own b{color:#C24E6A}
+.daily-on .dly-hh-dial{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.9)}
+.daily-on .dly-hh-dial i{font:600 17px var(--sub);font-style:italic;color:#C24E6A}
+.daily-on .dly-hh-dial input::-webkit-slider-runnable-track{background:rgba(194,78,106,.25)}
+.daily-on .dly-hh-dial input::-webkit-slider-thumb{background:#EFC5CA;border:2px solid #C24E6A}
+.daily-on .dly-hh-dial input::-moz-range-track{background:rgba(194,78,106,.25)}
+.daily-on .dly-hh-dial input::-moz-range-thumb{background:#EFC5CA;border:2px solid #C24E6A}
+.dly-hh-facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.dly-hh-facts span{font:600 12px var(--body);background:#EFC5CA;color:var(--ink);border-radius:999px;padding:7px 12px}
+.daily-on .cover .dly-go{background:var(--ink) !important;color:#fff !important;display:inline-flex;align-items:center;gap:16px;padding-right:8px !important}
+.dly-go-ar{width:40px;height:40px;border-radius:50%;background:#EFC5CA;color:var(--ink);display:grid;place-items:center;font-size:16px;letter-spacing:0}
+.daily-on .cv-claims li::before{background:#C24E6A}
+@media(max-width:767px){.daily-on .dly-hh-big b{font-size:24vw}.dly-hh-facts span{font-size:11px;padding:6px 10px}.dly-go-ar{width:34px;height:34px}}
 .daily-on .cv-claims li::before{background:var(--ink)}
 @media(max-width:767px){.dly-still{right:0;left:0;height:62%;bottom:auto;aspect-ratio:auto}.dly-still::before{display:none}.dly-still::after{top:auto;left:0;right:0;bottom:0;width:auto;height:25%;background:linear-gradient(0deg,#CFCAE3,rgba(207,202,227,0))}}
 .daily-on .cv-taps{display:none}
