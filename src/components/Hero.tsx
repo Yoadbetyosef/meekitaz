@@ -4,6 +4,7 @@ import Image, { getImageProps } from "next/image";
 import Link from "next/link";
 import { DailyHeroBadge, DailyHeroHeadline } from "./DailyPrice";
 import { useDaily } from "./DailyMode";
+import DailyProof from "./DailyProof";
 import { slides } from "@/lib/data";
 import Logo from "./Logo";
 
@@ -122,7 +123,7 @@ export default function Hero() {
         <div className="cv-row">
           {daily ? <Link href="/daily" className="pill cv-pill dly-go">Start my plan<span className="dly-go-ar" aria-hidden="true">→</span></Link> : <Link href="/engagement-rings" className="pill cv-pill">Shop Engagement Rings</Link>}
           {!daily && <DailyHeroBadge />}
-          <ul className="cv-claims"><li>30-day free returns</li><li>Lifetime warranty</li><li>IGI / GIA certified</li></ul>
+          {daily ? <DailyProof /> : <ul className="cv-claims"><li>30-day free returns</li><li>Lifetime warranty</li><li>IGI / GIA certified</li></ul>}
         </div>
       </div>
     </section>
