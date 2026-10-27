@@ -107,6 +107,7 @@ export function DailyMarquee() {
 
 /** Home cover in the Daily preview — "the equation": $amount × days = the piece. Pick the piece's price, then a pace
  *  ($10–$30 a day, each showing how long it takes). Paces that break the rules (≤180 days, cost covered by ship day 21) are off. */
+const NAMES = ["Easiest", "Easy", "Steady", "Faster", "Fastest"];
 const howLong = (d: number) => { const m = d / 30; if (m < 1.5) return `${d} days`; const r = Math.round(m * 2) / 2; return `${Math.floor(r)}${r % 1 ? "½" : ""} months`; };
 export function DailyHeroHeadline() {
   const on = useDaily();
@@ -115,20 +116,19 @@ export function DailyHeroHeadline() {
   if (!on) return null;
   const opts = dailyOptions(price);
   const cur = opts.find(o => o.ok && o.amt === pick) || opts.find(o => o.ok) || opts[opts.length - 1];
+  const okOpts = opts.filter(o => o.ok);
   return (
     <div className="dly-hh dly-eqv">
       <Logo className="dly-hh-logo" />
       <p className="dly-eq-kick">Own any piece up to $4,500. <b>From $10 a day.</b></p>
-      <div className="dly-eq" aria-live="polite">
-        <span className="n pink">${cur.amt}</span><span className="op">×</span><span className="n">{cur.days}</span><span className="op">=</span><span className="n">{usd(price)}</span>
-        <span className="u">a day</span><span /><span className="u">days</span><span /><span className="u">the piece, yours</span>
-      </div>
+      <p className="dly-pc-line" aria-live="polite">Your {usd(price)} piece:<br /><em>${cur.amt} a day, for {howLong(cur.days)}.</em></p>
       <label className="dly-eq-price"><span>Your piece</span><output>{usd(price)}</output><input type="range" min={300} max={4500} step={50} value={price} onChange={e => setPrice(Number(e.target.value))} aria-label="Price of the piece" /></label>
-      <p className="dly-eq-pt">Pick your pace</p>
-      <div className="dly-eq-pace" role="group" aria-label="Your pace">
-        {opts.map(o => <button key={o.amt} type="button" disabled={!o.ok} aria-pressed={o.amt === cur.amt} onClick={() => setPick(o.amt)}><b>${o.amt}</b><span>{o.ok ? howLong(o.days) : "—"}</span></button>)}
+      <div className="dly-pc-cards" role="group" aria-label="Your plan" style={{ gridTemplateColumns: `repeat(${okOpts.length}, 1fr)` }}>
+        {okOpts.map((o, i) => <button key={o.amt} type="button" className="dly-pc" aria-pressed={o.amt === cur.amt} onClick={() => setPick(o.amt)}>
+          <small>{okOpts.length === 1 ? "Your plan" : NAMES[NAMES.length - okOpts.length + i]}</small><b>${o.amt}<sub> /day</sub></b><span>{howLong(o.days)} · {o.days} days</span>
+        </button>)}
       </div>
-      <p className="dly-eq-fine">Ships on day {cur.ship} · $49 to open, once · no interest, no credit check</p>
+      <p className="dly-eq-fine">Ships on day {cur.ship} · yours from day one · $49 to open, once · no interest</p>
     </div>
   );
 }
