@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useDaily } from "./DailyMode";
-import Logo from "./Logo";
 import { dailyPlan, dailyOptions, DAILY } from "@/lib/daily";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
