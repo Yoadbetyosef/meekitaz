@@ -1921,8 +1921,37 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .dly-proof-q p b{display:block;margin-top:4px;font:600 11px var(--body);letter-spacing:.12em;text-transform:uppercase;font-style:normal;color:rgba(28,26,27,.55)}
 .dly-proof-sample{display:inline-block;margin-left:6px;vertical-align:3px;font:700 9px var(--body);letter-spacing:.12em;text-transform:uppercase;font-style:normal;background:#fff;color:#C24E6A;border-radius:999px;padding:2px 7px}
 @media(max-width:767px){.dly-proof{flex-direction:column;align-items:flex-start;gap:10px;margin-top:12px}.dly-proof-faces span,.dly-proof-faces img{width:30px;height:30px}.dly-proof-q{min-width:0;width:100%;min-height:3.4em}.dly-proof-q p{font-size:16px}}
+/* Daily cover · "No ___." headline */
+.dly-no-kick{margin:0 0 6px;font:700 11px var(--body);letter-spacing:.18em;text-transform:uppercase;color:rgba(28,26,27,.6)}
+.dly-no{margin:0;font:400 clamp(60px,6.6vw,112px)/1.08 var(--display);letter-spacing:-.02em;color:#fff;white-space:nowrap}
+.dly-no-w{display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .06em .16em 0;margin-bottom:-.16em}
+.dly-no-w span{display:inline-block;font:italic 500 1em/1.08 var(--sub);color:#C24E6A;animation:dlyNo .55s cubic-bezier(.2,.7,.2,1) both}
+@keyframes dlyNo{from{transform:translateY(70%);opacity:0}to{transform:none;opacity:1}}
+.dly-no-dream{margin:10px 0 16px;font:400 clamp(19px,1.6vw,25px)/1.25 var(--display);color:var(--ink)}
+.dly-no-dream em{font:italic 500 1.05em var(--sub);color:#C24E6A}
+/* the one glass bar: reviews · Start my plan — same width as the column above */
+.daily-on .cv-row{max-width:640px;flex-wrap:nowrap;gap:16px;margin-top:18px;padding:7px 7px 7px 12px;border-radius:999px;background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid #fff;box-shadow:0 18px 36px -22px rgba(60,40,110,.5)}
+.daily-on .cv-row .dly-proof{gap:12px}
+.daily-on .cv-row .dly-proof-faces span,.daily-on .cv-row .dly-proof-faces img{width:32px;height:32px;border-width:2px;border-color:#fff;margin-left:-9px}
+.daily-on .cv-row .dly-proof-rate{gap:9px;font-size:11px}
+.daily-on .cv-row .dly-proof-rate b{font-size:15px}
+.daily-on .cv-row .dly-proof-stars{font-size:12px;letter-spacing:1px}
+.daily-on .cv-row .dly-proof-q{min-width:0;min-height:2.6em;display:flex;align-items:center}
+.daily-on .cv-row .dly-proof-q p{position:static;opacity:1;transform:none;font-size:15px;line-height:1.2;animation:dlyQ .5s ease both}
+.daily-on .cv-row .dly-proof-q p b{font-size:9px;margin-top:2px}
+@keyframes dlyQ{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.daily-on .cv-row .dly-go{margin-left:auto;flex:none;padding:6px 6px 6px 20px !important;font-size:11.5px;gap:12px}
+.daily-on .cv-row .dly-go-ar{width:36px;height:36px}
+@media(max-width:767px){
+  .dly-no{font-size:14vw}.dly-no-dream{font-size:16px;margin:6px 0 10px}
+  .daily-on .cv-row{max-width:none;flex-wrap:wrap;border-radius:22px;padding:10px;gap:8px}
+  .daily-on .cv-row .dly-proof{flex-direction:row;flex-wrap:wrap;align-items:center;margin:0;width:100%}
+  .daily-on .cv-row .dly-proof-q{flex-basis:100%;min-height:3.2em}.daily-on .cv-row .dly-proof-q p{font-size:14px}
+  .daily-on .cv-row .dly-go{width:100% !important;margin-left:0}
+}
+@media(prefers-reduced-motion:reduce){.dly-no-w span,.daily-on .cv-row .dly-proof-q p{animation:none}}
 /* Daily cover B · plan cards */
-.dly-pc-line{margin:2px 0 16px;font:400 clamp(28px,2.6vw,42px)/1.15 var(--display);color:var(--ink)}
+.dly-pc-line{margin:0 0 12px;font:400 clamp(22px,1.9vw,30px)/1.2 var(--display);color:var(--ink)}
 .dly-pc-line em{font-style:normal;background:linear-gradient(100deg,#1C1A1B 0 30%,#C24E6A);-webkit-background-clip:text;background-clip:text;color:transparent}
 .dly-pc-cards{display:grid;gap:8px;margin-top:14px}
 .dly-pc{position:relative;border-radius:18px;background:rgba(255,255,255,.62);border:1px solid #fff;padding:14px 12px 12px;cursor:pointer;text-align:left;font:inherit;color:var(--ink)}
