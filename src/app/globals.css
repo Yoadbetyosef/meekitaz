@@ -1906,6 +1906,21 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .dly-eq-pace button[aria-pressed="true"] span{color:#EFC5CA}
 .dly-eq-pace button:disabled{opacity:.3;cursor:not-allowed}
 .dly-eq-fine{margin:12px 0 0;font:500 12px var(--body);color:rgba(28,26,27,.6)}
+/* Daily · reviews strip (option A, yellow stars) */
+.dly-proof{display:flex;align-items:center;gap:24px;flex:1;min-width:0;pointer-events:auto}
+.dly-proof-rate{display:flex;align-items:center;gap:12px;flex:none;font:600 12px/1.35 var(--body);color:var(--ink)}
+.dly-proof-rate b{font:400 18px var(--display)}
+.dly-proof-faces{display:flex}
+.dly-proof-faces span,.dly-proof-faces img{width:38px;height:38px;border-radius:50%;border:2.5px solid #D0CBE4;margin-left:-10px;display:grid;place-items:center;font:700 12px var(--body);color:#fff;object-fit:cover}
+.dly-proof-faces>:first-child{margin-left:0}
+.dly-proof-faces .ph{outline:1.5px dashed rgba(28,26,27,.4);outline-offset:-2px}
+.dly-proof-stars{color:#F2C230;letter-spacing:2px;font-size:15px;text-shadow:0 1px 0 rgba(140,100,0,.25)}
+.dly-proof-q{position:relative;flex:1;min-width:240px;min-height:3em}
+.dly-proof-q p{position:absolute;inset:0;margin:0;opacity:0;transform:translateY(6px);transition:opacity .5s,transform .5s;font:500 italic 19px/1.3 var(--sub);color:var(--ink)}
+.dly-proof-q p.on{opacity:1;transform:none}
+.dly-proof-q p b{display:block;margin-top:4px;font:600 11px var(--body);letter-spacing:.12em;text-transform:uppercase;font-style:normal;color:rgba(28,26,27,.55)}
+.dly-proof-sample{display:inline-block;margin-left:6px;vertical-align:3px;font:700 9px var(--body);letter-spacing:.12em;text-transform:uppercase;font-style:normal;background:#fff;color:#C24E6A;border-radius:999px;padding:2px 7px}
+@media(max-width:767px){.dly-proof{flex-direction:column;align-items:flex-start;gap:10px;margin-top:12px}.dly-proof-faces span,.dly-proof-faces img{width:30px;height:30px}.dly-proof-q{min-width:0;width:100%;min-height:3.4em}.dly-proof-q p{font-size:16px}}
 /* Daily cover B · plan cards */
 .dly-pc-line{margin:2px 0 16px;font:400 clamp(28px,2.6vw,42px)/1.15 var(--display);color:var(--ink)}
 .dly-pc-line em{font-style:normal;background:linear-gradient(100deg,#1C1A1B 0 30%,#C24E6A);-webkit-background-clip:text;background-clip:text;color:transparent}
