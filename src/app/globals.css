@@ -1906,6 +1906,18 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .dly-eq-pace button[aria-pressed="true"] span{color:#EFC5CA}
 .dly-eq-pace button:disabled{opacity:.3;cursor:not-allowed}
 .dly-eq-fine{margin:12px 0 0;font:500 12px var(--body);color:rgba(28,26,27,.6)}
+/* Daily cover B · plan cards */
+.dly-pc-line{margin:2px 0 16px;font:400 clamp(28px,2.6vw,42px)/1.15 var(--display);color:var(--ink)}
+.dly-pc-line em{font-style:normal;background:linear-gradient(100deg,#1C1A1B 0 30%,#C24E6A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dly-pc-cards{display:grid;gap:8px;margin-top:14px}
+.dly-pc{position:relative;border-radius:18px;background:rgba(255,255,255,.62);border:1px solid #fff;padding:14px 12px 12px;cursor:pointer;text-align:left;font:inherit;color:var(--ink)}
+.dly-pc small{display:block;font:700 10px var(--body);letter-spacing:.14em;text-transform:uppercase;color:rgba(28,26,27,.55)}
+.dly-pc b{display:block;font:400 28px/1.1 var(--display);margin:6px 0 2px}
+.dly-pc b sub{font:500 12px var(--body);vertical-align:baseline}
+.dly-pc span{display:block;font:500 12px var(--body);color:rgba(28,26,27,.7)}
+.dly-pc[aria-pressed="true"]{background:#fff;box-shadow:0 0 0 2px #C24E6A,0 16px 30px -16px rgba(194,78,106,.6)}
+.dly-pc[aria-pressed="true"]::after{content:"Your plan";position:absolute;top:-10px;right:10px;background:#C24E6A;color:#fff;font:700 9.5px var(--body);letter-spacing:.1em;text-transform:uppercase;border-radius:999px;padding:3px 8px}
+@media(max-width:767px){.dly-pc-line{font-size:22px;margin-bottom:10px}.dly-pc-cards{gap:5px;margin-top:10px}.dly-pc{padding:10px 6px 8px;border-radius:14px;text-align:center}.dly-pc small{font-size:8px;letter-spacing:.06em}.dly-pc b{font-size:18px;margin:4px 0 1px}.dly-pc b sub{display:none}.dly-pc span{font-size:9.5px}.dly-pc[aria-pressed="true"]::after{display:none}}
 @media(max-width:767px){
   .dly-eq{gap:2px 8px;margin-bottom:12px}.dly-eq .n{font-size:11vw}.dly-eq .op{font-size:6vw}.dly-eq .u{font-size:9px;letter-spacing:.08em}
   .dly-eq-kick{font-size:15px;margin-bottom:8px}.dly-eq-price{padding:9px 12px}.dly-eq-price output{font-size:20px;min-width:74px}
