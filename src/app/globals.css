@@ -1950,6 +1950,16 @@ body:has(.home-page){--blue-light:#E4E8EC}
   .daily-on .cv-row .dly-go{width:100% !important;margin-left:0}
 }
 @media(prefers-reduced-motion:reduce){.dly-no-w span,.daily-on .cv-row .dly-proof-q p{animation:none}}
+/* glass bar: fixed height so nothing moves when the quote changes; button centred */
+@media(min-width:768px){
+  .daily-on .cv-row{height:68px;box-sizing:border-box;align-items:center;padding:0 8px 0 12px}
+  .daily-on .cv-row .dly-proof{height:100%;align-items:center}
+  .daily-on .cv-row .dly-proof-q{height:44px;min-height:0;overflow:hidden;display:flex;align-items:center}
+  .daily-on .cv-row .dly-proof-q p{display:block}
+  .daily-on .cv-row .dly-proof-q p{font-size:14px;line-height:1.15}
+  .daily-on .cv-row .dly-proof-q p b{margin-top:2px;white-space:nowrap}
+  .daily-on .cover .cv-row .dly-go{height:52px !important;min-height:0 !important;margin:0 0 0 auto !important;align-self:center;line-height:1;box-sizing:border-box;transform:none !important}
+}
 /* Daily cover B · plan cards */
 .dly-pc-line{margin:0 0 12px;font:400 clamp(22px,1.9vw,30px)/1.2 var(--display);color:var(--ink)}
 .dly-pc-line em{font-style:normal;background:linear-gradient(100deg,#1C1A1B 0 30%,#C24E6A);-webkit-background-clip:text;background-clip:text;color:transparent}
