@@ -1844,7 +1844,10 @@ body:has(.home-page){--blue-light:#E4E8EC}
 /* Daily cover on the lilac portrait: the whole width takes the photo's own lilac, dark text */
 .daily-on .cover{background:linear-gradient(90deg,#D2CDE4 0%,#D0CBE4 45%,#CAC5E0 100%)}
 .daily-on .cover::after{display:none}
-.dly-still{position:absolute;top:0;bottom:0;right:7vw;z-index:0;height:100%;aspect-ratio:880/1168;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent 100%)}
+.dly-still{position:absolute;top:0;bottom:0;right:7vw;z-index:0;height:100%;aspect-ratio:880/1168;transform:translateZ(0);contain:paint}
+.dly-still::before,.dly-still::after{content:"";position:absolute;top:0;bottom:0;width:10%;z-index:1;pointer-events:none}
+.dly-still::before{left:0;background:linear-gradient(90deg,#D0CBE4,rgba(208,203,228,0))}
+.dly-still::after{right:0;background:linear-gradient(270deg,#CAC5E0,rgba(202,197,224,0))}
 .dly-still img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
 .daily-on .cv-bot{color:var(--ink)}
 .daily-on .dly-hh{color:var(--ink)}
@@ -1855,17 +1858,17 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .daily-on .dly-hh-dial input::-webkit-slider-runnable-track{background:rgba(28,26,27,.25)}
 .daily-on .dly-hh-dial input::-moz-range-track{background:rgba(28,26,27,.25)}
 .daily-on .cover .cv-pill{background:var(--ink) !important;color:#fff !important}
-.dly-hh-logo{display:block;width:min(640px,46vw);height:auto;color:#fff;margin:0 0 18px;filter:drop-shadow(0 8px 26px rgba(70,60,110,.18))}
+.dly-hh-logo{display:block;width:min(640px,46vw);height:auto;color:#fff;margin:0 0 18px;}
 /* lighter, see-through pieces on the lilac */
 .daily-on .dly-hh-tag{opacity:.6}
 .daily-on .dly-hh-own s{opacity:.4}
-.daily-on .dly-hh-dial{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.22);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2)}
+.daily-on .dly-hh-dial{border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.22);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .daily-on .dly-hh-note{opacity:.6}
 .daily-on .cv-claims{opacity:.7}
-.daily-on .cover .cv-pill{background:rgba(28,26,27,.86) !important;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.daily-on .cover .cv-pill{background:rgba(28,26,27,.86) !important}
 @media(max-width:767px){.dly-hh-logo{width:78vw;margin-bottom:10px}}
 .daily-on .cv-claims li::before{background:var(--ink)}
-@media(max-width:767px){.dly-still{right:0;left:0;height:62%;bottom:auto;aspect-ratio:auto;-webkit-mask-image:linear-gradient(180deg,#000 75%,transparent 100%);mask-image:linear-gradient(180deg,#000 75%,transparent 100%)}}
+@media(max-width:767px){.dly-still{right:0;left:0;height:62%;bottom:auto;aspect-ratio:auto}.dly-still::before{display:none}.dly-still::after{top:auto;left:0;right:0;bottom:0;width:auto;height:25%;background:linear-gradient(0deg,#CFCAE3,rgba(207,202,227,0))}}
 .daily-on .cv-taps{display:none}
 .daily-on .cv-mast{display:none}
 .daily-on .cv-seal{display:none}
