@@ -1885,9 +1885,9 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .dly-eq-kick{margin:0 0 12px;font:500 clamp(18px,1.5vw,22px) var(--sub);font-style:italic;color:rgba(28,26,27,.7)}
 .dly-eq-kick b{color:#C24E6A;font-weight:600}
 .dly-eq{display:grid;grid-template-columns:repeat(5,auto);justify-content:start;align-items:end;gap:4px 14px;margin:0 0 16px}
-.dly-eq .n{font:400 clamp(52px,5.4vw,90px)/1 var(--display);letter-spacing:-.02em;color:var(--ink)}
+.dly-eq .n{font:400 clamp(46px,4.6vw,78px)/1 var(--display);letter-spacing:-.02em;color:var(--ink)}
 .dly-eq .n.pink{background:linear-gradient(100deg,#1C1A1B 0 40%,#C24E6A);-webkit-background-clip:text;background-clip:text;color:transparent}
-.dly-eq .op{font:400 clamp(26px,2.2vw,34px)/1.6 var(--display);color:rgba(28,26,27,.38)}
+.dly-eq .op{font:300 clamp(22px,1.8vw,28px)/1 var(--body) !important;color:rgba(28,26,27,.35) !important;background:none !important;border:0 !important;box-shadow:none !important;padding:0 0 .55em !important;border-radius:0 !important;width:auto !important;height:auto !important;align-self:end}
 .dly-eq .u{font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;color:rgba(28,26,27,.55)}
 .dly-eq-price{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.62);border:1px solid #fff;border-radius:18px;padding:12px 16px;cursor:pointer}
 .dly-eq-price span{font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;color:rgba(28,26,27,.6);white-space:nowrap}
