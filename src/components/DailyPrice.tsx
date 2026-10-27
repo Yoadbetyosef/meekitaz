@@ -105,8 +105,9 @@ export function DailyMarquee() {
   return <div className="dly-mq" aria-label="Meekitaz Daily"><div>{[...t, ...t].map((x, i) => <span key={i}>{x}<i>✦</i></span>)}</div></div>;
 }
 
-/** Home cover in the Daily preview: pick the piece's price, then a round daily amount ($10–$30); the days follow.
- *  Amounts that don't meet the rules (≤180 days, cost covered by ship day 21) are greyed out. */
+/** Home cover in the Daily preview — "the equation": $amount × days = the piece. Pick the piece's price, then a pace
+ *  ($10–$30 a day, each showing how long it takes). Paces that break the rules (≤180 days, cost covered by ship day 21) are off. */
+const howLong = (d: number) => { const m = d / 30; if (m < 1.5) return `${d} days`; const r = Math.round(m * 2) / 2; return `${Math.floor(r)}${r % 1 ? "½" : ""} months`; };
 export function DailyHeroHeadline() {
   const on = useDaily();
   const [price, setPrice] = useState(1800);
@@ -115,19 +116,19 @@ export function DailyHeroHeadline() {
   const opts = dailyOptions(price);
   const cur = opts.find(o => o.ok && o.amt === pick) || opts.find(o => o.ok) || opts[opts.length - 1];
   return (
-    <div className="dly-hh">
+    <div className="dly-hh dly-eqv">
       <Logo className="dly-hh-logo" />
-      <p className="dly-hh-tag">From $10 a day · any piece up to <b>$4,500</b></p>
-      <h1 className="dly-hh-big"><b>${cur.amt}</b><span>a day</span></h1>
-      <p className="dly-hh-own"><s>Rent it</s><s>Lease it</s><b>Own it. From day one.</b></p>
-      <div className="dly-hh-dials">
-        <label className="dly-hh-dial"><span>Piece</span><i>{usd(price)}</i><input type="range" min={300} max={4500} step={50} value={price} onChange={e => setPrice(Number(e.target.value))} aria-label="Price of the piece" /></label>
-        <div className="dly-hh-amts" role="group" aria-label="Daily amount">
-          {opts.map(o => <button key={o.amt} type="button" disabled={!o.ok} aria-pressed={o.amt === cur.amt} onClick={() => setPick(o.amt)}>${o.amt}</button>)}
-        </div>
+      <p className="dly-eq-kick">Own any piece up to $4,500. <b>From $10 a day.</b></p>
+      <div className="dly-eq" aria-live="polite">
+        <span className="n pink">${cur.amt}</span><span className="op">×</span><span className="n">{cur.days}</span><span className="op">=</span><span className="n">{usd(price)}</span>
+        <span className="u">a day</span><span /><span className="u">days</span><span /><span className="u">the piece, yours</span>
       </div>
-      <p className="dly-hh-plan"><b>{cur.days} days</b> · ships day {cur.ship} · {usd(price)} total, no interest</p>
-      <div className="dly-hh-facts"><span>No credit check</span><span>Yours from day one</span><span>No interest</span></div>
+      <label className="dly-eq-price"><span>Your piece</span><output>{usd(price)}</output><input type="range" min={300} max={4500} step={50} value={price} onChange={e => setPrice(Number(e.target.value))} aria-label="Price of the piece" /></label>
+      <p className="dly-eq-pt">Pick your pace</p>
+      <div className="dly-eq-pace" role="group" aria-label="Your pace">
+        {opts.map(o => <button key={o.amt} type="button" disabled={!o.ok} aria-pressed={o.amt === cur.amt} onClick={() => setPick(o.amt)}><b>${o.amt}</b><span>{o.ok ? howLong(o.days) : "—"}</span></button>)}
+      </div>
+      <p className="dly-eq-fine">Ships on day {cur.ship} · $49 to open, once · no interest, no credit check</p>
     </div>
   );
 }
