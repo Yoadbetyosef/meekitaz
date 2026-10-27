@@ -1,7 +1,7 @@
 /* Meekitaz Daily — a PREVIEW layer, shown only to people who unlock it (?daily=CODE). It never changes prices in Shopify:
    every daily figure is worked out from the regular price on the fly, so turning it off brings the site back exactly as it was. */
 export const DAILY = {
-  enabled: false,    // PARKED (Oct 26, 2026): the whole Daily layer is off for everyone. Set to true to bring it back exactly as it was.
+  enabled: true,     // Preview layer on again (Oct 27, 2026) — visible only with ?daily=CODE; set false to park it.
   perDay: 15,        // the headline: $15 a day
   maxDays: 180,      // never longer than 6 months; above that the daily amount goes up
   shipDay: 0,        // message: it ships right away
