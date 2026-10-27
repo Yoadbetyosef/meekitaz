@@ -1843,6 +1843,7 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .dly-film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .daily-on .cv-taps{display:none}
 .daily-on .cv-mast{display:none}
+.daily-on .cv-seal{display:none}
 .dly-hh{color:#fff;pointer-events:auto;max-width:620px}
 .dly-hh-tag{margin:0 0 14px;font:500 clamp(18px,1.7vw,24px) var(--sub);font-style:italic;color:var(--blue);text-shadow:0 1px 12px rgba(0,0,0,.35)}
 .dly-hh-tag s{opacity:.75}
