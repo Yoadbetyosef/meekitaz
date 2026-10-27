@@ -15,3 +15,24 @@ export function dailyPlan(price: number, days?: number) {
   const n = days ? d : Math.ceil(p / perDay);
   return { perDay, days: n, last: p - perDay * (n - 1), total: p, months: Math.max(1, Math.round(n / 30)) };
 }
+
+/* The ladder (decided Oct 27, 2026): the customer picks a round daily amount, the days follow.
+   An amount is offered only if (1) the plan is 180 days or less and (2) by ship day 21 the payments plus the $49
+   account fee cover the piece's cost (price ÷ 6, the minimum markup). If no amount passes (very top of the range),
+   the $30 plan is offered and the piece ships on the day its cost is covered instead of day 21. */
+export const LADDER = [10, 15, 20, 25, 30];
+export const DAILY_RULES = { fee: 49, markup: 6, shipDay: 21, maxDays: 180, maxPrice: 4500 };
+export type DailyOption = { amt: number; days: number; last: number; ship: number; ok: boolean };
+export function dailyOptions(price: number): DailyOption[] {
+  const p = Math.max(0, Math.round(price)), cost = p / DAILY_RULES.markup;
+  const opts = LADDER.map(amt => {
+    const days = Math.max(1, Math.ceil(p / amt));
+    const ship = Math.max(DAILY_RULES.shipDay, Math.ceil((cost - DAILY_RULES.fee) / amt));
+    const ok = days <= DAILY_RULES.maxDays && ship === DAILY_RULES.shipDay;
+    return { amt, days, last: p - amt * (days - 1), ship, ok };
+  });
+  if (!opts.some(o => o.ok)) { const top = opts[opts.length - 1]; if (top.days <= DAILY_RULES.maxDays) top.ok = true; }
+  return opts;
+}
+/** The lowest daily amount a price can have. */
+export const lowestDaily = (price: number) => dailyOptions(price).find(o => o.ok) || null;
