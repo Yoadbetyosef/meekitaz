@@ -1950,6 +1950,8 @@ body:has(.home-page){--blue-light:#E4E8EC}
   .daily-on .cv-row .dly-go{width:100% !important;margin-left:0}
 }
 @media(prefers-reduced-motion:reduce){.dly-no-w span,.daily-on .cv-row .dly-proof-q p{animation:none}}
+/* whole left block 20% smaller on desktop */
+@media(min-width:768px){.daily-on .cv-bot{zoom:.8}}
 /* glass bar: fixed height so nothing moves when the quote changes; button centred */
 @media(min-width:768px){
   .daily-on .cv-row{height:72px;box-sizing:border-box;align-items:center;padding:0 8px 0 12px}
