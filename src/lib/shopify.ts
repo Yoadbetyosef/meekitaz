@@ -4,7 +4,7 @@ import { cardImage, isSupplierImage } from "./supplierImages";
 import { RING_SHAPES } from "./ringfilters";
 import { fancyColorOf } from "./fancy";
 // Set SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_TOKEN in .env.local / Vercel.
-export type Product = { id: string; handle: string; title: string; price: string; currency: string; compareAt?: number; image?: { url: string; alt: string }; modelImage?: string; code?: string; metal?: string; shape?: string; stone?: string; variants?: { metal: string; handle: string; title: string; image?: { url: string; alt: string }; modelImage?: string; price: string; compareAt?: number }[] };
+export type Product = { edit?: boolean; id: string; handle: string; title: string; price: string; currency: string; compareAt?: number; image?: { url: string; alt: string }; modelImage?: string; code?: string; metal?: string; shape?: string; stone?: string; variants?: { metal: string; handle: string; title: string; image?: { url: string; alt: string }; modelImage?: string; price: string; compareAt?: number }[] };
 
 export type CartLine = {
   id: string;
@@ -179,12 +179,42 @@ export async function getRelated(productType: string, exceptHandle: string, firs
     .slice(0, first).map(n => ({ handle: n.handle, title: n.title, price: +n.priceRange.minVariantPrice.amount, compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0, image: n.featuredImage && !isSupplierImage(n.featuredImage.url, n.tags) ? n.featuredImage.url : undefined }));
 }
 
+
+/* ---------------- New imports listed last ----------------
+   Pieces added from the new collection (tag "Meekitaz Edit") come after everything that was already in the store, on the default (best-selling) order:
+   the listing first pages through the store without them, then pages through them alone. The phase rides in the cursor ("E|" + cursor). */
+export const EDIT_TAG = "Meekitaz Edit";
+const EDIT_CAT: Record<string, string> = { earrings: "Earrings", necklaces: "Necklace", bracelets: "Bracelets", bands: "Wedding Bands" };
+type Page = { products: Product[]; hasNext: boolean; cursor: string | null } | null;
+const isPhase2 = (c?: string | null) => !!c && c.startsWith("E|");
+const inner = (c?: string | null) => (c && c.startsWith("E|") ? c.slice(2) || null : c || null);
+const toPhase2 = (r: Page): Page => r && { ...r, cursor: "E|" + (r.cursor || ""), hasNext: r.hasNext };
+export async function getProductsByQuery(query: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<Page> {
+  if (opts.sort && opts.sort !== "best") return getProductsByQueryRaw(query, opts);
+  if (isPhase2(opts.after)) return toPhase2(await getProductsByQueryRaw(`(${query}) AND tag:'${EDIT_TAG}'`, { ...opts, after: inner(opts.after) }));
+  const r = await getProductsByQueryRaw(`(${query}) AND -tag:'${EDIT_TAG}'`, opts);
+  if (r && !r.hasNext) {
+    if (r.products.length) return { ...r, hasNext: true, cursor: "E|" };
+    return toPhase2(await getProductsByQueryRaw(`(${query}) AND tag:'${EDIT_TAG}'`, { ...opts, after: null }));
+  }
+  return r;
+}
+export async function getCollectionPage(handle: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<Page> {
+  const cat = EDIT_CAT[handle];
+  if (!cat || (opts.sort && opts.sort !== "best")) return getCollectionPageRaw(handle, opts);
+  if (isPhase2(opts.after)) return toPhase2(await getProductsByQueryRaw(`tag:'${EDIT_TAG}' AND tag:'${cat}' AND -tag:'Configured' AND -tag:'Karat variant'`, { ...opts, after: inner(opts.after) }));
+  const r = await getCollectionPageRaw(handle, opts);
+  if (!r) return r;
+  const kept = { ...r, products: r.products.filter(p => !p.edit) };
+  return r.hasNext ? kept : { ...kept, hasNext: true, cursor: "E|" };
+}
+
 /* ---------------- Category listing with paging and sorting ---------------- */
 export const SORTS: Record<string, { key: string; reverse: boolean }> = {
   best: { key: "BEST_SELLING", reverse: false }, new: { key: "CREATED", reverse: true },
   price_asc: { key: "PRICE", reverse: false }, price_desc: { key: "PRICE", reverse: true },
 };
-export async function getCollectionPage(handle: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
+async function getCollectionPageRaw(handle: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
   const so = SORTS[opts.sort || "best"] || SORTS.best;
   const d = await sf<{ collection: null | { products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null; model?: { value: string } | null } }[] } } }>(
     `query($handle:String!,$first:Int!,$after:String,$key:ProductCollectionSortKeys!,$rev:Boolean!){ collection(handle:$handle){ products(first:$first, after:$after, sortKey:$key, reverse:$rev){
@@ -196,14 +226,14 @@ export async function getCollectionPage(handle: string, opts: { first?: number; 
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
     image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || undefined,
-    code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || gemFacets(n.title, n.tags).shape, stone: gemFacets(n.title, n.tags).stone,
+    edit: n.tags.includes(EDIT_TAG), code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || gemFacets(n.title, n.tags).shape, stone: gemFacets(n.title, n.tags).stone,
   }));
   return { products: collapseDesigns(products.filter(hasPhoto)), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
 }
 
 /** Cards for a Shopify product search (used by the filtered category pages). */
 const PSORT: Record<string, { key: string; rev: boolean }> = { best: { key: "BEST_SELLING", rev: false }, new: { key: "CREATED_AT", rev: true }, price_asc: { key: "PRICE", rev: false }, price_desc: { key: "PRICE", rev: true } };
-export async function getProductsByQuery(query: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
+async function getProductsByQueryRaw(query: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
   const so = PSORT[opts.sort || "best"] || PSORT.best;
   const d = await sf<{ products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null; model?: { value: string } | null } }[] } }>(
     `query($q:String!,$first:Int!,$after:String,$key:ProductSortKeys,$rev:Boolean){ products(first:$first, after:$after, query:$q, sortKey:$key, reverse:$rev){
@@ -215,7 +245,7 @@ export async function getProductsByQuery(query: string, opts: { first?: number; 
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
     image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || undefined,
-    code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || gemFacets(n.title, n.tags).shape, stone: gemFacets(n.title, n.tags).stone,
+    edit: n.tags.includes(EDIT_TAG), code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || gemFacets(n.title, n.tags).shape, stone: gemFacets(n.title, n.tags).stone,
   }));
   return { products: collapseDesigns(products.filter(hasPhoto)), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
 }
@@ -236,9 +266,9 @@ export async function searchProducts(query: string, opts: { first?: number; maxP
       id: n.id!, handle: n.handle!, title: n.title!, price: n.priceRange!.minVariantPrice.amount, currency: n.priceRange!.minVariantPrice.currencyCode,
       compareAt: +n.compareAtPriceRange!.minVariantPrice.amount > +n.priceRange!.minVariantPrice.amount ? +n.compareAtPriceRange!.minVariantPrice.amount : 0,
       image: cardImage({ title: n.title!, tags: n.tags!, featuredImage: n.featuredImage, images: (n as { images?: { edges: { node: { url: string; altText?: string } }[] } }).images }),
-      code: n.tags!.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title!), shape: n.tags!.find(t => RING_SHAPES.includes(t)) || "",
+      edit: n.tags!.includes(EDIT_TAG), code: n.tags!.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title!), shape: n.tags!.find(t => RING_SHAPES.includes(t)) || "",
     }));
-  if (products.length) return collapseDesigns(products.filter(hasPhoto));
+  if (products.length) { const all = collapseDesigns(products.filter(hasPhoto)); return [...all.filter(p => !p.edit), ...all.filter(p => p.edit)]; }
   // fallback: every word must be in the title or a tag
   const tokens = query.toLowerCase().split(/[^a-z0-9é]+/).filter(t => t.length > 1 && !STOP.has(t)).slice(0, 5);
   if (!tokens.length) return d ? [] : null;
