@@ -1842,19 +1842,21 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .daily-on .cv-bars{display:none}
 .dly-film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
 /* Daily cover on the lilac portrait: the whole width takes the photo's own lilac, dark text */
-.daily-on .cover{background:linear-gradient(90deg,#D2CDE4 0%,#D0CBE4 45%,#CAC5E0 100%)}
+.daily-on .cover{background:linear-gradient(180deg,#DEE9F4 0%,#DCE7F3 48%,#E1EAF5 100%)}
 .daily-on .cover::after{display:none}
-.dly-still{position:absolute;top:0;bottom:0;right:7vw;z-index:0;height:100%;aspect-ratio:880/1168;transform:translateZ(0);contain:paint}
+.dly-still{position:absolute;top:0;bottom:0;right:1vw;z-index:0;height:100%;aspect-ratio:1089/1445;transform:translateZ(0);contain:paint}
 .dly-still::before,.dly-still::after{content:"";position:absolute;top:0;bottom:0;width:10%;z-index:1;pointer-events:none}
-.dly-still::before{left:0;background:linear-gradient(90deg,#D0CBE4,rgba(208,203,228,0))}
-.dly-still::after{right:0;background:linear-gradient(270deg,#CAC5E0,rgba(202,197,224,0))}
+.dly-still::before{left:0;background:linear-gradient(90deg,#DDE8F3,rgba(221,232,243,0))}
+.dly-still::after{right:0;background:linear-gradient(270deg,#E0EAF5,rgba(224,234,245,0))}
 .dly-still img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+@media(min-width:1100px){.dly-still{height:106%;bottom:auto;top:-1%}}
 .daily-on .cv-bot{color:var(--ink)}
 .daily-on .dly-hh{color:var(--ink)}
 .daily-on .dly-hh-tag{color:var(--ink);opacity:.75;text-shadow:none}
 .daily-on .dly-hh-big,.daily-on .dly-hh-own,.daily-on .cv-claims{text-shadow:none}
 .daily-on .dly-hh-own b{color:var(--ink)}
 .daily-on .dly-hh-dial{border-color:rgba(28,26,27,.35);background:rgba(255,255,255,.35)}
+.daily-on .cv-row .dly-proof-faces span,.daily-on .cv-row .dly-proof-faces img{border-color:#fff}
 .daily-on .dly-hh-dial input::-webkit-slider-runnable-track{background:rgba(28,26,27,.25)}
 .daily-on .dly-hh-dial input::-moz-range-track{background:rgba(28,26,27,.25)}
 .daily-on .cover .cv-pill{background:var(--ink) !important;color:#fff !important}
@@ -2011,7 +2013,7 @@ body:has(.home-page){--blue-light:#E4E8EC}
 }
 @media(max-width:767px){.daily-on .dly-hh-big b{font-size:22vw}.dly-hh-facts span{font-size:11px;padding:6px 10px}.dly-go-ar{width:34px;height:34px}}
 .daily-on .cv-claims li::before{background:var(--ink)}
-@media(max-width:767px){.dly-still{right:0;left:0;height:62%;bottom:auto;aspect-ratio:auto}.dly-still::before{display:none}.dly-still::after{top:auto;left:0;right:0;bottom:0;width:auto;height:25%;background:linear-gradient(0deg,#CFCAE3,rgba(207,202,227,0))}}
+@media(max-width:767px){.dly-still{right:0;left:0;height:62%;bottom:auto;aspect-ratio:auto}.dly-still::before{display:none}.dly-still::after{top:auto;left:0;right:0;bottom:0;width:auto;height:25%;background:linear-gradient(0deg,#DFE9F4,rgba(223,233,244,0))}}
 .daily-on .cv-taps{display:none}
 .daily-on .cv-mast{display:none}
 .daily-on .cv-seal{display:none}
