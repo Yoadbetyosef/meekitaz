@@ -33,12 +33,7 @@ export default function DailyProof() {
         <div><span className="dly-proof-stars" aria-label={`${RATING.score} out of 5`}>★★★★★</span><br /><b>{RATING.score}</b> · {RATING.label}</div>
       </div>
       <div className="dly-proof-q" aria-live="polite">
-        {REVIEWS.map((r, i) => (
-          <p key={i} className={i === k ? "on" : ""}>
-            “{r.quote.replace(/^“|”$/g, "")}”
-            <b>{r.name}, {r.meta}</b>
-          </p>
-        ))}
+        <p key={k}>“{REVIEWS[k].quote.replace(/^“|”$/g, "")}”<b>{REVIEWS[k].name}, {REVIEWS[k].meta}</b></p>
       </div>
     </div>
   );
