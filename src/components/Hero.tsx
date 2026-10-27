@@ -32,15 +32,17 @@ export default function Hero() {
   }, []);
 
   useEffect(() => {
+    if (daily) return; // Daily cover is one still: no photos to preload
     let timer: ReturnType<typeof setTimeout>; let n = 0;
     const next = () => { n += 1; setSeen(x => Math.max(x, n)); if (n < slides.length - 1) timer = setTimeout(next, 900); };
     const start = () => { timer = setTimeout(next, 700); };
     if (document.readyState === "complete") start(); else window.addEventListener("load", start, { once: true });
     return () => { clearTimeout(timer); window.removeEventListener("load", start); };
-  }, []);
+  }, [daily]);
 
   // The clock: one frame at a time, paused while a finger is held on the photo, while the hero is off screen or the tab is hidden.
   useEffect(() => {
+    if (daily) return; // Daily cover is one still: no slide clock, no re-renders
     reduce.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const io = new IntersectionObserver(([e]) => { onScreen.current = e.isIntersecting; }, { threshold: 0.35 });
     if (secRef.current) io.observe(secRef.current);
@@ -57,7 +59,7 @@ export default function Hero() {
     };
     raf = requestAnimationFrame(tick);
     return () => { cancelAnimationFrame(raf); io.disconnect(); };
-  }, []);
+  }, [daily]);
 
   // On phones the seal sits above the text block, so the block's height is measured into a CSS variable.
   useEffect(() => {
