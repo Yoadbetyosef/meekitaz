@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useDaily } from "./DailyMode";
+import Logo from "./Logo";
 import { dailyPlan, DAILY } from "@/lib/daily";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
@@ -116,6 +117,7 @@ export function DailyHeroHeadline() {
   const amt = Math.max(DAILY.perDay, Math.ceil(price / d));
   return (
     <div className="dly-hh">
+      <Logo className="dly-hh-logo" />
       <p className="dly-hh-tag">Any piece up to $4,500 — <s>{usd(price)}</s></p>
       <h1 className="dly-hh-big"><b>${amt}</b><span>a day</span></h1>
       <p className="dly-hh-own"><s>Rent it</s><s>Lease it</s><b>Own it. From day one.</b></p>
