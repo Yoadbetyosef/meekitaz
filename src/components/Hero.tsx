@@ -120,7 +120,7 @@ export default function Hero() {
       <div className="cv-bot" ref={blockRef}>
         {daily ? <DailyHeroHeadline /> : <Link href={s.href} className="cv-line"><h1><small>{s.small}</small><span className="word" ref={wordRef}>{s.big}</span></h1></Link>}
         <div className="cv-row">
-          {daily ? <Link href="/daily" className="pill cv-pill dly-go">Start at $15 a day<span className="dly-go-ar" aria-hidden="true">→</span></Link> : <Link href="/engagement-rings" className="pill cv-pill">Shop Engagement Rings</Link>}
+          {daily ? <Link href="/daily" className="pill cv-pill dly-go">Start from $10 a day<span className="dly-go-ar" aria-hidden="true">→</span></Link> : <Link href="/engagement-rings" className="pill cv-pill">Shop Engagement Rings</Link>}
           {!daily && <DailyHeroBadge />}
           <ul className="cv-claims"><li>30-day free returns</li><li>Lifetime warranty</li><li>IGI / GIA certified</li></ul>
         </div>
