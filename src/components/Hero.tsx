@@ -90,7 +90,7 @@ export default function Hero() {
       {/* the first photo is fetched first and only the one for this screen size */}
       <link rel="preload" as="image" href={optimised(slides[0].mobile).src} imageSrcSet={optimised(slides[0].mobile).srcSet} imageSizes="100vw" media="(max-width:767px)" fetchPriority="high" />
       <link rel="preload" as="image" href={optimised(slides[0].desktop).src} imageSrcSet={optimised(slides[0].desktop).srcSet} imageSizes="100vw" media="(min-width:768px)" fetchPriority="high" />
-      {daily && <video className="hs on dly-film" src="/media/daily/hero.mp4" poster="/media/daily/hero.jpg" autoPlay muted loop playsInline preload="auto" aria-hidden="true" />}
+      {daily && <div className="dly-still" aria-hidden="true"><img src="/media/daily/hero-shh.jpg" alt="" fetchPriority="high" /></div>}
       {!daily && slides.map((sl, k) => (
         <div key={k} className={`hs${k === i ? " on" : ""}`} style={{ "--pos-m": (sl as { posM?: string }).posM || sl.pos, "--zoom-m": (sl as { zoomM?: number }).zoomM || 1 } as React.CSSProperties}>
           {k <= seen && (
