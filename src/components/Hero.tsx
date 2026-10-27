@@ -2,7 +2,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image, { getImageProps } from "next/image";
 import Link from "next/link";
-import { DailyHeroBadge } from "./DailyPrice";
+import { DailyHeroBadge, DailyHeroHeadline } from "./DailyPrice";
+import { useDaily } from "./DailyMode";
 import { slides } from "@/lib/data";
 import Logo from "./Logo";
 
@@ -22,6 +23,7 @@ export default function Hero() {
   const segs = useRef<(HTMLElement | null)[]>([]);
   const reduce = useRef(false);
   const wordRef = useRef<HTMLSpanElement>(null);
+  const daily = useDaily();
   const secRef = useRef<HTMLElement>(null), blockRef = useRef<HTMLDivElement>(null);
 
   const go = useCallback((n: number) => {
@@ -113,10 +115,10 @@ export default function Hero() {
       </div>
       <div className="cv-seal" role="img" aria-label="Rated 4.9 stars. Trusted brand, 2026"><svg className="rg" viewBox="0 0 100 100" aria-hidden="true"><defs><path id="cvring" d="M50,50 m-41,0 a41,41 0 1,1 82,0 a41,41 0 1,1 -82,0" /></defs><text><textPath href="#cvring" textLength="252" lengthAdjust="spacing">TRUSTED BRAND · 2026 · TRUSTED BRAND · 2026 ·</textPath></text></svg><div className="fc fa"><div><div className="five">4.9</div><div className="st"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg></div></div></div><div className="fc fb"><div><div className="yr">2026</div><div className="tr">Trusted brand</div></div></div></div>
       <div className="cv-bot" ref={blockRef}>
-        <Link href={s.href} className="cv-line"><h1><small>{s.small}</small><span className="word" ref={wordRef}>{s.big}</span></h1></Link>
+        {daily ? <DailyHeroHeadline /> : <Link href={s.href} className="cv-line"><h1><small>{s.small}</small><span className="word" ref={wordRef}>{s.big}</span></h1></Link>}
         <div className="cv-row">
-          <Link href="/engagement-rings" className="pill cv-pill">Shop Engagement Rings</Link>
-          <DailyHeroBadge />
+          {daily ? <Link href="/daily" className="pill cv-pill">Start at $15 a day</Link> : <Link href="/engagement-rings" className="pill cv-pill">Shop Engagement Rings</Link>}
+          {!daily && <DailyHeroBadge />}
           <ul className="cv-claims"><li>30-day free returns</li><li>Lifetime warranty</li><li>IGI / GIA certified</li></ul>
         </div>
       </div>
