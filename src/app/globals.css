@@ -1841,6 +1841,22 @@ body:has(.home-page){--blue-light:#E4E8EC}
 /* Daily hero: no lines at all — the slide bars and the masthead rule are hidden (regular site untouched) */
 .daily-on .cv-bars{display:none}
 .dly-film{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
+/* Daily cover on the lilac portrait: the whole width takes the photo's own lilac, dark text */
+.daily-on .cover{background:linear-gradient(90deg,#D2CDE4 0%,#D0CBE4 45%,#CAC5E0 100%)}
+.daily-on .cover::after{display:none}
+.dly-still{position:absolute;top:0;bottom:0;right:7vw;z-index:0;height:100%;aspect-ratio:880/1168;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent 100%)}
+.dly-still img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.daily-on .cv-bot{color:var(--ink)}
+.daily-on .dly-hh{color:var(--ink)}
+.daily-on .dly-hh-tag{color:var(--ink);opacity:.75;text-shadow:none}
+.daily-on .dly-hh-big,.daily-on .dly-hh-own,.daily-on .cv-claims{text-shadow:none}
+.daily-on .dly-hh-own b{color:var(--ink)}
+.daily-on .dly-hh-dial{border-color:rgba(28,26,27,.35);background:rgba(255,255,255,.35)}
+.daily-on .dly-hh-dial input::-webkit-slider-runnable-track{background:rgba(28,26,27,.25)}
+.daily-on .dly-hh-dial input::-moz-range-track{background:rgba(28,26,27,.25)}
+.daily-on .cover .cv-pill{background:var(--ink) !important;color:#fff !important}
+.daily-on .cv-claims li::before{background:var(--ink)}
+@media(max-width:767px){.dly-still{right:0;left:0;height:62%;bottom:auto;aspect-ratio:auto;-webkit-mask-image:linear-gradient(180deg,#000 75%,transparent 100%);mask-image:linear-gradient(180deg,#000 75%,transparent 100%)}}
 .daily-on .cv-taps{display:none}
 .daily-on .cv-mast{display:none}
 .daily-on .cv-seal{display:none}
