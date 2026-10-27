@@ -1849,6 +1849,9 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .dly-still::before{left:0;background:linear-gradient(90deg,#DDE8F3,rgba(221,232,243,0))}
 .dly-still::after{right:0;background:linear-gradient(270deg,#E0EAF5,rgba(224,234,245,0))}
 .dly-still img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+.dly-m{position:absolute;right:-14vw;bottom:-22vh;width:min(80vw,1100px);height:auto;opacity:.5;z-index:0;pointer-events:none}
+.dly-still::before,.dly-still::after{display:none}
+@media(max-width:767px){.dly-m{right:-30vw;bottom:auto;top:18%;width:120vw;opacity:.4}}
 @media(min-width:1100px){.dly-still{height:114%;bottom:auto;top:-2%;right:4vw}}
 .daily-on .cv-bot{color:var(--ink)}
 .daily-on .dly-hh{color:var(--ink)}
