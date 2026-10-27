@@ -1838,6 +1838,9 @@ body:has(.home-page){--blue-light:#E4E8EC}
 @media(max-width:767px){.df-acts{top:14px;right:14px}.df-acts .wh,.df-acts .wsh{width:38px;height:38px}}
 
 /* ===== Meekitaz Daily (preview layer, only with html.daily-on) ===== */
+/* Daily hero: no lines at all — the slide bars and the masthead rule are hidden (regular site untouched) */
+.daily-on .cv-bars{display:none}
+.daily-on .cv-issue{border-top:0;border-bottom:0}
 .daily-on .pcard .price,.daily-on .pp-price{display:none}
 .dly-card{display:flex;flex-direction:column;gap:2px;margin:2px 0 4px}
 .dly-card b{display:inline-flex;align-items:baseline;font:900 21px var(--body);letter-spacing:-.02em}
