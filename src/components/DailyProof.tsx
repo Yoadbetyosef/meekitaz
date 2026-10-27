@@ -11,17 +11,26 @@ export const RATING = { score: "4.9", label: "Daily customers" };
 export const REVIEWS: { quote: string; name: string; meta: string; photo?: string; tint: string; sample: boolean }[] = [
   { quote: "Skipped my morning Starbucks. Got a tennis bracelet instead.", name: "Maya", meta: "31 · Brooklyn", photo: "/media/daily/faces/maya.jpg", tint: "#B98A7A", sample: true },
   { quote: "It shipped on day 21. I forgot I was still paying.", name: "Jess", meta: "39 · Austin", photo: "/media/daily/faces/jess.jpg", tint: "#8E6E8C", sample: true },
-  { quote: "No credit check, no interest — and it’s mine, not rented.", name: "Linda", meta: "58 · Miami", photo: "/media/daily/faces/linda.jpg", tint: "#C9A27E", sample: true },
+  { quote: "No credit check, no interest, and it’s mine, not rented.", name: "Linda", meta: "58 · Miami", photo: "/media/daily/faces/linda.jpg", tint: "#C9A27E", sample: true },
   { quote: "Got my wife the studs at $15 a day. Best thing I bought this year.", name: "David", meta: "38 · Hoboken", photo: "/media/daily/faces/david.jpg", tint: "#6F7D99", sample: true },
 ]
 
-export default function DailyProof() {
+/** The rotating quote, one at a time, shown under the pill across its full width. */
+export function DailyQuote() {
   const [k, setK] = useState(0);
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setInterval(() => setK(n => (n + 1) % REVIEWS.length), 3600);
+    const t = setInterval(() => setK(n => (n + 1) % REVIEWS.length), 3800);
     return () => clearInterval(t);
   }, []);
+  return (
+    <div className="dly-quote" aria-live="polite">
+      <p key={k}>“{REVIEWS[k].quote.replace(/^“|”$/g, "")}”<b>{REVIEWS[k].name}, {REVIEWS[k].meta}</b></p>
+    </div>
+  );
+}
+
+export default function DailyProof() {
   return (
     <div className="dly-proof">
       <div className="dly-proof-rate">
@@ -30,10 +39,7 @@ export default function DailyProof() {
             ? <img key={i} src={r.photo} alt="" />
             : <span key={i} style={{ background: r.tint }}>{r.name.charAt(0)}</span>)}
         </div>
-        <div><span className="dly-proof-stars" aria-label={`${RATING.score} out of 5`}>★★★★★</span><br /><b>{RATING.score}</b> · {RATING.label}</div>
-      </div>
-      <div className="dly-proof-q" aria-live="polite">
-        <p key={k}>“{REVIEWS[k].quote.replace(/^“|”$/g, "")}”<b>{REVIEWS[k].name}, {REVIEWS[k].meta}</b></p>
+        <div><div className="dly-proof-stars" aria-label={`${RATING.score} out of 5`}>★★★★★</div><div className="dly-proof-lbl"><b>{RATING.score}</b> · {RATING.label}</div></div>
       </div>
     </div>
   );
