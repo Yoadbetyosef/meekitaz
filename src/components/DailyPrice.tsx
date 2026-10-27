@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useDaily } from "./DailyMode";
 import Logo from "./Logo";
-import { dailyPlan, DAILY } from "@/lib/daily";
+import { dailyPlan, dailyOptions, DAILY } from "@/lib/daily";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 /** On cards: "$15/day" leads, the full price under it. Renders nothing unless the Daily preview is on. */
@@ -105,26 +105,28 @@ export function DailyMarquee() {
   return <div className="dly-mq" aria-label="Meekitaz Daily"><div>{[...t, ...t].map((x, i) => <span key={i}>{x}<i>✦</i></span>)}</div></div>;
 }
 
-/** Home cover in the Daily preview: the daily number is the headline. Two small dials — the piece's price (up to $4,500) and the days —
- *  and the number follows: price ÷ days, floor $15, never above $30 a day, never longer than 6 months. */
+/** Home cover in the Daily preview: pick the piece's price, then a round daily amount ($10–$30); the days follow.
+ *  Amounts that don't meet the rules (≤180 days, cost covered by ship day 21) are greyed out. */
 export function DailyHeroHeadline() {
   const on = useDaily();
   const [price, setPrice] = useState(1800);
-  const [days, setDays] = useState<number | null>(null);
+  const [pick, setPick] = useState<number | null>(null);
   if (!on) return null;
-  const minDays = Math.max(60, Math.ceil(price / 30)), maxDays = DAILY.maxDays;
-  const d = Math.min(maxDays, Math.max(minDays, days ?? Math.ceil(price / DAILY.perDay)));
-  const amt = Math.max(DAILY.perDay, Math.ceil(price / d));
+  const opts = dailyOptions(price);
+  const cur = opts.find(o => o.ok && o.amt === pick) || opts.find(o => o.ok) || opts[opts.length - 1];
   return (
     <div className="dly-hh">
       <Logo className="dly-hh-logo" />
-      <p className="dly-hh-tag">Any piece up to <b>$4,500</b> — <s>{usd(price)}</s></p>
-      <h1 className="dly-hh-big"><b>${amt}</b><span>a day</span></h1>
+      <p className="dly-hh-tag">From $10 a day · any piece up to <b>$4,500</b></p>
+      <h1 className="dly-hh-big"><b>${cur.amt}</b><span>a day</span></h1>
       <p className="dly-hh-own"><s>Rent it</s><s>Lease it</s><b>Own it. From day one.</b></p>
       <div className="dly-hh-dials">
-        <label className="dly-hh-dial"><span>Piece</span><i>{usd(price)}</i><input type="range" min={300} max={4500} step={50} value={price} onChange={e => { setPrice(Number(e.target.value)); setDays(null); }} aria-label="Price of the piece" /></label>
-        <label className="dly-hh-dial"><span>For</span><i>{d} days</i><input type="range" min={minDays} max={maxDays} step={1} value={d} onChange={e => setDays(Number(e.target.value))} aria-label="How many days" /></label>
+        <label className="dly-hh-dial"><span>Piece</span><i>{usd(price)}</i><input type="range" min={300} max={4500} step={50} value={price} onChange={e => setPrice(Number(e.target.value))} aria-label="Price of the piece" /></label>
+        <div className="dly-hh-amts" role="group" aria-label="Daily amount">
+          {opts.map(o => <button key={o.amt} type="button" disabled={!o.ok} aria-pressed={o.amt === cur.amt} onClick={() => setPick(o.amt)}>${o.amt}</button>)}
+        </div>
       </div>
+      <p className="dly-hh-plan"><b>{cur.days} days</b> · ships day {cur.ship} · {usd(price)} total, no interest</p>
       <div className="dly-hh-facts"><span>No credit check</span><span>Yours from day one</span><span>No interest</span></div>
     </div>
   );
