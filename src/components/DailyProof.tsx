@@ -9,11 +9,11 @@ import { useEffect, useState } from "react";
    set sample: false, and update RATING to the real average. Do not take Daily public with sample entries. */
 export const RATING = { score: "4.9", label: "Daily customers" };
 export const REVIEWS: { quote: string; name: string; meta: string; photo?: string; tint: string; sample: boolean }[] = [
-  { quote: "Skipped my morning Starbucks. Got a tennis bracelet instead.", name: "Maya", meta: "31 · Brooklyn", tint: "#B98A7A", sample: true },
-  { quote: "It shipped on day 21. I forgot I was still paying.", name: "Jess", meta: "28 · Austin", tint: "#8E6E8C", sample: true },
-  { quote: "No credit check, no interest — and it’s mine, not rented.", name: "Carolina", meta: "36 · Miami", tint: "#C9A27E", sample: true },
-  { quote: "$15 a day for studs I wear every single day. Easy math.", name: "Noa", meta: "25 · Los Angeles", tint: "#6F7D99", sample: true },
-];
+  { quote: "Skipped my morning Starbucks. Got a tennis bracelet instead.", name: "Maya", meta: "31 · Brooklyn", photo: "/media/daily/faces/maya.jpg", tint: "#B98A7A", sample: true },
+  { quote: "It shipped on day 21. I forgot I was still paying.", name: "Jess", meta: "39 · Austin", photo: "/media/daily/faces/jess.jpg", tint: "#8E6E8C", sample: true },
+  { quote: "No credit check, no interest — and it’s mine, not rented.", name: "Linda", meta: "58 · Miami", photo: "/media/daily/faces/linda.jpg", tint: "#C9A27E", sample: true },
+  { quote: "Got my wife the studs at $15 a day. Best thing I bought this year.", name: "David", meta: "38 · Hoboken", photo: "/media/daily/faces/david.jpg", tint: "#6F7D99", sample: true },
+]
 
 export default function DailyProof() {
   const [k, setK] = useState(0);
