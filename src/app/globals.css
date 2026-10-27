@@ -2002,3 +2002,12 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .dly-curtain{position:relative;z-index:6;border-radius:30px 30px 0 0;overflow:hidden;box-shadow:0 -24px 60px rgba(0,0,0,.18);background:var(--ink)}
 .dly-curtain + .mkfilm{border-radius:0;box-shadow:none}
 @media(max-width:767px){.dly-curtain{border-radius:28px 28px 0 0}}
+
+/* Product page, phones: the model video fills the whole screen instead of sitting in a rounded square, with a slow push-in */
+@media(max-width:767px){
+  .ih .ih-sl .ih-pc.clip{top:0;left:0;right:0;bottom:0;width:100%;height:100%;aspect-ratio:auto;transform:none;opacity:1}
+  .ih .ih-sl.on .ih-pc.clip{transform:none}
+  .ih .ih-pc.clip video{inset:0;margin:0;width:100%;height:100%;max-width:none;max-height:none;aspect-ratio:auto;border-radius:0;object-fit:cover;object-position:50% 32%;transform:scale(1.06);transition:transform 9s ease-out}
+  .ih .ih-sl.on .ih-pc.clip video{transform:scale(1.16)}
+}
+@media(max-width:767px) and (prefers-reduced-motion:reduce){.ih .ih-pc.clip video,.ih .ih-sl.on .ih-pc.clip video{transform:scale(1.08);transition:none}}
