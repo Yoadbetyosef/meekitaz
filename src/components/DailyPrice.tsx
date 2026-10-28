@@ -132,12 +132,14 @@ export function DailyHeroHeadline() {
       <p className="dly-no-kick">Meekitaz Daily · from $10 a day</p>
       <h1 className="dly-no">No <NoWord /></h1>
       <p className="dly-no-dream">It’s on your hand from day one. <em>You’ll barely feel it.</em></p>
+      <div className="dly-sheet">
       <p className="dly-pc-line" aria-live="polite">Your {usd(price)} piece: <em>${cur.amt} a day, for {howLong(cur.days)}.</em></p>
       <label className="dly-eq-price"><span>Your piece</span><output>{usd(price)}</output><input type="range" min={300} max={4500} step={50} value={price} onChange={e => setPrice(Number(e.target.value))} aria-label="Price of the piece" /></label>
       <div className="dly-pc-cards" role="group" aria-label="Your plan" style={{ gridTemplateColumns: `repeat(${okOpts.length}, 1fr)` }}>
         {okOpts.map((o, i) => <button key={o.amt} type="button" className="dly-pc" aria-pressed={o.amt === cur.amt} onClick={() => setPick(o.amt)}>
           <small>{okOpts.length === 1 ? "Your plan" : NAMES[NAMES.length - okOpts.length + i]}</small><b>${o.amt}<sub> /day</sub></b><span>{howLong(o.days)} · {o.days} days</span>
         </button>)}
+      </div>
       </div>
     </div>
   );
