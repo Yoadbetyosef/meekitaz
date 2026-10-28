@@ -20,7 +20,7 @@ export default function Footer() {
         <div className="foot-giant" aria-hidden="true"><Logo className="foot-logo" /></div>
         <div className="mkf-under">
           <nav className="mkf-l" aria-label="Shop">{categories.map(c => <Link key={c.slug} href={`/${c.slug}`}>{c.nav}</Link>)}</nav>
-          <p className="mkf-base">&copy; {new Date().getFullYear()} Meekitaz &middot; Fifth Avenue, New York, by appointment</p>
+          <p className="mkf-base">&copy; {new Date().getFullYear()} Meekitaz &middot; New York</p>
           <div className="mkf-r">
             <nav aria-label="House"><Link href="/#codes">House codes</Link><Link href="/#reviews">Reviews</Link><Link href="/#contact">Private clients</Link></nav>
             <nav aria-label="Contact"><a href="mailto:sales@meekitaz.com">sales@meekitaz.com</a><a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a></nav>
