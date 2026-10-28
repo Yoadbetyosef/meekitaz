@@ -2,6 +2,7 @@
 import SizePicker from "./SizePicker";
 import { DailyPlanPicker, DailyLine, DailyOwn, DailyArrival } from "./DailyPrice";
 import { useDaily } from "./DailyMode";
+import { SaveBagRow, SaveBagPrompt } from "./SaveBag";
 import { dailyOptions, dailyPlan } from "@/lib/daily";
 import { useState, useEffect } from "react";
 import Image from "next/image";
@@ -61,6 +62,7 @@ export default function CartDrawer() {
   return (
     <>
       <div className={`cdov${open ? " on" : ""}`} onClick={() => setOpen(false)} aria-hidden="true" />
+      <SaveBagPrompt />
       <aside className={`cdrawer${open ? " on" : ""}`} role="dialog" aria-modal="true" aria-label="Your bag" aria-hidden={!open}>
         <div className="cd-top">
           <h3>Your bag<span>{bagCount} item{bagCount === 1 ? "" : "s"}</span></h3>
@@ -155,6 +157,7 @@ export default function CartDrawer() {
               <DailyPlanPicker price={subtotal} amt={planAmt} onChange={setPlanAmt} title="Your plan" />
               {daily && <div className="cd-dly"><DailyArrival express={express} /><DailyOwn compact /></div>}
             </div>
+            <SaveBagRow />
             {ringError && <p className="cd-err">{ringError}</p>}
             {daily && !needSize ? <Link className="cd-co" href={`/daily/checkout?amt=${planAmt ?? (dailyOptions(subtotal).find(o => o.ok) || dailyOptions(subtotal)[4]).amt}`} onClick={() => setOpen(false)}>Start my plan · ${planAmt ?? (dailyOptions(subtotal).find(o => o.ok) || dailyOptions(subtotal)[4]).amt} a day</Link> : null}
             {daily && !needSize ? <a className="cd-co cd-full" href={rings.length ? undefined : cart?.checkoutUrl} onClick={rings.length ? () => checkout() : undefined}>or pay in full · {money(subtotal, cur)}</a>
