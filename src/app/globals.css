@@ -2312,3 +2312,5 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .df-g{align-items:start}
 .df-sum{position:relative !important;top:auto !important;align-self:start;box-shadow:0 22px 44px -28px rgba(120,60,80,.35)}
 .df-bd{padding-bottom:56px}
+
+.dmsg-soft{opacity:.55;font-size:13px;margin:0 0 10px}
