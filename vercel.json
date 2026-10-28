@@ -1,6 +1,10 @@
 {
   "crons": [
     {
+      "path": "/api/diamonds",
+      "schedule": "*/20 * * * *"
+    },
+    {
       "path": "/api/fancy",
       "schedule": "*/20 * * * *"
     },
