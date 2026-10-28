@@ -30,7 +30,7 @@ export default function DiamondsBrowser() {
   const [items, setItems] = useState<Item[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [state, setState] = useState<"loading" | "ready" | "empty" | "off" | "error">("loading");
+  const [state, setState] = useState<"loading" | "updating" | "ready" | "empty" | "off" | "error">("loading");
   const [busy, setBusy] = useState(false);
   const [playing, setPlaying] = useState<string | null>(null);
 
@@ -68,9 +68,15 @@ export default function DiamondsBrowser() {
     const ac = new AbortController();
     const t = setTimeout(async () => {
       try {
-        const r = await fetch(`/api/diamonds?${qs(1)}`, { signal: ac.signal });
-        const j = await r.json();
-        if (!r.ok) throw new Error("x");
+        setState(s => (s === "ready" ? "updating" : "loading")); // keep the current stones on screen while the new filter loads
+        let r: Response | null = null, j: { configured?: boolean; items: Item[]; total: number } | null = null;
+        for (let attempt = 0; attempt < 3; attempt++) { // the supplier hiccups now and then: try up to three times before saying so
+          r = await fetch(`/api/diamonds?${qs(1)}`, { signal: ac.signal });
+          j = await r.json().catch(() => null);
+          if (r.ok && j) break;
+          await new Promise(res => setTimeout(res, 600 * (attempt + 1)));
+        }
+        if (!r || !j || !r.ok) throw new Error("x");
         if (j.configured === false) { setState("off"); return; }
         let all: Item[] = j.items, pg = 1;
         const rs = restore.current; restore.current = null;
@@ -99,14 +105,15 @@ export default function DiamondsBrowser() {
       <section className="grid-wrap dm-gal" id="results" aria-label="The collection">
         <div className="wrap">
           <div className="dres">
-            <div><h2>The collection</h2>{state === "ready" && <p className="dcount">{total.toLocaleString("en-US")} lab-grown diamonds{style ? <> · <Link href="/diamonds" scroll={false} className="dchip">{style} ×</Link></> : null}</p>}
+            <div><h2>The collection</h2>{(state === "ready" || state === "updating") && <p className="dcount">{total.toLocaleString("en-US")} lab-grown diamonds{style ? <> · <Link href="/diamonds" scroll={false} className="dchip">{style} ×</Link></> : null}</p>}
               <div className="dct" role="group" aria-label="Carat">{CT.map(([l, r]) => <button key={l} type="button" className={same(f.carat, r) ? "on" : ""} aria-pressed={same(f.carat, r)} onClick={() => setF({ ...f, carat: r })}>{l}</button>)}</div></div>
           </div>
           {state === "loading" && <p className="dmsg">Finding stones…</p>}
+          {state === "updating" && <p className="dmsg dmsg-soft">Updating…</p>}
           {state === "off" && <p className="dmsg">Our diamond inventory is connecting. Please check back shortly.</p>}
           {state === "error" && <p className="dmsg">We couldn&apos;t load diamonds just now. Please refresh in a moment.</p>}
           {state === "empty" && <><p className="dmsg">No diamonds match these filters. Try widening carat, price, color or clarity.</p>{f.carat[0] > 0.5 && <div className="dmore"><button type="button" onClick={() => setF({ ...f, carat: [0.5, f.carat[1]] })}>Show all sizes</button></div>}</>}
-          {state === "ready" && (
+          {(state === "ready" || state === "updating") && (
             <>
               {items.length > 0 && <div className="ai-head"><span className="ai-mia" aria-hidden="true"><i /><i /></span><div><b>Top 3 AI picks</b><span>Mia&rsquo;s best value in your search</span></div></div>}
               <div className="pgrid">{items.flatMap((d, n) => {
