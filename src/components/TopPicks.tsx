@@ -1,18 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useCart } from "./CartProvider";
-import { toast } from "./Toast";
-import { chooseStone, saveSetting, diamondsUrl, type Setting, type Stone } from "@/lib/setting";
+import { saveSetting, saveStone, diamondsUrl, type Setting, type Stone } from "@/lib/setting";
 import { baseShape } from "@/lib/setting";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 type Item = { id: string; vendor: number; stock: string; shape: string; carat: number; color: string | null; clarity: string | null; cut: string | null; lab: string; image: string; price: number; fancy: string | null; fancyColor?: string | null };
 
 /** Engagement-ring page: Mia's three best-value 2–3 ct stones in the shape (and fancy colour) chosen on the page.
- *  Tap one → the setting is saved and the pair goes to review, exactly like picking it on the diamonds page. */
+ *  Tap one → the setting and the stone are saved and the pair opens on the diamond page for review (not the bag). */
 export default function TopPicks({ setting, color }: { setting: Setting; color?: string }) {
-  const router = useRouter(); const { addRing } = useCart();
+  const router = useRouter();
   const [items, setItems] = useState<Item[] | null>(null);
   const shape = baseShape(setting.shape);
   useEffect(() => {
@@ -27,7 +25,8 @@ export default function TopPicks({ setting, color }: { setting: Setting; color?:
   const pick = (d: Item) => {
     saveSetting(setting);
     const s: Stone = { vendor: d.vendor, stock: d.stock, shape: d.shape, carat: d.carat, color: d.color, clarity: d.clarity, cut: d.cut, lab: d.lab, image: d.image, price: d.price, fancy: d.fancy };
-    chooseStone(s, { push: u => router.push(u), addRing, notify: toast });
+    saveStone(s); // review the pair first (diamond + setting), never straight into the bag
+    router.push(`/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}`);
   };
   return (
     <div className="tp">
