@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   } else if (b.action === "email") {
     const to = String(b.to || ""), subject = String(b.subject || "").slice(0, 200) || `About your Meekitaz order ${b.name || ""}`;
     if (!text || !/@/.test(to) || !process.env.RESEND_API_KEY) return NextResponse.json({ error: "cannot send" }, { status: 400 });
-    const html = `<div style="font-family:Arial,sans-serif;color:#1C1A1B;max-width:560px;margin:auto;padding:28px;background:#FDF8F3;font-size:15px;line-height:1.6">${esc(text).replace(/\n/g, "<br>")}<p style="margin-top:24px;font-family:Georgia,serif;font-style:italic">Meekitaz · Fifth Avenue, New York</p></div>`;
+    const html = `<div style="font-family:Arial,sans-serif;color:#1C1A1B;max-width:560px;margin:auto;padding:28px;background:#FDF8F3;font-size:15px;line-height:1.6">${esc(text).replace(/\n/g, "<br>")}<p style="margin-top:24px;font-family:Georgia,serif;font-style:italic">Meekitaz · New York</p></div>`;
     const r = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({ from: process.env.CONTACT_FROM || "Meekitaz <sales@meekitaz.com>", to: [to], reply_to: process.env.CONTACT_TO || "sales@meekitaz.com", subject, html, text }) }).catch(() => null);
     if (!r?.ok) return NextResponse.json({ error: "send failed" }, { status: 502 });
