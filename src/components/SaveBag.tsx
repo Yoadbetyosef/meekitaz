@@ -32,8 +32,8 @@ export function SaveBagRow() {
   };
   return (
     <div className="sb-row">
-      {state === "sent" ? <p className="sb-ok">Sent to <b>{email}</b>. It\u2019s saved for you.</p> : <>
-        <label>Email me my bag <small>so it\u2019s here when you\u2019re ready</small></label>
+      {state === "sent" ? <p className="sb-ok">Sent to <b>{email}</b>. It’s saved for you.</p> : <>
+        <label>Email me my bag <small>so it’s here when you’re ready</small></label>
         <div className="sb-in"><input type="email" inputMode="email" placeholder="you@email.com" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && go()} /><button type="button" disabled={state === "busy" || !EMAIL.test(email)} onClick={go}>{state === "busy" ? "…" : "Send"}</button></div>
       </>}
     </div>
@@ -69,8 +69,8 @@ export function SaveBagPrompt() {
       {first?.setting.image && <img src={first.setting.image} alt="" />}
       <div>
         <h3>Wait — your ring.</h3>
-        {state === "sent" ? <p>Sent to <b>{email}</b>. It\u2019s saved for you.</p> : <>
-          <p>We\u2019ll email you a link that brings it right back. No account, no spam.</p>
+        {state === "sent" ? <p>Sent to <b>{email}</b>. It’s saved for you.</p> : <>
+          <p>We’ll email you a link that brings it right back. No account, no spam.</p>
           <div className="sb-in"><input type="email" inputMode="email" placeholder="you@email.com" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === "Enter" && go()} autoFocus /><button type="button" disabled={state === "busy" || !EMAIL.test(email)} onClick={go}>{state === "busy" ? "…" : "Save my ring"}</button></div>
         </>}
       </div>
