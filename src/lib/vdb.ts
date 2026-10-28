@@ -103,9 +103,94 @@ function norm(d: Record<string, unknown>): Diamond | null {
   };
 }
 
-export async function searchDiamonds(q: DiamondQuery) {
+/** Live search at the supplier (the fallback). */
+export async function searchDiamondsLive(q: DiamondQuery) {
   const b = await vdb(build(q));
   return { total: b.total_diamonds_found || 0, items: b.diamonds.map(norm).filter((x): x is Diamond => !!x) };
+}
+
+// ---------- White diamonds: our own copy of the inventory ----------
+// The supplier goes down or crawls now and then (502/503s, dropped sockets). So the stones the site actually sells — every shape,
+// 0.5 ct and up, colour D–I, clarity FL–VS2, IGI/GIA, with photos — are copied to our database by a cron every 20 minutes, the
+// cheapest 150 of each shape × carat band (the ones a shopper sees first anyway). The diamonds page then filters our copy in
+// milliseconds; the supplier is only asked live when there is no copy yet.
+const WHITE_BANDS: [number, number][] = [[0.5, 0.7], [0.7, 1], [1, 1.5], [1.5, 2], [2, 2.5], [2.5, 3], [3, 4], [4, 30]];
+const WHITE_SHARDS: [string, number, number][] = [];
+for (const sh of SHAPES) for (const [lo, hi] of WHITE_BANDS) WHITE_SHARDS.push([sh, lo, hi]);
+const WHITE_PAGES = 3; // 3 × 50 = the 150 cheapest per shard
+async function harvestWhiteShard(shape: string, lo: number, hi: number): Promise<Diamond[]> {
+  const out = new Map<string, Diamond>();
+  for (let n = 1; n <= WHITE_PAGES; n++) {
+    const page = await vdb(build({ shapes: [shape], caratFrom: lo, caratTo: hi, colorFrom: "D", colorTo: "I", clarityFrom: "FL", clarityTo: "VS2", sort: "price_asc", page: n, pageSize: 50 }), 1200);
+    page.diamonds.forEach(x => { const d = norm(x); if (d) out.set(`${d.vendor}-${d.stock}`, d); });
+    if (page.diamonds.length < 50) break;
+  }
+  return [...out.values()];
+}
+const cachedWhiteShard = (sh: string, lo: number, hi: number) => unstable_cache(() => harvestWhiteShard(sh, lo, hi), ["vdb-white-v1", sh, String(lo), String(hi)], { revalidate: 1200 })();
+async function harvestWhite(budgetMs = 100_000): Promise<Diamond[]> {
+  const t0 = Date.now(), out = new Map<string, Diamond>();
+  let i = 0;
+  const worker = async () => {
+    while (i < WHITE_SHARDS.length && Date.now() - t0 < budgetMs) {
+      const [sh, lo, hi] = WHITE_SHARDS[i++];
+      try { (await cachedWhiteShard(sh, lo, hi)).forEach(d => out.set(`${d.vendor}-${d.stock}`, d)); } catch { /* one shard failing must not lose the rest */ }
+    }
+  };
+  await Promise.all(Array.from({ length: 12 }, worker));
+  return [...out.values()];
+}
+let whiteCache: { at: number; items: Diamond[] } | null = null;
+let whiteBusy: Promise<Diamond[]> | null = null;
+async function loadWhiteSnapshot(): Promise<{ at: number; items: Diamond[] } | null> {
+  try {
+    const { sql, ensureSchema } = await import("./db"); if (!sql) return null; await ensureSchema();
+    const r = await sql`SELECT data, updated_at FROM snapshots WHERE name='white'`;
+    return r[0] ? { at: new Date(r[0].updated_at as string).getTime(), items: r[0].data as Diamond[] } : null;
+  } catch { return null; }
+}
+/** Cron: copy the inventory and save it. A bad run (supplier down) never replaces a good copy. */
+export async function refreshWhiteSnapshot(): Promise<number> {
+  const items = await harvestWhite();
+  const prev = whiteCache?.items.length || (await loadWhiteSnapshot())?.items.length || 0;
+  if (items.length < 500 || items.length < prev * 0.7) return items.length;
+  whiteCache = { at: Date.now(), items };
+  try {
+    const { sql, ensureSchema } = await import("./db");
+    if (sql) { await ensureSchema(); await sql`INSERT INTO snapshots (name, data, count) VALUES ('white', ${JSON.stringify(items)}::jsonb, ${items.length}) ON CONFLICT (name) DO UPDATE SET data=EXCLUDED.data, count=EXCLUDED.count, updated_at=now()`; }
+  } catch (e) { console.error("[white snapshot]", e); }
+  return items.length;
+}
+/** Our copy of the white inventory, or [] when there is none yet. Never waits on the supplier. */
+export async function getWhite(): Promise<Diamond[]> {
+  if (whiteCache && Date.now() - whiteCache.at < 10 * 60 * 1000) return whiteCache.items;
+  if (!whiteBusy) whiteBusy = (async () => {
+    const snap = await loadWhiteSnapshot();
+    if (snap && snap.items.length) { whiteCache = snap; return snap.items; }
+    return [];
+  })().catch(() => (whiteCache ? whiteCache.items : [])).finally(() => { whiteBusy = null; });
+  return whiteCache ? whiteCache.items : whiteBusy;
+}
+const GRADE = (list: string[], v: string | null) => { const i = v ? list.indexOf(v) : -1; return i < 0 ? 99 : i; };
+/** The diamonds page: our copy first (instant, works when the supplier is down); live search only when there is no copy. */
+export async function searchDiamonds(q: DiamondQuery) {
+  const all = await getWhite();
+  if (!all.length) return searchDiamondsLive(q);
+  const shapes = (q.shapes || []).flatMap(x => (x === "Cushion" ? ["Cushion", "Elongated Cushion"] : [x]));
+  const cf = GRADE(COLORS, q.colorFrom || null), ct = q.colorTo ? GRADE(COLORS, q.colorTo) : 98, lf = GRADE(CLARITIES, q.clarityFrom || null), lt = q.clarityTo ? GRADE(CLARITIES, q.clarityTo) : 98;
+  const r = all.filter(d =>
+    (!shapes.length || shapes.includes(d.shape)) &&
+    (q.caratFrom == null || d.carat >= q.caratFrom) && (q.caratTo == null || d.carat <= q.caratTo) &&
+    (q.priceFrom == null || d.price >= q.priceFrom) && (q.priceTo == null || d.price <= q.priceTo) &&
+    (!q.colorFrom || GRADE(COLORS, d.color) >= (cf === 99 ? 0 : cf)) && (!q.colorTo || GRADE(COLORS, d.color) <= ct) &&
+    (!q.clarityFrom || GRADE(CLARITIES, d.clarity) >= (lf === 99 ? 0 : lf)) && (!q.clarityTo || GRADE(CLARITIES, d.clarity) <= lt));
+  const by: Record<string, (a: Diamond, b: Diamond) => number> = {
+    price_asc: (a, b) => a.price - b.price, price_desc: (a, b) => b.price - a.price,
+    carat_desc: (a, b) => b.carat - a.carat || a.price - b.price, carat_asc: (a, b) => a.carat - b.carat || a.price - b.price,
+  };
+  r.sort(by[q.sort || "price_asc"] || by.price_asc);
+  const size = Math.min(q.pageSize || 24, 50), page = Math.max(1, q.page || 1);
+  return { total: r.length, items: r.slice((page - 1) * size, page * size) };
 }
 
 export async function getDiamond(vendor: number, stock: string) {
