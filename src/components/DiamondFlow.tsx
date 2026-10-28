@@ -223,7 +223,6 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
           <Image src={showroomImage} alt="The Meekitaz showroom" width={900} height={900} sizes="(max-width:767px) 100vw, 50vw" quality={75} />
           <div className="df-tx">
             <span className="eyebrow">See it first</span><h2>Come and see it, or have us show you on camera.</h2>
-            <div className="df-addr">Fifth Avenue, New York</div>
             <p>By appointment, with the stone and the settings in front of you. Or a virtual appointment: we hold it up to the camera and talk you through it.</p>
             <div className="df-btns"><Link href="/#contact" className="df-cta">Book a private appointment</Link><Link href="/#contact" className="df-cta o">Virtual appointment</Link></div>
           </div>
