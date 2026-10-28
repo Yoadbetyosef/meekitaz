@@ -1,9 +1,9 @@
 "use client";
 import SizePicker from "./SizePicker";
-import { DailyLine, DailyOwn, DailyArrival } from "./DailyPrice";
+import { DailyPlanPicker, DailyLine, DailyOwn, DailyArrival } from "./DailyPrice";
 import { useDaily } from "./DailyMode";
-import { dailyPlan } from "@/lib/daily";
-import { useEffect } from "react";
+import { dailyOptions, dailyPlan } from "@/lib/daily";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -27,6 +27,7 @@ const Trust = () => (
 export default function CartDrawer() {
   const { cart, open, busy, setOpen, setQty, remove, rings, ringError, bagCount, setRingSize, removeRing, setCartRingSize, removeCartRing, checkout, addCare, setExpress } = useCart();
   const daily = useDaily();
+  const [planAmt, setPlanAmt] = useState<number | undefined>(undefined);
   const router = useRouter();
   const lines = cart?.lines ?? [];
   // rings that already reached Shopify: a setting line (has the "Diamond" note) and its diamond line, tied by the same "Build" id
@@ -151,11 +152,11 @@ export default function CartDrawer() {
               <div className="cd-arr"><span>Arrives by</span><span>{arrivalLabel()}</span></div></>}
               <div><small>Taxes calculated at checkout</small></div>
               <div className="t"><span>Total</span><span>{money(subtotal, cur)}</span></div>
-              <DailyLine price={subtotal} className="bag" />
+              <DailyPlanPicker price={subtotal} amt={planAmt} onChange={setPlanAmt} title="Your plan" />
               {daily && <div className="cd-dly"><DailyArrival express={express} /><DailyOwn compact /></div>}
             </div>
             {ringError && <p className="cd-err">{ringError}</p>}
-            {daily && !needSize ? <Link className="cd-co" href="/daily/checkout" onClick={() => setOpen(false)}>Start my plan · ${dailyPlan(subtotal).perDay} a day</Link> : null}
+            {daily && !needSize ? <Link className="cd-co" href={`/daily/checkout?amt=${planAmt ?? (dailyOptions(subtotal).find(o => o.ok) || dailyOptions(subtotal)[4]).amt}`} onClick={() => setOpen(false)}>Start my plan · ${planAmt ?? (dailyOptions(subtotal).find(o => o.ok) || dailyOptions(subtotal)[4]).amt} a day</Link> : null}
             {daily && !needSize ? <a className="cd-co cd-full" href={rings.length ? undefined : cart?.checkoutUrl} onClick={rings.length ? () => checkout() : undefined}>or pay in full · {money(subtotal, cur)}</a>
             : needSize ? <button className="cd-co" disabled>Select your ring size to continue</button>
               : rings.length > 0 ? <button className="cd-co" disabled={busy} onClick={checkout}>{busy ? "One moment…" : "Checkout"}</button>
