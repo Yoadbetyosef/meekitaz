@@ -2234,3 +2234,26 @@ body:has(.home-page){--blue-light:#E4E8EC}
   .ih .ih-sl.on .ih-pc.clip video{transform:scale(1.16)}
 }
 @media(max-width:767px) and (prefers-reduced-motion:reduce){.ih .ih-pc.clip video,.ih .ih-sl.on .ih-pc.clip video{transform:scale(1.08);transition:none}}
+
+/* ===== Daily cover · phone layout 3: full-bleed model, headline on top, glass sheet from the bottom ===== */
+@media(max-width:767px){
+  .daily-on .cover{min-height:100svh}
+  .dly-still{top:38px;bottom:auto;right:-22%;left:auto;height:92%;width:auto;aspect-ratio:1089/1445}
+  .dly-m{right:-36%;top:4%;width:120%;opacity:.5}
+  .daily-on .cv-bot{top:calc(96px + env(safe-area-inset-top,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));left:10px;right:10px;display:flex;flex-direction:column;gap:0;transform:none}
+  .daily-on .dly-hh{display:contents}
+  .dly-no-kick,.dly-no,.dly-no-dream{margin-left:6px;margin-right:6px;position:relative;z-index:1}
+  .dly-no{font-size:13.5vw}.dly-no-dream{margin-top:6px;font-size:15px}
+  .dly-sheet{margin-top:auto;background:rgba(236,240,248,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid #fff;border-bottom:0;border-radius:28px 28px 0 0;padding:14px 12px 0}
+  .dly-pc-line{font-size:17px;margin-bottom:8px}
+  .dly-eq-price{padding:8px 12px}.dly-eq-price output{font-size:18px;min-width:62px}
+  .dly-pc-cards{gap:5px;margin-top:8px}.dly-pc{padding:8px 3px 7px}.dly-pc b{font-size:17px}.dly-pc span{font-size:9.5px}
+  .daily-on .cv-row{margin:0;flex-wrap:nowrap;gap:8px;padding:10px 8px 10px 12px;background:rgba(236,240,248,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid #fff;border-top:0;border-radius:0 0 28px 28px;box-shadow:none;height:auto;align-items:center}
+  .daily-on .cv-row .dly-proof{width:auto;flex:1;flex-wrap:nowrap;gap:8px;margin:0;min-width:0}
+  .daily-on .cv-row .dly-proof-faces span,.daily-on .cv-row .dly-proof-faces img{width:34px;height:34px;border-width:2px;margin-left:-10px}
+  .daily-on .cv-row .dly-proof-stars{font-size:14px;letter-spacing:1px}
+  .daily-on .cv-row .dly-proof-lbl{font-size:10px}.daily-on .cv-row .dly-proof-lbl b{font-size:13px}
+  .daily-on .cover .cv-row .dly-go{width:auto !important;height:44px !important;margin:0 0 0 auto !important;padding:0 5px 0 14px !important;font-size:9.5px;gap:8px;flex:none;letter-spacing:.1em}
+  .daily-on .cv-row .dly-go-ar{width:34px;height:34px}
+  .dly-quote{display:none}
+}
