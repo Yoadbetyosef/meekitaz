@@ -1,3 +1,5 @@
+import { cleanTextInk } from "./textInk";
+
 // Some supplier renders carry a brand engraving inside the ring band. Two styles exist: a serif one (bands, mostly) and a bold
 // capital-letter one (solitaire rings). We look for each by its shape, flat on in the main photo and tilted in the angled photos,
 // and paint it out. Server-only (uses sharp).
@@ -260,6 +262,8 @@ export async function cleanImage(input: Buffer, slot = 0, mode: "ring" | "gold" 
   }
   if (!box) {
     if (slot >= 2 && slot <= 5 && cleanTiny(data, gray, W, H)) return sharp(data, { raw: { width: W, height: H, channels: 3 } }).jpeg({ quality: 90 }).toBuffer();
+    // the templates did not match (gemstone pieces, odd angles, the tiny text on a band seen from above): find the text by its shape instead
+    if (cleanTextInk(data, W, H)) return sharp(data, { raw: { width: W, height: H, channels: 3 } }).jpeg({ quality: 90 }).toBuffer();
     return null;
   }
 
