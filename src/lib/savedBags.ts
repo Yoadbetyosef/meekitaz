@@ -24,8 +24,8 @@ function mail(bag: SavedBag, id: string, second: boolean) {
 <table style="width:100%;border-collapse:collapse;border-top:1px solid #e6dfd6;border-bottom:1px solid #e6dfd6">${rows}</table>
 <p style="font:600 15px Arial;text-align:right;margin:12px 0 22px">Total ${usd(bag.total)}</p>
 <p style="text-align:center;margin:0 0 22px"><a href="${link}" style="display:inline-block;background:#1C1A1B;color:#fff;text-decoration:none;border-radius:999px;padding:16px 28px;font:700 12px Arial;letter-spacing:.14em;text-transform:uppercase">Pick up where I left off</a></p>
-<p style="font:13px/1.6 Arial;color:#6b6568;margin:0">Questions? Just reply to this email, or <a href="${SITE()}/#contact" style="color:#1C1A1B">book a private appointment</a> at our Fifth Avenue showroom.</p>
-<p style="margin-top:24px;font-style:italic">Meekitaz · Fifth Avenue, New York</p></div>`;
+<p style="font:13px/1.6 Arial;color:#6b6568;margin:0">Questions? Just reply to this email, or <a href="${SITE()}/#contact" style="color:#1C1A1B">book a private appointment</a> at our New York showroom.</p>
+<p style="margin-top:24px;font-style:italic">Meekitaz · New York</p></div>`;
   const text = `${title}\n\n${bag.items.map(i => `${i.title} — ${usd(i.price)}`).join("\n")}\nTotal ${usd(bag.total)}\n\nPick up where you left off: ${link}`;
   return { subject: second ? "Still thinking about it? Your Meekitaz bag is waiting" : "Your Meekitaz bag, saved", html, text };
 }
