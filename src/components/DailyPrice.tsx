@@ -5,6 +5,7 @@ import { useDaily } from "./DailyMode";
 import { dailyPlan, dailyOptions, DAILY } from "@/lib/daily";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
+const howLong = (d: number) => { const m = d / 30; if (m < 1.5) return `${d} days`; const r = Math.round(m * 2) / 2; return `${Math.floor(r)}${r % 1 ? "½" : ""} months`; };
 /** On cards: "$15/day" leads, the full price under it. Renders nothing unless the Daily preview is on. */
 export function DailyCardPrice({ price }: { price: number }) {
   const on = useDaily(); if (!on || !price) return null;
@@ -31,22 +32,15 @@ export function DailyHeroBadge() {
 }
 /** On the product page: pay daily / in full, the big daily number, a 3–6 month slider, the facts and the promise. */
 export function DailyBlock({ price, onFull }: { price: number; onFull?: () => void }) {
-  const on = useDaily(); const base = dailyPlan(price);
-  const [days, setDays] = useState<number | null>(null); const [mode, setMode] = useState<"daily" | "full">("daily");
+  const on = useDaily(); const [mode, setMode] = useState<"daily" | "full">("daily");
   if (!on || !price) return null;
-  const d = days ? dailyPlan(price, days) : base;
-  const minD = Math.min(90, base.days), maxD = DAILY.maxDays;
+  const d = dailyPlan(price);
   return (
     <div className="dly">
       <div className="dly-how"><button type="button" className={mode === "daily" ? "on" : ""} onClick={() => setMode("daily")}>Pay daily</button><button type="button" className={mode === "full" ? "on" : ""} onClick={() => { setMode("full"); onFull?.(); }}>Pay in full · {usd(price)}</button></div>
       {mode === "daily" && <>
-        <div className="dly-big"><b className="dly-holo">${d.perDay}</b><span>a day</span></div>
-        <p className="dly-sub">{d.days} days · {usd(price)} total, the same as paying in full · no interest, no credit check, everyone&rsquo;s approved.</p>
+        <DailyPlanPicker price={price} title="Pay daily" />
         <DailyLess />
-        {base.days > 30 && <div className="dly-sl"><input type="range" min={minD} max={maxD} step={5} value={d.days} onChange={e => setDays(Number(e.target.value))} aria-label="How many days" />
-          <div><span>Faster · ${dailyPlan(price, minD).perDay}/day</span><span>6 months · ${dailyPlan(price, maxD).perDay}/day</span></div></div>}
-        <div className="dly-meter"><i style={{ width: `${Math.max(6, Math.round(100 / d.days))}%` }} /></div>
-        <div className="dly-mt"><span>Today · ${d.perDay}</span><span>Now · it ships</span><span>Day {d.days} · all yours</span></div>
         <DailyArrival />
         <DailyOwn />
         <details className="dly-why"><summary>How is this different?</summary><DailyVs /></details>
@@ -54,6 +48,28 @@ export function DailyBlock({ price, onFull }: { price: number; onFull?: () => vo
         <Link href="/daily" className="dly-more">How Meekitaz Daily works →</Link>
         <p className="dly-fine">Example: {usd(price)} over {d.days} days at ${d.perDay} a day; the last payment is ${d.last}. Charged each business day from your bank account. Full terms at checkout.</p>
       </>}
+    </div>
+  );
+}
+
+
+/** The plan picker, same rules as the cover: a round daily amount ($10–$30), the days follow. Small enough for the build summary,
+ *  the product page and the bag. `onChange` lets a parent (the bag) carry the chosen amount to checkout. */
+export function DailyPlanPicker({ price, amt, onChange, title = "Your ring" }: { price: number; amt?: number; onChange?: (amt: number) => void; title?: string }) {
+  const on = useDaily();
+  const [local, setLocal] = useState<number | null>(null);
+  if (!on || !price) return null;
+  const opts = dailyOptions(price);
+  const pick = amt ?? local;
+  const cur = opts.find(o => o.ok && o.amt === pick) || opts.find(o => o.ok) || opts[opts.length - 1];
+  const choose = (a: number) => { setLocal(a); onChange?.(a); };
+  return (
+    <div className="dpp">
+      <div className="dpp-top"><small>{title}</small><div><b>${cur.amt}</b><span>a day · {howLong(cur.days)}</span></div></div>
+      <div className="dpp-seg" role="group" aria-label="Daily amount">
+        {opts.map(o => <button key={o.amt} type="button" disabled={!o.ok} aria-pressed={o.amt === cur.amt} onClick={() => choose(o.amt)}>${o.amt}</button>)}
+      </div>
+      <p className="dpp-sub">{cur.days} days · {usd(price)} total · ships day {cur.ship} · no interest</p>
     </div>
   );
 }
@@ -66,8 +82,8 @@ export function DailyStoneNote() {
 
 /** "Your ring" total on the build page: the daily number leads, the full price underneath. */
 export function DailyTotal({ price, label = "Your ring" }: { price: number; label?: string }) {
-  const on = useDaily(); if (!on || !price) return null; const d = dailyPlan(price);
-  return <div className="dly-tot"><small>{label}</small><div className="dly-big"><b className="dly-holo">${d.perDay}</b><span>a day</span></div><p>{d.days} days · {usd(price)} total · no interest</p><DailyLess /><DailyOwn compact /></div>;
+  const on = useDaily(); if (!on || !price) return null;
+  return <div className="dly-tot"><DailyPlanPicker price={price} title={label} /><DailyOwn compact /></div>;
 }
 
 /* ---------- "it's cheap, it's yours, you get it now" — repeated along the whole path ---------- */
@@ -118,7 +134,6 @@ function NoWord() {
   return <span className="dly-no-w" aria-live="polite"><span key={i}>{NO_WORDS[i]}</span></span>;
 }
 const NAMES = ["Easiest", "Easy", "Steady", "Faster", "Fastest"];
-const howLong = (d: number) => { const m = d / 30; if (m < 1.5) return `${d} days`; const r = Math.round(m * 2) / 2; return `${Math.floor(r)}${r % 1 ? "½" : ""} months`; };
 export function DailyHeroHeadline() {
   const on = useDaily();
   const [price, setPrice] = useState(1800);
