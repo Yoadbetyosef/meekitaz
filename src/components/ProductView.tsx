@@ -21,6 +21,7 @@ import { fancyColorOf } from "@/lib/fancy";
 import { METAL_LINE } from "@/lib/designs";
 import { addonFor, completeSel, optionRows, type ProductOptions, type Sel } from "@/lib/options";
 import StoneSwatch from "./StoneSwatch";
+import TopPicks from "./TopPicks";
 import { GOLD_COLORS, hasKarat, isGoldMetal, karatsFor, karatStep } from "@/lib/karat";
 import { toast } from "./Toast";
 import { photoSrc, isCleaned } from "@/lib/img";
@@ -213,6 +214,8 @@ export default function ProductView({ product: p, siblings, related, ring, optio
                 <div className="rp-shapes">{shapesHere.map(sh => (
                   <button key={sh.label} type="button" className={`rp-sh${cv.shape === sh.label ? " on" : ""}`} aria-pressed={cv.shape === sh.label} onClick={() => pickRing(sh.label, cv.metal)}>
                     <i><StoneImg img={sh.img} alt="" base={64} quality={70} /></i><b>{sh.label}</b></button>))}</div>
+                {(() => { const pk = karatOn && isGoldMetal(cv.metal) ? karat : ""; const fc = fancyColorOf(cv.title) || ring.color || undefined;
+                  return <TopPicks color={fc} setting={{ ns: ring.ns, handle: cv.handle, variantId: cv.variantId, title: cv.title, shape: cv.shape, metal: cv.metal, price: cv.price + (pk ? karatStep(ring.ns, pk) : 0), image: cv.images[0] || "", karat: pk || undefined, color: fc }} />; })()}
         </>
       )}
             {hasOpts && rows.filter(r => r.name !== "Gold Purity").map(r => (
