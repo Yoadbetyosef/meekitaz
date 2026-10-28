@@ -2242,20 +2242,20 @@ body:has(.home-page){--blue-light:#E4E8EC}
   .daily-on .cv-bot{position:relative;top:auto;bottom:auto;left:0;right:0;transform:none;display:flex;flex-direction:column;gap:0;padding:calc(92px + env(safe-area-inset-top,0px)) 16px 28px;align-items:stretch}
   .daily-on .dly-hh,.dly-sheet{display:contents}
   .dly-no-kick,.dly-no,.dly-no-dream{text-align:center;margin:0;position:relative;z-index:2}
-  .dly-no{font-size:14vw;color:var(--ink);order:2;line-height:1}.dly-no-kick{order:1;margin-bottom:4px}.dly-no-dream{order:3;margin-top:0;font-size:14px}
+  .dly-no{font-size:15vw;color:var(--ink);order:2;line-height:1}.dly-no-kick{order:1;margin-bottom:4px}.dly-no-dream{order:3;margin-top:2px;font-size:15px}
   /* model, whole and centred, in the band under the headline */
-  .dly-still{position:absolute;top:calc(196px + env(safe-area-inset-top,0px));left:50%;right:auto;bottom:auto;transform:translateX(-50%) translateZ(0);width:100vw;height:auto;aspect-ratio:923/930;z-index:1}
-  .dly-m{left:50%;right:auto;top:calc(255px + env(safe-area-inset-top,0px));bottom:auto;width:120vw;transform:translateX(-50%);opacity:.5}
-  .dly-chip{order:4;position:relative;z-index:2;display:block;margin:calc(100vw - 86px) 10px 0;background:#fff;border-radius:18px;padding:12px 14px;box-shadow:0 14px 30px -16px rgba(60,40,110,.5);text-align:left}
+  .dly-still{position:absolute;top:calc(206px + env(safe-area-inset-top,0px));left:50%;right:auto;bottom:auto;transform:translateX(-50%) translateZ(0);width:112vw;height:auto;aspect-ratio:923/930;z-index:1}
+  .dly-m{display:none}
+  .dly-chip{order:4;position:relative;z-index:2;display:block;margin:calc(113vw - 40px) 6px 0;background:#fff;border-radius:22px;padding:14px 16px;box-shadow:0 14px 30px -16px rgba(60,40,110,.5);text-align:left}
   .dly-chip-top{display:flex;justify-content:space-between;align-items:center}
-  .dly-chip-top b{font:400 20px var(--display);display:block;color:var(--ink)}.dly-chip-top span{font:600 11px var(--body);opacity:.6}.dly-chip-l{font:700 9px var(--body);letter-spacing:.12em;text-transform:uppercase;opacity:.6}
+  .dly-chip-top b{font:400 24px var(--display);display:block;color:var(--ink)}.dly-chip-top span{font:600 11px var(--body);opacity:.6}.dly-chip-l{font:700 9px var(--body);letter-spacing:.12em;text-transform:uppercase;opacity:.6}
   .dly-chip-step{display:flex;align-items:center;justify-content:space-between;margin-top:10px;background:#F3F5FA;border-radius:14px;padding:6px 8px}
-  .dly-chip-step button{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--ink);background:#fff;font:700 18px/1 var(--body);cursor:pointer;color:var(--ink)}
-  .dly-chip-step div{text-align:center}.dly-chip-step b{font:400 20px var(--display);display:block;color:var(--ink)}.dly-chip-step span{font:700 9px var(--body);letter-spacing:.12em;text-transform:uppercase;opacity:.6}
+  .dly-chip-step button{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--ink);background:#fff;font:700 18px/1 var(--body);cursor:pointer;color:var(--ink)}
+  .dly-chip-step div{text-align:center}.dly-chip-step b{font:400 24px var(--display);display:block;color:var(--ink)}.dly-chip-step span{font:700 9px var(--body);letter-spacing:.12em;text-transform:uppercase;opacity:.6}
   .dly-chip-seg{display:flex;gap:4px;margin-top:8px;background:#F3F5FA;border-radius:999px;padding:4px}
   .dly-chip-seg button{flex:1;border:0;background:transparent;border-radius:999px;padding:9px 0;font:700 12px var(--body);cursor:pointer;color:var(--ink)}
   .dly-chip-seg button[aria-pressed="true"]{background:var(--ink);color:#fff}.dly-chip-seg button:disabled{opacity:.3;cursor:not-allowed}
-  .daily-on .cv-row{order:5;position:relative;z-index:2;margin:12px 0 0;display:flex;flex-direction:column;gap:10px;padding:0;background:none;border:0;box-shadow:none;height:auto;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .daily-on .cv-row{order:5;position:relative;z-index:2;margin:10px -4px 0;display:flex;flex-direction:column;gap:10px;padding:0;background:none;border:0;box-shadow:none;height:auto;-webkit-backdrop-filter:none;backdrop-filter:none}
   .daily-on .cover .cv-row .dly-go{order:1;width:100% !important;height:54px !important;margin:0 !important;padding:0 6px 0 22px !important;font-size:12px;gap:12px;letter-spacing:.14em;justify-content:space-between}
   .daily-on .cv-row .dly-go-ar{width:42px;height:42px}
   .daily-on .cv-row .dly-proof{order:2;width:100%;justify-content:center;flex-wrap:nowrap;gap:10px;margin:0}
