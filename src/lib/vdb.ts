@@ -40,16 +40,21 @@ function build(q: DiamondQuery) {
 }
 
 export async function vdbRaw(qs: string) { return vdb(qs, 0); }
-async function vdb(qs: string, revalidate = 300) {
+async function vdbOnce(qs: string, revalidate: number, ms: number) {
   const res = await fetch(`${BASE}/v2/diamonds?${qs}`, {
     headers: { Authorization: `Token token=${process.env.VDB_ACCESS_TOKEN}, api_key=${process.env.VDB_API_KEY}` },
     next: { revalidate },
+    signal: AbortSignal.timeout(ms), // the supplier sometimes stalls; a stalled call must not hang the whole page
   });
   if (!res.ok) throw new Error(`VDB http ${res.status}`);
   const r = (await res.json())?.response;
   // VDB answers HTTP 200 even when auth fails: the real status is inside the payload.
   if (!r || r.header?.status !== 200 || typeof r.body === "string") throw new Error(`VDB ${r?.header?.status ?? "bad response"}`);
   return r.body as { diamonds: Record<string, unknown>[]; total_diamonds_found: number };
+}
+async function vdb(qs: string, revalidate = 300) {
+  try { return await vdbOnce(qs, revalidate, 14000); }
+  catch { await new Promise(r => setTimeout(r, 350)); return vdbOnce(qs, revalidate, 14000); } // one quiet retry: most supplier errors are momentary
 }
 
 
