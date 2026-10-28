@@ -2298,3 +2298,13 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .tp-more{display:block;width:100%;margin-top:8px;padding:10px 12px;border-radius:999px;border:1.5px solid rgba(255,255,255,.75);background:rgba(255,255,255,.1);color:inherit;font:700 10.5px var(--body);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
 .tp-more:hover{background:#fff;color:#1C1A1B}
 @media(max-width:767px){.tp-row{gap:6px}.tp-card b{font-size:15px}.tp-more{padding:9px 10px;font-size:10px}}
+
+/* ===== Build your ring · the pair: both columns the same shape, captions and swap buttons on the same lines ===== */
+.df-pair{align-items:stretch}
+.df-pair>div:not(.df-plus){display:flex;flex-direction:column}
+.df-plus{margin-top:0;height:clamp(260px,31vw,410px);display:grid;place-items:center;align-self:start}
+.df-capt{display:flex;flex-direction:column;flex:1}
+.df-capt b{min-height:2.4em;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.df-capt .df-swap{margin-top:auto}
+.df-capt .dly-line.cap{min-height:1.2em}
+@media(max-width:767px){.df-plus{height:200px}.df-capt b{min-height:2.4em}}
