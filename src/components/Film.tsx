@@ -15,7 +15,7 @@ export default function Film() {
       <div className="mkfilm-in">
         <div className="mkfilm-txt">
           <h2>Made, not mined.<br />Worn loudly.</h2>
-          <p>Every Meekitaz stone is IGI or GIA certified, grown above ground and set in our Fifth Avenue atelier. Same fire. Lighter footprint.</p>
+          <p>Every Meekitaz stone is IGI or GIA certified, grown above ground and set in our New York atelier. Same fire. Lighter footprint.</p>
           <Link href="/engagement-rings" className="pill">Shop engagement rings</Link>
         </div>
         <div className="mkfilm-vid">
