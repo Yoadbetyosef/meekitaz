@@ -2288,15 +2288,14 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .tp-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
 .tp-ai{display:inline-flex;align-items:center;gap:6px;font:700 9.5px var(--body);letter-spacing:.12em;text-transform:uppercase;background:#F7E9A8;color:#1C1A1B;border-radius:999px;padding:4px 9px}
 .tp-ai i{width:5px;height:5px;border-radius:50%;background:#1C1A1B;opacity:.7}.tp-ai i+i{margin-left:-3px}
-.tp-sub{font:italic 500 13px var(--sub);opacity:.85}
 .tp-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .tp-card{display:block;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.35);border-radius:18px;padding:8px 6px 9px;text-align:center;color:inherit;cursor:pointer;font:inherit;transition:background .2s,transform .2s,box-shadow .2s}
 .tp-card:hover{background:rgba(255,255,255,.26);transform:translateY(-2px);box-shadow:0 14px 28px -16px rgba(0,0,0,.35)}
 .tp-img{display:block;width:100%;aspect-ratio:1;border-radius:14px;overflow:hidden;margin:0 auto 7px;background:#fff}.tp-img img{width:100%;height:100%;object-fit:contain;display:block;transform:scale(1.18)}
 .tp-card b{display:block;font:400 17px var(--display)}.tp-card span:not(.tp-img){display:block;font:500 10.5px var(--body);opacity:.8;margin-top:2px}.tp-card em{display:block;font:700 12.5px var(--body);font-style:normal;margin-top:4px}
 .tp-skel{min-height:170px;background:rgba(255,255,255,.08);border-style:dashed}
-.tp-more{display:block;width:100%;margin-top:8px;padding:10px 12px;border-radius:999px;border:1.5px solid rgba(255,255,255,.75);background:rgba(255,255,255,.1);color:inherit;font:700 10.5px var(--body);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
-.tp-more:hover{background:#fff;color:#1C1A1B}
+.tp-more{flex:none;padding:8px 13px;border-radius:999px;border:0;background:#fff;color:#1C1A1B;font:700 10.5px var(--body);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.tp-more:hover{background:#F7E9A8}
 @media(max-width:767px){.tp-row{gap:6px}.tp-card b{font-size:15px}.tp-more{padding:9px 10px;font-size:10px}}
 
 /* ===== Build your ring · the pair: both columns the same shape, captions and swap buttons on the same lines ===== */
