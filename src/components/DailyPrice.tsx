@@ -132,9 +132,16 @@ export function DailyHeroHeadline() {
       <p className="dly-no-kick">Meekitaz Daily · from $10 a day</p>
       <h1 className="dly-no">No <NoWord /></h1>
       <p className="dly-no-dream">It’s on your hand from day one. <em>You’ll barely feel it.</em></p>
-      <div className="dly-chip" aria-hidden="true">
-        <div><b>${cur.amt} a day</b><span>for {howLong(cur.days)} · {usd(price)} piece</span></div>
-        <button type="button" onClick={() => document.querySelector(".dly-pc-line")?.scrollIntoView({ behavior: "smooth", block: "start" })}>Change ▾</button>
+      <div className="dly-chip">
+        <div className="dly-chip-top"><div><b>${cur.amt} a day</b><span>for {howLong(cur.days)}</span></div><span className="dly-chip-l">your piece</span></div>
+        <div className="dly-chip-step">
+          <button type="button" aria-label="Lower price" onClick={() => { setPrice(p => Math.max(300, p - 150)); setPick(null); }}>−</button>
+          <div><b>{usd(price)}</b><span>price</span></div>
+          <button type="button" aria-label="Higher price" onClick={() => { setPrice(p => Math.min(4500, p + 150)); setPick(null); }}>+</button>
+        </div>
+        <div className="dly-chip-seg" role="group" aria-label="Daily amount">
+          {opts.map(o => <button key={o.amt} type="button" disabled={!o.ok} aria-pressed={o.amt === cur.amt} onClick={() => setPick(o.amt)}>${o.amt}</button>)}
+        </div>
       </div>
       <div className="dly-sheet">
       <p className="dly-pc-line" aria-live="polite">Your {usd(price)} piece: <em>${cur.amt} a day, for {howLong(cur.days)}.</em></p>
