@@ -2269,3 +2269,16 @@ body:has(.home-page){--blue-light:#E4E8EC}
   /* the desktop calculator is replaced by the chip on the phone */
   .dly-pc-line,.dly-eq-price,.dly-pc-cards{display:none}
 }
+
+/* ===== Daily plan picker (build summary, product page, bag) ===== */
+.dpp{margin:10px 0 6px}
+.dpp-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.dpp-top small{font:700 10px var(--body);letter-spacing:.14em;text-transform:uppercase;color:rgba(28,26,27,.55)}
+.dpp-top div{display:flex;align-items:baseline;gap:8px}.dpp-top b{font:400 34px/1 var(--display);color:var(--ink)}.dpp-top span{font:italic 500 15px var(--sub);color:#C24E6A}
+.dpp-seg{display:flex;gap:4px;margin-top:8px;background:rgba(28,26,27,.06);border-radius:999px;padding:4px}
+.dpp-seg button{flex:1;border:0;background:transparent;border-radius:999px;padding:8px 0;font:700 12px var(--body);cursor:pointer;color:var(--ink)}
+.dpp-seg button[aria-pressed="true"]{background:var(--ink);color:#fff}.dpp-seg button:disabled{opacity:.28;cursor:not-allowed}
+.dpp-sub{margin:6px 0 0;font:500 12px var(--body);color:rgba(28,26,27,.65)}
+.df-sum .dly-tot{padding:8px 0 0}.df-sum .dly-tot .dly-own{margin-top:8px}
+.cd-dly .dpp,.cd-tot .dpp{margin-top:8px}
+@media(max-width:767px){.dpp-top b{font-size:30px}.dpp-seg button{padding:8px 0;font-size:11.5px}}
