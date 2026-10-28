@@ -2244,7 +2244,7 @@ body:has(.home-page){--blue-light:#E4E8EC}
   .dly-no-kick,.dly-no,.dly-no-dream{text-align:center;margin:0;position:relative;z-index:2}
   .dly-no{font-size:14vw;color:var(--ink);order:2;line-height:1}.dly-no-kick{order:1;margin-bottom:4px}.dly-no-dream{order:3;margin-top:0;font-size:14px}
   /* model, whole and centred, in the band under the headline */
-  .dly-still{position:absolute;top:calc(168px + env(safe-area-inset-top,0px));left:50%;right:auto;bottom:auto;transform:translateX(-50%) translateZ(0);height:420px;width:auto;aspect-ratio:1089/1445;z-index:1}
+  .dly-still{position:absolute;top:calc(182px + env(safe-area-inset-top,0px));left:50%;right:auto;bottom:auto;transform:translateX(-50%) translateZ(0);height:420px;width:auto;aspect-ratio:1089/1445;z-index:1}
   .dly-m{left:50%;right:auto;top:calc(255px + env(safe-area-inset-top,0px));bottom:auto;width:120vw;transform:translateX(-50%);opacity:.5}
   .dly-chip{order:4;position:relative;z-index:2;display:block;margin:300px 10px 0;background:#fff;border-radius:18px;padding:12px 14px;box-shadow:0 14px 30px -16px rgba(60,40,110,.5);text-align:left}
   .dly-chip-top{display:flex;justify-content:space-between;align-items:center}
@@ -2264,6 +2264,7 @@ body:has(.home-page){--blue-light:#E4E8EC}
   .daily-on .cv-row .dly-proof-stars{font-size:15px;letter-spacing:1px}
   .daily-on .cv-row .dly-proof-lbl{font-size:11px;margin:0}.daily-on .cv-row .dly-proof-lbl b{font-size:14px}
   .dly-quote{display:none}
+  .daily-on .cv-row .dly-proof{display:none}
   /* the desktop calculator is replaced by the chip on the phone */
   .dly-pc-line,.dly-eq-price,.dly-pc-cards{display:none}
 }
