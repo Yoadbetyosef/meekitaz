@@ -1852,7 +1852,7 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .dly-m{position:absolute;right:-14vw;bottom:-22vh;width:min(80vw,1100px);height:auto;opacity:.5;z-index:0;pointer-events:none}
 .dly-still::before,.dly-still::after{display:none}
 @media(max-width:767px){.dly-m{right:-30vw;bottom:auto;top:18%;width:120vw;opacity:.4}}
-@media(min-width:1100px){.dly-still{height:114%;bottom:auto;top:-2%;right:4vw}}
+@media(min-width:1100px){.dly-still{height:118%;bottom:auto;top:-3%;right:3vw}}
 .daily-on .cv-bot{color:var(--ink)}
 .daily-on .dly-hh{color:var(--ink)}
 .daily-on .dly-hh-tag{color:var(--ink);opacity:.75;text-shadow:none}
@@ -2244,11 +2244,17 @@ body:has(.home-page){--blue-light:#E4E8EC}
   .dly-no-kick,.dly-no,.dly-no-dream{text-align:center;margin:0;position:relative;z-index:2}
   .dly-no{font-size:14.5vw;color:var(--ink);order:2}.dly-no-kick{order:1;margin-bottom:4px}.dly-no-dream{order:3;margin-top:2px;font-size:15px}
   /* model, whole and centred, in the band under the headline */
-  .dly-still{position:absolute;top:calc(215px + env(safe-area-inset-top,0px));left:50%;right:auto;bottom:auto;transform:translateX(-50%) translateZ(0);height:400px;width:auto;aspect-ratio:1089/1445;z-index:1}
+  .dly-still{position:absolute;top:calc(210px + env(safe-area-inset-top,0px));left:50%;right:auto;bottom:auto;transform:translateX(-50%) translateZ(0);height:420px;width:auto;aspect-ratio:1089/1445;z-index:1}
   .dly-m{left:50%;right:auto;top:calc(300px + env(safe-area-inset-top,0px));bottom:auto;width:120vw;transform:translateX(-50%);opacity:.5}
-  .dly-chip{order:4;position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;margin:366px 10px 0;background:#fff;border-radius:18px;padding:12px 14px;box-shadow:0 14px 30px -16px rgba(60,40,110,.5)}
-  .dly-chip b{font:400 20px var(--display);display:block}.dly-chip span{font:600 11px var(--body);opacity:.6}
-  .dly-chip button{font:700 10px var(--body);letter-spacing:.1em;text-transform:uppercase;color:#C24E6A;background:none;border:0;padding:6px 0;cursor:pointer}
+  .dly-chip{order:4;position:relative;z-index:2;display:block;margin:386px 10px 0;background:#fff;border-radius:18px;padding:12px 14px;box-shadow:0 14px 30px -16px rgba(60,40,110,.5);text-align:left}
+  .dly-chip-top{display:flex;justify-content:space-between;align-items:center}
+  .dly-chip-top b{font:400 20px var(--display);display:block;color:var(--ink)}.dly-chip-top span{font:600 11px var(--body);opacity:.6}.dly-chip-l{font:700 9px var(--body);letter-spacing:.12em;text-transform:uppercase;opacity:.6}
+  .dly-chip-step{display:flex;align-items:center;justify-content:space-between;margin-top:10px;background:#F3F5FA;border-radius:14px;padding:6px 8px}
+  .dly-chip-step button{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--ink);background:#fff;font:700 18px/1 var(--body);cursor:pointer;color:var(--ink)}
+  .dly-chip-step div{text-align:center}.dly-chip-step b{font:400 20px var(--display);display:block;color:var(--ink)}.dly-chip-step span{font:700 9px var(--body);letter-spacing:.12em;text-transform:uppercase;opacity:.6}
+  .dly-chip-seg{display:flex;gap:4px;margin-top:8px;background:#F3F5FA;border-radius:999px;padding:4px}
+  .dly-chip-seg button{flex:1;border:0;background:transparent;border-radius:999px;padding:9px 0;font:700 12px var(--body);cursor:pointer;color:var(--ink)}
+  .dly-chip-seg button[aria-pressed="true"]{background:var(--ink);color:#fff}.dly-chip-seg button:disabled{opacity:.3;cursor:not-allowed}
   .daily-on .cv-row{order:5;position:relative;z-index:2;margin:12px 0 0;display:flex;flex-direction:column;gap:10px;padding:0;background:none;border:0;box-shadow:none;height:auto;-webkit-backdrop-filter:none;backdrop-filter:none}
   .daily-on .cover .cv-row .dly-go{order:1;width:100% !important;height:54px !important;margin:0 !important;padding:0 6px 0 22px !important;font-size:12px;gap:12px;letter-spacing:.14em;justify-content:space-between}
   .daily-on .cv-row .dly-go-ar{width:42px;height:42px}
@@ -2258,8 +2264,6 @@ body:has(.home-page){--blue-light:#E4E8EC}
   .daily-on .cv-row .dly-proof-stars{font-size:15px;letter-spacing:1px}
   .daily-on .cv-row .dly-proof-lbl{font-size:11px;margin:0}.daily-on .cv-row .dly-proof-lbl b{font-size:14px}
   .dly-quote{display:none}
-  /* the calculator, below */
-  .dly-pc-line{order:6;margin:26px 0 8px;font-size:17px;position:relative;z-index:2}
-  .dly-eq-price{order:7;padding:8px 12px;position:relative;z-index:2}.dly-eq-price output{font-size:18px;min-width:62px}
-  .dly-pc-cards{order:8;gap:5px;margin-top:8px;position:relative;z-index:2}.dly-pc{padding:8px 3px 7px}.dly-pc b{font-size:17px}.dly-pc span{font-size:9.5px}
+  /* the desktop calculator is replaced by the chip on the phone */
+  .dly-pc-line,.dly-eq-price,.dly-pc-cards{display:none}
 }
