@@ -30,7 +30,7 @@ export default function TopPicks({ setting, color }: { setting: Setting; color?:
   };
   return (
     <div className="tp">
-      <div className="tp-h"><span className="tp-ai"><i /><i />Top AI picks</span><span className="tp-sub">2–3 ct {shape.toLowerCase()}{color ? ` · ${color.toLowerCase()}` : ""} · Mia&rsquo;s best value</span></div>
+      <div className="tp-h"><span className="tp-ai"><i /><i />Top AI picks</span><button type="button" className="tp-more" onClick={() => { saveSetting(setting); router.push(diamondsUrl(setting.shape, color)); }}>View more →</button></div>
       <div className="tp-row">
         {(items || [null, null, null]).map((d, i) => d ? (
           <button key={d.id} type="button" className="tp-card" onClick={() => pick(d)}>
@@ -41,7 +41,6 @@ export default function TopPicks({ setting, color }: { setting: Setting; color?:
           </button>
         ) : <span key={i} className="tp-card tp-skel" aria-hidden="true" />)}
       </div>
-      <button type="button" className="tp-more" onClick={() => { saveSetting(setting); router.push(diamondsUrl(setting.shape, color)); }}>View more {shape.toLowerCase()} diamonds →</button>
     </div>
   );
 }
