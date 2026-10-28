@@ -134,7 +134,7 @@ export function DailyHeroHeadline() {
       <p className="dly-no-dream">It’s on your hand from day one. <em>You’ll barely feel it.</em></p>
       <div className="dly-chip" aria-hidden="true">
         <div><b>${cur.amt} a day</b><span>for {howLong(cur.days)} · {usd(price)} piece</span></div>
-        <button type="button" onClick={() => document.querySelector(".dly-sheet")?.scrollIntoView({ behavior: "smooth", block: "start" })}>Change ▾</button>
+        <button type="button" onClick={() => document.querySelector(".dly-pc-line")?.scrollIntoView({ behavior: "smooth", block: "start" })}>Change ▾</button>
       </div>
       <div className="dly-sheet">
       <p className="dly-pc-line" aria-live="polite">Your {usd(price)} piece: <em>${cur.amt} a day, for {howLong(cur.days)}.</em></p>
