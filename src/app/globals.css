@@ -2314,3 +2314,15 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .df-bd{padding-bottom:56px}
 
 .dmsg-soft{opacity:.55;font-size:13px;margin:0 0 10px}
+
+/* ===== Saved bag: "Email me my bag" + the exit prompt ===== */
+.sb-row{margin:12px 0 6px;padding:12px 14px;border-radius:16px;background:#F7F2EA}
+.sb-row label{display:block;font:600 13px var(--body);margin-bottom:6px}.sb-row label small{font-weight:500;opacity:.6;margin-left:6px}
+.sb-in{display:flex;gap:6px}.sb-in input{flex:1;min-width:0;border:1px solid rgba(28,26,27,.2);border-radius:999px;padding:10px 14px;font:500 14px var(--body);background:#fff}
+.sb-in button{border:0;border-radius:999px;background:var(--ink);color:#fff;font:700 11px var(--body);letter-spacing:.12em;text-transform:uppercase;padding:0 16px;cursor:pointer}.sb-in button:disabled{opacity:.4;cursor:not-allowed}
+.sb-ok{margin:0;font:500 13px var(--body)}
+.sbp{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:1200;width:min(560px,92vw);display:flex;gap:18px;align-items:center;background:#FDF8F3;border-radius:28px;padding:22px 24px;box-shadow:0 40px 90px -30px rgba(0,0,0,.5);border:1px solid #fff}
+.sbp img{width:120px;height:120px;border-radius:20px;object-fit:cover;background:#fff;flex:none}
+.sbp h3{margin:0 0 4px;font:400 26px var(--display)}.sbp p{margin:0 0 10px;font:500 14px/1.45 var(--body);opacity:.85}
+.sbp-x{position:absolute;right:10px;top:8px;border:0;background:none;font:400 26px/1 var(--body);cursor:pointer;opacity:.5}
+@media(max-width:767px){.sbp{display:none}}
