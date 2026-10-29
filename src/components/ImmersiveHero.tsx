@@ -64,9 +64,9 @@ function trimOf(el: HTMLImageElement): Trim | null {
   } catch { return null; }
 }
 
-export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, film, clip, boxPic, steps, summary, price, metal, rows, cta, appt, onVisible, actions }: {
+export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, stoneSlide = true, film, clip, boxPic, steps, summary, price, metal, rows, cta, appt, onVisible, actions }: {
   actions?: React.ReactNode;
-  title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; stoneShape?: string; film?: { src: string; poster: string; srcD?: string; posterD?: string }; clip?: { src: string; poster: string }; boxPic?: { src: string; alt: string }; summary?: string[];
+  title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; stoneShape?: string; stoneSlide?: boolean; film?: { src: string; poster: string; srcD?: string; posterD?: string }; clip?: { src: string; poster: string }; boxPic?: { src: string; alt: string }; summary?: string[];
   steps?: ReactNode; price: ReactNode; metal?: ReactNode; rows?: ReactNode; cta: ReactNode; appt?: ReactNode; onVisible?: (on: boolean) => void;
 }) {
   const [wideFilm, setWideFilm] = useState(false);
@@ -77,8 +77,8 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
     const m = model ? list.findIndex(s => s.url === model) : -1;
     if (m > 0) { const [x] = list.splice(m, 1); list.unshift(x); } // the worn photo opens the page
     let n = 0; list.forEach(s => { s.label = s.url === model ? "Worn" : VIEW_NAMES[Math.min(n++, VIEW_NAMES.length - 1)]; });
-    return [...list, ...(clipSrc ? [{ kind: "clip" as const, alt: "The piece in motion", label: "In motion" }] : []), ...(boxSrc ? [{ kind: "box" as const, alt: boxPic?.alt || "How it arrives", label: "How it arrives" }] : []), { kind: "stone", alt: "The stone", label: "The stone" }, { kind: "film", alt: "Meekitaz, a short film", label: "The film" }];
-  }, [images, model, clipSrc, boxSrc]);
+    return [...list, ...(clipSrc ? [{ kind: "clip" as const, alt: "The piece in motion", label: "In motion" }] : []), ...(boxSrc ? [{ kind: "box" as const, alt: boxPic?.alt || "How it arrives", label: "How it arrives" }] : []), ...(stoneSlide ? [{ kind: "stone" as const, alt: "The stone", label: "The stone" }] : []), { kind: "film", alt: "Meekitaz, a short film", label: "The film" }];
+  }, [images, model, clipSrc, boxSrc, stoneSlide]);
   const N = slides.length;
   const [i, setI] = useState(0);
   const [open, setOpen] = useState(false); // phone: the sheet at the bottom, folded (title, what is chosen, price, button) or open (every choice)
