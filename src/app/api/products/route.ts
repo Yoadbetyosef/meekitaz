@@ -9,8 +9,9 @@ const num = (v: string | null) => { const n = Number(v); return v && Number.isFi
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const handle = sp.get("handle") || "";
-  if (!shopifyConfigured || !categories.some(c => c.slug === handle)) return NextResponse.json({ products: [], hasNext: false, cursor: null });
-  const opts = { first: 24, after: sp.get("after"), sort: sp.get("sort") || "best" };
+  const EXTRA = ["one-of-one", "ready-to-ship"]; // collections with their own pages, newest first
+  if (!shopifyConfigured || (!categories.some(c => c.slug === handle) && !EXTRA.includes(handle))) return NextResponse.json({ products: [], hasNext: false, cursor: null });
+  const opts = { first: 24, after: sp.get("after"), sort: sp.get("sort") || (EXTRA.includes(handle) ? "new" : "best") };
   const r = handle === "engagement-rings" || handle === "fancy-colors"
     ? await getProductsByQuery(ringQuery({ shapes: list(sp.get("shape")), metals: list(sp.get("metal")), styles: list(sp.get("look")), min: num(sp.get("min")), max: num(sp.get("max")), fancy: handle === "fancy-colors" ? (sp.get("fancy") || "all") : undefined, type: handle === "fancy-colors" ? sp.get("type") || undefined : undefined }), opts)
     : handle === "gemstones" && sp.get("type") ? await getProductsByQuery(gemQuery(sp.get("style") || "", sp.get("type") || ""), opts)
