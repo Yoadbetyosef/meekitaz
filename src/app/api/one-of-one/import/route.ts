@@ -58,13 +58,11 @@ export async function GET(req: NextRequest) {
           const failed = media.filter(x => x.status === "FAILED").map(x => x.id);
           if (failed.length) { await adminGraphql(`mutation($ids:[ID!]!){ fileDelete(fileIds:$ids){ deletedFileIds userErrors{ message } } }`, { ids: failed }); log.push(`- ${r.handle}: ${failed.length} missing photos removed`); }
           const ready = media.filter(x => x.status === "READY").length, pending = media.filter(x => x.status === "PROCESSING").length;
-          if (!ready && !pending && failed.length && !triedBefore) { // every candidate failed once: remember that on the product, so we do not re-send 35 URLs every run
-            await adminGraphql(`mutation($id:ID!,$t:[String!]!){ tagsAdd(id:$id, tags:$t){ userErrors{ message } } }`, { id, t: ["photos-tried-s3"] }); log.push(`? ${r.handle}: no photo found at the supplier (needs a real URL)`);
-          } else if (!ready && !pending && !triedBefore && !tried.has(r.handle)) {
+          if (!ready && !pending && !triedBefore) { // one attempt with the current URL set (S3), remembered on the product so it is not repeated every run
             const urls = [...r.images, ...(r.guess || [])];
-            if (urls.length) { await adminGraphql(`mutation($id:ID!,$media:[CreateMediaInput!]!){ productUpdate(product:{ id:$id }, media:$media){ userErrors{ message } } }`, { id, media: urls.map(u => ({ originalSource: u, mediaContentType: "IMAGE", alt: r.title })) }); log.push(`~ ${r.handle}: ${urls.length} photo candidates sent`); }
-            tried.add(r.handle);
-          }
+            if (urls.length) { await adminGraphql(`mutation($id:ID!,$media:[CreateMediaInput!]!){ productUpdate(product:{ id:$id }, media:$media){ userErrors{ message } } }`, { id, media: urls.map(u => ({ originalSource: u, mediaContentType: "IMAGE", alt: r.title })) }); log.push(`~ ${r.handle}: ${urls.length} photo candidates sent (S3)`); }
+            await adminGraphql(`mutation($id:ID!,$t:[String!]!){ tagsAdd(id:$id, tags:$t){ userErrors{ message } } }`, { id, t: ["photos-tried-s3"] });
+          } else if (!ready && !pending && triedBefore && !failed.length) { log.push(`? ${r.handle}: no photo found at the supplier`); }
         }
         if (!r.video && r.videoGuess && !done.has(r.handle)) { // rings imported before the video check: attach the clip if the supplier has one
           const has = await adminGraphql<{ product: { metafield: { value: string } | null } | null }>(`query($id:ID!){ product(id:$id){ metafield(namespace:"meekitaz",key:"video"){ value } } }`, { id });
