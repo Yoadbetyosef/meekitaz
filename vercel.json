@@ -31,6 +31,10 @@
     {
       "path": "/api/one-of-one/style",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/img/clean-once",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
