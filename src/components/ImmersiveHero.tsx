@@ -88,6 +88,13 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const [trims, setTrims] = useState<Record<string, Trim>>({});
   const [pcBox, setPcBox] = useState({ w: 0, h: 0 });
   const box = useRef<HTMLElement>(null), vid = useRef<HTMLVideoElement>(null), cvid = useRef<HTMLVideoElement>(null), vis = useRef(true);
+  const [clipBg, setClipBg] = useState<"light" | "dark">("dark"); // the "In motion" slide takes the video's own background: white video, white slide
+  useEffect(() => {
+    if (!clip?.poster) return;
+    const im = new window.Image(); im.crossOrigin = "anonymous";
+    im.onload = () => { try { const c = document.createElement("canvas"); c.width = 16; c.height = 16; const x = c.getContext("2d"); if (!x) return; x.drawImage(im, 0, 0, 16, 16); const d = x.getImageData(0, 0, 16, 16).data; let s = 0, n = 0; for (const [px, py] of [[0, 0], [15, 0], [0, 15], [15, 15], [8, 0], [0, 8], [15, 8], [8, 15]]) { const i = (py * 16 + px) * 4; s += (d[i] + d[i + 1] + d[i + 2]) / 3; n++; } setClipBg(s / n > 150 ? "light" : "dark"); } catch { /* cross-origin: stay dark */ } };
+    im.src = clip.poster;
+  }, [clip?.poster]);
   const cur = Math.min(i, N - 1);
   /* The supplier's on-hand photos (CGD names them SKU-<metal>-2.jpg and -3.jpg) are always full-screen "photo" slides, never a framed piece. */
   const handShot = (u?: string) => !!u && /-(Y|W|R|YW|RW|YRW|YR)-[23]\.jpg/i.test(u);
@@ -182,14 +189,14 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   };
   const s = slides[cur], mode = modeOf(s);
   // on a phone the sheet sits over the lower part of the picture: white type when that part is dark, dark type when it is light
-  const tone: "dark" | "light" = s.kind === "film" || s.kind === "clip" ? "dark" : mode === "photo" && s.url ? (tones[s.url] ?? "light") : "light";
+  const tone: "dark" | "light" = s.kind === "film" ? "dark" : s.kind === "clip" ? (clipBg === "light" ? "light" : "dark") : mode === "photo" && s.url ? (tones[s.url] ?? "light") : "light";
   const len = bigTitle.length, sz = len <= 22 ? "l1" : len <= 40 ? "l2" : "l3";
   const diamond = stonePicture(stoneShape, stone); // the stone slide shows the shape the customer is looking at
   // the cleaner needs the photo's place among the Shopify photos, and the worn photo (which opens the page) is not one of them
   const slotOff = model && slides[0]?.url === model ? 1 : 0;
   const src = (u: string, w: number, k: number) => photoSrc(u, w, title, Math.max(0, k - slotOff));
   return (
-    <section className={`ih${open ? " open" : ""}`} ref={box} data-mode={mode} data-tone={tone} data-clip={s.kind === "clip" ? "1" : undefined} data-box={s.kind === "box" ? "1" : undefined} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
+    <section className={`ih${open ? " open" : ""}`} ref={box} data-mode={mode} data-tone={tone} data-clip={s.kind === "clip" ? clipBg : undefined} data-box={s.kind === "box" ? "1" : undefined} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
       <div className="ih-slides">
         {slides.map((sl, k) => {
           const m = modeOf(sl), on = k === cur;
