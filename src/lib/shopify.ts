@@ -349,3 +349,22 @@ export async function getOneOfOne(first = 8): Promise<OneOfOne[]> {
     sub: [n.tags.find(t => RING_SHAPES.includes(t)), ringMetalOf(n.title)].filter(Boolean).join(" · ") || undefined,
   }));
 }
+
+/** The Reel: ready-to-ship pieces (collection "ready-to-ship"), video first. */
+export type ReelItem = { handle: string; title: string; price: number; compare?: number; variantId: string; video?: string; image?: string; detail: string; type: string; available: boolean };
+const REEL_FIELDS = `handle title productType availableForSale description(truncateAt: 160) priceRange{ minVariantPrice{ amount } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url } variants(first:1){ nodes{ id } } video: metafield(namespace:"meekitaz", key:"video"){ value }`;
+type ReelNode = { handle: string; title: string; productType: string; availableForSale: boolean; description: string; priceRange: { minVariantPrice: { amount: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage: { url: string } | null; variants: { nodes: { id: string }[] }; video: { value: string } | null };
+const reelItem = (n: ReelNode): ReelItem => ({ handle: n.handle, title: n.title, price: +n.priceRange.minVariantPrice.amount, compare: +n.compareAtPriceRange.minVariantPrice.amount || undefined, variantId: n.variants.nodes[0]?.id || "", video: n.video?.value || undefined, image: n.featuredImage?.url, detail: n.description.replace(/^Ready to ship\.\s*/, "").replace(/\s*One of each.*$/, ""), type: n.productType, available: n.availableForSale });
+export async function getReel(first = 24, after: string | null = null, type = ""): Promise<{ items: ReelItem[]; hasNext: boolean; cursor: string | null }> {
+  const filters = type ? `, filters:[{ productType: "${type}" }]` : "";
+  const d = await sf<{ collection: { products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; nodes: ReelNode[] } } | null }>(
+    `query($first:Int!,$after:String){ collection(handle:"ready-to-ship"){ products(first:$first, after:$after${filters}){ pageInfo{ hasNextPage endCursor } nodes{ ${REEL_FIELDS} } } } }`, { first, after }, { fresh: true });
+  const p = d?.collection?.products;
+  return { items: (p?.nodes || []).filter(n => n.availableForSale).map(reelItem), hasNext: !!p?.pageInfo.hasNextPage, cursor: p?.pageInfo.endCursor || null };
+}
+export async function getReelByHandles(handles: string[]): Promise<ReelItem[]> {
+  const q = handles.map(h => `handle:${h}`).join(" OR ");
+  const d = await sf<{ products: { nodes: ReelNode[] } }>(`query($q:String!){ products(first:${handles.length}, query:$q){ nodes{ ${REEL_FIELDS} } } }`, { q }, { fresh: true });
+  const by = new Map((d?.products.nodes || []).map(n => [n.handle, reelItem(n)]));
+  return handles.map(h => by.get(h)).filter((x): x is ReelItem => !!x);
+}
