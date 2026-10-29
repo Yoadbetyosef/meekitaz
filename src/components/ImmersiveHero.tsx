@@ -194,7 +194,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
         {slides.map((sl, k) => {
           const m = modeOf(sl), on = k === cur;
           return (
-            <div key={`${sl.kind}-${sl.url || k}`} className={`ih-sl ${m}${on ? " on" : ""}`} aria-hidden={!on}>
+            <div key={`${sl.kind}-${sl.url || k}`} className={`ih-sl ${m}${handShot(sl.url) ? " hand" : ""}${on ? " on" : ""}`} aria-hidden={!on}>
               {sl.kind === "img" && sl.url && (m === "photo"
                 ? (() => { const w = washes[sl.url || ""]; return (
                   <div className={`ih-ph2${sl.url === model ? " mdl" : ""}${w ? ` ws${w.v ? " wv" : ""}` : ""}`} style={w ? ({ "--ar": w.ar, "--wa": washGrad(w.a, w.v), "--wb": washGrad(w.b, w.v) } as CSSProperties) : undefined}>
