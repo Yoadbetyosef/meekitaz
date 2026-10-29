@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import ProductBrowser from "@/components/ProductBrowser";
 import { getCollectionPage, shopifyConfigured, type Product } from "@/lib/shopify";
 import { fillPage } from "@/lib/designs";
-import OneCircles from "@/components/OneCircles";
 import { oneOfOneQuery } from "@/lib/ringfilters";
 import { getProductsByQuery } from "@/lib/shopify";
 
@@ -32,7 +31,6 @@ export default async function OneOfOnePage({ searchParams }: { searchParams: Pro
           </div>
         </div>
       </section>
-      <section className="ooo-circ-wrap"><div className="wrap"><OneCircles current={style} /></div></section>
       <div className="catbody" id="results">
         {r ? <Suspense fallback={null}><ProductBrowser key={style} handle="one-of-one" style={style} initial={r.products} hasNext={r.hasNext} cursor={r.cursor} /></Suspense>
            : <section className="grid-wrap"><div className="wrap"><h2>The collection</h2><p>The one-of-ones are on their way. Check back in a moment.</p></div></section>}
