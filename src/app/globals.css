@@ -2445,3 +2445,11 @@ body.reel-open .mk-page{min-height:0}
 /* On-hand supplier photos: edge to edge on every screen, no blurred bands */
 .ih-sl.hand .ih-fg{object-fit:cover;object-position:50% 40%}
 .ih-sl.hand .ih-wash{display:none}
+
+/* Supplier on-hand photos on the phone: edge to edge from the very top down behind the sheet, like our own worn photo, no bands */
+@media(max-width:767px){
+  .ih .ih-sl.hand .ih-ph2 .ih-bk{display:none}
+  .ih .ih-sl.hand .ih-ph2 .ih-fg{top:0 !important;bottom:auto !important;height:calc(var(--sht,560px) + 70px) !important;object-fit:cover;object-position:50% 35%;-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 84%,transparent 100%);mask-image:linear-gradient(to bottom,#000 0,#000 84%,transparent 100%)}
+  .ih .ih-sl.hand .ih-wash{display:none}
+}
+@media(min-width:768px){.ih .ih-sl.hand .ih-fg{object-fit:cover;object-position:50% 40%}.ih .ih-sl.hand .ih-bk{display:none}}
