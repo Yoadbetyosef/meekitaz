@@ -25,7 +25,7 @@ async function exists(handle: string) {
   return d?.productByIdentifier?.id || null;
 }
 async function createOne(r: Row) {
-  const imgs = [...r.images, ...(r.guess || [])], vid = r.video || r.videoGuess; // unverified: Shopify fetches, failures are cleaned up by the repair pass; a missing video is tolerated by the player
+  const imgs = [...r.images, ...(r.guess || [])], vid = r.video || null; // photos unverified (Shopify fetches, failures are cleaned up by the repair pass); only videos we saw on the supplier page
   const input = {
     title: r.title, handle: r.handle, descriptionHtml: r.desc, productType: "Ring", vendor: "Meekitaz", status: "ACTIVE", tags: r.tags,
     files: imgs.map(u => ({ originalSource: u, contentType: "IMAGE", alt: r.title })),
