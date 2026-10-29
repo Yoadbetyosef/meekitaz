@@ -19,11 +19,12 @@ export default function Reel({ initial, hasNext: h0, cursor: c0 }: { initial: Re
     const root = wrap.current; if (!root) return;
     const io = new IntersectionObserver(es => es.forEach(e => {
       const v = e.target.querySelector("video"); const idx = +(e.target.getAttribute("data-i") || 0);
-      if (e.isIntersecting) { setI(idx); v?.play().catch(() => {}); } else v?.pause();
+      if (e.isIntersecting) { setI(idx); v?.play().catch(() => {}); } else if (v) { v.pause(); }
     }), { root, threshold: 0.6 });
     root.querySelectorAll(".rl-slide").forEach(s => io.observe(s));
     return () => io.disconnect();
   }, [items]);
+  useEffect(() => { const v = wrap.current?.querySelector<HTMLVideoElement>(`[data-i="${i}"] video`); v?.play().catch(() => {}); }, [i]);
 
   useEffect(() => { // more when near the end
     if (!hasNext || loading.current || i < items.length - 4) return;
@@ -69,7 +70,7 @@ export default function Reel({ initial, hasNext: h0, cursor: c0 }: { initial: Re
       <div className="rl-wrap" ref={wrap}>
         {items.map((it, k) => (
           <div className="rl-slide" key={it.handle} data-i={k} data-handle={it.handle}>
-            {it.video ? <video src={it.video} muted loop playsInline preload={k < 2 ? "auto" : "metadata"} poster={it.image} /> : <img src={it.image} alt="" />}
+            {it.video && Math.abs(k - i) <= 1 ? <video src={it.video} muted loop playsInline autoPlay={k === i} preload="auto" poster={it.image} /> : <img src={it.image} alt="" loading="lazy" />}
             <div className="rl-side">
               <WishHeart item={{ handle: it.handle, title: it.title, image: it.image || "", price: it.price, compareAt: it.compare || null }} className="big" />
               <ShareArrow item={{ handle: it.handle, title: it.title, image: it.image || "", price: it.price, compareAt: it.compare || null }} className="big" />
