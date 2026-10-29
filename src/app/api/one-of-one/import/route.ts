@@ -8,7 +8,7 @@ export const maxDuration = 300;
 /* One of One import — 354 rings from Classic Grown Diamonds, in the supplier's order.
    Runs from the cron (or with ?key=CRON_SECRET), imports what is not in the store yet, a few dozen per run, idempotent by handle.
    Created LAST-first, so the first ring on the supplier's list ends up the newest = first on the home page. */
-type Row = { sku: string; handle: string; title: string; desc: string; price: number; tags: string[]; images: string[]; video: string | null; videoGuess: string | null; guess?: string[] };
+type Row = { sku: string; handle: string; title: string; desc: string; price: number; tags: string[]; images: string[]; video: string | null; videoGuess: string | null; guess?: string[]; try?: string };
 const alive = async (u: string) => { try { const r = await fetch(u, { headers: { Range: "bytes=0-0" }, signal: AbortSignal.timeout(8000) }); try { await r.body?.cancel(); } catch { /* ignore */ } return r.ok; } catch { return false; } };
 /** Only files the supplier really has: the image list was reconstructed by pattern for most rings, so each URL is checked first. */
 async function liveMedia(r: Row) {
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
         if (!done.has(r.handle)) { // photos: the supplier's host does not answer our checks, so Shopify fetches every candidate URL itself; the ones that fail are deleted next run
           const m = await adminGraphql<{ product: { tags: string[]; media: { nodes: { id: string; status: string }[] } } | null }>(`query($id:ID!){ product(id:$id){ tags media(first:60){ nodes{ id status } } } }`, { id });
           const media = m?.product?.media.nodes || [];
-          const triedBefore = (m?.product?.tags || []).includes("photos-tried-s3");
+          const triedBefore = (m?.product?.tags || []).includes(`photos-tried-${r.try || "s3"}`);
           const failed = media.filter(x => x.status === "FAILED").map(x => x.id);
           if (failed.length) { // the site's Admin token has no write_files scope: a failed delete must not stop the photos from being added
             try { await adminGraphql(`mutation($ids:[ID!]!){ fileDelete(fileIds:$ids){ deletedFileIds userErrors{ message } } }`, { ids: failed }); log.push(`- ${r.handle}: ${failed.length} missing photos removed`); } catch { /* cleaned up by hand later */ }
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
           if (!ready && !pending && !triedBefore) { // one attempt with the current URL set (S3), remembered on the product so it is not repeated every run
             const urls = [...r.images, ...(r.guess || [])];
             if (urls.length) { await adminGraphql(`mutation($id:ID!,$media:[CreateMediaInput!]!){ productUpdate(product:{ id:$id }, media:$media){ userErrors{ message } } }`, { id, media: urls.map(u => ({ originalSource: u, mediaContentType: "IMAGE", alt: r.title })) }); log.push(`~ ${r.handle}: ${urls.length} photo candidates sent (S3)`); }
-            await adminGraphql(`mutation($id:ID!,$t:[String!]!){ tagsAdd(id:$id, tags:$t){ userErrors{ message } } }`, { id, t: ["photos-tried-s3"] });
+            await adminGraphql(`mutation($id:ID!,$t:[String!]!){ tagsAdd(id:$id, tags:$t){ userErrors{ message } } }`, { id, t: [`photos-tried-${r.try || "s3"}`] });
           } else if (!ready && !pending && triedBefore && !failed.length) { log.push(`? ${r.handle}: no photo found at the supplier`); }
         }
         if (!r.video && r.videoGuess && !done.has(r.handle)) { // rings imported before the video check: attach the clip if the supplier has one
