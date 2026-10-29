@@ -2,6 +2,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
+import WishHeart from "@/components/WishHeart";
+import ShareArrow from "@/components/ShareArrow";
 import type { ReelItem } from "@/lib/shopify";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
@@ -46,7 +48,11 @@ export default function Reel({ initial, hasNext: h0, cursor: c0 }: { initial: Re
         {items.map((it, k) => (
           <div className="rl-slide" key={it.handle} data-i={k} data-handle={it.handle}>
             {it.video ? <video src={it.video} muted loop playsInline preload={k < 2 ? "auto" : "metadata"} poster={it.image} /> : <img src={it.image} alt="" />}
-            <div className="rl-side"><Link href={`/products/${it.handle}`} aria-label="Details">&#x2197;</Link></div>
+            <div className="rl-side">
+              <WishHeart item={{ handle: it.handle, title: it.title, image: it.image || "", price: it.price, compareAt: it.compare || null }} className="big" />
+              <ShareArrow item={{ handle: it.handle, title: it.title, image: it.image || "", price: it.price, compareAt: it.compare || null }} className="big" />
+              <Link href={`/products/${it.handle}`} aria-label="Details">&#x2197;</Link>
+            </div>
             <div className="rl-ov">
               <h3>{it.title}</h3>
               <p>{it.detail}</p>
