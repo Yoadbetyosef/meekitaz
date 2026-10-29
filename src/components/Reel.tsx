@@ -2,8 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
-import WishHeart from "@/components/WishHeart";
-import ShareArrow from "@/components/ShareArrow";
+import WishHeart, { ShareArrow } from "@/components/WishHeart";
 import type { ReelItem } from "@/lib/shopify";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
