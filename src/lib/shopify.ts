@@ -146,7 +146,7 @@ export async function getProductByHandle(handle: string): Promise<ProductFull | 
   const vs = p.variants.edges.map(({ node: v }) => ({ id: v.id, title: v.title, available: v.availableForSale, price: +v.price.amount, compareAt: v.compareAtPrice && +v.compareAtPrice.amount > +v.price.amount ? +v.compareAtPrice.amount : 0, selected: v.selectedOptions, imageUrl: v.image?.url }));
   return {
     id: p.id, handle: p.handle, title: p.title, description: p.description, descriptionHtml: p.descriptionHtml, productType: p.productType, tags: p.tags,
-    options: p.options, images: p.images.edges.filter(({ node: i }) => !isSupplierImage(i.url, p.tags)).map(({ node: i }) => ({ url: i.url, alt: i.altText || p.title, width: i.width, height: i.height })), modelImage: p.model?.value || undefined, videoUrl: p.film?.value || undefined, variants: vs,
+    options: p.options, images: p.images.edges.filter(({ node: i }) => !isSupplierImage(i.url, p.tags) && ownMetal(i.url, p.tags)).map(({ node: i }) => ({ url: i.url, alt: i.altText || p.title, width: i.width, height: i.height })), modelImage: p.model?.value || undefined, videoUrl: p.film?.value || undefined, variants: vs,
     currency: p.variants.edges[0]?.node.price.currencyCode || "USD", seoTitle: p.seo?.title || undefined, seoDescription: p.seo?.description || undefined,
   };
 }
@@ -337,6 +337,13 @@ export async function setCartDiscountCodes(cartId: string, codes: string[]): Pro
   return d?.cartDiscountCodesUpdate.cart ? shapeCart(d.cartDiscountCodesUpdate.cart) : null;
 }
 
+/** One-of-one galleries: the supplier files are named SKU-<metal>-n.jpg; keep only the ring's own metal (Y, W, R, YW, RW, YRW). */
+function ownMetal(url: string, tags: string[]): boolean {
+  if (!tags.includes("One of One")) return true;
+  const m = /-(Y|W|R|YW|RW|YRW|YR)-\d\.jpg/i.exec(url); if (!m) return true;
+  const t = tags.join(" ").toLowerCase(); const want = (t.includes("yellow") ? "Y" : "") + (t.includes("rose") ? "R" : "") + (t.includes("white") ? "W" : "");
+  return !want || m[1].toUpperCase() === want;
+}
 /** The one-of-ones: products tagged "One of One". Sold ones (nothing left to sell) stay in the list, marked claimed. */
 export type OneOfOne = { handle: string; title: string; price: number; image?: string; claimed: boolean; isNew: boolean; sub?: string };
 export async function getOneOfOne(first = 8): Promise<OneOfOne[]> {
