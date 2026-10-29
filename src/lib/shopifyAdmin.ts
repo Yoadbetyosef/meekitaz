@@ -28,6 +28,10 @@ export const adminGraphql = <T,>(query: string, variables: Record<string, unknow
 async function admin<T>(query: string, variables: Record<string, unknown> = {}, retry = true): Promise<T> {
   const r = await fetch(`${adminBase}/admin/api/2025-07/graphql.json`, { method: "POST", headers: { "Content-Type": "application/json", "X-Shopify-Access-Token": await adminToken() }, body: JSON.stringify({ query, variables }), cache: "no-store" });
   if (r.status === 401 && retry && !staticToken) { cached = null; await adminToken(true); return admin<T>(query, variables, false); } // the token was revoked or rotated: get a new one once
+  if (retry && !staticToken) { // scopes granted after the token was issued only reach a fresh token
+    const peek = await r.clone().json().catch(() => null) as { errors?: { extensions?: { code?: string } }[] } | null;
+    if (peek?.errors?.some(e => e.extensions?.code === "ACCESS_DENIED")) { cached = null; await adminToken(true); return admin<T>(query, variables, false); }
+  }
   const j = await r.json();
   if (!r.ok || j.errors) throw new Error("admin: " + JSON.stringify(j.errors || r.status).slice(0, 300));
   return j.data as T;
