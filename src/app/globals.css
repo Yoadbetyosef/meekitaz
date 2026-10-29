@@ -1306,6 +1306,7 @@ a.rp-mt{text-decoration:none}
 
 /* the product's own film: the whole screen turns black behind the same frame (white type, dark glass), the frame stays exactly where it was */
 .ih-sl:has(.ih-pc.clip){background:#000}
+.ih[data-clip="light"] .ih-sl:has(.ih-pc.clip){background:#fff}
 .ih[data-clip] .ih-shade{opacity:0}
 .ih-pc.clip{mix-blend-mode:normal}
 .ih-pc.clip video{position:absolute;inset:0;margin:auto;max-width:100%;max-height:100%;aspect-ratio:1;object-fit:cover;border-radius:24px;background:#000}
@@ -1353,6 +1354,7 @@ a.rp-mt{text-decoration:none}
 /* switching between photographs: the same soft fade as it always was; only the base behind the fading slides takes the colour of the slide (cream for a piece, black for the film), so nothing dark ever shows through the fade */
 .ih[data-mode=piece]{background:#F3ECE2}
 .ih[data-clip]{background:#000}
+.ih[data-clip="light"]{background:#fff}
 
 /* the product hero must never make the browser repaint the whole page (the bug where the pinned footer showed through for a moment while switching photographs):
    the multiply blend of a piece photograph is kept inside its own slide instead of the whole page, and slides that are not on screen are not painted at all */
@@ -2471,3 +2473,9 @@ body.reel-open .mk-page{min-height:0}
 .ih[data-clip] .ih-pc.clip{mix-blend-mode:normal;border-radius:0;box-shadow:none;background:transparent}
 .ih[data-clip="dark"] .ih-pc.clip video{background:#000}
 .ih[data-clip="light"] .ih-pc.clip video{background:#fff}
+
+/* white clip: the video blends into the white slide — no card corners, no frame */
+.ih[data-clip="light"] .ih-pc.clip video{background:#fff;border-radius:0}
+.ih[data-clip="light"] .ih-tt,.ih[data-clip="light"] .ih-tt h1,.ih[data-clip="light"] .ih-tt .eyebrow,.ih[data-clip="light"] .ih-cap,.ih[data-clip="light"] .ih-cnt{color:#1C1A1B}
+.ih[data-clip="light"] .ih-nav button,.ih[data-clip="light"] .ih-arrows button{border-color:rgba(28,26,27,.25);color:#1C1A1B}
+.ih[data-clip="dark"] .ih-pc.clip video{border-radius:0}
