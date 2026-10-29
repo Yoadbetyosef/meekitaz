@@ -2431,3 +2431,8 @@ body.reel-open .mk-page{min-height:0}
   .rl-main{min-height:100vh;padding:100px 0 20px;display:grid;place-items:center}
   .rl-phone{height:min(840px,calc(100vh - 130px));min-height:560px}
 }
+
+/* Reel: side buttons on black (the site styles them for white cards) */
+.rl-side .wh,.rl-side .wsh{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);box-shadow:none;color:#FBF8F3}
+.rl-side .wh path{stroke:#FBF8F3}.rl-side .wh.on path{fill:#E8738A;stroke:#E8738A}.rl-side .wsh svg{stroke:#FBF8F3}
+.rl-top{pointer-events:none}.rl-top a{pointer-events:auto}
