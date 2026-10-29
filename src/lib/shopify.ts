@@ -341,7 +341,7 @@ export async function setCartDiscountCodes(cartId: string, codes: string[]): Pro
 export type OneOfOne = { handle: string; title: string; price: number; image?: string; claimed: boolean; isNew: boolean; sub?: string };
 export async function getOneOfOne(first = 8): Promise<OneOfOne[]> {
   const d = await sf<{ products: { edges: { node: { handle: string; title: string; tags: string[]; createdAt: string; availableForSale: boolean; priceRange: { minVariantPrice: { amount: string } }; featuredImage: { url: string } | null } }[] } }>(
-    `query($first:Int!){ products(first:$first, query:"tag:'One of One'", sortKey:CREATED_AT, reverse:true){ edges{ node{ handle title tags createdAt availableForSale priceRange{ minVariantPrice{ amount } } featuredImage{ url } } } } }`, { first });
+    `query($first:Int!){ products(first:$first, query:"tag:'One of One'", sortKey:CREATED_AT, reverse:true){ edges{ node{ handle title tags createdAt availableForSale priceRange{ minVariantPrice{ amount } } featuredImage{ url } } } } }`, { first }, { fresh: true });
   const now = Date.now();
   return (d?.products.edges || []).map(({ node: n }) => ({
     handle: n.handle, title: n.title.replace(/^(Yellow|White|Rose) gold /i, "").replace(/ Engagement Ring$/i, ""), price: +n.priceRange.minVariantPrice.amount, image: n.featuredImage?.url,
