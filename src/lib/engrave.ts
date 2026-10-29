@@ -1,3 +1,4 @@
+const GENERIC_INK = false;
 import { cleanTextInk } from "./textInk";
 
 // Some supplier renders carry a brand engraving inside the ring band. Two styles exist: a serif one (bands, mostly) and a bold
@@ -264,7 +265,8 @@ export async function cleanImage(input: Buffer, slot = 0, mode: "ring" | "gold" 
     if (slot >= 2 && slot <= 5 && cleanTiny(data, gray, W, H)) return sharp(data, { raw: { width: W, height: H, channels: 3 } }).jpeg({ quality: 90 }).toBuffer();
     // the templates did not match (gemstone pieces, odd angles, the tiny text on a band seen from above): find the text by its shape instead
     // only on full-size angled photos (slot 1+, 900px and up): on small card images and busy pavé the shape test can misfire and smear stones
-    if (slot >= 1 && W >= 900 && cleanTextInk(data, W, H)) return sharp(data, { raw: { width: W, height: H, channels: 3 } }).jpeg({ quality: 90 }).toBuffer();
+    // Generic text-ink pass switched OFF (Oct 29): it smeared stones on on-hand photos. The templated SERIF/CAPS cleaners above still run.
+    if (GENERIC_INK && slot >= 1 && W >= 900 && cleanTextInk(data, W, H)) return sharp(data, { raw: { width: W, height: H, channels: 3 } }).jpeg({ quality: 90 }).toBuffer();
     return null;
   }
 
