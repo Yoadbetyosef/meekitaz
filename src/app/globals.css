@@ -2463,3 +2463,11 @@ body.reel-open .mk-page{min-height:0}
 @media(max-width:767px){.ooo-circles .sp{min-width:108px}.ooo-circles .sp b{font-size:12px}}
 
 .rl-ov h3 a{color:inherit;text-decoration:none}
+
+/* "In motion": a white video sits on a white slide, a black one on black; the clip fills the slide without the card frame */
+.ih[data-clip="light"]{background:#fff}
+.ih[data-clip="light"] .ih-tt{color:#1C1A1B}
+.ih[data-clip="light"] .ih-cnt,.ih[data-clip="light"] .ih-tt .eyebrow{color:#1C1A1B}
+.ih[data-clip] .ih-pc.clip{mix-blend-mode:normal;border-radius:0;box-shadow:none;background:transparent}
+.ih[data-clip="dark"] .ih-pc.clip video{background:#000}
+.ih[data-clip="light"] .ih-pc.clip video{background:#fff}
