@@ -31,6 +31,21 @@ export default function Reel({ initial, hasNext: h0, cursor: c0 }: { initial: Re
     fetch(`/api/reel?first=24${cursor ? `&after=${encodeURIComponent(cursor)}` : ""}${type ? `&type=${type}` : ""}`).then(r => r.json()).then(r => { setItems(x => [...x, ...r.items]); setHasNext(r.hasNext); setCursor(r.cursor); }).finally(() => { loading.current = false; });
   }, [i, items.length, hasNext, cursor, type]);
 
+  useEffect(() => { // the feed owns the screen: no page scroll behind it, arrow keys move it
+    document.body.classList.add("reel-open");
+    const key = (e: KeyboardEvent) => { if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); go(e.key === "ArrowDown" ? 1 : -1); } };
+    window.addEventListener("keydown", key);
+    return () => { document.body.classList.remove("reel-open"); window.removeEventListener("keydown", key); };
+  }, []);
+
+  useEffect(() => { // desktop: one wheel notch = one piece (the snap container alone jitters with a trackpad)
+    const el = wrap.current; if (!el || !window.matchMedia("(min-width:768px)").matches) return;
+    let lock = 0;
+    const onWheel = (e: WheelEvent) => { e.preventDefault(); const now = Date.now(); if (now - lock < 650 || Math.abs(e.deltaY) < 8) return; lock = now; el.scrollBy({ top: Math.sign(e.deltaY) * el.clientHeight, behavior: "smooth" }); };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
   useEffect(() => { // deep link #reel-xxxx opens on that piece
     const h = location.hash.slice(1); if (!h) return;
     const el = wrap.current?.querySelector(`[data-handle="${h}"]`); el?.scrollIntoView();
@@ -64,8 +79,8 @@ export default function Reel({ initial, hasNext: h0, cursor: c0 }: { initial: Re
               <h3>{it.title}</h3>
               <p>{it.detail}</p>
               <b>{usd(it.price)}</b>
-              <button className="rl-btn" onClick={() => claim(it)} disabled={busy === it.handle}>{busy === it.handle ? "Adding…" : "Claim it · ships in 48h"} <i>&rarr;</i></button>
-              <small>One of each · lab-grown · certified</small>
+              <button className="rl-btn" onClick={() => claim(it)} disabled={busy === it.handle}><span>{busy === it.handle ? "Adding to bag…" : `Add to bag · ${usd(it.price)}`}</span><i>&rarr;</i></button>
+              <small>One of each · ships in 48 hours · 30-day returns</small>
             </div>
           </div>
         ))}
