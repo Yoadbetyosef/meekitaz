@@ -52,12 +52,15 @@ export async function GET(req: NextRequest) {
       const id = await exists(r.handle);
       if (id) {
         if (!done.has(r.handle)) { // photos: the supplier's host does not answer our checks, so Shopify fetches every candidate URL itself; the ones that fail are deleted next run
-          const m = await adminGraphql<{ product: { media: { nodes: { id: string; status: string }[] } } | null }>(`query($id:ID!){ product(id:$id){ media(first:60){ nodes{ id status } } } }`, { id });
+          const m = await adminGraphql<{ product: { tags: string[]; media: { nodes: { id: string; status: string }[] } } | null }>(`query($id:ID!){ product(id:$id){ tags media(first:60){ nodes{ id status } } } }`, { id });
           const media = m?.product?.media.nodes || [];
+          const triedBefore = (m?.product?.tags || []).includes("photos-tried");
           const failed = media.filter(x => x.status === "FAILED").map(x => x.id);
           if (failed.length) { await adminGraphql(`mutation($ids:[ID!]!){ fileDelete(fileIds:$ids){ deletedFileIds userErrors{ message } } }`, { ids: failed }); log.push(`- ${r.handle}: ${failed.length} missing photos removed`); }
           const ready = media.filter(x => x.status === "READY").length, pending = media.filter(x => x.status === "PROCESSING").length;
-          if (!ready && !pending && !tried.has(r.handle)) {
+          if (!ready && !pending && failed.length && !triedBefore) { // every candidate failed once: remember that on the product, so we do not re-send 35 URLs every run
+            await adminGraphql(`mutation($id:ID!,$t:[String!]!){ tagsAdd(id:$id, tags:$t){ userErrors{ message } } }`, { id, t: ["photos-tried"] }); log.push(`? ${r.handle}: no photo found at the supplier (needs a real URL)`);
+          } else if (!ready && !pending && !triedBefore && !tried.has(r.handle)) {
             const urls = [...r.images, ...(r.guess || [])];
             if (urls.length) { await adminGraphql(`mutation($id:ID!,$media:[CreateMediaInput!]!){ productUpdate(product:{ id:$id }, media:$media){ userErrors{ message } } }`, { id, media: urls.map(u => ({ originalSource: u, mediaContentType: "IMAGE", alt: r.title })) }); log.push(`~ ${r.handle}: ${urls.length} photo candidates sent`); }
             tried.add(r.handle);
