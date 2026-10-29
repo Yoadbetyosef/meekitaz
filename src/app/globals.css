@@ -2391,12 +2391,12 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .rl-top{position:absolute;left:16px;right:16px;top:16px;display:flex;justify-content:space-between;align-items:center;z-index:3}
 .rl-wm{font:400 22px var(--display);color:#FBF8F3;text-decoration:none;text-shadow:0 1px 14px rgba(0,0,0,.6)}
 .rl-n{font:700 11px var(--body);letter-spacing:.14px;opacity:.8}
-.rl-tag{display:inline-flex;align-items:center;gap:6px;font:700 9.5px var(--body);letter-spacing:.14em;text-transform:uppercase;border-radius:999px;padding:5px 9px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.rl-tag{display:inline-flex;align-items:center;gap:6px;font:700 9.5px var(--body);letter-spacing:.14em;text-transform:uppercase;border-radius:999px;padding:5px 9px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);}
 .rl-tag i{width:6px;height:6px;border-radius:50%;background:#EFC5CA;animation:rsBlink 1.4s infinite}
 .rl-chips{position:absolute;left:16px;right:16px;top:56px;display:flex;gap:6px;flex-wrap:wrap;z-index:3}
 @media(max-width:767px){.rl-aside{display:block;position:absolute;left:0;right:0;top:0;z-index:3;pointer-events:none}.rl-aside .rl-chips{pointer-events:auto}.rl-aside-h,.rl-aside-t,.rl-aside-p,.rl-arrows{display:none}}
-.rl-chips button{font:600 11px var(--body);border-radius:999px;padding:7px 12px;background:rgba(255,255,255,.12);color:#FBF8F3;border:1px solid rgba(255,255,255,.2);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);cursor:pointer}.rl-chips button.on{background:#F7E9A8;color:#1C1A1B;border-color:#F7E9A8}
-.rl-side{position:absolute;right:14px;top:38%;z-index:4;display:flex;flex-direction:column;gap:10px;align-items:center}.rl-side .big{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#FBF8F3;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}.rl-side a{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#FBF8F3;text-decoration:none;font-size:18px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.rl-chips button{font:600 11px var(--body);border-radius:999px;padding:7px 12px;background:rgba(255,255,255,.12);color:#FBF8F3;border:1px solid rgba(255,255,255,.2);cursor:pointer}.rl-chips button.on{background:#F7E9A8;color:#1C1A1B;border-color:#F7E9A8}
+.rl-side{position:absolute;right:14px;top:38%;z-index:4;display:flex;flex-direction:column;gap:10px;align-items:center}.rl-side .big{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#FBF8F3;}.rl-side a{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#FBF8F3;text-decoration:none;font-size:18px;}
 .rl-ov{position:absolute;left:18px;right:18px;bottom:22px;z-index:3;display:grid;grid-template-columns:1fr auto;gap:8px 14px;align-items:end}
 .rl-ov h3{margin:0;font:400 22px/1.15 var(--display)}.rl-ov p{margin:0;font:500 12px/1.4 var(--body);opacity:.8;grid-column:1}
 .rl-ov b{grid-column:2;grid-row:1/3;font:400 28px var(--display);font-weight:400;color:#F7E9A8}
@@ -2436,3 +2436,8 @@ body.reel-open .mk-page{min-height:0}
 .rl-side .wh,.rl-side .wsh{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);box-shadow:none;color:#FBF8F3}
 .rl-side .wh path{stroke:#FBF8F3}.rl-side .wh.on path{fill:#E8738A;stroke:#E8738A}.rl-side .wsh svg{stroke:#FBF8F3}
 .rl-top{pointer-events:none}.rl-top a{pointer-events:auto}
+
+/* Reel on black: solid translucent chrome instead of blur (no backdrop-filter anywhere on this page) */
+.rl-tag,.rl-chips button,.rl-side .wh,.rl-side .wsh,.rl-side a,.rl-arrows button{background:rgba(255,255,255,.14)}
+.rl-chips button.on{background:#F7E9A8}
+.rl-side .wh,.rl-side .wsh,.rl-side a{border-radius:50% !important;width:44px;height:44px}
