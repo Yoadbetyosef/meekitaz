@@ -8,7 +8,7 @@ export const maxDuration = 300;
 /* One of One import — 354 rings from Classic Grown Diamonds, in the supplier's order.
    Runs from the cron (or with ?key=CRON_SECRET), imports what is not in the store yet, a few dozen per run, idempotent by handle.
    Created LAST-first, so the first ring on the supplier's list ends up the newest = first on the home page. */
-type Row = { sku: string; handle: string; title: string; desc: string; price: number; tags: string[]; images: string[]; video: string | null; videoGuess: string | null };
+type Row = { sku: string; handle: string; title: string; desc: string; price: number; tags: string[]; images: string[]; video: string | null; videoGuess: string | null; guess?: string[] };
 const alive = async (u: string) => { try { const r = await fetch(u, { headers: { Range: "bytes=0-0" }, signal: AbortSignal.timeout(8000) }); try { await r.body?.cancel(); } catch { /* ignore */ } return r.ok; } catch { return false; } };
 /** Only files the supplier really has: the image list was reconstructed by pattern for most rings, so each URL is checked first. */
 async function liveMedia(r: Row) {
@@ -17,7 +17,7 @@ async function liveMedia(r: Row) {
   return { imgs, vid };
 }
 const LOC = "gid://shopify/Location/95949258989";
-const done = new Set<string>(); // handles whose video was already checked in this process
+const done = new Set<string>(), tried = new Set<string>(); // handles whose video was already checked in this process
 const PUBS = ["gid://shopify/Publication/223010783469", "gid://shopify/Publication/222997545197", "gid://shopify/Publication/222997577965"];
 
 async function exists(handle: string) {
@@ -25,7 +25,7 @@ async function exists(handle: string) {
   return d?.productByIdentifier?.id || null;
 }
 async function createOne(r: Row) {
-  const { imgs, vid } = await liveMedia(r);
+  const imgs = [...r.images, ...(r.guess || [])], vid = r.video || r.videoGuess; // unverified: Shopify fetches, failures are cleaned up by the repair pass; a missing video is tolerated by the player
   const input = {
     title: r.title, handle: r.handle, descriptionHtml: r.desc, productType: "Ring", vendor: "Meekitaz", status: "ACTIVE", tags: r.tags,
     files: imgs.map(u => ({ originalSource: u, contentType: "IMAGE", alt: r.title })),
@@ -51,11 +51,16 @@ export async function GET(req: NextRequest) {
     try {
       const id = await exists(r.handle);
       if (id) {
-        if (!done.has(r.handle)) { // rings created while the file check was broken: add their photos now
-          const mc = await adminGraphql<{ product: { mediaCount: { count: number } } | null }>(`query($id:ID!){ product(id:$id){ mediaCount{ count } } }`, { id });
-          if (mc?.product && mc.product.mediaCount.count === 0) {
-            const { imgs } = await liveMedia(r);
-            if (imgs.length) { await adminGraphql(`mutation($id:ID!,$media:[CreateMediaInput!]!){ productUpdate(product:{ id:$id }, media:$media){ userErrors{ message } } }`, { id, media: imgs.map(u => ({ originalSource: u, mediaContentType: "IMAGE", alt: r.title })) }); log.push(`~ ${r.handle}: ${imgs.length} photos added`); }
+        if (!done.has(r.handle)) { // photos: the supplier's host does not answer our checks, so Shopify fetches every candidate URL itself; the ones that fail are deleted next run
+          const m = await adminGraphql<{ product: { media: { nodes: { id: string; status: string }[] } } | null }>(`query($id:ID!){ product(id:$id){ media(first:60){ nodes{ id status } } } }`, { id });
+          const media = m?.product?.media.nodes || [];
+          const failed = media.filter(x => x.status === "FAILED").map(x => x.id);
+          if (failed.length) { await adminGraphql(`mutation($ids:[ID!]!){ fileDelete(fileIds:$ids){ deletedFileIds userErrors{ message } } }`, { ids: failed }); log.push(`- ${r.handle}: ${failed.length} missing photos removed`); }
+          const ready = media.filter(x => x.status === "READY").length, pending = media.filter(x => x.status === "PROCESSING").length;
+          if (!ready && !pending && !tried.has(r.handle)) {
+            const urls = [...r.images, ...(r.guess || [])];
+            if (urls.length) { await adminGraphql(`mutation($id:ID!,$media:[CreateMediaInput!]!){ productUpdate(product:{ id:$id }, media:$media){ userErrors{ message } } }`, { id, media: urls.map(u => ({ originalSource: u, mediaContentType: "IMAGE", alt: r.title })) }); log.push(`~ ${r.handle}: ${urls.length} photo candidates sent`); }
+            tried.add(r.handle);
           }
         }
         if (!r.video && r.videoGuess && !done.has(r.handle)) { // rings imported before the video check: attach the clip if the supplier has one
