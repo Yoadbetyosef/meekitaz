@@ -2350,3 +2350,9 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .ooo-sold{position:absolute;inset:0;display:grid;place-items:center;background:rgba(251,248,243,.55);z-index:2}.ooo-sold span{font:800 11px var(--body);letter-spacing:.2em;text-transform:uppercase;border:2px solid #7E0508;color:#7E0508;padding:7px 12px;transform:rotate(-12deg);background:rgba(255,255,255,.85)}
 .ooo-card.is-claimed .ooo-badge{background:#7E0508}
 @media(max-width:900px){.ooo-wrap{padding:40px 0 0}.ooo{min-height:0}.ooo-girl{position:relative;right:auto !important;width:100%;max-width:none;display:block;margin:16px -4vw 0;width:108%}.ooo-m{left:-40vw !important;bottom:auto;top:40%;width:120vw;opacity:.45}.ooo-h{font-size:13vw}.ooo-rail{flex-wrap:wrap;margin-top:16px;padding-bottom:30px}.ooo-card{width:calc(50% - 6px)}}
+
+/* One of One page: the home block as a hero, then the grid */
+.ooo-page{padding-top:110px;background:#DFE4EA}
+.ooo-page .ooo{min-height:560px}
+.ooo-page .ooo-fine{margin:16px 0 40px;font:500 13px var(--body);opacity:.65}
+@media(max-width:900px){.ooo-page{padding-top:90px}.ooo-page .ooo-fine{margin-bottom:16px}}
