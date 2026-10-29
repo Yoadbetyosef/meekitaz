@@ -8,8 +8,16 @@ export const maxDuration = 300;
 /* One of One import — 354 rings from Classic Grown Diamonds, in the supplier's order.
    Runs from the cron (or with ?key=CRON_SECRET), imports what is not in the store yet, a few dozen per run, idempotent by handle.
    Created LAST-first, so the first ring on the supplier's list ends up the newest = first on the home page. */
-type Row = { sku: string; handle: string; title: string; desc: string; price: number; tags: string[]; images: string[]; video: string | null };
+type Row = { sku: string; handle: string; title: string; desc: string; price: number; tags: string[]; images: string[]; video: string | null; videoGuess: string | null };
+const alive = async (u: string) => { try { const r = await fetch(u, { method: "HEAD", signal: AbortSignal.timeout(8000) }); return r.ok; } catch { return false; } };
+/** Only files the supplier really has: the image list was reconstructed by pattern for most rings, so each URL is checked first. */
+async function liveMedia(r: Row) {
+  const imgs = (await Promise.all(r.images.map(async u => (await alive(u)) ? u : null))).filter((u): u is string => !!u);
+  const vid = r.video || (r.videoGuess && (await alive(r.videoGuess)) ? r.videoGuess : null);
+  return { imgs, vid };
+}
 const LOC = "gid://shopify/Location/95949258989";
+const done = new Set<string>(); // handles whose video was already checked in this process
 const PUBS = ["gid://shopify/Publication/223010783469", "gid://shopify/Publication/222997545197", "gid://shopify/Publication/222997577965"];
 
 async function exists(handle: string) {
@@ -17,10 +25,11 @@ async function exists(handle: string) {
   return d?.productByIdentifier?.id || null;
 }
 async function createOne(r: Row) {
+  const { imgs, vid } = await liveMedia(r);
   const input = {
     title: r.title, handle: r.handle, descriptionHtml: r.desc, productType: "Ring", vendor: "Meekitaz", status: "ACTIVE", tags: r.tags,
-    files: r.images.map(u => ({ originalSource: u, contentType: "IMAGE", alt: r.title })),
-    metafields: r.video ? [{ namespace: "meekitaz", key: "video", type: "url", value: r.video }] : [],
+    files: imgs.map(u => ({ originalSource: u, contentType: "IMAGE", alt: r.title })),
+    metafields: vid ? [{ namespace: "meekitaz", key: "video", type: "url", value: vid }] : [],
     productOptions: [{ name: "Title", values: [{ name: "Default Title" }] }],
     variants: [{ optionValues: [{ optionName: "Title", name: "Default Title" }], price: String(r.price), compareAtPrice: String(r.price * 2), inventoryPolicy: "DENY", inventoryItem: { sku: "MK-1OF1-" + r.sku, tracked: true }, inventoryQuantities: [{ locationId: LOC, name: "available", quantity: 1 }] }],
   };
@@ -40,7 +49,15 @@ export async function GET(req: NextRequest) {
   for (const r of list) {
     if (Date.now() - t0 > budget) { log.push("budget reached; the next run continues"); break; }
     try {
-      if (await exists(r.handle)) { skipped++; continue; }
+      const id = await exists(r.handle);
+      if (id) {
+        if (!r.video && r.videoGuess && !done.has(r.handle)) { // rings imported before the video check: attach the clip if the supplier has one
+          const has = await adminGraphql<{ product: { metafield: { value: string } | null } | null }>(`query($id:ID!){ product(id:$id){ metafield(namespace:"meekitaz",key:"video"){ value } } }`, { id });
+          if (!has?.product?.metafield && (await alive(r.videoGuess))) { await adminGraphql(`mutation($id:ID!,$v:String!){ productUpdate(product:{ id:$id, metafields:[{ namespace:"meekitaz", key:"video", type:"url", value:$v }] }){ userErrors{ message } } }`, { id, v: r.videoGuess }); log.push(`~ ${r.handle}: video attached`); }
+          done.add(r.handle);
+        }
+        skipped++; continue;
+      }
       await createOne(r); created++; log.push(`+ ${r.handle} $${r.price}`);
     } catch (e) { failed++; log.push(`! ${r.handle}: ${e instanceof Error ? e.message : String(e)}`); }
   }
