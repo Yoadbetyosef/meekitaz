@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getOneOfOne, getCollectionProducts } from "@/lib/shopify";
+import { getOneOfOne } from "@/lib/shopify";
 import { photoSrc } from "@/lib/img";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
@@ -7,13 +7,8 @@ const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 /* Home · under the gemstones slide: the one-of-ones. One stone, one setting, one ring; tag a product "One of One" in Shopify and it appears
    here, and when it sells it stays, stamped Claimed. The photo's own blue is the section's background, so she sits in it edge to edge. */
 export default async function OneOfOne() {
-  let items = await getOneOfOne(8).catch(() => []);
-  let preview = false;
-  if (!items.length) { // nothing tagged "One of One" yet: show the newest engagement rings as a stand-in, marked Preview (no 1-of-1 claim)
-    const fb = (await getCollectionProducts("engagement-rings", 4).catch(() => null)) || [];
-    items = fb.map(p => ({ handle: p.handle, title: p.title.replace(/^(Yellow|White|Rose) gold /i, "").replace(/ Engagement Ring$/i, ""), price: +p.price, image: p.image?.url, claimed: false, isNew: false, sub: [p.shape, p.metal].filter(Boolean).join(" · ") || undefined }));
-    preview = true;
-  }
+  const items = await getOneOfOne(8).catch(() => []);
+  const preview = false; // only pieces tagged "One of One" ever show here
   const claimed = items.filter(i => i.claimed).length, left = items.length - claimed;
   return (
     <section className="ooo-wrap">
