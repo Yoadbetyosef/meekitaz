@@ -2,16 +2,20 @@ import { Suspense } from "react";
 import ProductBrowser from "@/components/ProductBrowser";
 import { getCollectionPage, shopifyConfigured, type Product } from "@/lib/shopify";
 import { fillPage } from "@/lib/designs";
+import OneCircles from "@/components/OneCircles";
+import { oneOfOneQuery } from "@/lib/ringfilters";
+import { getProductsByQuery } from "@/lib/shopify";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "One of One — MEEKITAZ", description: "Made once. Never again. One stone, one setting, one ring; when it’s claimed, it’s gone." };
 
 /* /one-of-one — the one-of-ones, in the supplier's order (newest first). The hero repeats the home-page block: the model coming in from the right,
    the big M behind her; the rings follow in the usual grid with "Show more". */
-export default async function OneOfOnePage() {
+export default async function OneOfOnePage({ searchParams }: { searchParams: Promise<{ style?: string }> }) {
+  const { style = "" } = await searchParams;
   let r: { products: Product[]; hasNext: boolean; cursor: string | null } | null = null;
   if (shopifyConfigured) {
-    const f = await fillPage([], { cursor: null, hasNext: true }, after => getCollectionPage("one-of-one", { first: 24, after, sort: "new" }), 24, 5).catch(() => null);
+    const f = await fillPage([], { cursor: null, hasNext: true }, after => style ? getProductsByQuery(oneOfOneQuery("one-of-one", style), { first: 24, after, sort: "new" }) : getCollectionPage("one-of-one", { first: 24, after, sort: "new" }), 24, 5).catch(() => null);
     if (f && (f.items.length || !f.failed)) r = { products: f.items, hasNext: f.hasNext, cursor: f.cursor };
   }
   return (
@@ -28,8 +32,9 @@ export default async function OneOfOnePage() {
           </div>
         </div>
       </section>
-      <div className="catbody">
-        {r ? <Suspense fallback={null}><ProductBrowser handle="one-of-one" initial={r.products} hasNext={r.hasNext} cursor={r.cursor} /></Suspense>
+      <section className="ooo-circ-wrap"><div className="wrap"><OneCircles current={style} /></div></section>
+      <div className="catbody" id="results">
+        {r ? <Suspense fallback={null}><ProductBrowser key={style} handle="one-of-one" style={style} initial={r.products} hasNext={r.hasNext} cursor={r.cursor} /></Suspense>
            : <section className="grid-wrap"><div className="wrap"><h2>The collection</h2><p>The one-of-ones are on their way. Check back in a moment.</p></div></section>}
       </div>
     </main>
