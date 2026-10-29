@@ -11,7 +11,7 @@ export const metadata = { title: "One of One — MEEKITAZ", description: "Made o
 export default async function OneOfOnePage() {
   let r: { products: Product[]; hasNext: boolean; cursor: string | null } | null = null;
   if (shopifyConfigured) {
-    const f = await fillPage([], { cursor: null, hasNext: true }, after => getCollectionPage("one-of-one", { first: 24, after }), 24, 5).catch(() => null);
+    const f = await fillPage([], { cursor: null, hasNext: true }, after => getCollectionPage("one-of-one", { first: 24, after, sort: "new" }), 24, 5).catch(() => null);
     if (f && (f.items.length || !f.failed)) r = { products: f.items, hasNext: f.hasNext, cursor: f.cursor };
   }
   return (
