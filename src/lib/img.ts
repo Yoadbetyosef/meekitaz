@@ -6,6 +6,8 @@ const EARRING = /\b(?:earrings?|studs?|hoops?|huggies?)\b/i;
 // `slot` is the photo's place among the Shopify product photos (0 = the first).
 export function photoSrc(url: string, width: number, title: string, slot = 0) {
   if (!/cdn\.shopify\.com/.test(url)) return url; // only Shopify product photos carry the engraving; on-model photos are left alone
+  // Supplier photos (One of One: SJR…, Ready to Ship: BC/ER/RG… lots) carry no engraving: straight from Shopify's CDN, sized there, no proxy, no cleaner
+  if (/\/files\/(SJR\d|[A-Z]{2,3}\d{3,6}[%_ (])/i.test(url) || /\/files\/sjr\d/i.test(url)) return url.replace(/(\?v=\d+)?$/, `$1${url.includes("?") ? "&" : "?"}width=${Math.min(width * 2, 2000)}`);
   // v=6: the cleaners got better (generic text pass), so older cleaned copies are not reused; rings and bands: every studio photo
   if (slot <= 4 && EARRING.test(title)) return `/api/img?u=${encodeURIComponent(url)}&w=${width}&s=${slot}&m=gold&v=6`;
   if (slot <= 7 && RING.test(title)) return `/api/img?u=${encodeURIComponent(url)}&w=${width}&s=${slot}&v=6`;
