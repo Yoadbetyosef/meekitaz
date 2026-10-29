@@ -13,6 +13,7 @@ const TYPES = [["", "All"], ["Ring", "Rings"], ["Earrings", "Earrings"], ["Brace
 export default function Reel({ initial, hasNext: h0, cursor: c0 }: { initial: ReelItem[]; hasNext: boolean; cursor: string | null }) {
   const [items, setItems] = useState(initial), [hasNext, setHasNext] = useState(h0), [cursor, setCursor] = useState(c0), [type, setType] = useState(""), [i, setI] = useState(0), [busy, setBusy] = useState("");
   const wrap = useRef<HTMLDivElement>(null), loading = useRef(false);
+  const mutedVideo = (el: HTMLVideoElement | null) => { if (el) { el.muted = true; el.defaultMuted = true; el.setAttribute("muted", ""); } };
   const cart = useCart();
 
   useEffect(() => { // which slide is on screen: play it, pause the rest
@@ -70,7 +71,7 @@ export default function Reel({ initial, hasNext: h0, cursor: c0 }: { initial: Re
       <div className="rl-wrap" ref={wrap}>
         {items.map((it, k) => (
           <div className="rl-slide" key={it.handle} data-i={k} data-handle={it.handle}>
-            {it.video && Math.abs(k - i) <= 1 ? <video src={it.video} muted loop playsInline autoPlay={k === i} preload="auto" poster={it.image} /> : <img src={it.image} alt="" loading="lazy" />}
+            {it.video && Math.abs(k - i) <= 1 ? <video ref={mutedVideo} src={it.video} loop playsInline preload="auto" poster={it.image} /> : <img src={it.image} alt="" loading="lazy" />}
             <div className="rl-side">
               <WishHeart item={{ handle: it.handle, title: it.title, image: it.image || "", price: it.price, compareAt: it.compare || null }} className="big" />
               <ShareArrow item={{ handle: it.handle, title: it.title, image: it.image || "", price: it.price, compareAt: it.compare || null }} className="big" />
