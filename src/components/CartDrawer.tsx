@@ -117,7 +117,7 @@ export default function CartDrawer() {
                   <h4>{l.title.replace(/ \((?:[^()]*)\)$/, "")}</h4>
                   {l.variantTitle && <div className="cd-meta">{l.variantTitle}</div>}
                   {l.attributes.filter(a => !["Build", "Arrives by"].includes(a.key)).length > 0 && <div className="cd-meta">{l.attributes.filter(a => !["Build", "Arrives by"].includes(a.key)).map(a => a.value.replace(/ Carat$/i, " ct")).join(" · ")}</div>}
-                  {l.compareAt > 0 && <span className="cd-tag">50% off · made to order</span>}
+                  {l.handle.startsWith("reel-") || l.handle.startsWith("one-of-one-") ? <span className="cd-tag">{l.handle.startsWith("reel-") ? "Ready to ship · ships in 48h" : "One of one"}</span> : l.compareAt > 0 && <span className="cd-tag">50% off · made to order</span>}
                   {!l.handle.startsWith("care-package") && <div className="cd-qty">
                     <button onClick={() => setQty(l.id, l.quantity - 1)} aria-label="Decrease quantity" disabled={busy}>−</button>
                     <span>{l.quantity}</span>
