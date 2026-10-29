@@ -2441,3 +2441,7 @@ body.reel-open .mk-page{min-height:0}
 .rl-tag,.rl-chips button,.rl-side .wh,.rl-side .wsh,.rl-side a,.rl-arrows button{background:rgba(255,255,255,.14)}
 .rl-chips button.on{background:#F7E9A8}
 .rl-side .wh,.rl-side .wsh,.rl-side a{border-radius:50% !important;width:44px;height:44px}
+
+/* On-hand supplier photos: edge to edge on every screen, no blurred bands */
+.ih-sl.hand .ih-fg{object-fit:cover;object-position:50% 40%}
+.ih-sl.hand .ih-wash{display:none}
