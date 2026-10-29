@@ -39,7 +39,17 @@ export async function GET(req: NextRequest) {
     if (!RING.test(n.title) && mode !== "gold") { await tag(n.id); products++; continue; } // nothing to clean on this kind of piece
     let changed = 0;
     try {
-      const nodes = n.media.nodes.filter(m => m.image);
+      const all = n.media.nodes.filter(m => m.image);
+      const cleanOnes = all.filter(m => /-clean(_\d+)?\.jpg/i.test(m.image!.url));
+      if (cleanOnes.length) { // a clean copy is already there (from a run that could not remove the original): finish the swap, drop extra copies
+        const base = (u: string) => (u.split("/").pop() || "").replace(/\?.*$/, "").replace(/-clean(_\d+)?\.jpg$/i, "").replace(/(_\d+)?\.(jpg|png|webp|jpeg)$/i, "");
+        const keep = new Map<string, Media>(); const drop: Media[] = [];
+        for (const m of cleanOnes) { const b = base(m.image!.url); if (keep.has(b)) drop.push(m); else keep.set(b, m); }
+        for (const m of all.filter(m => !cleanOnes.includes(m))) if (keep.has(base(m.image!.url))) drop.push(m);
+        if (drop.length) await adminGraphql(`mutation($files:[FileUpdateInput!]!){ fileUpdate(files:$files){ userErrors{ message } } }`, { files: drop.map(m => ({ id: m.id, referencesToRemove: [n.id] })) });
+        await tag(n.id); products++; log.push(`${n.title}: swap finished, ${drop.length} removed`); continue;
+      }
+      const nodes = all;
       for (let slot = 0; slot < nodes.length; slot++) {
         const m = nodes[slot]; const url = m.image!.url.replace(/\?.*$/, "") + "?width=1600";
         const r = await fetch(url, { headers: { Accept: "image/jpeg,image/webp" } }); if (!r.ok) continue;
