@@ -2453,3 +2453,13 @@ body.reel-open .mk-page{min-height:0}
   .ih .ih-sl.hand .ih-wash{display:none}
 }
 @media(min-width:768px){.ih .ih-sl.hand .ih-fg{object-fit:cover;object-position:50% 40%}.ih .ih-sl.hand .ih-bk{display:none}}
+
+/* One of One circles */
+.ooo-circ-wrap{background:#DFE4EA;padding:10px 0 26px;position:relative;z-index:6}
+.ooo-circ-wrap .wrap{width:min(1300px,92vw);margin:0 auto}
+.ooo-circles .sp-row{margin-bottom:14px}
+.ooo-circles .sp{width:calc((100% - 7*18px)/8);min-width:118px}
+.ooo-circles .sp-img{background:#fff}.ooo-circles .sp-img img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.15)}
+.ooo-circles .sp b{font:400 13px var(--display);text-align:center}
+.ooo-circles .sp.on .sp-img{box-shadow:0 0 0 3px #7E0508}
+@media(max-width:767px){.ooo-circles .sp{min-width:98px}.ooo-circles .sp b{font-size:12px}}
