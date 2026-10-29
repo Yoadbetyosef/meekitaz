@@ -263,7 +263,8 @@ export async function cleanImage(input: Buffer, slot = 0, mode: "ring" | "gold" 
   if (!box) {
     if (slot >= 2 && slot <= 5 && cleanTiny(data, gray, W, H)) return sharp(data, { raw: { width: W, height: H, channels: 3 } }).jpeg({ quality: 90 }).toBuffer();
     // the templates did not match (gemstone pieces, odd angles, the tiny text on a band seen from above): find the text by its shape instead
-    if (cleanTextInk(data, W, H)) return sharp(data, { raw: { width: W, height: H, channels: 3 } }).jpeg({ quality: 90 }).toBuffer();
+    // only on full-size angled photos (slot 1+, 900px and up): on small card images and busy pavé the shape test can misfire and smear stones
+    if (slot >= 1 && W >= 900 && cleanTextInk(data, W, H)) return sharp(data, { raw: { width: W, height: H, channels: 3 } }).jpeg({ quality: 90 }).toBuffer();
     return null;
   }
 
