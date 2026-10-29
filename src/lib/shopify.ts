@@ -341,7 +341,7 @@ export async function setCartDiscountCodes(cartId: string, codes: string[]): Pro
 export type OneOfOne = { handle: string; title: string; price: number; image?: string; claimed: boolean; isNew: boolean; sub?: string };
 export async function getOneOfOne(first = 8): Promise<OneOfOne[]> {
   const d = await sf<{ products: { edges: { node: { handle: string; title: string; tags: string[]; createdAt: string; availableForSale: boolean; priceRange: { minVariantPrice: { amount: string } }; featuredImage: { url: string } | null } }[] } }>(
-    `query($first:Int!){ products(first:$first, query:"tag:'One of One'", sortKey:CREATED_AT, reverse:true){ edges{ node{ handle title tags createdAt availableForSale priceRange{ minVariantPrice{ amount } } featuredImage{ url } } } } }`, { first }, { fresh: true });
+    `query($first:Int!){ products(first:$first, query:"tag:'One of One'", sortKey:CREATED_AT, reverse:true){ edges{ node{ handle title tags createdAt availableForSale priceRange{ minVariantPrice{ amount } } featuredImage{ url } } } } }`, { first }); // cached a few minutes: the home page must not wait on Shopify for every visit
   const now = Date.now();
   return (d?.products.edges || []).map(({ node: n }) => ({
     handle: n.handle, title: n.title.replace(/^(Yellow|White|Rose) gold /i, "").replace(/ Engagement Ring$/i, ""), price: +n.priceRange.minVariantPrice.amount, image: n.featuredImage?.url,
@@ -365,6 +365,6 @@ export async function getReel(first = 24, after: string | null = null, type = ""
 export async function getReelByHandles(handles: string[]): Promise<ReelItem[]> {
   // one aliased lookup per handle (the Storefront search index does not filter on handle)
   const q = `query{ ${handles.map((h, k) => `p${k}: product(handle:"${h}"){ ${REEL_FIELDS} }`).join(" ")} }`;
-  const d = await sf<Record<string, ReelNode | null>>(q, {}, { fresh: true });
+  const d = await sf<Record<string, ReelNode | null>>(q, {}); // cached a few minutes, same reason
   return handles.map((_, k) => d?.[`p${k}`]).filter((n): n is ReelNode => !!n).map(reelItem);
 }
