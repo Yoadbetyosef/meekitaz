@@ -75,10 +75,9 @@ export default function Reel({ initial, hasNext: h0, cursor: c0 }: { initial: Re
             <div className="rl-side">
               <WishHeart item={{ handle: it.handle, title: it.title, image: it.image || "", price: it.price, compareAt: it.compare || null }} className="big" />
               <ShareArrow item={{ handle: it.handle, title: it.title, image: it.image || "", price: it.price, compareAt: it.compare || null }} className="big" />
-              <Link href={`/products/${it.handle}`} aria-label="Details">&#x2197;</Link>
             </div>
             <div className="rl-ov">
-              <h3>{it.title}</h3>
+              <h3><Link href={`/products/${it.handle}`}>{it.title}</Link></h3>
               <p>{it.detail}</p>
               <b>{usd(it.price)}</b>
               <button className="rl-btn" onClick={() => claim(it)} disabled={busy === it.handle}><span>{busy === it.handle ? "Adding to bag…" : `Add to bag · ${usd(it.price)}`}</span><i>&rarr;</i></button>
