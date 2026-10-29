@@ -89,7 +89,9 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const [pcBox, setPcBox] = useState({ w: 0, h: 0 });
   const box = useRef<HTMLElement>(null), vid = useRef<HTMLVideoElement>(null), cvid = useRef<HTMLVideoElement>(null), vis = useRef(true);
   const cur = Math.min(i, N - 1);
-  const modeOf = useCallback((s: Slide): "photo" | "piece" => s.kind === "film" || s.kind === "clip" ? "photo" : s.kind === "stone" || s.kind === "box" ? "piece" : (modes[s.url || ""] ?? (s.url === model ? "photo" : "piece")), [modes, model]);
+  /* The supplier's on-hand photos (CGD names them SKU-<metal>-2.jpg and -3.jpg) are always full-screen "photo" slides, never a framed piece. */
+  const handShot = (u?: string) => !!u && /-(Y|W|R|YW|RW|YRW|YR)-[23]\.jpg/i.test(u);
+  const modeOf = useCallback((s: Slide): "photo" | "piece" => s.kind === "film" || s.kind === "clip" ? "photo" : s.kind === "stone" || s.kind === "box" ? "piece" : handShot(s.url) ? "photo" : (modes[s.url || ""] ?? (s.url === model ? "photo" : "piece")), [modes, model]);
   const go = useCallback((k: number) => setI(((k % N) + N) % N), [N]);
   useEffect(() => { setI(x => Math.min(x, N - 1)); }, [N]);
 
@@ -162,7 +164,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const onImg = (url: string) => (e: React.SyntheticEvent<HTMLImageElement>) => {
     const r = measure(e.currentTarget);
     const tr = trimOf(e.currentTarget); if (tr) setTrims(m => (m[url] ? m : { ...m, [url]: tr }));
-    if (url !== model && r.photo !== null) setModes(m => (m[url] === (r.photo ? "photo" : "piece") ? m : { ...m, [url]: r.photo ? "photo" : "piece" }));
+    if (url !== model && !handShot(url) && r.photo !== null) setModes(m => (m[url] === (r.photo ? "photo" : "piece") ? m : { ...m, [url]: r.photo ? "photo" : "piece" }));
     if (r.dark !== null) setTones(t => (t[url] === (r.dark ? "dark" : "light") ? t : { ...t, [url]: r.dark ? "dark" : "light" }));
   };
   // the photograph's own image: besides the usual look, its edge colours fill the sides it does not reach (laptop and desktop)
