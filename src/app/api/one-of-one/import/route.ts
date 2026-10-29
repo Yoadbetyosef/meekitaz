@@ -9,7 +9,7 @@ export const maxDuration = 300;
    Runs from the cron (or with ?key=CRON_SECRET), imports what is not in the store yet, a few dozen per run, idempotent by handle.
    Created LAST-first, so the first ring on the supplier's list ends up the newest = first on the home page. */
 type Row = { sku: string; handle: string; title: string; desc: string; price: number; tags: string[]; images: string[]; video: string | null; videoGuess: string | null };
-const alive = async (u: string) => { try { const r = await fetch(u, { method: "HEAD", signal: AbortSignal.timeout(8000) }); return r.ok; } catch { return false; } };
+const alive = async (u: string) => { try { const r = await fetch(u, { headers: { Range: "bytes=0-0" }, signal: AbortSignal.timeout(8000) }); try { await r.body?.cancel(); } catch { /* ignore */ } return r.ok; } catch { return false; } };
 /** Only files the supplier really has: the image list was reconstructed by pattern for most rings, so each URL is checked first. */
 async function liveMedia(r: Row) {
   const imgs = (await Promise.all(r.images.map(async u => (await alive(u)) ? u : null))).filter((u): u is string => !!u);
@@ -51,6 +51,13 @@ export async function GET(req: NextRequest) {
     try {
       const id = await exists(r.handle);
       if (id) {
+        if (!done.has(r.handle)) { // rings created while the file check was broken: add their photos now
+          const mc = await adminGraphql<{ product: { mediaCount: { count: number } } | null }>(`query($id:ID!){ product(id:$id){ mediaCount{ count } } }`, { id });
+          if (mc?.product && mc.product.mediaCount.count === 0) {
+            const { imgs } = await liveMedia(r);
+            if (imgs.length) { await adminGraphql(`mutation($id:ID!,$media:[CreateMediaInput!]!){ productUpdate(product:{ id:$id }, media:$media){ userErrors{ message } } }`, { id, media: imgs.map(u => ({ originalSource: u, mediaContentType: "IMAGE", alt: r.title })) }); log.push(`~ ${r.handle}: ${imgs.length} photos added`); }
+          }
+        }
         if (!r.video && r.videoGuess && !done.has(r.handle)) { // rings imported before the video check: attach the clip if the supplier has one
           const has = await adminGraphql<{ product: { metafield: { value: string } | null } | null }>(`query($id:ID!){ product(id:$id){ metafield(namespace:"meekitaz",key:"video"){ value } } }`, { id });
           if (!has?.product?.metafield && (await alive(r.videoGuess))) { await adminGraphql(`mutation($id:ID!,$v:String!){ productUpdate(product:{ id:$id, metafields:[{ namespace:"meekitaz", key:"video", type:"url", value:$v }] }){ userErrors{ message } } }`, { id, v: r.videoGuess }); log.push(`~ ${r.handle}: video attached`); }
