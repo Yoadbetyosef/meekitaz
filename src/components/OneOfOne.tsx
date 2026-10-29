@@ -12,8 +12,8 @@ export default async function OneOfOne() {
   return (
     <section className="ooo-wrap">
       <div className="ooo">
+        <img className="ooo-m" src="/brand/meekitaz-m-white.png" alt="" aria-hidden="true" loading="lazy" />
         <img className="ooo-girl" src="/media/home/one-of-one.jpg" alt="" loading="lazy" />
-        <div className="ooo-stamp"><div><b>1</b>of one</div></div>
         <div className="ooo-copy">
           <p className="ooo-eye"><i />One of One{claimed ? ` · ${claimed} claimed` : ""}</p>
           <h2 className="ooo-h">Made once.<em>Never again.</em></h2>
