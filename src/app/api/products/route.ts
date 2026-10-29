@@ -3,6 +3,17 @@ import { categories } from "@/lib/data";
 import { getCollectionPage, getProductsByQuery, shopifyConfigured } from "@/lib/shopify";
 import { gemQuery, ringQuery, styleQuery } from "@/lib/ringfilters";
 
+/* One of One / Ready to Ship circles: every circle is a tag (shape, style, colour, size, metal) or a price band */
+export function oneOfOneQuery(handle: string, style: string): string {
+  const base = handle === "one-of-one" ? "tag:'One of One'" : "tag:'Ready to Ship'";
+  if (style === "Under $4,000") return `${base} AND variants.price:<4000`;
+  if (style === "$4–8K") return `${base} AND variants.price:>=4000 AND variants.price:<8000`;
+  if (style === "$8K+") return `${base} AND variants.price:>=8000`;
+  if (style === "Fancy colour") return `${base} AND tag:'Fancy'`;
+  if (style === "4 ct and up") return `${base} AND tag:'Big stone'`;
+  return `${base} AND tag:'${style.replace(/'/g, "")}'`;
+}
+
 const list = (v: string | null) => (v ? v.split(",").map(x => x.trim()).filter(Boolean).slice(0, 12) : []);
 const num = (v: string | null) => { const n = Number(v); return v && Number.isFinite(n) ? n : undefined; };
 
@@ -15,6 +26,7 @@ export async function GET(req: NextRequest) {
   const r = handle === "engagement-rings" || handle === "fancy-colors"
     ? await getProductsByQuery(ringQuery({ shapes: list(sp.get("shape")), metals: list(sp.get("metal")), styles: list(sp.get("look")), min: num(sp.get("min")), max: num(sp.get("max")), fancy: handle === "fancy-colors" ? (sp.get("fancy") || "all") : undefined, type: handle === "fancy-colors" ? sp.get("type") || undefined : undefined }), opts)
     : handle === "gemstones" && sp.get("type") ? await getProductsByQuery(gemQuery(sp.get("style") || "", sp.get("type") || ""), opts)
+    : EXTRA.includes(handle) && sp.get("style") ? await getProductsByQuery(oneOfOneQuery(handle, sp.get("style") || ""), opts)
     : sp.get("style") ? await getProductsByQuery(styleQuery(handle, sp.get("style") || ""), opts)
     : await getCollectionPage(handle, opts);
   if (!r) return NextResponse.json({ error: "unavailable" }, { status: 502 });
