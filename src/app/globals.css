@@ -2462,3 +2462,5 @@ body.reel-open .mk-page{min-height:0}
 .ooo-circles .sp b{font:400 13px var(--display);text-align:center}
 .ooo-circles .sp.on .sp-img{box-shadow:0 0 0 3px #7E0508}
 @media(max-width:767px){.ooo-circles .sp{min-width:108px}.ooo-circles .sp b{font-size:12px}}
+
+.rl-ov h3 a{color:inherit;text-decoration:none}
