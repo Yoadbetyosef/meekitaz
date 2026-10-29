@@ -27,6 +27,10 @@
     {
       "path": "/api/reel/import",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/one-of-one/style",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
