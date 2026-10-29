@@ -363,8 +363,8 @@ export async function getReel(first = 24, after: string | null = null, type = ""
   return { items: (p?.nodes || []).filter(n => n.availableForSale).map(reelItem), hasNext: !!p?.pageInfo.hasNextPage, cursor: p?.pageInfo.endCursor || null };
 }
 export async function getReelByHandles(handles: string[]): Promise<ReelItem[]> {
-  const q = handles.map(h => `handle:${h}`).join(" OR ");
-  const d = await sf<{ products: { nodes: ReelNode[] } }>(`query($q:String!){ products(first:${handles.length}, query:$q){ nodes{ ${REEL_FIELDS} } } }`, { q }, { fresh: true });
-  const by = new Map((d?.products.nodes || []).map(n => [n.handle, reelItem(n)]));
-  return handles.map(h => by.get(h)).filter((x): x is ReelItem => !!x);
+  // one aliased lookup per handle (the Storefront search index does not filter on handle)
+  const q = `query{ ${handles.map((h, k) => `p${k}: product(handle:"${h}"){ ${REEL_FIELDS} }`).join(" ")} }`;
+  const d = await sf<Record<string, ReelNode | null>>(q, {}, { fresh: true });
+  return handles.map((_, k) => d?.[`p${k}`]).filter((n): n is ReelNode => !!n).map(reelItem);
 }
