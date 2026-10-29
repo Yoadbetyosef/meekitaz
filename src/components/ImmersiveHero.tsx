@@ -88,13 +88,17 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const [trims, setTrims] = useState<Record<string, Trim>>({});
   const [pcBox, setPcBox] = useState({ w: 0, h: 0 });
   const box = useRef<HTMLElement>(null), vid = useRef<HTMLVideoElement>(null), cvid = useRef<HTMLVideoElement>(null), vis = useRef(true);
-  const [clipBg, setClipBg] = useState<"light" | "dark">("dark"); // the "In motion" slide takes the video's own background: white video, white slide
+  // the "In motion" slide takes the video's own background. Known supplier hosts decide it outright (CGD films on white, LGD on black);
+  // anything else is sampled from the poster when the browser allows it
+  const hostBg = (u?: string): "light" | "dark" | null => !u ? null : /r2\.dev|webassests|classicgrown/i.test(u) ? "light" : /lgdus/i.test(u) ? "dark" : null;
+  const [clipBg, setClipBg] = useState<"light" | "dark">(hostBg(clip?.src) || "dark");
   useEffect(() => {
+    const known = hostBg(clip?.src); if (known) { setClipBg(known); return; }
     if (!clip?.poster) return;
     const im = new window.Image(); im.crossOrigin = "anonymous";
-    im.onload = () => { try { const c = document.createElement("canvas"); c.width = 16; c.height = 16; const x = c.getContext("2d"); if (!x) return; x.drawImage(im, 0, 0, 16, 16); const d = x.getImageData(0, 0, 16, 16).data; let s = 0, n = 0; for (const [px, py] of [[0, 0], [15, 0], [0, 15], [15, 15], [8, 0], [0, 8], [15, 8], [8, 15]]) { const i = (py * 16 + px) * 4; s += (d[i] + d[i + 1] + d[i + 2]) / 3; n++; } setClipBg(s / n > 150 ? "light" : "dark"); } catch { /* cross-origin: stay dark */ } };
+    im.onload = () => { try { const c = document.createElement("canvas"); c.width = 16; c.height = 16; const x = c.getContext("2d"); if (!x) return; x.drawImage(im, 0, 0, 16, 16); const d = x.getImageData(0, 0, 16, 16).data; let s = 0, n = 0; for (const [px, py] of [[0, 0], [15, 0], [0, 15], [15, 15], [8, 0], [0, 8], [15, 8], [8, 15]]) { const k = (py * 16 + px) * 4; s += (d[k] + d[k + 1] + d[k + 2]) / 3; n++; } setClipBg(s / n > 150 ? "light" : "dark"); } catch { /* tainted canvas: keep dark */ } };
     im.src = clip.poster;
-  }, [clip?.poster]);
+  }, [clip?.src, clip?.poster]);
   const cur = Math.min(i, N - 1);
   /* The supplier's on-hand photos (CGD names them SKU-<metal>-2.jpg and -3.jpg) are always full-screen "photo" slides, never a framed piece. */
   const handShot = (u?: string) => !!u && /-(Y|W|R|YW|RW|YRW|YR)-[23]\.jpg/i.test(u);
