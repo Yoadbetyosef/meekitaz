@@ -4,6 +4,7 @@ import Categories from "@/components/Categories";
 import HouseCodes from "@/components/HouseCodes";
 import NewFancy from "@/components/NewFancy";
 import OneOfOne from "@/components/OneOfOne";
+import ReelStrip from "@/components/ReelStrip";
 import PressRow from "@/components/PressRow";
 import LooksReel from "@/components/LooksReel";
 import Reviews from "@/components/Reviews";
@@ -17,6 +18,7 @@ export default function Home() {
       <Categories />
       <NewFancy />
       <OneOfOne />
+      <ReelStrip />
       <HouseCodes />
       <PressRow />
       <LooksReel />
