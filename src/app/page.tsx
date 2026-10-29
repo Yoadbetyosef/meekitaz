@@ -3,6 +3,7 @@ import Film from "@/components/Film";
 import Categories from "@/components/Categories";
 import HouseCodes from "@/components/HouseCodes";
 import NewFancy from "@/components/NewFancy";
+import OneOfOne from "@/components/OneOfOne";
 import PressRow from "@/components/PressRow";
 import LooksReel from "@/components/LooksReel";
 import Reviews from "@/components/Reviews";
@@ -15,6 +16,7 @@ export default function Home() {
       <Film />
       <Categories />
       <NewFancy />
+      <OneOfOne />
       <HouseCodes />
       <PressRow />
       <LooksReel />
