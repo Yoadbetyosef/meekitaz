@@ -56,7 +56,9 @@ export async function GET(req: NextRequest) {
           const media = m?.product?.media.nodes || [];
           const triedBefore = (m?.product?.tags || []).includes("photos-tried-s3");
           const failed = media.filter(x => x.status === "FAILED").map(x => x.id);
-          if (failed.length) { await adminGraphql(`mutation($ids:[ID!]!){ fileDelete(fileIds:$ids){ deletedFileIds userErrors{ message } } }`, { ids: failed }); log.push(`- ${r.handle}: ${failed.length} missing photos removed`); }
+          if (failed.length) { // the site's Admin token has no write_files scope: a failed delete must not stop the photos from being added
+            try { await adminGraphql(`mutation($ids:[ID!]!){ fileDelete(fileIds:$ids){ deletedFileIds userErrors{ message } } }`, { ids: failed }); log.push(`- ${r.handle}: ${failed.length} missing photos removed`); } catch { /* cleaned up by hand later */ }
+          }
           const ready = media.filter(x => x.status === "READY").length, pending = media.filter(x => x.status === "PROCESSING").length;
           if (!ready && !pending && !triedBefore) { // one attempt with the current URL set (S3), remembered on the product so it is not repeated every run
             const urls = [...r.images, ...(r.guess || [])];
