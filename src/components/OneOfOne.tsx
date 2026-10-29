@@ -19,7 +19,7 @@ export default async function OneOfOne() {
           <p className="ooo-eye"><i />One of One{claimed ? ` · ${claimed} claimed` : ""}</p>
           <h2 className="ooo-h">Made once.<em>Never again.</em></h2>
           <p className="ooo-lead">A single stone, a single setting, a single ring. When it&rsquo;s claimed, it&rsquo;s gone &mdash; we don&rsquo;t remake them.</p>
-          <div className="ooo-row"><Link href="/collections/one-of-one" className="ooo-btn">See the one-of-ones &rarr;</Link>{items.length > 0 && !preview && <span className="ooo-cnt">{left} left of {items.length}</span>}</div>
+          <div className="ooo-row"><Link href="/one-of-one" className="ooo-btn">See the one-of-ones &rarr;</Link>{items.length > 0 && !preview && <span className="ooo-cnt">{left} left of {items.length}</span>}</div>
         </div>
         {items.length > 0 && (
           <div className="ooo-rail">
