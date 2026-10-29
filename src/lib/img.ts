@@ -4,7 +4,11 @@
 const RING = /\b(?:eternity|bands?|rings?)\b/i; // whole words: rings and bands, not earrings
 const EARRING = /\b(?:earrings?|studs?|hoops?|huggies?)\b/i;
 // `slot` is the photo's place among the Shopify product photos (0 = the first).
+/** Oct 29: the on-the-fly engraving cleaner is OFF — every photo comes straight from Shopify's CDN, sized there, cached worldwide.
+ *  The cleaner (/api/img + lib/engrave) stays in the code for cleaning photos at upload time; flip this to use it on the fly again. */
+const CLEAN_ON_THE_FLY = false;
 export function photoSrc(url: string, width: number, title: string, slot = 0) {
+  if (!CLEAN_ON_THE_FLY) return /cdn\.shopify\.com/.test(url) ? url.replace(/(\?v=\d+)?$/, `$1${url.includes("?") ? "&" : "?"}width=${Math.min(width * 2, 2000)}`) : url;
   if (!/cdn\.shopify\.com/.test(url)) return url; // only Shopify product photos carry the engraving; on-model photos are left alone
   // Supplier photos (One of One: SJR…, Ready to Ship: BC/ER/RG… lots) carry no engraving: straight from Shopify's CDN, sized there, no proxy, no cleaner
   if (/\/files\/(SJR\d|[A-Z]{2,3}\d{3,6}[%_ (])/i.test(url) || /\/files\/sjr\d/i.test(url)) return url.replace(/(\?v=\d+)?$/, `$1${url.includes("?") ? "&" : "?"}width=${Math.min(width * 2, 2000)}`);
