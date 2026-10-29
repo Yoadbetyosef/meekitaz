@@ -43,7 +43,7 @@ async function createOne(r: Row) {
 export async function GET(req: NextRequest) {
   const sp = req.nextUrl.searchParams;
   const ok = process.env.CRON_SECRET && (req.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}` || sp.get("key") === process.env.CRON_SECRET);
-  if (!ok) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  if (!ok) { console.log("[one-of-one] unauthorized call"); return NextResponse.json({ error: "unauthorized" }, { status: 401 }); }
   const t0 = Date.now(), budget = 240_000, log: string[] = []; let created = 0, skipped = 0, failed = 0;
   const list = [...(rows as Row[])].reverse();
   for (const r of list) {
@@ -75,5 +75,6 @@ export async function GET(req: NextRequest) {
     } catch (e) { failed++; log.push(`! ${r.handle}: ${e instanceof Error ? e.message : String(e)}`); }
   }
   const remaining = list.length - created - skipped - failed;
+  console.log(`[one-of-one] created ${created} skipped ${skipped} failed ${failed} remaining ${remaining} in ${Math.round((Date.now() - t0) / 1000)}s`, log.slice(0, 40).join(" | "));
   return NextResponse.json({ created, skipped, failed, remaining, log });
 }
