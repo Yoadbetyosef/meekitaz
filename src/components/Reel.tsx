@@ -38,12 +38,20 @@ export default function Reel({ initial, hasNext: h0, cursor: c0 }: { initial: Re
   }, []);
 
   const pick = (t: string) => { setType(t); loading.current = true; setItems([]); fetch(`/api/reel?first=24${t ? `&type=${t}` : ""}`).then(r => r.json()).then(r => { setItems(r.items); setHasNext(r.hasNext); setCursor(r.cursor); wrap.current?.scrollTo({ top: 0 }); }).finally(() => { loading.current = false; }); };
+  const go = (d: number) => { const el = wrap.current; if (!el) return; el.scrollBy({ top: d * el.clientHeight, behavior: "smooth" }); };
   const claim = async (it: ReelItem) => { setBusy(it.handle); const r = await cart.add(it.variantId); setBusy(""); if (!r.ok) alert(r.error || "Could not add"); };
 
   return (
     <div className="rl">
-      <div className="rl-top"><Link href="/" className="rl-wm">Meekitaz</Link><span className="rl-tag"><i />Ready to ship</span><span className="rl-n">{items.length ? `${i + 1}/${items.length}${hasNext ? "+" : ""}` : ""}</span></div>
-      <div className="rl-chips">{TYPES.map(([v, l]) => <button key={v} className={type === v ? "on" : ""} onClick={() => pick(v)}>{l}</button>)}</div>
+      <aside className="rl-aside">
+        <p className="rl-aside-h"><span className="rl-tag"><i />Ready to ship</span></p>
+        <h1 className="rl-aside-t">The Reel.<em>One of each.</em></h1>
+        <div className="rl-chips">{TYPES.map(([v, l]) => <button key={v} className={type === v ? "on" : ""} onClick={() => pick(v)}>{l}</button>)}</div>
+        <p className="rl-aside-p">Swipe or use the arrows. Every piece is filmed and ships within 48 hours.</p>
+        <div className="rl-arrows"><button onClick={() => go(-1)} aria-label="Previous">&uarr;</button><button onClick={() => go(1)} aria-label="Next">&darr;</button></div>
+      </aside>
+      <div className="rl-phone">
+      <div className="rl-top"><Link href="/" className="rl-wm">Meekitaz</Link><span className="rl-tag rl-tag-m"><i />Ready to ship</span><span className="rl-n">{items.length ? `${i + 1}/${items.length}${hasNext ? "+" : ""}` : ""}</span></div>
       <div className="rl-wrap" ref={wrap}>
         {items.map((it, k) => (
           <div className="rl-slide" key={it.handle} data-i={k} data-handle={it.handle}>
@@ -63,6 +71,7 @@ export default function Reel({ initial, hasNext: h0, cursor: c0 }: { initial: Re
           </div>
         ))}
         {!items.length && <div className="rl-slide rl-empty">Loading the reel…</div>}
+      </div>
       </div>
     </div>
   );
