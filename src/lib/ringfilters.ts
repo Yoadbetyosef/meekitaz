@@ -87,3 +87,14 @@ export function gemQuery(style: string, type: string): string {
   return parts.join(" AND ");
 }
 
+
+/* One of One / Ready to Ship circles: every circle is a tag (shape, style, colour, size, metal) or a price band */
+export function oneOfOneQuery(handle: string, style: string): string {
+  const base = handle === "one-of-one" ? "tag:'One of One'" : "tag:'Ready to Ship'";
+  if (style === "Under $4,000") return `${base} AND variants.price:<4000`;
+  if (style === "$4–8K") return `${base} AND variants.price:>=4000 AND variants.price:<8000`;
+  if (style === "$8K+") return `${base} AND variants.price:>=8000`;
+  if (style === "Fancy colour") return `${base} AND tag:'Fancy'`;
+  if (style === "4 ct and up") return `${base} AND tag:'Big stone'`;
+  return `${base} AND tag:'${style.replace(/'/g, "")}'`;
+}
