@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
   const t0 = Date.now(); let repetitive = 0, stand = 0, kept = 0, failed = 0;
 
   // 1 · repetitive models
-  for (let round = 0; round < 6 && Date.now() - t0 < 60_000; round++) {
+  for (let round = 0; round < 3 && Date.now() - t0 < 40_000; round++) {
     const d = await adminGraphql<{ products: { nodes: { id: string }[] } }>(`query{ products(first:200, query:"tag:'Ready to Ship' AND status:active AND (title:'Martini Earrings' OR title:Studs)"){ nodes{ id } } }`, {});
     const ids = (d?.products.nodes || []).map(n => n.id); if (!ids.length) break;
     await draftMany(ids, "repetitive"); repetitive += ids.length;
@@ -32,11 +32,11 @@ export async function GET(req: NextRequest) {
 
   // 2 · lying on black, or out
   if (process.env.ANTHROPIC_API_KEY) {
-    const d = await adminGraphql<{ products: { nodes: P[] } }>(`query{ products(first:60, query:"tag:'Ready to Ship' AND status:active AND -tag:'bg-checked'"){ nodes{ id title featuredMedia{ preview{ image{ url } } } } } }`, {});
+    const d = await adminGraphql<{ products: { nodes: P[] } }>(`query{ products(first:150, query:"tag:'Ready to Ship' AND status:active AND -tag:'bg-checked'"){ nodes{ id title featuredMedia{ preview{ image{ url } } } } } }`, {});
     const out: string[] = [], pass: string[] = [];
     const nodes = d?.products.nodes || [];
-    for (let i = 0; i < nodes.length && Date.now() - t0 < 230_000; i += 6) {
-      await Promise.all(nodes.slice(i, i + 6).map(async n => {
+    for (let i = 0; i < nodes.length && Date.now() - t0 < 230_000; i += 12) {
+      await Promise.all(nodes.slice(i, i + 12).map(async n => {
         const url = n.featuredMedia?.preview?.image?.url; if (!url) { out.push(n.id); return; }
         try {
           const r = await fetch("https://api.anthropic.com/v1/messages", { method: "POST",
