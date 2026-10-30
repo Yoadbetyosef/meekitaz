@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
 /* Ready to Ship · curation rules (Oct 30), run from the cron until the stock is clean:
-   1. Repetitive models out: the endless round studs (titles "… Martini Earrings", "… Studs").
+   1. Repetitive models out: martini earrings, studs, tennis bracelets and necklaces, solitaire rings.
    2. Only pieces filmed lying on black stay. Claude looks at each piece's photo once: on a display stand, bust, hand or ear, or not on a
       black background → out. Pieces that pass are tagged "bg-checked" and never looked at again.
    "Out" = status DRAFT (off the site, kept in Shopify, reversible) + a tag saying why. */
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
 
   // 1 · repetitive models
   for (let round = 0; round < 3 && Date.now() - t0 < 40_000; round++) {
-    const d = await adminGraphql<{ products: { nodes: { id: string }[] } }>(`query{ products(first:200, query:"tag:'Ready to Ship' AND status:active AND (title:'Martini Earrings' OR title:Studs)"){ nodes{ id } } }`, {});
+    const d = await adminGraphql<{ products: { nodes: { id: string }[] } }>(`query{ products(first:200, query:"tag:'Ready to Ship' AND status:active AND (title:'Martini Earrings' OR title:Studs OR title:'Tennis Bracelet' OR title:'Tennis Necklace' OR title:'Solitaire Ring')"){ nodes{ id } } }`, {});
     const ids = (d?.products.nodes || []).map(n => n.id); if (!ids.length) break;
     await draftMany(ids, "repetitive"); repetitive += ids.length;
   }
