@@ -9,20 +9,20 @@ export default async function ReelStrip() {
   const items = await getReelByHandles(PICKS).catch(() => []);
   if (!items.length) return null;
   return (
-    <section className="reel-strip" aria-label="The Reel">
+    <section className="reel-strip" aria-label="Ready to Ship">
       <div className="rs-w">
         <div className="rs-head">
           <span className="rs-tag"><i />Ready to ship</span>
-          <b>The Reel. <em>One of each.</em></b>
-          <p>2,900 filmed pieces. Ships in 48h.</p>
+          <b>Ready to Ship. <em>One of each.</em></b>
+          <p>2,900 filmed pieces. One of each.</p>
         </div>
         {items.map((it, i) => (
-          <Link key={it.handle} href={`/reel#${it.handle}`} className="rs-t" aria-label={it.title}>
+          <Link key={it.handle} href={`/ready-to-ship#${it.handle}`} className="rs-t" aria-label={it.title}>
             {it.video ? <video src={it.video} muted loop playsInline autoPlay preload={i < 3 ? "auto" : "metadata"} poster={it.image} /> : <img src={it.image} alt="" />}
             <em>{usd(it.price)}</em>
           </Link>
         ))}
-        <Link href="/reel" className="rs-more">Watch<br />the Reel &rarr;</Link>
+        <Link href="/ready-to-ship" className="rs-more">See all<br />&rarr;</Link>
       </div>
     </section>
   );
