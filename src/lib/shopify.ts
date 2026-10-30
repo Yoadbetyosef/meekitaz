@@ -376,11 +376,11 @@ export type ReelItem = { handle: string; title: string; price: number; compare?:
 const REEL_FIELDS = `handle title productType availableForSale description(truncateAt: 160) priceRange{ minVariantPrice{ amount } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url } variants(first:1){ nodes{ id } } video: metafield(namespace:"meekitaz", key:"video"){ value }`;
 type ReelNode = { handle: string; title: string; productType: string; availableForSale: boolean; description: string; priceRange: { minVariantPrice: { amount: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage: { url: string } | null; variants: { nodes: { id: string }[] }; video: { value: string } | null };
 const reelItem = (n: ReelNode): ReelItem => ({ handle: n.handle, title: n.title, price: +n.priceRange.minVariantPrice.amount, compare: +n.compareAtPriceRange.minVariantPrice.amount || undefined, variantId: n.variants.nodes[0]?.id || "", video: n.video?.value || undefined, image: n.featuredImage?.url, detail: n.description.replace(/^Ready to ship\.\s*/, "").replace(/\s*One of each.*$/, ""), type: n.productType, available: n.availableForSale });
-export async function getReel(first = 24, after: string | null = null, type = ""): Promise<{ items: ReelItem[]; hasNext: boolean; cursor: string | null }> {
+export async function getReel(first = 24, after: string | null = null, type = "", sort = "new"): Promise<{ items: ReelItem[]; hasNext: boolean; cursor: string | null }> {
   // a search, not a collection: collection filters are ignored on this store, search terms are not
   const q = `tag:'Ready to Ship' AND available_for_sale:true${type ? ` AND product_type:${type}` : ""}`;
   const d = await sf<{ products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; nodes: ReelNode[] } }>(
-    `query($first:Int!,$after:String,$q:String!){ products(first:$first, after:$after, query:$q, sortKey:CREATED_AT, reverse:true){ pageInfo{ hasNextPage endCursor } nodes{ ${REEL_FIELDS} } } }`, { first, after, q }, { fresh: true });
+    `query($first:Int!,$after:String,$q:String!,$key:ProductSortKeys!,$rev:Boolean!){ products(first:$first, after:$after, query:$q, sortKey:$key, reverse:$rev){ pageInfo{ hasNextPage endCursor } nodes{ ${REEL_FIELDS} } } }`, { first, after, q, key: sort.startsWith("price") ? "PRICE" : "CREATED_AT", rev: sort !== "price_asc" }, { fresh: true });
   const p = d?.products;
   return { items: (p?.nodes || []).filter(n => n.availableForSale).map(reelItem), hasNext: !!p?.pageInfo.hasNextPage, cursor: p?.pageInfo.endCursor || null };
 }
