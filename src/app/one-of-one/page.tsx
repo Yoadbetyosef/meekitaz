@@ -22,7 +22,7 @@ export default async function OneOfOnePage({ searchParams }: { searchParams: Pro
   return (
     <main>
       <section className="cat-hero" aria-label="One of One">
-        <Image src="https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_005300_520e34ad-6539-4260-82ac-59d4202aeb20.png" alt="" fill loading="eager" fetchPriority="high" sizes="100vw" quality={78} style={{ "--hero-pos": "50% 35%", "--hero-zoom": 1 } as React.CSSProperties} />
+        <Image src="https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_005300_520e34ad-6539-4260-82ac-59d4202aeb20.png" alt="" fill loading="eager" fetchPriority="high" sizes="100vw" quality={78} style={{ "--hero-pos": "50% 35%", "--hero-zoom": 1 } as import("react").CSSProperties} />
         <div className="wrap"><h1>One of One.</h1></div>
       </section>
       <div className="catbody" id="results">
