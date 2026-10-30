@@ -61,9 +61,9 @@ export default function Reel({ initial, hasNext: h0, cursor: c0 }: { initial: Re
     <div className="rl">
       <aside className="rl-aside">
         <p className="rl-aside-h"><span className="rl-tag"><i />Ready to ship</span></p>
-        <h1 className="rl-aside-t">The Reel.<em>One of each.</em></h1>
+        <h1 className="rl-aside-t">Ready to Ship.<em>One of each.</em></h1>
         <div className="rl-chips">{TYPES.map(([v, l]) => <button key={v} className={type === v ? "on" : ""} onClick={() => pick(v)}>{l}</button>)}</div>
-        <p className="rl-aside-p">Swipe or use the arrows. Every piece is filmed and ships within 48 hours.</p>
+        <p className="rl-aside-p">Swipe or use the arrows. Every piece is filmed, one of each, ready to ship.</p>
         <div className="rl-arrows"><button onClick={() => go(-1)} aria-label="Previous">&uarr;</button><button onClick={() => go(1)} aria-label="Next">&darr;</button></div>
       </aside>
       <div className="rl-phone">
@@ -81,7 +81,7 @@ export default function Reel({ initial, hasNext: h0, cursor: c0 }: { initial: Re
               <p>{it.detail}</p>
               <b>{usd(it.price)}</b>
               <button className="rl-btn" onClick={() => claim(it)} disabled={busy === it.handle}><span>{busy === it.handle ? "Adding to bag…" : `Add to bag · ${usd(it.price)}`}</span><i>&rarr;</i></button>
-              <small>One of each · ships in 48 hours · 30-day returns</small>
+              <small>One of each · ready to ship · 30-day returns</small>
             </div>
           </div>
         ))}
