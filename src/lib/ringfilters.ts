@@ -36,7 +36,17 @@ export function ringQuery(sel: RingSel): string {
   if (styles.length) parts.push(or(styles));
   if (sel.min && sel.min > RING_PRICE.min) parts.push(`variants.price:>=${Math.round(sel.min)}`);
   if (sel.max && sel.max < RING_PRICE.max) parts.push(`variants.price:<=${Math.round(sel.max)}`);
-  return parts.join(" AND ");
+  if (!sel.fancy) return parts.join(" AND ");
+  // Fancy Colors is one collection: the catalogue's fancy pieces AND the coloured one-of-ones, in the same grid, under the same filters
+  // (stone colour, jewelry type, price; the ring-only filters — shape, metal, style — narrow the catalogue side only).
+  const kind: Record<string, string> = { Rings: "(tag:'Rings' OR tag:'Engagement Rings')", Earrings: "tag:'Earrings'", Necklaces: "(tag:'Necklaces' OR tag:'Pendants')", Bracelets: "tag:'Bracelets'" };
+  if (sel.type === "Bands") return parts.join(" AND ");
+  const one = ["tag:'One of One'", "tag:'Fancy'"];
+  if (sel.type && kind[sel.type]) one.push(kind[sel.type]);
+  if (["Yellow", "Pink", "Blue", "Green"].includes(sel.fancy)) one.push(`tag:'${sel.fancy}'`);
+  if (sel.min && sel.min > RING_PRICE.min) one.push(`variants.price:>=${Math.round(sel.min)}`);
+  if (sel.max && sel.max < RING_PRICE.max) one.push(`variants.price:<=${Math.round(sel.max)}`);
+  return `(${parts.join(" AND ")}) OR (${one.join(" AND ")})`;
 }
 
 /** Category pages without the ring filters (earrings, necklaces, bracelets, bands, gemstones). Every product carries its category
