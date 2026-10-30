@@ -128,7 +128,7 @@ export default function CartDrawer() {
                   <button className="cd-rm" onClick={() => remove(l.id)} disabled={busy}>Remove</button>
                 </div>
                 <div className="cd-pr">{money(l.price * l.quantity, cur)}{l.compareAt > 0 && <s>{money(l.compareAt * l.quantity, cur)}</s>}</div>
-                {isRingLine(l) && <div className="cd-li-size">{sizeBox(l.id, attr(l, "Ring size"), v => setCartRingSize([l.id], v))}</div>}
+                {isRingLine(l) && <div className="cd-li-size">{sizeBox(l.id, attr(l, "Ring size") || "", v => setCartRingSize([l.id], v))}</div>}
               </div>
             ))}
             {(() => {
