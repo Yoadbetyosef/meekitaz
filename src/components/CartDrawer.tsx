@@ -41,7 +41,9 @@ export default function CartDrawer() {
   const inRing = new Set(cartRings.flatMap(r => [r.setting.id, r.stone.id]));
   const express = lines.some(l => l.handle === "express-shipping-3-5-days");
   const plain = lines.filter(l => !inRing.has(l.id) && !(daily && l.handle === "express-shipping-3-5-days")); // in Daily the express line lives in the shipping switch
-  const needSize = rings.some(r => !r.size) || cartRings.some(r => !r.size);
+  // any ring or band bought on its own (bands, one-of-ones, ready-to-ship, catalogue rings) needs a size too — "Earrings" is not a ring
+  const isRingLine = (l: CartLine) => !l.handle.startsWith("care-package") && /\b(ring|band)\b/i.test(l.title) && !/\bearrings?\b|\bbangle\b/i.test(l.title);
+  const needSize = rings.some(r => !r.size) || cartRings.some(r => !r.size) || plain.some(l => isRingLine(l) && !attr(l, "Ring size"));
   const ringsTotal = rings.reduce((t, r) => t + r.setting.price + r.stone.price, 0);
   const subtotal = (cart?.subtotal ?? 0) + ringsTotal;
   const cur = cart?.currency || "USD";
@@ -116,7 +118,7 @@ export default function CartDrawer() {
                 <div>
                   <h4>{l.title.replace(/ \((?:[^()]*)\)$/, "")}</h4>
                   {l.variantTitle && <div className="cd-meta">{l.variantTitle}</div>}
-                  {l.attributes.filter(a => !["Build", "Arrives by"].includes(a.key)).length > 0 && <div className="cd-meta">{l.attributes.filter(a => !["Build", "Arrives by"].includes(a.key)).map(a => a.value.replace(/ Carat$/i, " ct")).join(" · ")}</div>}
+                  {l.attributes.filter(a => !["Build", "Arrives by", "Ring size"].includes(a.key)).length > 0 && <div className="cd-meta">{l.attributes.filter(a => !["Build", "Arrives by", "Ring size"].includes(a.key)).map(a => a.value.replace(/ Carat$/i, " ct")).join(" · ")}</div>}
                   {l.handle.startsWith("reel-") || l.handle.startsWith("one-of-one-") ? <span className="cd-tag">{l.handle.startsWith("reel-") ? "Ready to ship" : "One of one"}</span> : l.compareAt > 0 && <span className="cd-tag">50% off · made to order</span>}
                   {!l.handle.startsWith("care-package") && <div className="cd-qty">
                     <button onClick={() => setQty(l.id, l.quantity - 1)} aria-label="Decrease quantity" disabled={busy}>−</button>
@@ -126,6 +128,7 @@ export default function CartDrawer() {
                   <button className="cd-rm" onClick={() => remove(l.id)} disabled={busy}>Remove</button>
                 </div>
                 <div className="cd-pr">{money(l.price * l.quantity, cur)}{l.compareAt > 0 && <s>{money(l.compareAt * l.quantity, cur)}</s>}</div>
+                {isRingLine(l) && <div className="cd-li-size">{sizeBox(l.id, attr(l, "Ring size"), v => setCartRingSize([l.id], v))}</div>}
               </div>
             ))}
             {(() => {
