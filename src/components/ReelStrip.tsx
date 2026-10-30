@@ -3,8 +3,11 @@ import ReelHand from "@/components/ReelHand";
 
 /* Home · Ready to Ship, under One of One: "The Hand" — a fanned deck of filmed pieces on the same Mist as One of One
    with the big white M behind it; every few seconds the front card is dealt away and the next one comes forward
-   (the same swipe gesture as the Reel). Five hand-picked pieces. */
-const PICKS = ["reel-bc5309", "reel-er24721", "reel-eb3319", "reel-rg8537", "reel-pd2891"];
+   (the same swipe gesture as the Reel). Hand-picked pieces; the fan shows five at a time and the deck cycles through all of them. */
+const PICKS = [
+  "reel-bc5309", "reel-er24721", "reel-eb3319", "reel-rg8537", "reel-pd2891",
+  "reel-rg2258", "reel-rg9248", "reel-bc5974", "reel-eb8786", "reel-eb6543", // added 2026-10-30: emerald three-stone, moval three-stone, station bracelet, marquise band, mixed-shape bezel eternity
+];
 
 export default async function ReelStrip() {
   const items = await getReelByHandles(PICKS).catch(() => []);
