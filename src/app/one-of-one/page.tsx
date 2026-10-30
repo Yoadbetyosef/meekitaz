@@ -31,6 +31,11 @@ export default async function OneOfOnePage({ searchParams }: { searchParams: Pro
           </div>
         </div>
       </section>
+      <nav className="ooo-tabs" aria-label="Type">
+        <div className="wrap">{["", "Rings", "Earrings", "Necklaces", "Bracelets"].map(t => (
+          <a key={t || "all"} href={t ? `/one-of-one?style=${t}#results` : "/one-of-one#results"} className={style === t ? "on" : ""} aria-current={style === t ? "page" : undefined}>{t || "All"}</a>
+        ))}</div>
+      </nav>
       <div className="catbody" id="results">
         {r ? <Suspense fallback={null}><ProductBrowser key={style} handle="one-of-one" style={style} sort0="new" initial={r.products} hasNext={r.hasNext} cursor={r.cursor} /></Suspense>
            : <section className="grid-wrap"><div className="wrap"><h2>The collection</h2><p>The one-of-ones are on their way. Check back in a moment.</p></div></section>}
