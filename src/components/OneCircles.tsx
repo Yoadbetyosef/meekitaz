@@ -13,6 +13,7 @@ const ROW: { label: string; style: string; pic: string }[] = [
   { label: "Rings", style: "Rings", pic: "Rings" },
   { label: "Earrings", style: "Earrings", pic: "Earrings" },
   { label: "Necklaces", style: "Necklaces", pic: "Pendants" }, // a pendant reads better in a circle than a fine chain
+  { label: "Bracelets", style: "Bracelets", pic: "Bracelets" },
 ];
 async function pic(style: string) {
   if (!style) return FALLBACK[""];
