@@ -222,7 +222,7 @@ async function getCollectionPageRaw(handle: string, opts: { first?: number; afte
       edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } images(first:3){ edges{ node{ url altText } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } } }`,
     { handle, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.reverse });
   const c = d?.collection?.products; if (!c) return null;
-  const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
+  const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026" || (t === "Ready to Ship" && handle !== "ready-to-ship"))).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
     image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || handPhoto(n as unknown as { images?: { edges: { node: { url: string } }[] } }),
@@ -239,7 +239,7 @@ async function getProductsByQueryRaw(query: string, opts: { first?: number; afte
     `query($q:String!,$first:Int!,$after:String,$key:ProductSortKeys,$rev:Boolean){ products(first:$first, after:$after, query:$q, sortKey:$key, reverse:$rev){
       pageInfo{ hasNextPage endCursor }
       edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } images(first:3){ edges{ node{ url altText } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } }`,
-    { q: query, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.rev });
+    { q: /Ready to Ship/.test(query) ? query : `(${query}) AND -tag:'Ready to Ship'`, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.rev }); // Ready to Ship lives only in its own feed
   const c = d?.products; if (!c) return null;
   const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
@@ -261,7 +261,7 @@ export async function searchProducts(query: string, opts: { first?: number; maxP
     `query($q:String!,$first:Int!,$f:[ProductFilter!]){ search(query:$q, first:$first, types:PRODUCT, prefix:LAST, productFilters:$f){ nodes{ ... on Product { id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } images(first:3){ edges{ node{ url altText } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } }`,
     { q: query, first, f: opts.maxPrice ? [{ price: { max: opts.maxPrice } }] : null });
   let products: Product[] = (d?.search.nodes || [])
-    .filter((n): n is Required<Pick<N, "id" | "handle" | "title" | "tags" | "priceRange" | "compareAtPriceRange">> & N => !!n.id && !!n.tags && !n.tags.some(t => BAD_TAGS.includes(t) || t.toLowerCase() === "fifa world cup 2026"))
+    .filter((n): n is Required<Pick<N, "id" | "handle" | "title" | "tags" | "priceRange" | "compareAtPriceRange">> & N => !!n.id && !!n.tags && !n.tags.some(t => BAD_TAGS.includes(t) || t === "Ready to Ship" || t.toLowerCase() === "fifa world cup 2026"))
     .map(n => ({
       id: n.id!, handle: n.handle!, title: n.title!, price: n.priceRange!.minVariantPrice.amount, currency: n.priceRange!.minVariantPrice.currencyCode,
       compareAt: +n.compareAtPriceRange!.minVariantPrice.amount > +n.priceRange!.minVariantPrice.amount ? +n.compareAtPriceRange!.minVariantPrice.amount : 0,
