@@ -1,5 +1,8 @@
 import Link from "next/link";
-import { getOneOfOne } from "@/lib/shopify";
+import { getOneOfOne, getOneOfOneByHandles } from "@/lib/shopify";
+
+// the four pieces on the home page, chosen by hand: the toi-et-moi ring, the princess-and-pear studs, the charm necklace, the drop bracelet
+const PICKS = ["one-of-one-sjr63597pe-y", "one-of-one-sjpse210110pepr", "one-of-one-sjn08248", "one-of-one-sjbr20793"];
 import { photoSrc } from "@/lib/img";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
@@ -7,7 +10,8 @@ const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 /* Home · under the gemstones slide: the one-of-ones. One stone, one setting, one ring; tag a product "One of One" in Shopify and it appears
    here, and when it sells it stays, stamped Claimed. The photo's own blue is the section's background, so she sits in it edge to edge. */
 export default async function OneOfOne() {
-  const items = await getOneOfOne(8).catch(() => []);
+  const picks = await getOneOfOneByHandles(PICKS).catch(() => []);
+  const items = picks.length >= 4 ? picks : [...picks, ...(await getOneOfOne(8).catch(() => [])).filter(x => !PICKS.includes(x.handle))].slice(0, 4);
   const preview = false; // only pieces tagged "One of One" ever show here
   const claimed = items.filter(i => i.claimed).length, left = items.length - claimed;
   return (
