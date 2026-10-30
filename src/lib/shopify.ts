@@ -145,7 +145,7 @@ export async function getProductByHandle(handle: string): Promise<ProductFull | 
   const p = d?.product; if (!p) return null;
   const vs = p.variants.edges.map(({ node: v }) => ({ id: v.id, title: v.title, available: v.availableForSale, price: +v.price.amount, compareAt: v.compareAtPrice && +v.compareAtPrice.amount > +v.price.amount ? +v.compareAtPrice.amount : 0, selected: v.selectedOptions, imageUrl: v.image?.url }));
   return {
-    id: p.id, handle: p.handle, title: p.title, description: p.description, descriptionHtml: p.descriptionHtml, productType: p.productType, tags: p.tags,
+    id: p.id, handle: p.handle, title: p.title, description: p.description, descriptionHtml: p.descriptionHtml.replace(/\s*One of each; it ships within 48 hours\./g, " One of each, ready to ship."), productType: p.productType, tags: p.tags,
     options: p.options, images: p.images.edges.filter(({ node: i }) => !isSupplierImage(i.url, p.tags) && ownMetal(i.url, p.tags)).map(({ node: i }) => ({ url: i.url, alt: i.altText || p.title, width: i.width, height: i.height })), modelImage: p.model?.value || undefined, videoUrl: p.film?.value || undefined, variants: vs,
     currency: p.variants.edges[0]?.node.price.currencyCode || "USD", seoTitle: p.seo?.title || undefined, seoDescription: p.seo?.description || undefined,
   };
