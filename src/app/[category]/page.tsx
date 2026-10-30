@@ -9,7 +9,6 @@ import { Suspense } from "react";
 import ShapeRow from "@/components/ShapeRow";
 import StoneBrowser from "@/components/StoneBrowser";
 import FancyColorRow from "@/components/FancyColorRow";
-import FancyPieces from "@/components/FancyPieces";
 import { fancySwatches, vdbConfigured } from "@/lib/vdb";
 import RingsSection from "@/components/RingsSection";
 import SettingBar from "@/components/SettingBar";
