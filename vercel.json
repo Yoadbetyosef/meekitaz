@@ -25,15 +25,15 @@
       "schedule": "*/5 * * * *"
     },
     {
-      "path": "/api/reel/import",
-      "schedule": "*/5 * * * *"
-    },
-    {
       "path": "/api/one-of-one/style",
       "schedule": "*/5 * * * *"
     },
     {
       "path": "/api/img/clean-once",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/reel/curate",
       "schedule": "*/5 * * * *"
     }
   ]
