@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import ProductBrowser from "@/components/ProductBrowser";
 import { getCollectionPage, shopifyConfigured, type Product } from "@/lib/shopify";
 import { fillPage } from "@/lib/designs";
+import OneCircles from "@/components/OneCircles";
 import { oneOfOneQuery } from "@/lib/ringfilters";
 import { getProductsByQuery } from "@/lib/shopify";
 
@@ -19,23 +20,11 @@ export default async function OneOfOnePage({ searchParams }: { searchParams: Pro
   }
   return (
     <main>
-      <section className="ooo-wrap ooo-page" aria-label="One of One">
-        <div className="ooo">
-          <img className="ooo-m" src="/brand/meekitaz-m-white.png" alt="" aria-hidden="true" />
-          <img className="ooo-girl" src="/media/home/one-of-one.jpg" alt="" fetchPriority="high" />
-          <div className="ooo-copy">
-            <p className="ooo-eye"><i />One of One</p>
-            <h1 className="ooo-h">Made once.<em>Never again.</em></h1>
-            <p className="ooo-lead">A single stone, a single setting, a single ring. When it&rsquo;s claimed, it&rsquo;s gone &mdash; we don&rsquo;t remake them.</p>
-            <p className="ooo-fine">Every piece below exists exactly once. Lab-grown, certified, ready to ship.</p>
-          </div>
-        </div>
+      <section className="ooo-hero" aria-label="One of One">
+        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_005300_520e34ad-6539-4260-82ac-59d4202aeb20.png" alt="" fetchPriority="high" />
+        <h1>One of One.</h1>
       </section>
-      <nav className="ooo-tabs" aria-label="Type">
-        <div className="wrap">{["", "Rings", "Earrings", "Necklaces", "Bracelets"].map(t => (
-          <a key={t || "all"} href={t ? `/one-of-one?style=${t}#results` : "/one-of-one#results"} className={style === t ? "on" : ""} aria-current={style === t ? "page" : undefined}>{t || "All"}</a>
-        ))}</div>
-      </nav>
+      <section className="ooo-circ-wrap"><div className="wrap"><OneCircles current={style} /></div></section>
       <div className="catbody" id="results">
         {r ? <Suspense fallback={null}><ProductBrowser key={style} handle="one-of-one" style={style} sort0="new" initial={r.products} hasNext={r.hasNext} cursor={r.cursor} /></Suspense>
            : <section className="grid-wrap"><div className="wrap"><h2>The collection</h2><p>The one-of-ones are on their way. Check back in a moment.</p></div></section>}
