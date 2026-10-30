@@ -11,7 +11,7 @@ export default async function FancyPieces({ color, kind }: { color: string; kind
   const q = (k: string) => oneOfOneQuery("one-of-one", `fancy|${k}|${color}`);
   const [first, ...pics] = await Promise.all([
     getProductsByQuery(q(kind), { first: 24, sort: "new" }).catch(() => null),
-    ...KINDS.map(k => getProductsByQuery(q(k), { first: 1, sort: "new" }).then(r => r.products[0]?.image?.url || null).catch(() => null)),
+    ...KINDS.map(k => getProductsByQuery(q(k), { first: 1, sort: "new" }).then(r => r?.products[0]?.image?.url || null).catch(() => null)),
   ]);
   const href = (k: string) => `/fancy-colors?${new URLSearchParams({ ...(color ? { color } : {}), ...(k ? { kind: k } : {}) })}#pieces`;
   const shown = KINDS.map((k, i) => ({ k, img: pics[i] as string | null })).filter(x => x.img);
