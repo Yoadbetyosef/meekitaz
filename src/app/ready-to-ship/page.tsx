@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import RtsGrid from "@/components/RtsGrid";
 import { getReel } from "@/lib/shopify";
@@ -18,7 +17,7 @@ export default async function ReadyToShipPage({ searchParams }: { searchParams: 
   return (
     <main>
       <section className="cat-hero" aria-label="Ready to Ship">
-        <Image src="https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_032245_36492a63-aa83-4d59-b206-7d3c88daa52a.png" alt="" fill loading="eager" fetchPriority="high" sizes="100vw" quality={78} style={{ objectFit: "cover", objectPosition: "50% 40%" }} />
+        <picture><source media="(max-width:767px)" srcSet="/media/rts/hero-portrait.jpg" /><img src="/media/rts/hero-wide.jpg" alt="" fetchPriority="high" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "70% 30%" }} /></picture>
         <div className="wrap"><h1>Ready to Ship.</h1></div>
       </section>
       <div className="catbody">
