@@ -350,6 +350,16 @@ function ownMetal(url: string, tags: string[]): boolean {
 }
 /** The one-of-ones: products tagged "One of One". Sold ones (nothing left to sell) stay in the list, marked claimed. */
 export type OneOfOne = { handle: string; title: string; price: number; image?: string; claimed: boolean; isNew: boolean; sub?: string };
+/** Hand-picked one-of-ones, in this order (the home-page block). Missing or sold-out handles are skipped by the caller's fallback. */
+export async function getOneOfOneByHandles(handles: string[]): Promise<OneOfOne[]> {
+  const q = `query{ ${handles.map((h, k) => `p${k}: product(handle:"${h}"){ handle title tags createdAt availableForSale priceRange{ minVariantPrice{ amount } } featuredImage{ url } }`).join(" ")} }`;
+  type N = { handle: string; title: string; tags: string[]; createdAt: string; availableForSale: boolean; priceRange: { minVariantPrice: { amount: string } }; featuredImage: { url: string } | null };
+  const d = await sf<Record<string, N | null>>(q, {});
+  return handles.map((_, k) => d?.[`p${k}`]).filter((n): n is N => !!n).map(n => ({
+    handle: n.handle, title: n.title.replace(/^(Yellow|White|Rose)( & White)? gold /i, ""), price: +n.priceRange.minVariantPrice.amount, image: n.featuredImage?.url,
+    claimed: !n.availableForSale, isNew: false, sub: ringMetalOf(n.title) || undefined,
+  }));
+}
 export async function getOneOfOne(first = 8): Promise<OneOfOne[]> {
   const d = await sf<{ products: { edges: { node: { handle: string; title: string; tags: string[]; createdAt: string; availableForSale: boolean; priceRange: { minVariantPrice: { amount: string } }; featuredImage: { url: string } | null } }[] } }>(
     `query($first:Int!){ products(first:$first, query:"tag:'One of One'", sortKey:CREATED_AT, reverse:true){ edges{ node{ handle title tags createdAt availableForSale priceRange{ minVariantPrice{ amount } } featuredImage{ url } } } } }`, { first }); // cached a few minutes: the home page must not wait on Shopify for every visit
