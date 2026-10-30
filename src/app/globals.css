@@ -2486,3 +2486,13 @@ body.reel-open .mk-page{min-height:0}
 .ooo-tabs a{font:600 13px var(--body);letter-spacing:.06em;padding:11px 20px;border-radius:999px;border:1px solid rgba(28,26,27,.18);color:#1C1A1B;text-decoration:none;background:#fff}
 .ooo-tabs a.on{background:#1C1A1B;color:#fff;border-color:#1C1A1B}
 @media(max-width:767px){.ooo-tabs .wrap{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.ooo-tabs a{flex:none}}
+
+/* One of One · category-style header */
+.ooo-hero{position:relative;height:84vh;min-height:520px;margin:0 16px;border-radius:0 0 34px 34px;overflow:hidden;background:#1C1A1B;z-index:6}
+.ooo-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 35%}
+.ooo-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.42),transparent 45%)}
+.ooo-hero h1{position:absolute;left:5%;bottom:7%;margin:0;z-index:2;color:#fff;font:400 clamp(52px,8vw,128px)/.92 var(--display);text-transform:uppercase}
+.ooo-circ-wrap{background:var(--ivory,#FBF8F3);padding:34px 0 6px}
+.ooo-circles .sp-row{justify-content:center}
+.ooo-circles .sp-img{background:#fff}
+@media(max-width:767px){.ooo-hero{height:72vh;margin:0}.ooo-hero h1{font-size:13vw;left:20px;bottom:24px}.ooo-circles .sp-row{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}}
