@@ -63,7 +63,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
             </div>
           </section>
         )}
-        {p.special === "fancy" ? <><FancyColorRow color={one("color")} /><Suspense fallback={null}><FancyPieces color={one("color")} kind={one("kind")} /></Suspense><Suspense fallback={null}><RingsSection fancy={one("color") || "all"} /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><StoneBrowser swatches={vdbConfigured ? await fancySwatches() : {}} /></Suspense> : <><Suspense fallback={null}>{gemTypes.length > 1 && <section className="gem-types" aria-label="Jewelry type"><div className="wrap"><small className="eyebrow">Jewelry type</small><GemTypeBar types={gemTypes} /></div></section>}</Suspense><ProductGrid page={p} style={one("style")} type={gemType} /></>}
+        {p.special === "fancy" ? <><FancyColorRow color={one("color")} /><Suspense fallback={null}><RingsSection fancy={one("color") || "all"} /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><StoneBrowser swatches={vdbConfigured ? await fancySwatches() : {}} /></Suspense> : <><Suspense fallback={null}>{gemTypes.length > 1 && <section className="gem-types" aria-label="Jewelry type"><div className="wrap"><small className="eyebrow">Jewelry type</small><GemTypeBar types={gemTypes} /></div></section>}</Suspense><ProductGrid page={p} style={one("style")} type={gemType} /></>}
       </div>
     </main>
   );
