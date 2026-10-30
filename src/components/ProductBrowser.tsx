@@ -15,11 +15,11 @@ const MOOD: Record<string, { src: string; poster: string; reveal?: Reveal }> = {
 };
 
 
-export default function ProductBrowser({ handle, style = "", type = "", initial, hasNext: h0, cursor: c0 }: { handle: string; style?: string; type?: string; initial: Product[]; hasNext: boolean; cursor: string | null }) {
+export default function ProductBrowser({ handle, style = "", type = "", initial, hasNext: h0, cursor: c0, sort0 = "best" }: { handle: string; style?: string; type?: string; initial: Product[]; hasNext: boolean; cursor: string | null; sort0?: string }) {
   const [items, setItems] = useState<Product[]>(initial);
   const [hasNext, setHasNext] = useState(h0);
   const [cursor, setCursor] = useState<string | null>(c0);
-  const [sort, setSort] = useState("best");
+  const [sort, setSort] = useState(sort0); // must match the order the first page was fetched in, or the cursor points nowhere
   const [busy, setBusy] = useState(false);
 
   async function load(reset: boolean, s = sort) {
