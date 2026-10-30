@@ -2496,3 +2496,8 @@ body.reel-open .mk-page{min-height:0}
 .ooo-circles .sp-row{justify-content:center}
 .ooo-circles .sp-img{background:#fff}
 @media(max-width:767px){.ooo-hero{height:72vh;margin:0}.ooo-hero h1{font-size:13vw;left:20px;bottom:24px}.ooo-circles .sp-row{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}}
+
+/* Home cover: no slide progress bars, no rule under "New York · Serious diamonds, worn lightly." */
+.cv-bars{display:none !important}
+.cv-issue{border:0 !important;box-shadow:none !important}
+.cv-issue::before,.cv-issue::after{display:none !important}
