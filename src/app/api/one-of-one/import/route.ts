@@ -8,7 +8,7 @@ export const maxDuration = 300;
 /* One of One import — 354 rings from Classic Grown Diamonds, in the supplier's order.
    Runs from the cron (or with ?key=CRON_SECRET), imports what is not in the store yet, a few dozen per run, idempotent by handle.
    Created LAST-first, so the first ring on the supplier's list ends up the newest = first on the home page. */
-type Row = { sku: string; handle: string; title: string; desc: string; price: number; tags: string[]; images: string[]; video: string | null; videoGuess: string | null; guess?: string[]; try?: string };
+type Row = { sku: string; handle: string; title: string; desc: string; price: number; tags: string[]; images: string[]; video: string | null; videoGuess: string | null; guess?: string[]; try?: string; type?: string };
 const alive = async (u: string) => { try { const r = await fetch(u, { headers: { Range: "bytes=0-0" }, signal: AbortSignal.timeout(8000) }); try { await r.body?.cancel(); } catch { /* ignore */ } return r.ok; } catch { return false; } };
 /** Only files the supplier really has: the image list was reconstructed by pattern for most rings, so each URL is checked first. */
 async function liveMedia(r: Row) {
@@ -27,7 +27,7 @@ async function exists(handle: string) {
 async function createOne(r: Row) {
   const imgs = [...r.images, ...(r.guess || [])], vid = r.video || null; // photos unverified (Shopify fetches, failures are cleaned up by the repair pass); only videos we saw on the supplier page
   const input = {
-    title: r.title, handle: r.handle, descriptionHtml: r.desc, productType: "Ring", vendor: "Meekitaz", status: "ACTIVE", tags: r.tags,
+    title: r.title, handle: r.handle, descriptionHtml: r.desc, productType: r.type || "Ring", vendor: "Meekitaz", status: "ACTIVE", tags: r.tags,
     files: imgs.map(u => ({ originalSource: u, contentType: "IMAGE", alt: r.title })),
     metafields: vid ? [{ namespace: "meekitaz", key: "video", type: "url", value: vid }] : [],
     productOptions: [{ name: "Title", values: [{ name: "Default Title" }] }],
