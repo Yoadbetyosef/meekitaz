@@ -2479,3 +2479,10 @@ body.reel-open .mk-page{min-height:0}
 .ih[data-clip="light"] .ih-tt,.ih[data-clip="light"] .ih-tt h1,.ih[data-clip="light"] .ih-tt .eyebrow,.ih[data-clip="light"] .ih-cap,.ih[data-clip="light"] .ih-cnt{color:#1C1A1B}
 .ih[data-clip="light"] .ih-nav button,.ih[data-clip="light"] .ih-arrows button{border-color:rgba(28,26,27,.25);color:#1C1A1B}
 .ih[data-clip="dark"] .ih-pc.clip video{border-radius:0}
+
+/* One of One · type tabs */
+.ooo-tabs{background:#FBF8F3;padding:34px 0 0;position:relative;z-index:6}
+.ooo-tabs .wrap{width:min(1300px,92vw);margin:0 auto;display:flex;gap:10px;flex-wrap:wrap}
+.ooo-tabs a{font:600 13px var(--body);letter-spacing:.06em;padding:11px 20px;border-radius:999px;border:1px solid rgba(28,26,27,.18);color:#1C1A1B;text-decoration:none;background:#fff}
+.ooo-tabs a.on{background:#1C1A1B;color:#fff;border-color:#1C1A1B}
+@media(max-width:767px){.ooo-tabs .wrap{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.ooo-tabs a{flex:none}}
