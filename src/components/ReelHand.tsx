@@ -10,6 +10,7 @@ export default function ReelHand({ items }: { items: Item[] }) {
   const [front, setFront] = useState(0);
   const [leaving, setLeaving] = useState<number | null>(null);
   const ref = useRef<HTMLElement>(null);
+  const vids = useRef<(HTMLVideoElement | null)[]>([]);
   const n = items.length;
 
   // deal the front card away every few seconds — only while the block is on screen, never under reduced motion
@@ -26,6 +27,15 @@ export default function ReelHand({ items }: { items: Item[] }) {
     if (ref.current) io.observe(ref.current);
     return () => { io.disconnect(); if (timer) clearInterval(timer); };
   }, [n]);
+
+  // only the card on top plays — it starts from the beginning as it comes up; every card behind it is a still (its poster)
+  useEffect(() => {
+    vids.current.forEach((v, k) => {
+      if (!v) return;
+      if (k === front) { v.currentTime = 0; v.play().catch(() => {}); }
+      else v.pause();
+    });
+  }, [front]);
 
   const cur = items[front];
   return (
@@ -53,7 +63,7 @@ export default function ReelHand({ items }: { items: Item[] }) {
             return (
               <Link key={it.handle} href={`/ready-to-ship#${it.handle}`} className="rh-card" data-pos={pos} tabIndex={-1}>
                 {it.video
-                  ? <video src={it.video} muted loop playsInline autoPlay preload={k < 2 ? "auto" : "metadata"} poster={it.image} />
+                  ? <video ref={el => { vids.current[k] = el; }} src={it.video} muted loop playsInline preload={k === front || k === (front + 1) % n ? "auto" : "none"} poster={it.image} />
                   : <img src={it.image} alt="" loading="lazy" />}
                 <span className="rh-cap"><b>{it.title}</b><em>{usd(it.price)}</em></span>
               </Link>
