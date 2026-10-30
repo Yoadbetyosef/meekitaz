@@ -2,27 +2,28 @@ import Link from "next/link";
 import { getProductsByQuery } from "@/lib/shopify";
 import { oneOfOneQuery } from "@/lib/ringfilters";
 
-/* /one-of-one · the circles. Two rows, like every category page: the character of the ring first, then shape, metal and price.
-   Each circle shows a real ring from its group (the newest one). A circle is a filter; the current one is marked. */
-const ROW = ["Fancy colour", "4 ct and up", "Toi et Moi", "Three-stone", "Halo", "Cluster", "Band"]; // one row of seven, like every category page
-
-async function pic(label: string) {
-  const r = await getProductsByQuery(oneOfOneQuery("one-of-one", label), { first: 1, sort: "new" }).catch(() => null);
+/* /one-of-one · the circles, like every category page: the piece itself inside each circle (the newest one of its kind). */
+const ROW: { label: string; style: string; pic: string }[] = [
+  { label: "All", style: "", pic: "" },
+  { label: "Rings", style: "Rings", pic: "Rings" },
+  { label: "Earrings", style: "Earrings", pic: "Earrings" },
+  { label: "Necklaces", style: "Necklaces", pic: "Pendants" }, // a pendant reads better in a circle than a fine chain
+  { label: "Bracelets", style: "Bracelets", pic: "Bracelets" },
+];
+async function pic(style: string) {
+  const q = style ? oneOfOneQuery("one-of-one", style) : "tag:'One of One' AND tag:'Fancy'";
+  const r = await getProductsByQuery(q, { first: 1, sort: "new" }).catch(() => null);
   return r?.products[0]?.image?.url || null;
 }
 export default async function OneCircles({ current }: { current: string }) {
-  const all = ROW;
-  const pics = await Promise.all(all.map(pic));
-  const items = all.map((label, k) => ({ label, img: pics[k] })).filter(x => x.img);
-  const row = (labels: string[]) => items.filter(x => labels.includes(x.label));
-  const circle = (x: { label: string; img: string | null }) => (
-    <Link key={x.label} href={current === x.label ? "/one-of-one" : `/one-of-one?style=${encodeURIComponent(x.label)}`} className={`sp${current === x.label ? " on" : ""}`} aria-pressed={current === x.label} scroll={false}>
-      <span className="sp-img"><img src={x.img!} alt="" loading="lazy" /></span><b>{x.label}</b>
-    </Link>
-  );
+  const pics = await Promise.all(ROW.map(x => pic(x.pic)));
   return (
     <div className="ooo-circles">
-      <div className={`sp-row${items.length === 6 ? " n6" : items.length === 4 ? " n4" : ""}`}>{row(ROW).map(circle)}</div>
+      <div className="sp-row n5">{ROW.map((x, k) => pics[k] && (
+        <Link key={x.label} href={x.style ? `/one-of-one?style=${x.style}#results` : "/one-of-one#results"} className={`sp${current === x.style ? " on" : ""}`} aria-current={current === x.style ? "page" : undefined} scroll={false}>
+          <span className="sp-img"><img src={pics[k]!} alt="" loading="lazy" /></span><b>{x.label}</b>
+        </Link>
+      ))}</div>
     </div>
   );
 }
