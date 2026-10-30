@@ -26,7 +26,7 @@ export default async function OneCircles({ current }: { current: string }) {
   return (
     <div className="ooo-circles">
       <div className="sp-row n5">{ROW.map((x, k) => pics[k] && (
-        <Link key={x.label} href={x.style ? `/one-of-one?style=${x.style}#results` : "/one-of-one#results"} className={`sp${current === x.style ? " on" : ""}`} aria-current={current === x.style ? "page" : undefined} scroll={false}>
+        <Link key={x.label} href={`/one-of-one?style=${x.style || "all"}#results`} className={`sp${current === x.style ? " on" : ""}`} aria-current={current === x.style ? "page" : undefined} scroll={false}>
           <span className="sp-img"><img src={pics[k]!} alt="" loading="lazy" /></span><b>{x.label}</b>
         </Link>
       ))}</div>
