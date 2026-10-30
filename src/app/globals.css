@@ -2501,3 +2501,8 @@ body.reel-open .mk-page{min-height:0}
 .cv-bars{display:none !important}
 .cv-issue{border:0 !important;box-shadow:none !important}
 .cv-issue::before,.cv-issue::after{display:none !important}
+
+/* Home cover: no "New York · Serious diamonds" line; the yellow seal a touch smaller (scale keeps its inner type in proportion) */
+.cv-issue{display:none !important}
+.cv-seal{transform:rotate(10deg) scale(.8);transform-origin:100% 100%}
+@media(max-width:767px){.cv-seal{transform:rotate(10deg) scale(.85)}}
