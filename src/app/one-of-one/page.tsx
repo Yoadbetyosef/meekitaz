@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Suspense } from "react";
 import ProductBrowser from "@/components/ProductBrowser";
 import { getCollectionPage, shopifyConfigured, type Product } from "@/lib/shopify";
@@ -20,12 +21,12 @@ export default async function OneOfOnePage({ searchParams }: { searchParams: Pro
   }
   return (
     <main>
-      <section className="ooo-hero" aria-label="One of One">
-        <img src="https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_005300_520e34ad-6539-4260-82ac-59d4202aeb20.png" alt="" fetchPriority="high" />
-        <h1>One of One.</h1>
+      <section className="cat-hero" aria-label="One of One">
+        <Image src="https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_005300_520e34ad-6539-4260-82ac-59d4202aeb20.png" alt="" fill loading="eager" fetchPriority="high" sizes="100vw" quality={78} style={{ "--hero-pos": "50% 35%", "--hero-zoom": 1 } as React.CSSProperties} />
+        <div className="wrap"><h1>One of One.</h1></div>
       </section>
-      <section className="ooo-circ-wrap"><div className="wrap"><OneCircles current={style} /></div></section>
       <div className="catbody" id="results">
+        <section className="shapes" aria-label="Jewelry type"><div className="wrap"><OneCircles current={style} /></div></section>
         {r ? <Suspense fallback={null}><ProductBrowser key={style} handle="one-of-one" style={style} sort0="new" initial={r.products} hasNext={r.hasNext} cursor={r.cursor} /></Suspense>
            : <section className="grid-wrap"><div className="wrap"><h2>The collection</h2><p>The one-of-ones are on their way. Check back in a moment.</p></div></section>}
       </div>
