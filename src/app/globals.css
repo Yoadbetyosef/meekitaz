@@ -2360,15 +2360,37 @@ body:has(.home-page){--blue-light:#E4E8EC}
 @media(max-width:900px){.ooo-page{padding-top:90px}.ooo-page .ooo-fine{margin-bottom:16px}}
 
 /* ===== Home · The Reel strip (black band under One of One) ===== */
-.reel-strip{position:relative;z-index:6;background:#0E0D0D;color:#FBF8F3;padding:26px 0}
-.rs-w{width:min(1300px,92vw);margin:0 auto;display:flex;gap:12px;align-items:center;overflow-x:auto;scrollbar-width:none}.rs-w::-webkit-scrollbar{display:none}
-.rs-head{flex:0 0 250px}.rs-head b{display:block;font:400 26px var(--display);margin-top:8px}.rs-head b em{font:italic 500 1em var(--sub);color:#EFC5CA}.rs-head p{margin:6px 0 0;font:500 12px var(--body);opacity:.7}
-.rs-tag{display:inline-flex;align-items:center;gap:6px;font:700 9.5px var(--body);letter-spacing:.14em;text-transform:uppercase;border-radius:999px;padding:5px 9px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25)}
-.rs-tag i{width:6px;height:6px;border-radius:50%;background:#EFC5CA;animation:rsBlink 1.4s infinite}@keyframes rsBlink{50%{opacity:.25}}
-.rs-t{flex:0 0 150px;aspect-ratio:4/5;border-radius:16px;overflow:hidden;position:relative;background:#111;display:block}.rs-t video,.rs-t img{width:100%;height:100%;object-fit:cover;display:block}
-.rs-t em{position:absolute;left:10px;bottom:10px;font:400 14px var(--display);font-style:normal;color:#F7E9A8;text-shadow:0 1px 10px rgba(0,0,0,.6)}
-.rs-more{flex:0 0 150px;aspect-ratio:4/5;border-radius:16px;border:1px solid rgba(255,255,255,.25);display:grid;place-items:center;text-align:center;font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;color:#FBF8F3;text-decoration:none}
-@media(max-width:767px){.rs-w{width:100%;padding:0 4vw}.rs-head{flex-basis:200px}.rs-t,.rs-more{flex-basis:120px}}
+/* ===== Home · Ready to Ship — "The Hand": a fanned deck of filmed pieces on the One of One Mist, the big M behind; the front card deals away ===== */
+.rh-wrap{position:relative;z-index:6;overflow:hidden;background:#DFE4EA;padding:90px 0 110px}
+.rh{width:min(1300px,92vw);margin:0 auto;position:relative;display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center;color:var(--ink)}
+.rh-m{position:absolute;right:calc((100vw - min(1300px,92vw)) / -2 - 6vw);top:-18vw;width:min(62vw,900px);height:auto;opacity:.75;z-index:0;pointer-events:none}
+.rh-copy{position:relative;z-index:2;max-width:560px}
+.rh-eye{font:700 11px var(--body);letter-spacing:.24em;text-transform:uppercase;color:#7E0508;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+.rh-eye i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#7E0508;animation:oooBlink 1.4s infinite}
+.rh-h{font:400 clamp(44px,5.6vw,84px)/.98 var(--display);margin:0}.rh-h em{display:block;font:italic 500 .78em var(--sub);color:#9A4A5A}
+.rh-lead{font:italic 500 20px/1.4 var(--sub);margin:18px 0 0;max-width:440px}
+.rh-now{margin-top:36px;padding-top:24px;border-top:1px solid rgba(28,26,27,.16)}
+.rh-now small{display:block;font:italic 500 18px var(--sub);color:#9A4A5A}
+.rh-now b{display:block;font:400 clamp(20px,2vw,27px)/1.2 var(--display);margin:10px 0 4px}
+.rh-now span{display:block;font:500 12px var(--body);opacity:.7}
+.rh-now em{display:block;font:400 24px var(--display);font-style:normal;margin-top:8px}
+.rh-row{display:flex;align-items:center;gap:22px;margin-top:26px;flex-wrap:wrap}
+.rh-btn{display:inline-flex;align-items:center;gap:12px;border-radius:999px;padding:17px 28px;font:700 12px var(--body);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:#fff;background:var(--ink)}
+.rh-all{font:700 11px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);text-decoration:none;border-bottom:1px solid rgba(28,26,27,.4);padding-bottom:4px}
+.rh-hand{position:relative;z-index:1;height:620px}
+.rh-card{position:absolute;left:50%;top:50%;width:300px;aspect-ratio:3/4.3;margin:-320px 0 0 -150px;border-radius:22px;overflow:hidden;background:#111;box-shadow:0 40px 80px rgba(28,26,27,.28);transform-origin:50% 120%;transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .9s,filter .9s;display:block;text-decoration:none}
+.rh-card video,.rh-card img{width:100%;height:100%;object-fit:cover;display:block}
+.rh-cap{position:absolute;inset:auto 0 0;padding:60px 18px 18px;background:linear-gradient(transparent,rgba(0,0,0,.8));color:#FBF8F3}
+.rh-cap b{display:block;font:400 18px/1.2 var(--display);font-weight:400}.rh-cap em{display:block;font:400 20px var(--display);font-style:normal;color:#F7E9A8;margin-top:6px}
+.rh-card[data-pos="0"]{transform:rotate(0) translateY(0);z-index:5}
+.rh-card[data-pos="1"]{transform:rotate(-9deg) translate(-26px,8px);z-index:4;filter:brightness(.85)}
+.rh-card[data-pos="2"]{transform:rotate(9deg) translate(26px,8px);z-index:3;filter:brightness(.75)}
+.rh-card[data-pos="3"]{transform:rotate(-17deg) translate(-52px,22px);z-index:2;filter:brightness(.6)}
+.rh-card[data-pos="4"]{transform:rotate(17deg) translate(52px,22px);z-index:1;filter:brightness(.5)}
+.rh-card[data-pos="out"]{transform:rotate(-28deg) translate(-140px,-520px);opacity:0;z-index:6;pointer-events:none}
+.rh-card:not([data-pos="0"]):not([data-pos="1"]):not([data-pos="2"]):not([data-pos="3"]):not([data-pos="4"]):not([data-pos="out"]){transform:translateY(40px) scale(.9);opacity:0;z-index:0;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.rh-card{transition:none}}
+@media(max-width:900px){.rh-wrap{padding:60px 0 70px}.rh{grid-template-columns:1fr;gap:30px}.rh-m{right:-30vw;top:30%;width:110vw;opacity:.5}.rh-hand{height:500px}.rh-card{width:240px;margin:-260px 0 0 -120px}.rh-lead{font-size:18px}}
 
 /* ===== /reel — the vertical video feed ===== */
 .rl-main{background:#0E0D0D;min-height:100vh}
@@ -2510,12 +2532,12 @@ body.reel-open .mk-page{min-height:0}
 .ooo-circles .sp-row{justify-content:center;gap:clamp(18px,3vw,44px)}
 
 /* Press feedback, like the rest of the site: everything tappable gives a little */
-.ooo-btn,.ooo-card,.ooo-circles .sp,.rs-t,.rs-more,.rl-btn,.rl-chips button,.rl-arrows button,.rl-side .wh,.rl-side .wsh{transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .2s,background-color .2s}
+.ooo-btn,.ooo-card,.ooo-circles .sp,.rl-btn,.rl-chips button,.rl-arrows button,.rl-side .wh,.rl-side .wsh{transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .2s,background-color .2s}
 .ooo-btn:hover{transform:translateY(-2px)}
 .ooo-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -24px rgba(0,0,0,.35)}
 .ooo-circles .sp:hover .sp-img{transform:scale(1.04)}
 .ooo-circles .sp-img{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
-.ooo-btn:active,.ooo-card:active,.ooo-circles .sp:active,.rs-t:active,.rs-more:active,.rl-btn:active,.rl-chips button:active,.rl-arrows button:active{transform:scale(.96)}
+.ooo-btn:active,.ooo-card:active,.ooo-circles .sp:active,.rl-btn:active,.rl-chips button:active,.rl-arrows button:active{transform:scale(.96)}
 
 /* ===== Nav pill + bag: mauve glass (like TG Jewellers), white wordmark and icons ===== */
 .nav,.cart{background:linear-gradient(100deg,rgba(150,112,112,.82),rgba(112,84,92,.78) 45%,rgba(196,150,140,.8) 80%,rgba(120,88,96,.82)) !important;-webkit-backdrop-filter:blur(16px) saturate(1.3) !important;backdrop-filter:blur(16px) saturate(1.3) !important;border:1px solid rgba(255,255,255,.28) !important;color:#fff !important;box-shadow:0 18px 50px -22px rgba(40,20,24,.55)}
