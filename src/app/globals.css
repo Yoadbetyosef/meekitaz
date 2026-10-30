@@ -2508,3 +2508,11 @@ body.reel-open .mk-page{min-height:0}
 @media(max-width:767px){.cv-seal{transform:rotate(10deg) scale(.85)}}
 
 .ooo-circles .sp-row{justify-content:center;gap:clamp(18px,3vw,44px)}
+
+/* Press feedback, like the rest of the site: everything tappable gives a little */
+.ooo-btn,.ooo-card,.ooo-circles .sp,.rs-t,.rs-more,.rl-btn,.rl-chips button,.rl-arrows button,.rl-side .wh,.rl-side .wsh{transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .2s,background-color .2s}
+.ooo-btn:hover{transform:translateY(-2px)}
+.ooo-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -24px rgba(0,0,0,.35)}
+.ooo-circles .sp:hover .sp-img{transform:scale(1.04)}
+.ooo-circles .sp-img{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.ooo-btn:active,.ooo-card:active,.ooo-circles .sp:active,.rs-t:active,.rs-more:active,.rl-btn:active,.rl-chips button:active,.rl-arrows button:active{transform:scale(.96)}
