@@ -13,7 +13,8 @@ export const metadata = { title: "One of One — MEEKITAZ", description: "Made o
 /* /one-of-one — the one-of-ones, in the supplier's order (newest first). The hero repeats the home-page block: the model coming in from the right,
    the big M behind her; the rings follow in the usual grid with "Show more". */
 export default async function OneOfOnePage({ searchParams }: { searchParams: Promise<{ style?: string }> }) {
-  const { style = "" } = await searchParams;
+  const { style: asked } = await searchParams;
+  const style = asked === undefined ? "Rings" : asked === "all" ? "" : asked; // the page opens on rings; "All" is ?style=all
   let r: { products: Product[]; hasNext: boolean; cursor: string | null } | null = null;
   if (shopifyConfigured) {
     const f = await fillPage([], { cursor: null, hasNext: true }, after => style ? getProductsByQuery(oneOfOneQuery("one-of-one", style), { first: 24, after, sort: "new" }) : getCollectionPage("one-of-one", { first: 24, after, sort: "new" }), 24, 5).catch(() => null);
