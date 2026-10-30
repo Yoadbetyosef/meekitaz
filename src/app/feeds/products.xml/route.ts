@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 
 export const maxDuration = 300;
-export const revalidate = 21600; // rebuilt every 6 hours
+export const dynamic = "force-dynamic"; // streamed on request and cached at the edge for 6 hours — a prerendered page this size (34 MB) is over Vercel's 20 MB ISR limit and broke the deploy
 
 /* Product feed for Google Merchant Center and Meta (Facebook / Instagram) Commerce Manager — both read this RSS/XML format.
    Every link points to meekitaz.com, never to the Shopify store. It lists exactly what a shopper can buy on the site:
@@ -30,8 +30,8 @@ function kind(n: N): string {
   return n.productType || "Jewelry";
 }
 
-async function all(): Promise<N[]> {
-  const out: N[] = []; let after: string | null = null;
+async function* pages(): AsyncGenerator<N[]> {
+  let after: string | null = null;
   for (let i = 0; i < 120; i++) {
     const r = await fetch(`${process.env.SHOPIFY_API_BASE || `https://${process.env.SHOPIFY_STORE_DOMAIN}`}/api/2025-07/graphql.json`, {
       method: "POST", headers: { "Content-Type": "application/json", "X-Shopify-Storefront-Access-Token": process.env.SHOPIFY_STOREFRONT_TOKEN || "" },
@@ -39,20 +39,17 @@ async function all(): Promise<N[]> {
     });
     const j = await r.json() as { data?: { products: { pageInfo: { hasNextPage: boolean; endCursor: string }; nodes: N[] } } };
     const p = j.data?.products; if (!p) break;
-    out.push(...p.nodes);
+    yield p.nodes;
     if (!p.pageInfo.hasNextPage) break; after = p.pageInfo.endCursor;
   }
-  return out;
 }
 
-export async function GET(req: NextRequest) {
-  const products = (await all()).filter(n => n.featuredImage && !n.tags.some(t => HIDE.has(t)) && +n.variants.nodes[0]?.price.amount > 0);
-  const items = products.map(n => {
-    const v = n.variants.nodes[0], price = +v.price.amount, compare = v.compareAtPrice ? +v.compareAtPrice.amount : 0;
-    const id = v.sku || v.id.split("/").pop()!;
-    const extra = n.images.nodes.map(x => x.url).filter(u => u !== n.featuredImage!.url).slice(0, 3);
-    const desc = strip(n.description || n.title).slice(0, 4900);
-    return `<item>
+function item(n: N): string {
+  const v = n.variants.nodes[0], price = +v.price.amount, compare = v.compareAtPrice ? +v.compareAtPrice.amount : 0;
+  const id = v.sku || v.id.split("/").pop()!;
+  const extra = n.images.nodes.map(x => x.url).filter(u => u !== n.featuredImage!.url).slice(0, 3);
+  const desc = strip(n.description || n.title).slice(0, 4900);
+  return `<item>
 <g:id>${esc(id)}</g:id><g:item_group_id>${esc(n.handle)}</g:item_group_id>
 <title>${esc(strip(n.title).slice(0, 150))}</title>
 <description>${esc(desc)}</description>
@@ -64,11 +61,23 @@ ${compare > price ? `<g:price>${compare.toFixed(2)} USD</g:price><g:sale_price>$
 <g:google_product_category>${esc(category(n))}</g:google_product_category><g:product_type>${esc(kind(n))}</g:product_type>
 <g:shipping><g:country>US</g:country><g:price>0.00 USD</g:price></g:shipping>
 </item>`;
+}
+
+export async function GET(_req: NextRequest) {
+  const enc = new TextEncoder();
+  const stream = new ReadableStream<Uint8Array>({
+    async start(c) {
+      c.enqueue(enc.encode(`<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0"><channel>\n<title>Meekitaz</title><link>${SITE}</link><description>Lab-grown diamond jewelry</description>\n`));
+      try {
+        for await (const page of pages()) {
+          const items = page.filter(n => n.featuredImage && !n.tags.some(t => HIDE.has(t)) && +n.variants.nodes[0]?.price.amount > 0).map(item);
+          if (items.length) c.enqueue(enc.encode(items.join("\n") + "\n"));
+        }
+      } finally {
+        c.enqueue(enc.encode(`</channel></rss>`));
+        c.close();
+      }
+    },
   });
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0"><channel>
-<title>Meekitaz</title><link>${SITE}</link><description>Lab-grown diamond jewelry</description>
-${items.join("\n")}
-</channel></rss>`;
-  return new Response(xml, { headers: { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, s-maxage=21600, stale-while-revalidate=86400" } });
+  return new Response(stream, { headers: { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, s-maxage=21600, stale-while-revalidate=86400" } });
 }
