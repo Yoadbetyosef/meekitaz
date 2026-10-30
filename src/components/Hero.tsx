@@ -37,8 +37,11 @@ export default function Hero() {
     let timer: ReturnType<typeof setTimeout>; let n = 0;
     const next = () => { n += 1; setSeen(x => Math.max(x, n)); if (n < slides.length - 1) timer = setTimeout(next, 900); };
     const start = () => { timer = setTimeout(next, 700); };
-    if (document.readyState === "complete") start(); else window.addEventListener("load", start, { once: true });
-    return () => { clearTimeout(timer); window.removeEventListener("load", start); };
+    // start preloading after the page load — or after 2.5 s at the latest: on a phone the load event can come very late (videos, long page)
+    const fallback = setTimeout(start, 2500);
+    const onLoad = () => { clearTimeout(fallback); start(); };
+    if (document.readyState === "complete") onLoad(); else window.addEventListener("load", onLoad, { once: true });
+    return () => { clearTimeout(timer); clearTimeout(fallback); window.removeEventListener("load", onLoad); };
   }, [daily]);
 
   // The clock: one frame at a time, paused while a finger is held on the photo, while the hero is off screen or the tab is hidden.
@@ -96,7 +99,7 @@ export default function Hero() {
       {daily && <><img className="dly-m" src="/brand/meekitaz-m-white.png" alt="" aria-hidden="true" /><div className="dly-still" aria-hidden="true"><img src="/media/daily/hero-blue-cut3.webp" alt="" fetchPriority="high" /></div></>}
       {!daily && slides.map((sl, k) => (
         <div key={k} className={`hs${k === i ? " on" : ""}`} style={{ "--pos-m": (sl as { posM?: string }).posM || sl.pos, "--zoom-m": (sl as { zoomM?: number }).zoomM || 1 } as React.CSSProperties}>
-          {k <= seen && (
+          {(k <= seen || k <= i + 1 || (i === slides.length - 1 && k === 0)) && ( /* the photo on screen and the next one always load, whether or not the page has finished loading */
             <picture>
               <source media="(max-width:767px)" srcSet={optimised(sl.mobile).srcSet} sizes="100vw" />
               <Image src={sl.desktop} alt="" fill loading={k === 0 ? "eager" : "lazy"} fetchPriority={k === 0 ? "high" : "auto"} sizes="100vw" quality={78} style={{ objectFit: "cover", objectPosition: sl.pos }} />
