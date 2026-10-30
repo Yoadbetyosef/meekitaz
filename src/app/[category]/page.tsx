@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import ShapeRow from "@/components/ShapeRow";
 import StoneBrowser from "@/components/StoneBrowser";
 import FancyColorRow from "@/components/FancyColorRow";
+import FancyTypeCircles from "@/components/FancyTypeCircles";
 import { fancySwatches, vdbConfigured } from "@/lib/vdb";
 import RingsSection from "@/components/RingsSection";
 import SettingBar from "@/components/SettingBar";
@@ -62,7 +63,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
             </div>
           </section>
         )}
-        {p.special === "fancy" ? <><FancyColorRow color={one("color")} /><Suspense fallback={null}><RingsSection fancy={one("color") || "all"} /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><StoneBrowser swatches={vdbConfigured ? await fancySwatches() : {}} /></Suspense> : <><Suspense fallback={null}>{gemTypes.length > 1 && <section className="gem-types" aria-label="Jewelry type"><div className="wrap"><small className="eyebrow">Jewelry type</small><GemTypeBar types={gemTypes} /></div></section>}</Suspense><ProductGrid page={p} style={one("style")} type={gemType} /></>}
+        {p.special === "fancy" ? <><Suspense fallback={null}><FancyTypeCircles color={one("color")} type={one("type")} /></Suspense><FancyColorRow color={one("color")} /><Suspense fallback={null}><RingsSection fancy={one("color") || "all"} /></Suspense></> : p.special === "rings" ? <Suspense fallback={null}><RingsSection /></Suspense> : p.filters ? <Suspense fallback={null}><StoneBrowser swatches={vdbConfigured ? await fancySwatches() : {}} /></Suspense> : <><Suspense fallback={null}>{gemTypes.length > 1 && <section className="gem-types" aria-label="Jewelry type"><div className="wrap"><small className="eyebrow">Jewelry type</small><GemTypeBar types={gemTypes} /></div></section>}</Suspense><ProductGrid page={p} style={one("style")} type={gemType} /></>}
       </div>
     </main>
   );
