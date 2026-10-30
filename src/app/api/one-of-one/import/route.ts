@@ -8,7 +8,7 @@ export const maxDuration = 300;
 /* One of One import — 354 rings from Classic Grown Diamonds, in the supplier's order.
    Runs from the cron (or with ?key=CRON_SECRET), imports what is not in the store yet, a few dozen per run, idempotent by handle.
    Created LAST-first, so the first ring on the supplier's list ends up the newest = first on the home page. */
-type Row = { sku: string; handle: string; title: string; desc: string; price: number; tags: string[]; images: string[]; video: string | null; videoGuess: string | null; guess?: string[]; try?: string; type?: string };
+type Row = { sku: string; handle: string; title: string; desc: string; price: number; tags: string[]; images: string[]; video: string | null; videoGuess: string | null; guess?: string[]; try?: string; type?: string; syncPrice?: boolean };
 const alive = async (u: string) => { try { const r = await fetch(u, { headers: { Range: "bytes=0-0" }, signal: AbortSignal.timeout(8000) }); try { await r.body?.cancel(); } catch { /* ignore */ } return r.ok; } catch { return false; } };
 /** Only files the supplier really has: the image list was reconstructed by pattern for most rings, so each URL is checked first. */
 async function liveMedia(r: Row) {
@@ -17,7 +17,7 @@ async function liveMedia(r: Row) {
   return { imgs, vid };
 }
 const LOC = "gid://shopify/Location/95949258989";
-const done = new Set<string>(), tried = new Set<string>(); // handles whose video was already checked in this process
+const done = new Set<string>(), tried = new Set<string>(), priced = new Set<string>(); // handles whose video was already checked in this process
 const PUBS = ["gid://shopify/Publication/223010783469", "gid://shopify/Publication/222997545197", "gid://shopify/Publication/222997577965"];
 
 async function exists(handle: string) {
@@ -50,6 +50,12 @@ export async function GET(req: NextRequest) {
     if (Date.now() - t0 > budget) { log.push("budget reached; the next run continues"); break; }
     try {
       const id = await exists(r.handle);
+      if (id && r.syncPrice && !priced.has(r.handle)) { // price rule changed after creation (necklaces ×3): bring the live price in line once
+        const v = await adminGraphql<{ product: { variants: { nodes: { id: string; price: string }[] } } | null }>(`query($id:ID!){ product(id:$id){ variants(first:1){ nodes{ id price } } } }`, { id });
+        const vr = v?.product?.variants.nodes[0];
+        if (vr && Math.round(+vr.price) !== r.price) { await adminGraphql(`mutation($p:ID!,$v:[ProductVariantsBulkInput!]!){ productVariantsBulkUpdate(productId:$p, variants:$v){ userErrors{ message } } }`, { p: id, v: [{ id: vr.id, price: String(r.price), compareAtPrice: String(r.price * 2) }] }); log.push(`$ ${r.handle}: ${vr.price} → ${r.price}`); }
+        priced.add(r.handle);
+      }
       if (id) {
         if (!done.has(r.handle)) { // photos: the supplier's host does not answer our checks, so Shopify fetches every candidate URL itself; the ones that fail are deleted next run
           const m = await adminGraphql<{ product: { tags: string[]; media: { nodes: { id: string; status: string }[] } } | null }>(`query($id:ID!){ product(id:$id){ tags media(first:60){ nodes{ id status } } } }`, { id });
