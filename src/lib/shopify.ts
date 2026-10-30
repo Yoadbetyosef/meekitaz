@@ -225,7 +225,7 @@ async function getCollectionPageRaw(handle: string, opts: { first?: number; afte
   const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
-    image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || undefined,
+    image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || handPhoto(n as unknown as { images?: { edges: { node: { url: string } }[] } }),
     edit: n.tags.includes(EDIT_TAG), code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || gemFacets(n.title, n.tags).shape, stone: gemFacets(n.title, n.tags).stone,
   }));
   return { products: collapseDesigns(products.filter(hasPhoto)), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
@@ -244,7 +244,7 @@ async function getProductsByQueryRaw(query: string, opts: { first?: number; afte
   const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
-    image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || undefined,
+    image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || handPhoto(n as unknown as { images?: { edges: { node: { url: string } }[] } }),
     edit: n.tags.includes(EDIT_TAG), code: n.tags.find(t => /^NS-\d+$/.test(t)) || "", metal: ringMetalOf(n.title), shape: n.tags.find(t => RING_SHAPES.includes(t)) || gemFacets(n.title, n.tags).shape, stone: gemFacets(n.title, n.tags).stone,
   }));
   return { products: collapseDesigns(products.filter(hasPhoto)), hasNext: c.pageInfo.hasNextPage, cursor: c.pageInfo.endCursor };
@@ -337,6 +337,10 @@ export async function setCartDiscountCodes(cartId: string, codes: string[]): Pro
   return d?.cartDiscountCodesUpdate.cart ? shapeCart(d.cartDiscountCodesUpdate.cart) : null;
 }
 
+/** Card hover for supplier pieces without our own worn photo: their on-hand shot (CGD files SKU-<metal>-2.jpg). */
+function handPhoto(n: { images?: { edges: { node: { url: string } }[] } }): string | undefined {
+  return n.images?.edges.map(e => e.node.url).find(u => /-(Y|W|R|YW|RW|YRW|YR)-2\.jpg/i.test(u));
+}
 /** One-of-one galleries: the supplier files are named SKU-<metal>-n.jpg; keep only the ring's own metal (Y, W, R, YW, RW, YRW). */
 function ownMetal(url: string, tags: string[]): boolean {
   if (!tags.includes("One of One")) return true;
