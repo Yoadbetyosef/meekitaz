@@ -2367,7 +2367,7 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .rh-copy{position:relative;z-index:2;max-width:560px}
 .rh-eye{font:700 11px var(--body);letter-spacing:.24em;text-transform:uppercase;color:#7E0508;margin:0 0 12px;display:flex;align-items:center;gap:10px}
 .rh-eye i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#7E0508;animation:oooBlink 1.4s infinite}
-.rh-h{font:400 clamp(44px,5.6vw,84px)/.98 var(--display);margin:0}.rh-h em{display:block;font:italic 500 .78em var(--sub);color:#9A4A5A}
+.rh-h{font:400 clamp(44px,5.6vw,84px)/.98 var(--display);margin:0 0 34px}.rh-h em{display:block;font:italic 500 .78em var(--sub);color:#9A4A5A}
 .rh-lead{font:italic 500 20px/1.4 var(--sub);margin:18px 0 0;max-width:440px}
 .rh-now{margin-top:36px;padding-top:24px;border-top:1px solid rgba(28,26,27,.16)}
 .rh-now small{display:block;font:italic 500 18px var(--sub);color:#9A4A5A}

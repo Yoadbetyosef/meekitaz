@@ -37,25 +37,13 @@ export default function ReelHand({ items }: { items: Item[] }) {
     });
   }, [front]);
 
-  const cur = items[front];
   return (
     <section className="rh-wrap" aria-label="Ready to Ship" ref={ref}>
       <div className="rh">
         <img className="rh-m" src="/brand/meekitaz-m-white.png" alt="" aria-hidden="true" loading="lazy" />
         <div className="rh-copy">
-          <p className="rh-eye"><i />Ready to ship</p>
-          <h2 className="rh-h">Ready to ship.<em>One of each.</em></h2>
-          <p className="rh-lead">Every piece in this deck is filmed, graded, boxed and sitting in New York. When it&rsquo;s claimed, it&rsquo;s gone &mdash; there is no second one.</p>
-          <div className="rh-now" aria-live="polite">
-            <small>On the table now</small>
-            <b>{cur.title}</b>
-            {cur.detail && <span>{cur.detail}</span>}
-            <em>{usd(cur.price)}</em>
-          </div>
-          <div className="rh-row">
-            <Link href={`/ready-to-ship#${cur.handle}`} className="rh-btn">Claim it &middot; ships in 48h &rarr;</Link>
-            <Link href="/ready-to-ship" className="rh-all">See all 2,900 pieces</Link>
-          </div>
+          <h2 className="rh-h">Ready to ship.</h2>
+          <Link href="/ready-to-ship" className="rh-btn">Shop ready to ship &rarr;</Link>
         </div>
         <div className="rh-hand" aria-hidden="true">
           {items.map((it, k) => {
