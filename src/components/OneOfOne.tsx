@@ -29,7 +29,6 @@ export default async function OneOfOne() {
           <div className="ooo-rail">
             {items.slice(0, 4).map(i => (
               <Link key={i.handle} href={`/products/${i.handle}`} className={`ooo-card${i.claimed ? " is-claimed" : ""}`}>
-                <span className={`ooo-badge${i.isNew && !i.claimed ? " new" : ""}`}>{preview ? "Preview" : i.claimed ? "Claimed" : i.isNew ? "New" : "1 of 1"}</span>
                 <span className="ooo-im">{i.image && <img src={photoSrc(i.image, 500, i.title)} alt={i.title} loading="lazy" />}{i.claimed && <span className="ooo-sold"><span>Claimed</span></span>}</span>
                 <b>{i.title}</b>{i.sub && <span>{i.sub}</span>}<em>{usd(i.price)}</em>
               </Link>
