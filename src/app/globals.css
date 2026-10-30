@@ -2506,3 +2506,5 @@ body.reel-open .mk-page{min-height:0}
 .cv-issue{display:none !important}
 .cv-seal{transform:rotate(10deg) scale(.8);transform-origin:100% 100%}
 @media(max-width:767px){.cv-seal{transform:rotate(10deg) scale(.85)}}
+
+.ooo-circles .sp-row{justify-content:center;gap:clamp(18px,3vw,44px)}
