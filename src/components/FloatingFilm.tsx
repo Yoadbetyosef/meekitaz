@@ -1,24 +1,17 @@
-"use client";
-import { useEffect, useRef } from "react";
-
-/* Home · the Floating collection: the same frame as the Meekitaz film above, mirrored — film on the left, the name on the right. */
+/* Home · Floating collection (option C): the threaded marquise, cut out so it sits on the page itself, in the same frame size as the film
+   above; the copy explains the house floating setting. */
 export default function FloatingFilm() {
-  const v = useRef<HTMLVideoElement>(null);
-  useEffect(() => {
-    const el = v.current; if (!el) return;
-    el.muted = true;
-    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) el.play().catch(() => {}); else el.pause(); }), { threshold: 0.25, rootMargin: "300px 0px" });
-    io.observe(el); return () => io.disconnect();
-  }, []);
   return (
-    <section className="mkfilm flip" aria-label="Floating collection">
+    <section className="mkfilm flip fl" aria-label="Floating collection">
       <div className="mkfilm-in">
-        <div className="mkfilm-vid">
-          <video ref={v} playsInline muted loop preload="none" poster="/media/floating-collection-poster.jpg">
-            <source src="/media/floating-collection.mp4" type="video/mp4" />
-          </video>
+        <div className="mkfilm-vid fl-img"><img src="/media/floating-diamond.webp" alt="A marquise diamond threaded onto a gold chain through a drilled channel, with no prongs" loading="lazy" /></div>
+        <div className="mkfilm-txt fl-txt">
+          <p className="fl-eye"><i />Floating collection</p>
+          <h2>Light, all the way through.</h2>
+          <p className="fl-quote">&ldquo;Is it even set?&rdquo; Yes. Just not the way you&rsquo;re used to.</p>
+          <p className="fl-body">Our floating setting threads each diamond onto the gold through a tiny drilled channel. With no metal around it, the stone takes in light from above, below and behind, and throws it back as fire you notice from across the room.</p>
+          <div className="fl-stat"><div><b>No</b><span>prongs</span></div><div><b>360&deg;</b><span>light</span></div><div><b>1</b><span>house method</span></div></div>
         </div>
-        <div className="mkfilm-txt"><h2>Floating collection</h2></div>
       </div>
     </section>
   );
