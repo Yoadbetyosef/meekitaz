@@ -35,6 +35,10 @@
     {
       "path": "/api/reel/curate",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/seo/rename",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
