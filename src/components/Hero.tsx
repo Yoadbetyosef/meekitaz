@@ -5,7 +5,14 @@ import Link from "next/link";
 import { DailyHeroBadge, DailyHeroHeadline } from "./DailyPrice";
 import { useDaily } from "./DailyMode";
 import DailyProof, { DailyQuote } from "./DailyProof";
-import { slides } from "@/lib/data";
+import { slides as allSlides } from "@/lib/data";
+
+/* TRIAL (2026-10-30): one still photo instead of the changing slides.
+   To go back to the original changing slides: set ONE_PHOTO = false (or delete this block and the "slides" line below). */
+const ONE_PHOTO = true;
+const ONE = { small: "Fancy yellow. Worn on a Tuesday.", big: "Fancy colors.", href: "/fancy-colors",
+  desktop: "/media/hero/one-yellow.webp", mobile: "/media/hero/one-yellow.webp", pos: "50% 50%", posM: "50% 50%" };
+const slides = ONE_PHOTO ? [ONE] : allSlides;
 import Logo from "./Logo";
 
 // The mobile photo goes through the same image optimiser as the desktop one (a plain <source> would download the original multi-megabyte file on a phone).
@@ -107,11 +114,11 @@ export default function Hero() {
           )}
         </div>
       ))}
-      <div className="cv-taps">
+      <div className="cv-taps" hidden={slides.length < 2}>
         <button type="button" className="prev" aria-label="Previous photo" onClick={() => tap(-1)} />
         <button type="button" className="next" aria-label="Next photo" onClick={() => tap(1)} />
       </div>
-      <div className="cv-bars" role="group" aria-label="Photos">
+      <div className="cv-bars" role="group" aria-label="Photos" hidden={slides.length < 2}>
         {slides.map((sl, k) => (
           <button key={k} type="button" aria-label={`${sl.big.replace(".", "")}`} aria-current={k === i} onClick={() => go(k)}><i ref={el => { segs.current[k] = el; }} /></button>
         ))}
