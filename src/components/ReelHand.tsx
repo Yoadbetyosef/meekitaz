@@ -61,7 +61,7 @@ export default function ReelHand({ items }: { items: Item[] }) {
         <div className="rh-copy">
           <p className="rh-eye"><i />In stock</p>
           <h2 className="rh-h">Ready to ship.</h2>
-          <Link href="/ready-to-ship" className="rh-btn">Shop ready to ship &rarr;</Link>
+          <Link href="/ready-to-ship" className="rh-btn">Shop in-stock jewelry &rarr;</Link>
         </div>
         <div className="rh-hand" aria-hidden="true">
           {items.map((it, k) => {
