@@ -2653,3 +2653,9 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 .rts-play{position:absolute;right:14px;bottom:18px;z-index:3;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);color:#fff;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .rts-play svg{width:16px;height:16px;margin-left:2px}
 @media(hover:hover){.rts-play{opacity:.85}}
+
+/* Floating collection: the film section mirrored — film left, name right */
+.mkfilm.flip{padding-top:0}
+@media(min-width:768px){.mkfilm.flip .mkfilm-in{direction:rtl}.mkfilm.flip .mkfilm-in>*{direction:ltr}.mkfilm.flip .mkfilm-txt{text-align:left}}
+.mkfilm.flip .mkfilm-txt h2{margin:0}
+.mkfilm.flip video{object-fit:cover;object-position:50% 45%}
