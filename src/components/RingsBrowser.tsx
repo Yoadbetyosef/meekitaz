@@ -121,6 +121,10 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
               {handle === "engagement-rings" && i === 4 && items.length > 4 && <GridMood src="/media/rings-mood.mp4" poster="/media/rings-mood-poster.jpg" reveal={{ tag: "Engagement rings", l1: "One stone.", l2: "The whole conversation.", cta: "Shop the look", href: "/products/yellow-gold-cushion-diamond-solitaire-engagement-ring" }} />}
               {/* Fancy Colors: the walking film (yellow cushion on her hand), same opening as the necklaces; the crop keeps the hand in view */}
               {handle === "fancy-colors" && i === 4 && items.length > 4 && <GridMood src="/media/fancy-mood.mp4" poster="/media/fancy-mood-poster.jpg" pos="62% 92%" reveal={{ tag: "Fancy colors", l1: "Pack light.", l2: "Wear the yellow.", cta: "Shop the look", href: "/products/yellow-gold-fancy-yellow-cushion-cut-diamond-classic-solitaire-engagement-ring" }} />}
+              {/* Fancy Colors: the yellow-headscarf photo, two rows after the film (four rows in), the same tile as the One of One page */}
+              {handle === "fancy-colors" && i === 10 && items.length > 10 && (
+                <div className="pgrid-slot"><div className="op-tile"><img src="/media/fancy-yellow-tile.jpg" alt="Hand over her mouth in a yellow headscarf and oval sunglasses, a fancy yellow cushion diamond ring on her finger" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 55%" }} /><div className="op-cap"><small>Fancy yellow</small><b>Say less.<br />Wear yellow.</b></div></div></div>
+              )}
               <DesignCard p={p} />
             </Fragment>
           ))}
