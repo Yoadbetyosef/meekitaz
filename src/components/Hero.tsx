@@ -10,8 +10,8 @@ import { slides as allSlides } from "@/lib/data";
 /* TRIAL (2026-10-30): one still photo instead of the changing slides.
    To go back to the original changing slides: set ONE_PHOTO = false (or delete this block and the "slides" line below). */
 const ONE_PHOTO = true;
-const ONE = { small: "Fancy yellow. Worn on a Tuesday.", big: "Fancy colors.", href: "/fancy-colors",
-  desktop: "/media/hero/one-yellow.webp", mobile: "/media/hero/one-yellow.webp", pos: "50% 50%", posM: "50% 50%" };
+const ONE = { small: "", big: "Engagement rings.", href: "/engagement-rings",
+  desktop: "/media/hero/one-yellow.webp", mobile: "/media/hero/one-yellow-m.webp", pos: "50% 50%", posM: "50% 30%" };
 const slides = ONE_PHOTO ? [ONE] : allSlides;
 import Logo from "./Logo";
 
@@ -129,7 +129,7 @@ export default function Hero() {
       </div>
       <div className="cv-seal" role="img" aria-label="Rated 4.9 stars. Trusted brand, 2026"><svg className="rg" viewBox="0 0 100 100" aria-hidden="true"><defs><path id="cvring" d="M50,50 m-41,0 a41,41 0 1,1 82,0 a41,41 0 1,1 -82,0" /></defs><text><textPath href="#cvring" textLength="252" lengthAdjust="spacing">TRUSTED BRAND · 2026 · TRUSTED BRAND · 2026 ·</textPath></text></svg><div className="fc fa"><div><div className="five">4.9</div><div className="st"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg></div></div></div><div className="fc fb"><div><div className="yr">2026</div><div className="tr">Trusted brand</div></div></div></div>
       <div className="cv-bot" ref={blockRef}>
-        {daily ? <DailyHeroHeadline /> : <Link href={s.href} className="cv-line"><h1><small>{s.small}</small><span className="word" ref={wordRef}>{s.big}</span></h1></Link>}
+        {daily ? <DailyHeroHeadline /> : <Link href={s.href} className="cv-line"><h1>{s.small && <small>{s.small}</small>}<span className="word" ref={wordRef}>{s.big}</span></h1></Link>}
         <div className="cv-row">
           {daily ? <><DailyProof /><Link href="/engagement-rings" className="pill cv-pill dly-go">Shop engagement rings<span className="dly-go-ar" aria-hidden="true">→</span></Link><DailyQuote /></> : <>
           <Link href="/engagement-rings" className="pill cv-pill">Shop Engagement Rings</Link>
