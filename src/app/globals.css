@@ -2726,3 +2726,15 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 .flpD-steps h4{font:400 21px var(--display);margin:8px 0 0}
 .flpD-steps p{font:400 14px/1.5 var(--body);opacity:.75;margin:6px 0 0}
 @media(max-width:860px){.flpD-split{grid-template-columns:1fr}.flpD-left{position:relative;height:72vh}.flpD-right{padding:28px 14px 80px}.flpD-steps{grid-template-columns:1fr}.flpD-how{padding:24px 18px}}
+
+/* Home Floating · option D: same type scale as "Made, not mined." + marker circle */
+.fl .fl-txt h2{font:500 clamp(30px,3.6vw,52px)/1.05 var(--display);margin:0 0 16px}
+.fl .fl-txt>p{font:400 17px/1.6 var(--sub);font-style:italic;color:#444;margin:0 0 22px;max-width:40ch;opacity:1}
+.fl .fl-stat{margin:0 0 26px;gap:24px}.fl .fl-stat b{font-size:24px}.fl .fl-stat span{font-size:10px}
+.fl .fl-btn{margin-top:0}
+.fl-note{display:inline-block;font:italic 500 21px var(--sub);color:#7E0508;margin:0 0 16px;transform:rotate(-3deg);transform-origin:left center}
+.fl-circ{position:relative;display:inline-block}
+.fl-circ svg{position:absolute;left:-14%;top:-30%;width:128%;height:160%;pointer-events:none;overflow:visible}
+.fl-circ path{fill:none;stroke:#7E0508;stroke-width:3.2;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke-dasharray:520;stroke-dashoffset:520;animation:flDraw 1.4s .4s ease forwards}
+@keyframes flDraw{to{stroke-dashoffset:0}}
+@media(max-width:767px){.fl .fl-txt{text-align:left}.fl .fl-txt>p{margin-left:0}}
