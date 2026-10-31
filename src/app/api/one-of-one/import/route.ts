@@ -51,7 +51,8 @@ export async function GET(req: NextRequest) {
   for (const r of list) {
     if (Date.now() - t0 > budget) { log.push("budget reached; the next run continues"); break; }
     try {
-      const id = await exists(r.handle);
+      const bySku = await adminGraphql<{ products: { nodes: { id: string }[] } }>(`query($q:String!){ products(first:1, query:$q){ nodes{ id } } }`, { q: `tag:'CGD-${r.sku}'` }); // the supplier SKU is the identity — handles change (SEO)
+      const id = bySku?.products.nodes[0]?.id || await exists(r.handle);
       if (id && r.syncPrice && !priced.has(r.handle)) { // price rule changed after creation (necklaces ×3): bring the live price in line once
         const v = await adminGraphql<{ product: { variants: { nodes: { id: string; price: string }[] } } | null }>(`query($id:ID!){ product(id:$id){ variants(first:1){ nodes{ id price } } } }`, { id });
         const vr = v?.product?.variants.nodes[0];
