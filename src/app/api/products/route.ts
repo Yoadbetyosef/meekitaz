@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { categories } from "@/lib/data";
 import { getCollectionPage, getProductsByQuery, shopifyConfigured } from "@/lib/shopify";
-import { FLOATING_QUERY, gemQuery, oneOfOneQuery, ringQuery, styleQuery } from "@/lib/ringfilters";
+import { floatingQuery, gemQuery, oneOfOneQuery, ringQuery, styleQuery } from "@/lib/ringfilters";
 
 
 const list = (v: string | null) => (v ? v.split(",").map(x => x.trim()).filter(Boolean).slice(0, 12) : []);
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
   const r = handle === "engagement-rings" || handle === "fancy-colors"
     ? await getProductsByQuery(ringQuery({ shapes: list(sp.get("shape")), metals: list(sp.get("metal")), styles: list(sp.get("look")), min: num(sp.get("min")), max: num(sp.get("max")), fancy: handle === "fancy-colors" ? (sp.get("fancy") || "all") : undefined, type: handle === "fancy-colors" ? sp.get("type") || undefined : undefined }), opts)
     : handle === "gemstones" && sp.get("type") ? await getProductsByQuery(gemQuery(sp.get("style") || "", sp.get("type") || ""), opts)
-    : handle === "floating" ? await getProductsByQuery(FLOATING_QUERY, opts)
+    : handle === "floating" ? await getProductsByQuery(floatingQuery(sp.get("style") || ""), opts)
     : EXTRA.includes(handle) && sp.get("style") ? await getProductsByQuery(oneOfOneQuery(handle, sp.get("style") || ""), opts)
     : sp.get("style") ? await getProductsByQuery(styleQuery(handle, sp.get("style") || ""), opts)
     : await getCollectionPage(handle, opts);
