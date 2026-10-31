@@ -118,3 +118,6 @@ export function oneOfOneQuery(handle: string, style: string): string {
 
 /** The Floating collection: every piece made with the house floating setting (named "Floating …"). */
 export const FLOATING_QUERY = "title:Floating OR tag:Floating"; // plus one-of-ones picked into the collection (tag "Floating")
+export function floatingQuery(kind: string): string {
+  return kind === "Bracelets" ? `(${FLOATING_QUERY}) AND tag:'Bracelets'` : FLOATING_QUERY;
+}
