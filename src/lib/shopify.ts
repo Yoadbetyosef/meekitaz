@@ -216,7 +216,20 @@ export const SORTS: Record<string, { key: string; reverse: boolean }> = {
 };
 /* A collection page hides pieces that live elsewhere (Ready to Ship…). When a whole batch is hidden, fetch the next batch, so the page is
    never empty while the collection still has pieces to show. */
+/* Earrings, bracelets, necklaces: the house catalogue first (yellow gold up front, as always), and the one-of-ones we added after it,
+   at the end. The cursor "oo:…" marks the second part. */
+const OOO_KIND: Record<string, string> = { earrings: "tag:'Earrings'", bracelets: "tag:'Bracelets'", necklaces: "(tag:'Necklaces' OR tag:'Pendants')" };
 async function getCollectionPageRaw(handle: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
+  const kind = OOO_KIND[handle];
+  if (kind && opts.after?.startsWith("oo:")) {
+    const r = await getProductsByQueryRaw(`tag:'One of One' AND ${kind}`, { first: opts.first, after: opts.after.slice(3) || null, sort: "new" });
+    return r ? { ...r, cursor: r.cursor ? `oo:${r.cursor}` : null } : null;
+  }
+  const house = await getCollectionPageRaw0(handle, { ...opts, noOoo: !!kind });
+  if (kind && house && !house.hasNext) return { ...house, hasNext: true, cursor: "oo:" }; // catalogue done: the one-of-ones follow
+  return house;
+}
+async function getCollectionPageRaw0(handle: string, opts: { first?: number; after?: string | null; sort?: string; noOoo?: boolean } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
   const want = opts.first || 24; let after = opts.after || null; const all: Product[] = []; let last: { products: Product[]; hasNext: boolean; cursor: string | null } | null = null;
   for (let i = 0; i < 6; i++) {
     last = await getCollectionBatch(handle, { ...opts, after });
@@ -227,7 +240,7 @@ async function getCollectionPageRaw(handle: string, opts: { first?: number; afte
   }
   return { products: all, hasNext: !!last?.hasNext, cursor: last?.cursor ?? null };
 }
-async function getCollectionBatch(handle: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
+async function getCollectionBatch(handle: string, opts: { first?: number; after?: string | null; sort?: string; noOoo?: boolean } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
   const so = SORTS[opts.sort || "best"] || SORTS.best;
   const d = await sf<{ collection: null | { products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null; model?: { value: string } | null } }[] } } }>(
     `query($handle:String!,$first:Int!,$after:String,$key:ProductCollectionSortKeys!,$rev:Boolean!){ collection(handle:$handle){ products(first:$first, after:$after, sortKey:$key, reverse:$rev){
@@ -235,7 +248,7 @@ async function getCollectionBatch(handle: string, opts: { first?: number; after?
       edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } images(first:3){ edges{ node{ url altText } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } } }`,
     { handle, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.reverse });
   const c = d?.collection?.products; if (!c) return null;
-  const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026" || (t === "Ready to Ship" && handle !== "ready-to-ship") || (t === "One of One" && /engagement/.test(handle)))).map(n => ({
+  const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026" || (t === "Ready to Ship" && handle !== "ready-to-ship") || (t === "One of One" && (/engagement/.test(handle) || !!opts.noOoo)))).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
     image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || handPhoto(n as unknown as { images?: { edges: { node: { url: string } }[] } }),
