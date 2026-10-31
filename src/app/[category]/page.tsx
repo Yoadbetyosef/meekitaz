@@ -30,10 +30,12 @@ export async function generateMetadata({ params }: { params: Promise<{ category:
 export default async function CategoryPage({ params, searchParams }: { params: Promise<{ category: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const { category } = await params;
   const sp = await searchParams;
-  const one = (k: string) => { const v = sp[k]; return typeof v === "string" ? v : ""; };
+  const NO_FILTERS = ["earrings"]; // pages shown as one plain collection for now: no style circles, no style filter
+  const plain = NO_FILTERS.includes(p.slug);
+  const one = (k: string) => { if (plain && k === "style") return ""; const v = sp[k]; return typeof v === "string" ? v : ""; };
   const p = categories.find(c => c.slug === category);
   if (!p) notFound();
-  const n = p.styles.length;
+  const n = plain ? 0 : p.styles.length;
   // Gemstones: which jewelry types exist for the chosen stone (a type with nothing in it is not offered), so the page never leads to an empty list.
   const gemTypes = p.slug === "gemstones" && shopifyConfigured
     ? (await Promise.all(GEM_TYPES.map(async t => { const r = await getProductsByQuery(gemQuery(one("style"), t.label), { first: 1 }).catch(() => null); return r && r.products.length ? t.label : ""; }))).filter(Boolean)
