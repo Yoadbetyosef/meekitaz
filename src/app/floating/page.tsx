@@ -13,13 +13,13 @@ export const metadata = {
 /* /floating · design B: the film and the promise, then how it floats (drilled, threaded, free), then the pieces. */
 export default async function FloatingPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
   const { type = "" } = await searchParams;
-  const kind = type === "Bracelets" ? "Bracelets" : "";
-  const [r, allPic, brPic] = await Promise.all([
+  const KINDS = ["Bracelets", "Earrings", "Necklaces"];
+  const kind = KINDS.includes(type) ? type : ""; // opens on All
+  const [r, ...pics] = await Promise.all([
     getProductsByQuery(floatingQuery(kind), { first: 24, sort: "new" }).catch(() => null),
-    getProductsByQuery(floatingQuery(""), { first: 1, sort: "new" }).then(x => x?.products[0]?.image?.url || null).catch(() => null),
-    getProductsByQuery(floatingQuery("Bracelets"), { first: 1, sort: "new" }).then(x => x?.products[0]?.image?.url || null).catch(() => null),
+    ...["", ...KINDS].map(k => getProductsByQuery(floatingQuery(k), { first: 1, sort: "new" }).then(x => x?.products[0]?.image?.url || null).catch(() => null)),
   ]);
-  const circles = [{ k: "", label: "All", img: allPic }, { k: "Bracelets", label: "Bracelets", img: brPic }].filter(c => c.img);
+  const circles = ["", ...KINDS].map((k, i) => ({ k, label: k || "All", img: pics[i] as string | null })).filter(c => c.img);
   return (
     <main className="flp">
       <section className="flp-hero">
@@ -44,7 +44,7 @@ export default async function FloatingPage({ searchParams }: { searchParams: Pro
         </div>
       </section>
       <div className="catbody" id="results">
-        <section className="shapes" aria-label="Jewelry type"><div className="wrap"><div className="ooo-circles"><div className="sp-row">
+        <section className="shapes" aria-label="Jewelry type"><div className="wrap"><div className="ooo-circles"><div className="sp-row" style={{ justifyContent: "center" }}>
           {circles.map(c => (
             <Link key={c.label} href={c.k ? `/floating?type=${c.k}#results` : "/floating#results"} scroll={false} className={`sp${kind === c.k ? " on" : ""}`} aria-current={kind === c.k ? "page" : undefined}>
               <span className="sp-img"><img src={c.img!} alt="" loading="lazy" /></span><b>{c.label}</b>
