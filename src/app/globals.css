@@ -2739,3 +2739,10 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 @keyframes flDraw{to{stroke-dashoffset:0}}
 @media(max-width:767px){.fl .fl-txt{text-align:left}.fl .fl-txt>p{margin-left:0}}
 .cv-bars[hidden],.cv-taps[hidden]{display:none !important}
+
+/* hero trial, one photo — phone layout "D": the wordmark sits low, just above the headline, so nothing covers the face; the 2026 seal moves up under the bar */
+@media(max-width:767px){
+.cover.one .cv-mast{top:auto;bottom:calc(var(--hc,230px) + 22px + env(safe-area-inset-bottom,0px))}
+.cover.one .cv-mast .cv-issue{display:none}
+.cover.one .cv-seal{bottom:auto;top:calc(112px + env(safe-area-inset-top,0px))}
+}

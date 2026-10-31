@@ -11,7 +11,7 @@ import { slides as allSlides } from "@/lib/data";
    To go back to the original changing slides: set ONE_PHOTO = false (or delete this block and the "slides" line below). */
 const ONE_PHOTO = true;
 const ONE = { small: "", big: "Engagement rings.", href: "/engagement-rings",
-  desktop: "/media/hero/one-yellow.webp", mobile: "/media/hero/one-yellow-m.webp", pos: "50% 50%", posM: "50% 30%" };
+  desktop: "/media/hero/one-yellow.webp", mobile: "/media/hero/one-yellow-m.webp", pos: "50% 50%", posM: "80% 0%" }; // phone: framing "D" — hand and ring in the middle, glasses at the top
 const slides = ONE_PHOTO ? [ONE] : allSlides;
 import Logo from "./Logo";
 
@@ -97,7 +97,7 @@ export default function Hero() {
   const tap = (d: number) => { if (Date.now() - downAt.current < 320) go(iRef.current + d); };
   const s = slides[i];
   return (
-    <section className="hero cover" id="hero" aria-label="Hero" ref={secRef}
+    <section className={`hero cover${slides.length < 2 ? " one" : ""}`} id="hero" aria-label="Hero" ref={secRef}
       onPointerDown={() => { paused.current = true; downAt.current = Date.now(); }}
       onPointerUp={() => { paused.current = false; }} onPointerCancel={() => { paused.current = false; }} onPointerLeave={() => { paused.current = false; }}>
       {/* the first photo is fetched first and only the one for this screen size */}
