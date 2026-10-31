@@ -11,7 +11,7 @@ import { slides as allSlides } from "@/lib/data";
    To go back to the original changing slides: set ONE_PHOTO = false (or delete this block and the "slides" line below). */
 const ONE_PHOTO = true;
 const ONE = { small: "", big: "Engagement rings.", href: "/engagement-rings",
-  desktop: "/media/hero/one-yellow.webp", mobile: "/media/hero/one-yellow-m.webp", pos: "50% 50%", posM: "80% 0%" }; // phone: framing "D" — hand and ring in the middle, glasses at the top
+  desktop: "/media/hero/one-yellow.webp", mobile: "/media/hero/one-yellow-tall-m.webp", pos: "50% 50%", posM: "50% 0%" }; // phone: the clean tall photo (851×1848), full width at its own ratio
 const slides = ONE_PHOTO ? [ONE] : allSlides;
 import Logo from "./Logo";
 
