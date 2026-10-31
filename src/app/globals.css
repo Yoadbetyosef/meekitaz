@@ -2627,7 +2627,7 @@ body.home-light:has(.home-page){--home-fg-auto:#1C1A1B;--home-accent-auto:#7E050
 .home-page :is(.ooo-eye i,.rh-eye i){background:var(--home-accent,var(--home-accent-auto))}
 .bgp{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:9999;width:300px;background:rgba(251,248,243,.96);backdrop-filter:blur(12px);color:#1C1A1B;border-radius:18px;padding:14px;box-shadow:0 20px 50px rgba(0,0,0,.3);font:500 12px var(--body)}
 .bgp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.bgp-top b{font:400 16px var(--display)}.bgp-top button{border:0;background:none;font-size:20px;cursor:pointer;color:#1C1A1B}
-.bgp-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:12px;background:rgba(28,26,27,.06);border-radius:12px;padding:3px}
+.bgp-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:12px;background:rgba(28,26,27,.06);border-radius:12px;padding:3px}
 .bgp-tabs button{border:0;background:none;border-radius:9px;padding:7px 2px;font:600 10.5px var(--body);color:#1C1A1B;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
 .bgp-tabs button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.12)}
 .bgp-tabs i{width:12px;height:12px;border-radius:50%;border:1px solid rgba(28,26,27,.25)}
@@ -2640,3 +2640,9 @@ body.home-light:has(.home-page){--home-fg-auto:#1C1A1B;--home-accent-auto:#7E050
 .bgp-row button,.bgp-reset{height:34px;border:0;border-radius:999px;background:#1C1A1B;color:#fff;padding:0 14px;font:700 11px var(--body);letter-spacing:.08em;cursor:pointer}
 .bgp-now{margin-top:10px;opacity:.75}.bgp-now code{font-size:12px}
 .bgp-reset{width:100%;margin-top:10px;background:transparent;color:#1C1A1B;border:1px solid rgba(28,26,27,.25)}
+
+/* top bar (nav pill + bag) — only when a colour is picked in the palette; glass = --nav-a */
+body.nav-custom .nav,body.nav-custom .cart{background:linear-gradient(100deg,color-mix(in srgb,var(--nav-bg) var(--nav-a,82%),transparent),color-mix(in srgb,color-mix(in srgb,var(--nav-bg) 82%,#000) var(--nav-a,82%),transparent) 45%,color-mix(in srgb,color-mix(in srgb,var(--nav-bg) 72%,#fff) var(--nav-a,82%),transparent) 80%,color-mix(in srgb,var(--nav-bg) var(--nav-a,82%),transparent)) !important}
+body.navfg-custom .nav,body.navfg-custom .nav .brand,body.navfg-custom .nav-search,body.navfg-custom .nav-wish,body.navfg-custom .cart,body.navfg-custom .cart svg{color:var(--nav-fg) !important}
+body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
+.bgp-glass{display:flex;align-items:center;gap:8px;margin-top:10px;font:600 11px var(--body)}.bgp-glass input{flex:1;accent-color:#1C1A1B}.bgp-glass span{width:38px;text-align:right;opacity:.7}

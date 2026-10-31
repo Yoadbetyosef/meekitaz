@@ -3,6 +3,7 @@ import { Prata, Cormorant_Garamond, Archivo, Didact_Gothic } from "next/font/goo
 import "./globals.css";
 import Nav from "@/components/Nav";
 import DesignLabGate from "@/components/DesignLabGate";
+import BgPalette from "@/components/BgPalette";
 import Footer from "@/components/Footer";
 import Toast from "@/components/Toast";
 import FreeStuds from "@/components/FreeStuds";
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <PressFx />
           <CartDrawer />
           <DesignLabGate />
+          <BgPalette />
         </CartProvider>
         </DailyMode>
       </body>

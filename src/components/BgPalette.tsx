@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-/* Home colour tester — for Yoad only. Open meekitaz.com/?palette to show the panel; it stays on in that browser until ×.
+/* Site colour tester (home colours + the top bar) — for Yoad only. Open meekitaz.com/?palette to show the panel; it stays on in that browser until ×.
    Four targets: background, headings, text, accent (the small red/pink labels). Choices apply only in your own browser
    (localStorage); visitors keep the defaults in globals.css until they are changed there. */
 const SWATCHES: { name: string; hex: string }[] = [
@@ -12,11 +12,14 @@ const SWATCHES: { name: string; hex: string }[] = [
   { name: "Sky", hex: "#DCEBF4" }, { name: "Baby pink", hex: "#F7D3DA" }, { name: "Blush", hex: "#EFC5CA" },
   { name: "Butter", hex: "#F7E9A8" }, { name: "Sage", hex: "#D6E4C8" }, { name: "Rose", hex: "#E8B4B8" },
 ];
-type T = "bg" | "head" | "fg" | "accent";
+type T = "bg" | "head" | "fg" | "accent" | "nav" | "navfg";
 const TARGETS: { k: T; label: string; v: string }[] = [
   { k: "bg", label: "Background", v: "--home-bg" }, { k: "head", label: "Headings", v: "--home-head" },
   { k: "fg", label: "Text", v: "--home-fg" }, { k: "accent", label: "Accent", v: "--home-accent" },
+  { k: "nav", label: "Bar", v: "--nav-bg" }, { k: "navfg", label: "Bar icons", v: "--nav-fg" },
 ];
+const EMPTY: Record<T, string | null> = { bg: null, head: null, fg: null, accent: null, nav: null, navfg: null };
+const GLASS = "mk-nav-glass";
 const ON = "mk-palette", key = (t: T) => "mk-home-" + t;
 const isLight = (hex: string) => {
   const n = parseInt(hex.slice(1), 16);
@@ -27,17 +30,24 @@ function apply(t: T, hex: string | null) {
   const b = document.body, v = TARGETS.find(x => x.k === t)!.v;
   if (hex) b.style.setProperty(v, hex); else b.style.removeProperty(v);
   if (t === "bg") b.classList.toggle("home-light", !!hex && isLight(hex));
+  if (t === "nav") b.classList.toggle("nav-custom", !!hex);
+  if (t === "navfg") b.classList.toggle("navfg-custom", !!hex);
 }
+const setGlass = (g: number) => document.body.style.setProperty("--nav-a", g + "%");
 
 export default function BgPalette() {
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<T>("bg");
-  const [vals, setVals] = useState<Record<T, string | null>>({ bg: null, head: null, fg: null, accent: null });
+  const [vals, setVals] = useState<Record<T, string | null>>(EMPTY);
+  const [glass, setG] = useState(82);
   const [hexIn, setHexIn] = useState("");
 
   useEffect(() => {
-    const v: Record<T, string | null> = { bg: null, head: null, fg: null, accent: null }; let on = false;
-    try { TARGETS.forEach(({ k }) => { v[k] = localStorage.getItem(key(k)); if (v[k]) apply(k, v[k]); }); on = localStorage.getItem(ON) === "1"; } catch {}
+    const v: Record<T, string | null> = { ...EMPTY }; let on = false;
+    try {
+      TARGETS.forEach(({ k }) => { v[k] = localStorage.getItem(key(k)); if (v[k]) apply(k, v[k]); }); on = localStorage.getItem(ON) === "1";
+      const g = +(localStorage.getItem(GLASS) || 0); if (g) { setGlass(g); setG(g); }
+    } catch {}
     if (new URLSearchParams(location.search).has("palette")) { on = true; try { localStorage.setItem(ON, "1"); } catch {} }
     setVals(v); setHexIn(v.bg || ""); setOpen(on);
   }, []);
@@ -48,14 +58,15 @@ export default function BgPalette() {
     apply(tab, h); setVals(s => ({ ...s, [tab]: h })); setHexIn(h); try { localStorage.setItem(key(tab), h); } catch {}
   };
   const clear = (t: T) => { apply(t, null); setVals(s => ({ ...s, [t]: null })); if (t === tab) setHexIn(""); try { localStorage.removeItem(key(t)); } catch {} };
-  const resetAll = () => TARGETS.forEach(({ k }) => clear(k));
+  const resetAll = () => { TARGETS.forEach(({ k }) => clear(k)); document.body.style.removeProperty("--nav-a"); setG(82); try { localStorage.removeItem(GLASS); } catch {} };
+  const glassTo = (g: number) => { setGlass(g); setG(g); try { localStorage.setItem(GLASS, String(g)); } catch {} };
   const hide = () => { setOpen(false); try { localStorage.removeItem(ON); } catch {} };
   const cur = vals[tab];
 
   if (!open) return null;
   return (
-    <div className="bgp" role="dialog" aria-label="Home colours">
-      <div className="bgp-top"><b>Home colours</b><button onClick={hide} aria-label="Hide">×</button></div>
+    <div className="bgp" role="dialog" aria-label="Site colours">
+      <div className="bgp-top"><b>Site colours</b><button onClick={hide} aria-label="Hide">×</button></div>
       <div className="bgp-tabs">
         {TARGETS.map(t => (
           <button key={t.k} className={tab === t.k ? "on" : ""} onClick={() => { setTab(t.k); setHexIn(vals[t.k] || ""); }}>
@@ -74,8 +85,11 @@ export default function BgPalette() {
         <input type="text" value={hexIn} placeholder="#4B1425" onChange={e => setHexIn(e.target.value)} onKeyDown={e => e.key === "Enter" && pick(hexIn)} aria-label="Hex" />
         <button onClick={() => pick(hexIn)}>Set</button>
       </div>
+      {tab === "nav" && (
+        <label className="bgp-glass">Glass <input type="range" min={40} max={100} value={glass} onChange={e => glassTo(+e.target.value)} /> <span>{glass === 100 ? "solid" : glass + "%"}</span></label>
+      )}
       <div className="bgp-now">
-        {TARGETS.find(t => t.k === tab)!.label}: {cur ? <><code>{cur}</code> · <button className="bgp-x" onClick={() => clear(tab)}>default</button></> : tab === "bg" ? "site default" : "automatic (matches background)"}
+        {TARGETS.find(t => t.k === tab)!.label}: {cur ? <><code>{cur}</code> · <button className="bgp-x" onClick={() => clear(tab)}>default</button></> : tab === "bg" || tab === "nav" || tab === "navfg" ? "site default" : "automatic (matches background)"}
       </div>
       <button className="bgp-reset" onClick={resetAll}>Reset everything</button>
     </div>
