@@ -1,17 +1,25 @@
 import ProductBrowser from "@/components/ProductBrowser";
 import FloatingHeroVideo from "@/components/FloatingHeroVideo";
 import { getProductsByQuery } from "@/lib/shopify";
-import { FLOATING_QUERY } from "@/lib/ringfilters";
+import Link from "next/link";
+import { floatingQuery } from "@/lib/ringfilters";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Floating Collection — MEEKITAZ",
   description: "No prongs, no bezel: each lab-grown diamond threaded onto the gold through a tiny drilled channel, so light comes in from every side.",
 };
 
 /* /floating · design B: the film and the promise, then how it floats (drilled, threaded, free), then the pieces. */
-export default async function FloatingPage() {
-  const r = await getProductsByQuery(FLOATING_QUERY, { first: 24, sort: "new" }).catch(() => null);
+export default async function FloatingPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
+  const { type = "" } = await searchParams;
+  const kind = type === "Bracelets" ? "Bracelets" : "";
+  const [r, allPic, brPic] = await Promise.all([
+    getProductsByQuery(floatingQuery(kind), { first: 24, sort: "new" }).catch(() => null),
+    getProductsByQuery(floatingQuery(""), { first: 1, sort: "new" }).then(x => x?.products[0]?.image?.url || null).catch(() => null),
+    getProductsByQuery(floatingQuery("Bracelets"), { first: 1, sort: "new" }).then(x => x?.products[0]?.image?.url || null).catch(() => null),
+  ]);
+  const circles = [{ k: "", label: "All", img: allPic }, { k: "Bracelets", label: "Bracelets", img: brPic }].filter(c => c.img);
   return (
     <main className="flp">
       <section className="flp-hero">
@@ -36,7 +44,14 @@ export default async function FloatingPage() {
         </div>
       </section>
       <div className="catbody" id="results">
-        {r && r.products.length > 0 && <ProductBrowser handle="floating" sort0="new" initial={r.products} hasNext={r.hasNext} cursor={r.cursor} />}
+        <section className="shapes" aria-label="Jewelry type"><div className="wrap"><div className="ooo-circles"><div className="sp-row">
+          {circles.map(c => (
+            <Link key={c.label} href={c.k ? `/floating?type=${c.k}#results` : "/floating#results"} scroll={false} className={`sp${kind === c.k ? " on" : ""}`} aria-current={kind === c.k ? "page" : undefined}>
+              <span className="sp-img"><img src={c.img!} alt="" loading="lazy" /></span><b>{c.label}</b>
+            </Link>
+          ))}
+        </div></div></div></section>
+        {r && r.products.length > 0 && <ProductBrowser key={kind} handle="floating" style={kind} sort0="new" initial={r.products} hasNext={r.hasNext} cursor={r.cursor} />}
       </div>
     </main>
   );
