@@ -15,7 +15,7 @@ export default async function FloatingPage() {
   return (
     <main className="flp">
       <section className="flp-hero">
-        <FloatingHeroVideo />
+        <div className="flp-card"><FloatingHeroVideo /></div>
         <div className="flp-tx">
           <p className="fl-eye"><i />Floating collection</p>
           <h1>Floating.<em>Light, all the way through.</em></h1>
