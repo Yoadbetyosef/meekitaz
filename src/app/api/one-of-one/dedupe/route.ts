@@ -11,10 +11,11 @@ export async function GET(req: NextRequest) {
   const ok = process.env.CRON_SECRET && (req.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}` || sp.get("key") === process.env.CRON_SECRET);
   if (!ok) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const seen = new Map<string, string>(), extra: string[] = []; let after: string | null = null;
+  type Page = { products: { pageInfo: { hasNextPage: boolean; endCursor: string }; nodes: { id: string; tags: string[] }[] } };
   for (let i = 0; i < 20; i++) {
-    const d = await adminGraphql<{ products: { pageInfo: { hasNextPage: boolean; endCursor: string }; nodes: { id: string; tags: string[] }[] } }>(
+    const d: Page | null = await adminGraphql<Page>(
       `query($a:String){ products(first:250, after:$a, query:"tag:'One of One'", sortKey:ID){ pageInfo{ hasNextPage endCursor } nodes{ id tags } } }`, { a: after });
-    for (const n of d?.products.nodes || []) { const sku = n.tags.find(t => t.startsWith("CGD-")); if (!sku) continue; if (seen.has(sku)) extra.push(n.id); else seen.set(sku, n.id); }
+    for (const n of d?.products.nodes || []) { const sku = n.tags.find((t: string) => t.startsWith("CGD-")); if (!sku) continue; if (seen.has(sku)) extra.push(n.id); else seen.set(sku, n.id); }
     if (!d?.products.pageInfo.hasNextPage) break; after = d.products.pageInfo.endCursor;
   }
   for (let i = 0; i < extra.length; i += 20) await adminGraphql(`mutation{ ${extra.slice(i, i + 20).map((id, k) => `d${k}: productDelete(input:{ id:"${id}" }){ deletedProductId }`).join(" ")} }`, {});
