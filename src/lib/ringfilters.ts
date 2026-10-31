@@ -119,5 +119,6 @@ export function oneOfOneQuery(handle: string, style: string): string {
 /** The Floating collection: every piece made with the house floating setting (named "Floating …"). */
 export const FLOATING_QUERY = "tag:Floating"; // only the pieces picked into the collection (the catalogue's "Floating … Drop Earrings" are not part of it) // plus one-of-ones picked into the collection (tag "Floating")
 export function floatingQuery(kind: string): string {
-  return kind === "Bracelets" ? `(${FLOATING_QUERY}) AND tag:'Bracelets'` : FLOATING_QUERY;
+  const t: Record<string, string> = { Bracelets: "tag:'Bracelets'", Earrings: "tag:'Earrings'", Necklaces: "(tag:'Necklaces' OR tag:'Pendants')" };
+  return t[kind] ? `(${FLOATING_QUERY}) AND ${t[kind]}` : FLOATING_QUERY;
 }
