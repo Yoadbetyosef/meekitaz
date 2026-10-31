@@ -16,11 +16,12 @@ const MOODS: Mood[] = [
    our colours, and two fashion blocks break the grid. The film plays on hover (desktop) or when the card is in view (phone). */
 function Card({ it, k }: { it: ReelItem; k: number }) {
   const v = useRef<HTMLVideoElement>(null), box = useRef<HTMLAnchorElement>(null);
+  const [playing, setPlaying] = useState(false); // the photo stays until the film is really playing — never a black square
   useEffect(() => {
     const el = box.current, vid = v.current; if (!el || !vid) return;
     vid.muted = true; vid.defaultMuted = true;
     if (!window.matchMedia("(hover: none)").matches) return;
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) vid.play().catch(() => {}); else vid.pause(); }, { threshold: 0.75 });
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) vid.play().catch(() => {}); else vid.pause(); }, { threshold: 0.6 });
     io.observe(el); return () => io.disconnect();
   }, []);
   const [ct, rest] = [it.title.split(" · ")[1] || "", it.title.split(" · ")[0]];
@@ -31,7 +32,8 @@ function Card({ it, k }: { it: ReelItem; k: number }) {
         <span className="rts-tag">Ready to ship</span>
         <span className="rts-heart" onClick={e => e.preventDefault()}><WishHeart item={{ handle: it.handle, title: it.title, image: it.image || "", price: it.price, compareAt: it.compare || null }} /></span>
         {it.image && <img src={it.image} alt={it.title} loading={k < 6 ? "eager" : "lazy"} />}
-        {it.video && <video ref={v} src={it.video} muted loop playsInline preload="none" />}
+        {it.video && <video ref={v} className={playing ? "on" : ""} src={it.video} poster={it.image || undefined} muted loop playsInline preload="none" onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} />}
+        {it.video && !playing && <span className="rts-play" aria-hidden="true" onClick={e => { e.preventDefault(); v.current?.play().catch(() => {}); }}><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg></span>}
       </div>
       <div className="rts-meta"><div><b>{rest}</b><span>{ct ? `${ct} · ` : ""}lab-grown</span></div><em>{usd(it.price)}</em></div>
     </Link>
