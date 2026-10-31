@@ -11,7 +11,7 @@ export default function FloatingFilm() {
           <p className="fl-quote">&ldquo;Is it even set?&rdquo; Yes. Just not the way you&rsquo;re used to.</p>
           <p className="fl-body">Our floating setting threads each diamond onto the gold through a tiny drilled channel. With no metal around it, the stone takes in light from above, below and behind, and throws it back as fire you notice from across the room.</p>
           <div className="fl-stat"><div><b>No</b><span>prongs</span></div><div><b>360&deg;</b><span>light</span></div><div><b>1</b><span>house method</span></div></div>
-          <a href="/floating" className="pill fl-btn">Shop floating &rarr;</a>
+          <a href="/floating" className="pill fl-btn">Shop floating</a>
         </div>
       </div>
     </section>
