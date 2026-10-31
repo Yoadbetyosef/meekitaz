@@ -2613,3 +2613,11 @@ body.reel-open .mk-page{min-height:0}
 @media(max-width:900px){.rts-grid{grid-template-columns:repeat(2,1fr);gap:12px}.rts-mood{grid-column:span 2;min-height:360px;padding:24px}.rts-meta b{font-size:15px}.rts-media{border-radius:18px}}
 
 .cd-li-size{grid-column:1/-1;margin-top:10px}
+
+/* ===== TRIAL (2026-10-30): home background #4B1425 (deep plum) in place of the Mist blue-grey.
+   Original: --blue-light #E4E8EC on the home page, #DFE4EA on One of One / Ready to Ship. To revert, delete this block. ===== */
+body:has(.home-page){--blue-light:#4B1425}
+.home-page .ooo-wrap,.home-page .ooo-circ-wrap,.home-page .rh-wrap{background:#4B1425}
+.home-page .sec,.home-page .mkfilm,.home-page .pr,.home-page .ooo,.home-page .rh{color:#FBF8F3}
+.home-page .ooo-eye,.home-page .rh-eye,.home-page .ooo-h em{color:#EFC5CA}
+.home-page .ooo-eye i,.home-page .rh-eye i{background:#EFC5CA}
