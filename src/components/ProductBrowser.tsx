@@ -15,7 +15,7 @@ const MOOD: Record<string, { src: string; poster: string; reveal?: Reveal }> = {
 };
 
 
-export default function ProductBrowser({ handle, style = "", type = "", initial, hasNext: h0, cursor: c0, sort0 = "best" }: { handle: string; style?: string; type?: string; initial: Product[]; hasNext: boolean; cursor: string | null; sort0?: string }) {
+export default function ProductBrowser({ handle, style = "", type = "", initial, hasNext: h0, cursor: c0, sort0 = "best", slot, slotAt = 4 }: { handle: string; style?: string; type?: string; initial: Product[]; hasNext: boolean; cursor: string | null; sort0?: string; slot?: React.ReactNode; slotAt?: number }) {
   const [items, setItems] = useState<Product[]>(initial);
   const [hasNext, setHasNext] = useState(h0);
   const [cursor, setCursor] = useState<string | null>(c0);
@@ -47,6 +47,7 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
             <Fragment key={p.id}>
               {/* earrings: the silent mood clip sits after the first two rows (CSS order places it; 6 cards before it on desktop, 4 on phones) */}
               {MOOD[handle] && i === 4 && items.length > 4 && <GridMood src={MOOD[handle].src} poster={MOOD[handle].poster} reveal={MOOD[handle].reveal} />}
+              {slot && i === slotAt && <div className="pgrid-slot">{slot}</div>}
               <DesignCard p={p} />
             </Fragment>
           ))}
