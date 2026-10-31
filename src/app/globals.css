@@ -2835,8 +2835,13 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 .cover.one::after{background:linear-gradient(180deg,transparent 45%,rgba(30,4,4,.2) 60%,rgba(30,4,4,.8))}
 /* cover "1" (approved 2026-10-31): the wordmark is a 25% white watermark spanning the bottom, cut off by the bottom edge;
    above it, on the left, a small kicker + smaller headline + compact button, then the claims — nothing touching */
-.cover.one .cv-seal{display:grid;width:66px;height:66px;top:auto;left:auto;right:4vw;bottom:calc(35vw + 13px)} /* S1 (approved): beside the button */
-.cover.one .cv-seal b{font-size:21px}.cover.one .cv-seal span{font-size:6px}
+.cover.one .cv-seal{display:grid;width:84px;height:84px;top:auto;left:auto;right:3vw;bottom:calc(35vw + 6px);transform:rotate(10deg);transform-origin:50% 50%} /* S1 (approved): beside the button, 84px, no extra scale */
+.cover.one .cv-seal .rg text{font-size:8.4px}
+.cover.one .cv-seal .fc{inset:23%}
+.cover.one .cv-seal .five{font-size:21px}
+.cover.one .cv-seal .st{gap:1.5px;margin-top:3px}.cover.one .cv-seal .st svg{width:6.5px;height:6.5px}
+.cover.one .cv-seal .yr{font-size:17px}
+.cover.one .cv-seal .tr{font-size:5.2px;line-height:1.3;letter-spacing:.12em;margin:3px auto 0;max-width:40px}
 .cover.one .cv-mast{top:auto;left:-8vw;right:auto;width:116vw;bottom:-5vw;opacity:.35;z-index:2}
 .cover.one .cv-mast svg{width:100%;filter:none}
 .cover.one .cv-bot{left:5.1vw;right:5.1vw;bottom:30vw;gap:0}
