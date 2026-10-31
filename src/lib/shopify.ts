@@ -351,7 +351,8 @@ function ownMetal(url: string, tags: string[]): boolean {
 /** The one-of-ones: products tagged "One of One". Sold ones (nothing left to sell) stay in the list, marked claimed. */
 export type OneOfOne = { handle: string; title: string; price: number; image?: string; claimed: boolean; isNew: boolean; sub?: string };
 /** Hand-picked one-of-ones, in this order (the home-page block). Missing or sold-out handles are skipped by the caller's fallback. */
-export async function getOneOfOneByHandles(handles: string[]): Promise<OneOfOne[]> {
+export async function getOneOfOneByHandles(handles0: string[]): Promise<OneOfOne[]> {
+  const handles = await currentHandles(handles0);
   const q = `query{ ${handles.map((h, k) => `p${k}: product(handle:"${h}"){ handle title tags createdAt availableForSale priceRange{ minVariantPrice{ amount } } featuredImage{ url } }`).join(" ")} }`;
   type N = { handle: string; title: string; tags: string[]; createdAt: string; availableForSale: boolean; priceRange: { minVariantPrice: { amount: string } }; featuredImage: { url: string } | null };
   const d = await sf<Record<string, N | null>>(q, {});
@@ -384,7 +385,13 @@ export async function getReel(first = 24, after: string | null = null, type = ""
   const p = d?.products;
   return { items: (p?.nodes || []).filter(n => n.availableForSale).map(reelItem), hasNext: !!p?.pageInfo.hasNextPage, cursor: p?.pageInfo.endCursor || null };
 }
-export async function getReelByHandles(handles: string[]): Promise<ReelItem[]> {
+/** Hand-picked handles may have been renamed for SEO: map each one to its current handle (old handles live on as tags "oldhandle-…"). */
+async function currentHandles(handles: string[]): Promise<string[]> {
+  const d = await sf<Record<string, { handle: string } | null>>(`query{ ${handles.map((h, k) => `p${k}: product(handle:"${h}"){ handle }`).join(" ")} }`, {});
+  return Promise.all(handles.map(async (h, k) => d?.[`p${k}`] ? h : (await findByOldHandle(h)) || h));
+}
+export async function getReelByHandles(handles0: string[]): Promise<ReelItem[]> {
+  const handles = await currentHandles(handles0);
   // one aliased lookup per handle (the Storefront search index does not filter on handle)
   const q = `query{ ${handles.map((h, k) => `p${k}: product(handle:"${h}"){ ${REEL_FIELDS} }`).join(" ")} }`;
   const d = await sf<Record<string, ReelNode | null>>(q, {}); // cached a few minutes, same reason
