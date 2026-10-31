@@ -1,5 +1,6 @@
 import Hero from "@/components/Hero";
 import Film from "@/components/Film";
+import FloatingFilm from "@/components/FloatingFilm";
 import Categories from "@/components/Categories";
 import HouseCodes from "@/components/HouseCodes";
 import NewFancy from "@/components/NewFancy";
@@ -15,6 +16,7 @@ export default function Home() {
     <main className="home-page">
       <Hero />
       <Film />
+      <FloatingFilm />
       <Categories />
       <NewFancy />
       <OneOfOne />
