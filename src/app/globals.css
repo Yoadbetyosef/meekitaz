@@ -2746,3 +2746,14 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 .cover.one .cv-mast .cv-issue{display:none}
 .cover.one .cv-seal{bottom:auto;top:calc(112px + env(safe-area-inset-top,0px))}
 }
+
+/* hero trial, one photo — desktop "4B": the wordmark runs vertically up the right edge as a translucent white watermark,
+   bigger than the screen so it is cut off top and bottom; the 2026 seal is smaller and moves left of it */
+.cv-edge{display:none}
+@media(min-width:768px){
+.cover.one .cv-mast{display:none}
+.cover.one .cv-edge{display:block;position:absolute;z-index:2;top:-12vh;left:calc(100% + 3vh);width:124vh;transform:rotate(90deg);transform-origin:0 0;color:#fff;opacity:.6;pointer-events:none}
+.cover.one .cv-edge svg{display:block;width:100%;height:auto}
+.cover.one .cv-seal{width:104px;height:104px;right:calc(26vh + 2vw);bottom:calc(5vh + 6px)}
+.cover.one .cv-seal b{font-size:32px}
+}
