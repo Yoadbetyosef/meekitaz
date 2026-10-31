@@ -2618,8 +2618,9 @@ body.reel-open .mk-page{min-height:0}
 
 /* ===== Home colours: back to the original (2026-10-30, the plum #4B1425 trial was reverted) — Mist #E4E8EC page, #DFE4EA One of One / Ready to Ship.
    meekitaz.com/?palette can still try other colours in your own browser only; the rules below act only while a colour is picked there (body.home-custom). ===== */
-body:has(.home-page){--blue-light:var(--home-bg,#E4E8EC)}
-.home-page .ooo-wrap,.home-page .ooo-circ-wrap,.home-page .rh-wrap{background:var(--home-bg,#DFE4EA)}
+/* TRIAL (2026-10-30): neutral light grey #ECECEA. To revert: put back #E4E8EC (first line) and #DFE4EA (second line). */
+body:has(.home-page){--blue-light:var(--home-bg,#ECECEA)}
+.home-page .ooo-wrap,.home-page .ooo-circ-wrap,.home-page .rh-wrap{background:var(--home-bg,#ECECEA)}
 body.home-custom:has(.home-page){--home-fg-auto:#FBF8F3;--home-accent-auto:#EFC5CA}
 body.home-custom.home-light:has(.home-page){--home-fg-auto:#1C1A1B;--home-accent-auto:#7E0508}
 body.home-custom .home-page :is(.sec,.mkfilm,.pr,.ooo,.rh){color:var(--home-fg,var(--home-fg-auto))}
