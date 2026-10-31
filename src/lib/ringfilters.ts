@@ -117,4 +117,4 @@ export function oneOfOneQuery(handle: string, style: string): string {
 }
 
 /** The Floating collection: every piece made with the house floating setting (named "Floating …"). */
-export const FLOATING_QUERY = "title:Floating";
+export const FLOATING_QUERY = "title:Floating OR tag:Floating"; // plus one-of-ones picked into the collection (tag "Floating")
