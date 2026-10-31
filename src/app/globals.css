@@ -2838,10 +2838,10 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 .cover.one .cv-seal{display:none}
 .cover.one .cv-mast{top:auto;left:-5.1vw;right:auto;width:110.2vw;bottom:-7.9vw;opacity:.25;z-index:2}
 .cover.one .cv-mast svg{width:100%;filter:none}
-.cover.one .cv-bot{left:5.1vw;right:5.1vw;bottom:24.2vw;gap:0}
-.cover.one .cv-line h1{font-size:6.3vw;line-height:1;white-space:nowrap}
+.cover.one .cv-bot{left:5.1vw;right:5.1vw;bottom:40vw;gap:0}
+.cover.one .cv-line h1{font-size:7.45vw;line-height:1;white-space:nowrap}
 .cover.one .cv-line h1::before{content:"The Engagement Issue";display:block;font:600 2.2vw var(--body);letter-spacing:.28em;color:var(--butter,#F7E9A8);margin-bottom:8px;text-shadow:0 1px 8px rgba(0,0,0,.35)}
-.cover.one .cv-row{align-items:flex-start;gap:7.5vw;margin-top:14px}
-.cover.one .cv-pill{width:auto;height:38px;padding:0 18px;font-size:10px;letter-spacing:.16em}
+.cover.one .cv-row{align-items:flex-start;gap:22px;margin-top:16px}
+.cover.one .cv-pill{width:auto;height:48px;padding:0 28px;font-size:12px;letter-spacing:.16em}
 .cover.one .cv-claims{font-size:2vw;gap:4px 12px}
 }
