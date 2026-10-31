@@ -2663,6 +2663,8 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 /* Floating collection · option C */
 .fl .fl-img{aspect-ratio:1;background:none;box-shadow:none;border-radius:0}
 .fl .fl-img img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 30px 40px rgba(28,26,27,.16))}
+/* the film has its own pale studio backdrop: its edges fade into the page so there is no box */
+.fl .fl-img video{width:100%;height:100%;object-fit:cover;display:block;-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent),linear-gradient(180deg,transparent,#000 7%,#000 92%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent),linear-gradient(180deg,transparent,#000 7%,#000 92%,transparent);mask-composite:intersect}
 .fl .fl-eye{font:700 11px var(--body);letter-spacing:.24em;text-transform:uppercase;color:#7E0508;display:flex;gap:8px;align-items:center;margin:0 0 14px}
 .fl .fl-eye i{width:7px;height:7px;border-radius:50%;background:#7E0508}
 .fl .fl-txt h2{font:400 clamp(40px,4.6vw,66px)/.98 var(--display);margin:0}

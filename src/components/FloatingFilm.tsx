@@ -1,10 +1,10 @@
-/* Home · Floating collection: the threaded marquise on the page itself, and copy set exactly like the film section above
+/* Home · Floating collection (sits right under Shop by category): a film of the threaded marquise, same square as the photo it replaced, and copy set exactly like the film section above
    (same headline size, same italic text, same button), with a hand-drawn marker circle around "Only". */
 export default function FloatingFilm() {
   return (
     <section className="mkfilm flip fl" aria-label="Floating collection">
       <div className="mkfilm-in">
-        <div className="mkfilm-vid fl-img"><img src="/media/floating-diamond.webp" alt="A marquise diamond threaded onto a gold chain through a drilled channel, with no prongs" loading="lazy" /></div>
+        <div className="mkfilm-vid fl-img"><video src="/media/floating-diamond.mp4" poster="/media/floating-diamond-poster.webp" muted loop playsInline autoPlay preload="metadata" aria-label="A marquise diamond threaded onto a gold chain through a drilled channel, with no prongs" /></div>
         <div className="mkfilm-txt fl-txt">
           <span className="fl-note">
             Only at Meekitaz.

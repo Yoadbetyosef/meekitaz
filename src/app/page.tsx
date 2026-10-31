@@ -16,8 +16,8 @@ export default function Home() {
     <main className="home-page">
       <Hero />
       <Film />
-      <FloatingFilm />
       <Categories />
+      <FloatingFilm />
       <NewFancy />
       <OneOfOne />
       <ReelStrip />
