@@ -7,7 +7,7 @@ export default function FloatingFilm() {
         <div className="mkfilm-vid fl-img"><img src="/media/floating-diamond.webp" alt="A marquise diamond threaded onto a gold chain through a drilled channel, with no prongs" loading="lazy" /></div>
         <div className="mkfilm-txt fl-txt">
           <span className="fl-note">
-            <span className="fl-circ">Only<svg viewBox="0 0 200 100" preserveAspectRatio="none" aria-hidden="true"><path d="M18,52 C20,18 120,6 176,26 C206,38 190,82 120,90 C60,96 10,84 14,50 C16,40 28,30 46,24" /></svg></span> at Meekitaz.
+            Only at Meekitaz.
           </span>
           <h2>Light, all the way through.</h2>
           <p>&ldquo;Is it even set?&rdquo; Yes. Just not the way you&rsquo;re used to. Our floating setting threads each diamond onto the gold through a tiny drilled channel, so light comes in from every side.</p>
