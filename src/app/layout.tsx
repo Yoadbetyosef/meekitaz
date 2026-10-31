@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Prata, Cormorant_Garamond, Archivo, Didact_Gothic } from "next/font/google";
+import { Prata, Cormorant_Garamond, Archivo, Didact_Gothic, Mrs_Saint_Delafield } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import DesignLabGate from "@/components/DesignLabGate";
@@ -21,6 +21,7 @@ import { categories } from "@/lib/data";
 const prata = Prata({ weight: "400", subsets: ["latin"], variable: "--f-display", display: "swap" });
 const cormorant = Cormorant_Garamond({ weight: ["500"], style: ["italic"], subsets: ["latin"], variable: "--f-sub", display: "swap" });
 const didact = Didact_Gothic({ weight: "400", subsets: ["latin"], variable: "--f-title", display: "swap" }); // jewelry (product) titles
+const script = Mrs_Saint_Delafield({ weight: "400", subsets: ["latin"], variable: "--f-script", display: "swap" }); // handwritten Meekitaz signature (home film card)
 const archivo = Archivo({ weight: ["300", "400", "600", "700"], subsets: ["latin"], variable: "--f-body", display: "swap" });
 
 export const metadata: Metadata = {
@@ -31,7 +32,7 @@ export const viewport: Viewport = { themeColor: "#C4DEEE", viewportFit: "cover" 
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable} ${didact.variable}`}>
+    <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable} ${didact.variable} ${script.variable}`}>
       <body>
         <DailyMode>
         <CartProvider>
