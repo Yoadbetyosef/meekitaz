@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminGraphql } from "@/lib/shopifyAdmin";
+import KEEP from "@/data/rts-keep-studs.json";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -23,9 +24,20 @@ export async function GET(req: NextRequest) {
   if (!ok) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const t0 = Date.now(); let repetitive = 0, stand = 0, kept = 0, failed = 0;
 
+  // 0 · only ROUND studs are "endless": fancy-shape studs (emerald, oval, asscher, radiant…) come back, tagged keep-shape, and go through the photo check
+  const keepSet = new Set(KEEP as string[]); let restored = 0;
+  for (let round = 0; round < 4; round++) {
+    const d = await adminGraphql<{ products: { nodes: { id: string; handle: string }[] } }>(`query{ products(first:250, query:"tag:'repetitive' AND -tag:'keep-shape' AND title:Studs"){ nodes{ id handle } } }`, {});
+    const back = (d?.products.nodes || []).filter(n => keepSet.has(n.handle)); if (!back.length) break;
+    for (let i = 0; i < back.length; i += 20) {
+      await adminGraphql(`mutation{ ${back.slice(i, i + 20).map((n, k) => `u${k}: productUpdate(product:{ id:"${n.id}", status:ACTIVE }){ userErrors{ message } } r${k}: tagsRemove(id:"${n.id}", tags:["curated-out","repetitive"]){ userErrors{ message } } a${k}: tagsAdd(id:"${n.id}", tags:["keep-shape"]){ userErrors{ message } }`).join(" ")} }`, {});
+    }
+    restored += back.length;
+  }
+
   // 2 · lying on black, or out
   if (process.env.ANTHROPIC_API_KEY) {
-    const d = await adminGraphql<{ products: { nodes: P[] } }>(`query{ products(first:150, query:"tag:'Ready to Ship' AND status:active AND -tag:'bg-checked' AND -(title:'Martini Earrings' OR title:Studs OR title:'Tennis Bracelet' OR title:'Tennis Necklace' OR title:'Solitaire Ring')"){ nodes{ id title featuredMedia{ preview{ image{ url } } } } } }`, {});
+    const d = await adminGraphql<{ products: { nodes: P[] } }>(`query{ products(first:150, query:"tag:'Ready to Ship' AND status:active AND -tag:'bg-checked' AND -(title:'Martini Earrings' OR (title:Studs AND -tag:'keep-shape') OR title:'Tennis Bracelet' OR title:'Tennis Necklace' OR title:'Solitaire Ring')"){ nodes{ id title featuredMedia{ preview{ image{ url } } } } } }`, {});
     const out: string[] = [], pass: string[] = [];
     const nodes = d?.products.nodes || [];
     for (let i = 0; i < nodes.length && Date.now() - t0 < 150_000; i += 12) {
@@ -50,11 +62,11 @@ export async function GET(req: NextRequest) {
   }
   // 1 · repetitive models
   for (let round = 0; round < 6 && Date.now() - t0 < 230_000; round++) {
-    const d = await adminGraphql<{ products: { nodes: { id: string }[] } }>(`query{ products(first:200, query:"tag:'Ready to Ship' AND status:active AND (title:'Martini Earrings' OR title:Studs OR title:'Tennis Bracelet' OR title:'Tennis Necklace' OR title:'Solitaire Ring')"){ nodes{ id } } }`, {});
+    const d = await adminGraphql<{ products: { nodes: { id: string }[] } }>(`query{ products(first:200, query:"tag:'Ready to Ship' AND status:active AND (title:'Martini Earrings' OR (title:Studs AND -tag:'keep-shape') OR title:'Tennis Bracelet' OR title:'Tennis Necklace' OR title:'Solitaire Ring')"){ nodes{ id } } }`, {});
     const ids = (d?.products.nodes || []).map(n => n.id); if (!ids.length) break;
     await draftMany(ids, "repetitive"); repetitive += ids.length;
   }
 
-  console.log(`[rts-curate] repetitive ${repetitive}, not on black ${stand}, kept ${kept}, failed ${failed}`);
+  console.log(`[rts-curate] restored ${restored}, repetitive ${repetitive}, not on black ${stand}, kept ${kept}, failed ${failed}`);
   return NextResponse.json({ repetitive, stand, kept, failed });
 }
