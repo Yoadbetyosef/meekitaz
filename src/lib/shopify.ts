@@ -222,7 +222,7 @@ async function getCollectionPageRaw(handle: string, opts: { first?: number; afte
       edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } images(first:3){ edges{ node{ url altText } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } } }`,
     { handle, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.reverse });
   const c = d?.collection?.products; if (!c) return null;
-  const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026" || (t === "Ready to Ship" && handle !== "ready-to-ship"))).map(n => ({
+  const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026" || (t === "Ready to Ship" && handle !== "ready-to-ship") || (t === "One of One" && handle !== "one-of-one"))).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
     compareAt: +n.compareAtPriceRange.minVariantPrice.amount > +n.priceRange.minVariantPrice.amount ? +n.compareAtPriceRange.minVariantPrice.amount : 0,
     image: cardImage(n as unknown as Parameters<typeof cardImage>[0]), modelImage: n.model?.value || handPhoto(n as unknown as { images?: { edges: { node: { url: string } }[] } }),
@@ -239,7 +239,7 @@ async function getProductsByQueryRaw(query: string, opts: { first?: number; afte
     `query($q:String!,$first:Int!,$after:String,$key:ProductSortKeys,$rev:Boolean){ products(first:$first, after:$after, query:$q, sortKey:$key, reverse:$rev){
       pageInfo{ hasNextPage endCursor }
       edges{ node{ id handle title tags priceRange{ minVariantPrice{ amount currencyCode } } compareAtPriceRange{ minVariantPrice{ amount } } featuredImage{ url altText } images(first:3){ edges{ node{ url altText } } } model: metafield(namespace:"meekitaz", key:"model_image"){ value } } } } }`,
-    { q: /Ready to Ship/.test(query) ? query : `(${query}) AND -tag:'Ready to Ship'`, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.rev }); // Ready to Ship lives only in its own feed
+    { q: /Ready to Ship|One of One/.test(query) ? query : `(${query}) AND -tag:'Ready to Ship' AND -tag:'One of One'`, first: Math.min(120, (opts.first || 24) * 4), after: opts.after || null, key: so.key, rev: so.rev }); // Ready to Ship lives only in its own feed
   const c = d?.products; if (!c) return null;
   const products = c.edges.map(e => e.node).filter(n => !n.tags.some(t => t.toLowerCase() === "fifa world cup 2026")).map(n => ({
     id: n.id, handle: n.handle, title: n.title, price: n.priceRange.minVariantPrice.amount, currency: n.priceRange.minVariantPrice.currencyCode,
