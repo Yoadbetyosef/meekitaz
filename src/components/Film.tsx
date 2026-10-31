@@ -38,6 +38,7 @@ export default function Film() {
           <h2>Made, not mined.<br />Worn loudly.</h2>
           <p>Every Meekitaz stone is IGI or GIA certified, grown above ground and set in our New York atelier. Same fire. Lighter footprint.</p>
           <Link href="/engagement-rings" className="pill">Shop engagement rings</Link>
+          <svg className={`hc-sig${write ? " on" : ""}`} viewBox="0 0 640 200" aria-hidden="true"><text x="18" y="150">Meekitaz</text></svg>
         </div>
         <div className="mkfilm-vid hc-wrap" ref={wrap}>
           <div className="hc" ref={card}>
@@ -56,7 +57,6 @@ export default function Film() {
             <div className="hc-meta"><span>No. 001 / 2026</span><span>Lab-grown</span></div>
             <div className="hc-stats"><div><small>Origin</small>Grown</div><div><small>Grade</small>IGI · GIA</div><div><small>Fire</small>Same</div></div>
             <div className="hc-sheen" aria-hidden="true" /><div className="hc-glare" aria-hidden="true" />
-            <svg className={`hc-sig${write ? " on" : ""}`} viewBox="0 0 640 200" aria-hidden="true"><text x="18" y="150">Meekitaz</text></svg>
           </div>
         </div>
       </div>

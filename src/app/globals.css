@@ -2775,10 +2775,10 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 #film .hc-stats small{display:block;font:600 8.5px var(--body);letter-spacing:.14em;text-transform:uppercase;opacity:.5}
 #film .hc-sheen{position:absolute;inset:0;border-radius:26px;pointer-events:none;mix-blend-mode:color-dodge;opacity:.5;background:linear-gradient(115deg,transparent 20%,rgba(255,120,200,.55) 35%,rgba(120,220,255,.55) 45%,rgba(255,240,140,.55) 55%,transparent 70%);background-size:220% 220%;background-position:var(--hx,50%) var(--hy,50%)}
 #film .hc-glare{position:absolute;inset:0;border-radius:26px;pointer-events:none;background:radial-gradient(circle at var(--hx,50%) var(--hy,30%),rgba(255,255,255,.5),transparent 45%)}
-#film .hc-sig{position:absolute;right:-64px;bottom:92px;width:400px;height:auto;overflow:visible;pointer-events:none;transform:translateZ(60px) rotate(-8deg);filter:drop-shadow(0 0 4px rgba(255,255,255,.9)) drop-shadow(0 0 14px rgba(255,214,180,.8)) drop-shadow(0 8px 18px rgba(28,26,27,.25))}
+#film .hc-sig{display:block;width:min(420px,100%);height:auto;margin:18px 0 0 -10px;overflow:visible;pointer-events:none;filter:drop-shadow(0 0 3px rgba(255,255,255,.9)) drop-shadow(0 0 12px rgba(255,214,180,.75)) drop-shadow(0 6px 14px rgba(28,26,27,.28))} /* under the button, not on the film */
 #film .hc-sig text{font-family:var(--f-script),cursive;font-size:150px;fill:rgba(255,255,255,0);stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:2600;stroke-dashoffset:2600}
 #film .hc-sig.on text{animation:hcWrite 3.2s cubic-bezier(.45,.05,.3,1) .3s forwards}
 @keyframes hcWrite{78%{stroke-dashoffset:0;fill:rgba(255,255,255,0)}100%{stroke-dashoffset:0;fill:#fff}}
 #film .mkctl{z-index:3}
-@media(max-width:767px){#film .hc{width:min(340px,86vw)}#film .hc-sig{width:300px;right:-26px;bottom:78px}}
+@media(max-width:767px){#film .hc{width:min(340px,86vw)}#film .hc-sig{width:280px;margin:14px auto 0}}
 @media(prefers-reduced-motion:reduce){#film .hc-sig text{stroke-dashoffset:0;fill:#fff;animation:none}}
