@@ -11,7 +11,7 @@ const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
    here, and when it sells it stays, stamped Claimed. The photo's own blue is the section's background, so she sits in it edge to edge. */
 export default async function OneOfOne() {
   const picks = await getOneOfOneByHandles(PICKS).catch(() => []);
-  const items = picks.length >= 4 ? picks : [...picks, ...(await getOneOfOne(8).catch(() => [])).filter(x => !PICKS.includes(x.handle))].slice(0, 4);
+  const items = picks.length >= 4 ? picks : [...picks, ...(await getOneOfOne(8).catch(() => [])).filter(x => !picks.some(p => p.handle === x.handle))].slice(0, 4);
   const preview = false; // only pieces tagged "One of One" ever show here
   const claimed = items.filter(i => i.claimed).length, left = items.length - claimed;
   return (
