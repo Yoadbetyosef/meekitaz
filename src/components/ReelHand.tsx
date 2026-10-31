@@ -40,7 +40,7 @@ export default function ReelHand({ items }: { items: Item[] }) {
   return (
     <section className="rh-wrap" aria-label="Ready to Ship" ref={ref}>
       <div className="rh">
-        <img className="rh-m" src="/brand/meekitaz-m-white.png" alt="" aria-hidden="true" loading="lazy" />
+        <img className="rh-m" src="/brand/meekitaz-logo-white.png" alt="" aria-hidden="true" loading="lazy" />
         <div className="rh-copy">
           <p className="rh-eye"><i />In stock</p>
           <h2 className="rh-h">Ready to ship.</h2>

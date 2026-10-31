@@ -2363,7 +2363,7 @@ body:has(.home-page){--blue-light:#E4E8EC}
 /* ===== Home · Ready to Ship — "The Hand": a fanned deck of filmed pieces on the One of One Mist, the big M behind; the front card deals away ===== */
 .rh-wrap{position:relative;z-index:6;overflow:hidden;background:#DFE4EA;padding:90px 0 110px}
 .rh{width:min(1300px,92vw);margin:0 auto;position:relative;display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center;color:var(--ink)}
-.rh-m{position:absolute;left:calc((100vw - min(1300px,92vw)) / -2 - 4vw);top:50%;transform:translateY(-50%);width:min(52vw,760px);height:auto;opacity:.75;z-index:0;pointer-events:none} /* the big white M sits behind the title, not the cards */
+.rh-m{position:absolute;left:calc((100vw - min(1300px,92vw)) / -2 - 3vw);top:50%;transform:translateY(-50%);width:min(68vw,1000px);height:auto;opacity:.8;z-index:0;pointer-events:none} /* the white Meekitaz wordmark, big, behind the title */
 .rh-copy{position:relative;z-index:2;max-width:560px}
 .rh-eye{font:700 11px var(--body);letter-spacing:.24em;text-transform:uppercase;color:#7E0508;margin:0 0 12px;display:flex;align-items:center;gap:10px}
 .rh-eye i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#7E0508;animation:oooBlink 1.4s infinite}
@@ -2391,7 +2391,7 @@ body:has(.home-page){--blue-light:#E4E8EC}
 .rh-card[data-pos="out"]{transform:rotate(-28deg) translate(-140px,-520px);opacity:0;z-index:6;pointer-events:none}
 .rh-card:not([data-pos="0"]):not([data-pos="1"]):not([data-pos="2"]):not([data-pos="3"]):not([data-pos="4"]):not([data-pos="out"]){transform:translateY(40px) scale(.9);opacity:0;z-index:0;pointer-events:none}
 @media(prefers-reduced-motion:reduce){.rh-card{transition:none}}
-@media(max-width:900px){.rh-wrap{padding:60px 0 70px}.rh{grid-template-columns:1fr;gap:30px}.rh-m{left:-30vw;top:0;transform:none;width:100vw;opacity:.5}.rh-hand{height:500px}.rh-card{width:240px;margin:-260px 0 0 -120px}.rh-lead{font-size:18px}}
+@media(max-width:900px){.rh-wrap{padding:60px 0 70px}.rh{grid-template-columns:1fr;gap:30px}.rh-m{left:-8vw;top:10px;transform:none;width:116vw;opacity:.6}.rh-hand{height:500px}.rh-card{width:240px;margin:-260px 0 0 -120px}.rh-lead{font-size:18px}}
 
 /* ===== /reel — the vertical video feed ===== */
 .rl-main{background:#0E0D0D;min-height:100vh}
