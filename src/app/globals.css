@@ -2825,10 +2825,10 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 @media(max-width:767px){.pgrid-slot:has(.op-tile){grid-column:1/-1;grid-row:auto}.op-tile{height:auto;min-height:0;aspect-ratio:4/5;border-radius:14px}}
 
 /* hero trial, one photo — phones (2026-10-31): the clean tall photo at full width and its own ratio (851×1848), no zoom, no top gap;
-   the hero is as tall as the photo and scrolls normally (not sticky), the floating menu crosses the top of the glasses;
+   the hero is as tall as the photo, the floating menu crosses the top of the glasses;
    logo, headline, button and claims sit live over the lower part with a soft shade under them */
 @media(max-width:767px){
-.hero.cover.one{position:relative;height:calc(100vw * 1848 / 851);min-height:0;background:#fff}
+.hero.cover.one{position:sticky;top:min(0px,calc(100svh - 100vw * 1848 / 851));height:calc(100vw * 1848 / 851);min-height:0;background:#fff} /* sticky again so the next section slides up over the cover; it pins once its bottom reaches the bottom of the screen, so the whole photo and text are seen first */
 .cover.one .hs{inset:0;--kz:1}
 .cover.one .hs img{object-fit:cover;object-position:50% 0% !important}
 .cover.one .hs.on img{animation:none;transform:none}
