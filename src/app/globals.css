@@ -2646,3 +2646,10 @@ body.home-custom .home-page :is(.ooo-eye i,.rh-eye i){background:var(--home-acce
 body.navfg-custom .nav,body.navfg-custom .nav .brand,body.navfg-custom .nav-search,body.navfg-custom .nav-wish,body.navfg-custom .cart,body.navfg-custom .cart svg{color:var(--nav-fg) !important}
 body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 .bgp-glass{display:flex;align-items:center;gap:8px;margin-top:10px;font:600 11px var(--body)}.bgp-glass input{flex:1;accent-color:#1C1A1B}.bgp-glass span{width:38px;text-align:right;opacity:.7}
+
+/* Ready to Ship cards: the photo is always there; the film fades in only once it is really playing */
+.rts-media video{opacity:0 !important;transition:opacity .35s}
+.rts-media video.on{opacity:1 !important}
+.rts-play{position:absolute;right:14px;bottom:18px;z-index:3;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);color:#fff;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.rts-play svg{width:16px;height:16px;margin-left:2px}
+@media(hover:hover){.rts-play{opacity:.85}}
