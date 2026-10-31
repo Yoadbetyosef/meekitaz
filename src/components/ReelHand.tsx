@@ -42,6 +42,7 @@ export default function ReelHand({ items }: { items: Item[] }) {
       <div className="rh">
         <img className="rh-m" src="/brand/meekitaz-m-white.png" alt="" aria-hidden="true" loading="lazy" />
         <div className="rh-copy">
+          <p className="rh-eye"><i />In stock</p>
           <h2 className="rh-h">Ready to ship.</h2>
           <Link href="/ready-to-ship" className="rh-btn">Shop ready to ship &rarr;</Link>
         </div>
