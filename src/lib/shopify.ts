@@ -214,7 +214,20 @@ export const SORTS: Record<string, { key: string; reverse: boolean }> = {
   best: { key: "BEST_SELLING", reverse: false }, new: { key: "CREATED", reverse: true },
   price_asc: { key: "PRICE", reverse: false }, price_desc: { key: "PRICE", reverse: true },
 };
+/* A collection page hides pieces that live elsewhere (Ready to Ship…). When a whole batch is hidden, fetch the next batch, so the page is
+   never empty while the collection still has pieces to show. */
 async function getCollectionPageRaw(handle: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
+  const want = opts.first || 24; let after = opts.after || null; const all: Product[] = []; let last: { products: Product[]; hasNext: boolean; cursor: string | null } | null = null;
+  for (let i = 0; i < 6; i++) {
+    last = await getCollectionBatch(handle, { ...opts, after });
+    if (!last) return all.length ? { products: all, hasNext: false, cursor: after } : null;
+    all.push(...last.products);
+    if (all.length >= want || !last.hasNext) break;
+    after = last.cursor;
+  }
+  return { products: all, hasNext: !!last?.hasNext, cursor: last?.cursor ?? null };
+}
+async function getCollectionBatch(handle: string, opts: { first?: number; after?: string | null; sort?: string } = {}): Promise<{ products: Product[]; hasNext: boolean; cursor: string | null } | null> {
   const so = SORTS[opts.sort || "best"] || SORTS.best;
   const d = await sf<{ collection: null | { products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; edges: { node: { id: string; handle: string; title: string; tags: string[]; priceRange: { minVariantPrice: { amount: string; currencyCode: string } }; compareAtPriceRange: { minVariantPrice: { amount: string } }; featuredImage?: { url: string; altText?: string } | null; model?: { value: string } | null } }[] } } }>(
     `query($handle:String!,$first:Int!,$after:String,$key:ProductCollectionSortKeys!,$rev:Boolean!){ collection(handle:$handle){ products(first:$first, after:$after, sortKey:$key, reverse:$rev){
