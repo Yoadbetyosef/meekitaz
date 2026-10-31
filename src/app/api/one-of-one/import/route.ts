@@ -22,7 +22,9 @@ const PUBS = ["gid://shopify/Publication/223010783469", "gid://shopify/Publicati
 
 async function exists(handle: string) {
   const d = await adminGraphql<{ productByIdentifier: { id: string } | null }>(`query($h:String!){ productByIdentifier(identifier:{handle:$h}){ id } }`, { h: handle });
-  return d?.productByIdentifier?.id || null;
+  if (d?.productByIdentifier?.id) return d.productByIdentifier.id;
+  const o = await adminGraphql<{ products: { nodes: { id: string }[] } }>(`query($q:String!){ products(first:1, query:$q){ nodes{ id } } }`, { q: `tag:'oldhandle-${handle}'` }); // renamed for SEO
+  return o?.products.nodes[0]?.id || null;
 }
 async function createOne(r: Row) {
   const imgs = [...r.images, ...(r.guess || [])], vid = r.video || null; // photos unverified (Shopify fetches, failures are cleaned up by the repair pass); only videos we saw on the supplier page
