@@ -115,3 +115,6 @@ export function oneOfOneQuery(handle: string, style: string): string {
   if (style === "4 ct and up") return `${base} AND tag:'Big stone'`;
   return `${base} AND tag:'${style.replace(/'/g, "")}'`;
 }
+
+/** The Floating collection: every piece made with the house floating setting (named "Floating …"). */
+export const FLOATING_QUERY = "title:Floating";
