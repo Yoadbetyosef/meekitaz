@@ -31,6 +31,9 @@ function apply(t: T, hex: string | null) {
   const b = document.body, v = TARGETS.find(x => x.k === t)!.v;
   if (hex) b.style.setProperty(v, hex); else b.style.removeProperty(v);
   if (t === "bg") b.classList.toggle("home-light", !!hex && isLight(hex));
+  const HOME: T[] = ["bg", "head", "fg", "accent"];
+  b.classList.toggle("home-custom", HOME.some(k => !!b.style.getPropertyValue(TARGETS.find(x => x.k === k)!.v)));
+  if (t === "bg" && !hex) b.classList.add("home-light"); // the original Mist is light
   if (t === "nav") b.classList.toggle("nav-custom", !!hex);
   if (t === "navfg") b.classList.toggle("navfg-custom", !!hex);
 }
@@ -47,6 +50,8 @@ export default function BgPalette() {
   useEffect(() => {
     const v: Record<T, string | null> = { ...EMPTY }; let on = false;
     try {
+      // one-time: forget the plum trial colours picked before the revert on 2026-10-30
+      if (!localStorage.getItem("mk-reset-1030")) { ["bg", "head", "fg", "accent"].forEach(k => localStorage.removeItem(key(k as T))); localStorage.setItem("mk-reset-1030", "1"); }
       TARGETS.forEach(({ k }) => { if (LOCKED.has(k)) { localStorage.removeItem(key(k)); return; } v[k] = localStorage.getItem(key(k)); if (v[k]) apply(k, v[k]); }); on = localStorage.getItem(ON) === "1";
       localStorage.removeItem(GLASS);
     } catch {}

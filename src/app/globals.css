@@ -2614,17 +2614,16 @@ body.reel-open .mk-page{min-height:0}
 
 .cd-li-size{grid-column:1/-1;margin-top:10px}
 
-/* ===== TRIAL (2026-10-30): home background. Site default is --home-bg below (#4B1425, deep plum) in place of the Mist blue-grey.
-   Original: #E4E8EC on the home page, #DFE4EA on One of One / Ready to Ship. To revert, delete this block.
-   meekitaz.com/?palette opens a colour panel (BgPalette) that overrides --home-bg in your own browser only; light colours add body.home-light. ===== */
-body:has(.home-page){--home-bg:#4B1425;--blue-light:var(--home-bg)}
-.home-page .ooo-wrap,.home-page .ooo-circ-wrap,.home-page .rh-wrap{background:var(--home-bg)}
-body:has(.home-page){--home-fg-auto:#FBF8F3;--home-accent-auto:#EFC5CA}
-body.home-light:has(.home-page){--home-fg-auto:#1C1A1B;--home-accent-auto:#7E0508}
-.home-page :is(.sec,.mkfilm,.pr,.ooo,.rh){color:var(--home-fg,var(--home-fg-auto))}
-.home-page :is(.sec,.mkfilm,.pr,.ooo,.rh) :is(h1,h2,h3,.ooo-h,.rh-h){color:var(--home-head,var(--home-fg,var(--home-fg-auto)))}
-.home-page :is(.ooo-eye,.rh-eye,.ooo-h em){color:var(--home-accent,var(--home-accent-auto))}
-.home-page :is(.ooo-eye i,.rh-eye i){background:var(--home-accent,var(--home-accent-auto))}
+/* ===== Home colours: back to the original (2026-10-30, the plum #4B1425 trial was reverted) — Mist #E4E8EC page, #DFE4EA One of One / Ready to Ship.
+   meekitaz.com/?palette can still try other colours in your own browser only; the rules below act only while a colour is picked there (body.home-custom). ===== */
+body:has(.home-page){--blue-light:var(--home-bg,#E4E8EC)}
+.home-page .ooo-wrap,.home-page .ooo-circ-wrap,.home-page .rh-wrap{background:var(--home-bg,#DFE4EA)}
+body.home-custom:has(.home-page){--home-fg-auto:#FBF8F3;--home-accent-auto:#EFC5CA}
+body.home-custom.home-light:has(.home-page){--home-fg-auto:#1C1A1B;--home-accent-auto:#7E0508}
+body.home-custom .home-page :is(.sec,.mkfilm,.pr,.ooo,.rh){color:var(--home-fg,var(--home-fg-auto))}
+body.home-custom .home-page :is(.sec,.mkfilm,.pr,.ooo,.rh) :is(h1,h2,h3,.ooo-h,.rh-h){color:var(--home-head,var(--home-fg,var(--home-fg-auto)))}
+body.home-custom .home-page :is(.ooo-eye,.rh-eye,.ooo-h em){color:var(--home-accent,var(--home-accent-auto))}
+body.home-custom .home-page :is(.ooo-eye i,.rh-eye i){background:var(--home-accent,var(--home-accent-auto))}
 .bgp{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:9999;width:300px;background:rgba(251,248,243,.96);backdrop-filter:blur(12px);color:#1C1A1B;border-radius:18px;padding:14px;box-shadow:0 20px 50px rgba(0,0,0,.3);font:500 12px var(--body)}
 .bgp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.bgp-top b{font:400 16px var(--display)}.bgp-top button{border:0;background:none;font-size:20px;cursor:pointer;color:#1C1A1B}
 .bgp-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:12px;background:rgba(28,26,27,.06);border-radius:12px;padding:3px}
