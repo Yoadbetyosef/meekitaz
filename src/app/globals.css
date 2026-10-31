@@ -2619,12 +2619,20 @@ body.reel-open .mk-page{min-height:0}
    meekitaz.com/?palette opens a colour panel (BgPalette) that overrides --home-bg in your own browser only; light colours add body.home-light. ===== */
 body:has(.home-page){--home-bg:#4B1425;--blue-light:var(--home-bg)}
 .home-page .ooo-wrap,.home-page .ooo-circ-wrap,.home-page .rh-wrap{background:var(--home-bg)}
-body:not(.home-light) .home-page :is(.sec,.mkfilm,.pr,.ooo,.rh){color:#FBF8F3}
-body:not(.home-light) .home-page :is(.ooo-eye,.rh-eye,.ooo-h em){color:#EFC5CA}
-body:not(.home-light) .home-page :is(.ooo-eye i,.rh-eye i){background:#EFC5CA}
-.bgp{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:9999;width:272px;background:rgba(251,248,243,.96);backdrop-filter:blur(12px);color:#1C1A1B;border-radius:18px;padding:14px;box-shadow:0 20px 50px rgba(0,0,0,.3);font:500 12px var(--body)}
+body:has(.home-page){--home-fg-auto:#FBF8F3;--home-accent-auto:#EFC5CA}
+body.home-light:has(.home-page){--home-fg-auto:#1C1A1B;--home-accent-auto:#7E0508}
+.home-page :is(.sec,.mkfilm,.pr,.ooo,.rh){color:var(--home-fg,var(--home-fg-auto))}
+.home-page :is(.sec,.mkfilm,.pr,.ooo,.rh) :is(h1,h2,h3,.ooo-h,.rh-h){color:var(--home-head,var(--home-fg,var(--home-fg-auto)))}
+.home-page :is(.ooo-eye,.rh-eye,.ooo-h em){color:var(--home-accent,var(--home-accent-auto))}
+.home-page :is(.ooo-eye i,.rh-eye i){background:var(--home-accent,var(--home-accent-auto))}
+.bgp{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:9999;width:300px;background:rgba(251,248,243,.96);backdrop-filter:blur(12px);color:#1C1A1B;border-radius:18px;padding:14px;box-shadow:0 20px 50px rgba(0,0,0,.3);font:500 12px var(--body)}
 .bgp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.bgp-top b{font:400 16px var(--display)}.bgp-top button{border:0;background:none;font-size:20px;cursor:pointer;color:#1C1A1B}
-.bgp-sw{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}
+.bgp-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:12px;background:rgba(28,26,27,.06);border-radius:12px;padding:3px}
+.bgp-tabs button{border:0;background:none;border-radius:9px;padding:7px 2px;font:600 10.5px var(--body);color:#1C1A1B;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bgp-tabs button.on{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.bgp-tabs i{width:12px;height:12px;border-radius:50%;border:1px solid rgba(28,26,27,.25)}
+.bgp-sw{display:grid;grid-template-columns:repeat(9,1fr);gap:6px}
+.bgp-x{border:0;background:none;padding:0;font:inherit;text-decoration:underline;cursor:pointer;color:#1C1A1B}
 .bgp-sw button{aspect-ratio:1;border-radius:50%;border:1px solid rgba(28,26,27,.2);cursor:pointer;padding:0}.bgp-sw button.on{outline:2px solid #1C1A1B;outline-offset:2px}
 .bgp-row{display:flex;gap:6px;margin-top:12px;align-items:center}
 .bgp-row input[type=color]{width:34px;height:34px;border:0;padding:0;background:none;cursor:pointer}

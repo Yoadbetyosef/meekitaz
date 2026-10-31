@@ -1,62 +1,68 @@
 "use client";
 import { useEffect, useState } from "react";
 
-/* Home background tester — for Yoad only. Open meekitaz.com/?palette to show the panel; it stays on in that browser
-   until "Hide". The colour you pick applies only in your own browser (localStorage); visitors keep the site's default
-   until the default in globals.css (--home-bg) is changed. */
+/* Home colour tester — for Yoad only. Open meekitaz.com/?palette to show the panel; it stays on in that browser until ×.
+   Four targets: background, headings, text, accent (the small red/pink labels). Choices apply only in your own browser
+   (localStorage); visitors keep the defaults in globals.css until they are changed there. */
 const SWATCHES: { name: string; hex: string }[] = [
-  { name: "Mist (original)", hex: "#E4E8EC" },
-  { name: "Plum (trial)", hex: "#4B1425" },
-  { name: "Burgundy", hex: "#6B1E2E" },
-  { name: "Ink", hex: "#1C1A1B" },
-  { name: "Midnight", hex: "#1F2A44" },
-  { name: "Forest", hex: "#1E3A2F" },
-  { name: "Mocha", hex: "#4A3B33" },
-  { name: "Cream", hex: "#FBF8F3" },
-  { name: "Champagne", hex: "#EFE6D8" },
-  { name: "Sky", hex: "#DCEBF4" },
-  { name: "Baby pink", hex: "#F7D3DA" },
-  { name: "Blush", hex: "#EFC5CA" },
-  { name: "Butter", hex: "#F7E9A8" },
-  { name: "Sage", hex: "#D6E4C8" },
+  { name: "Mist (original bg)", hex: "#E4E8EC" }, { name: "Plum", hex: "#4B1425" }, { name: "Burgundy", hex: "#6B1E2E" },
+  { name: "Red (original accent)", hex: "#7E0508" }, { name: "Ink (original text)", hex: "#1C1A1B" }, { name: "Midnight", hex: "#1F2A44" },
+  { name: "Forest", hex: "#1E3A2F" }, { name: "Mocha", hex: "#4A3B33" }, { name: "White", hex: "#FFFFFF" },
+  { name: "Cream", hex: "#FBF8F3" }, { name: "Champagne", hex: "#EFE6D8" }, { name: "Gold", hex: "#C29A55" },
+  { name: "Sky", hex: "#DCEBF4" }, { name: "Baby pink", hex: "#F7D3DA" }, { name: "Blush", hex: "#EFC5CA" },
+  { name: "Butter", hex: "#F7E9A8" }, { name: "Sage", hex: "#D6E4C8" }, { name: "Rose", hex: "#E8B4B8" },
 ];
-const KEY = "mk-home-bg", ON = "mk-palette";
+type T = "bg" | "head" | "fg" | "accent";
+const TARGETS: { k: T; label: string; v: string }[] = [
+  { k: "bg", label: "Background", v: "--home-bg" }, { k: "head", label: "Headings", v: "--home-head" },
+  { k: "fg", label: "Text", v: "--home-fg" }, { k: "accent", label: "Accent", v: "--home-accent" },
+];
+const ON = "mk-palette", key = (t: T) => "mk-home-" + t;
 const isLight = (hex: string) => {
-  const h = hex.replace("#", ""); const n = parseInt(h.length === 3 ? h.split("").map(c => c + c).join("") : h, 16);
+  const n = parseInt(hex.slice(1), 16);
   const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(v => { v /= 255; return v <= .03928 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; });
   return .2126 * r + .7152 * g + .0722 * b > .35;
 };
-function apply(hex: string | null) {
-  const b = document.body;
-  if (!hex) { b.style.removeProperty("--home-bg"); b.classList.remove("home-light"); return; }
-  b.style.setProperty("--home-bg", hex); b.classList.toggle("home-light", isLight(hex));
+function apply(t: T, hex: string | null) {
+  const b = document.body, v = TARGETS.find(x => x.k === t)!.v;
+  if (hex) b.style.setProperty(v, hex); else b.style.removeProperty(v);
+  if (t === "bg") b.classList.toggle("home-light", !!hex && isLight(hex));
 }
 
 export default function BgPalette() {
   const [open, setOpen] = useState(false);
-  const [cur, setCur] = useState<string | null>(null);
+  const [tab, setTab] = useState<T>("bg");
+  const [vals, setVals] = useState<Record<T, string | null>>({ bg: null, head: null, fg: null, accent: null });
   const [hexIn, setHexIn] = useState("");
 
   useEffect(() => {
-    let saved: string | null = null, on = false;
-    try { saved = localStorage.getItem(KEY); on = localStorage.getItem(ON) === "1"; } catch {}
+    const v: Record<T, string | null> = { bg: null, head: null, fg: null, accent: null }; let on = false;
+    try { TARGETS.forEach(({ k }) => { v[k] = localStorage.getItem(key(k)); if (v[k]) apply(k, v[k]); }); on = localStorage.getItem(ON) === "1"; } catch {}
     if (new URLSearchParams(location.search).has("palette")) { on = true; try { localStorage.setItem(ON, "1"); } catch {} }
-    if (saved) { apply(saved); setCur(saved); setHexIn(saved); }
-    setOpen(on);
+    setVals(v); setHexIn(v.bg || ""); setOpen(on);
   }, []);
 
   const pick = (hex: string) => {
-    const h = hex.startsWith("#") ? hex.toUpperCase() : ("#" + hex).toUpperCase();
+    const h = (hex.startsWith("#") ? hex : "#" + hex).toUpperCase();
     if (!/^#[0-9A-F]{6}$/.test(h)) return;
-    apply(h); setCur(h); setHexIn(h); try { localStorage.setItem(KEY, h); } catch {}
+    apply(tab, h); setVals(s => ({ ...s, [tab]: h })); setHexIn(h); try { localStorage.setItem(key(tab), h); } catch {}
   };
-  const reset = () => { apply(null); setCur(null); setHexIn(""); try { localStorage.removeItem(KEY); } catch {} };
+  const clear = (t: T) => { apply(t, null); setVals(s => ({ ...s, [t]: null })); if (t === tab) setHexIn(""); try { localStorage.removeItem(key(t)); } catch {} };
+  const resetAll = () => TARGETS.forEach(({ k }) => clear(k));
   const hide = () => { setOpen(false); try { localStorage.removeItem(ON); } catch {} };
+  const cur = vals[tab];
 
   if (!open) return null;
   return (
-    <div className="bgp" role="dialog" aria-label="Home background">
-      <div className="bgp-top"><b>Home background</b><button onClick={hide} aria-label="Hide">×</button></div>
+    <div className="bgp" role="dialog" aria-label="Home colours">
+      <div className="bgp-top"><b>Home colours</b><button onClick={hide} aria-label="Hide">×</button></div>
+      <div className="bgp-tabs">
+        {TARGETS.map(t => (
+          <button key={t.k} className={tab === t.k ? "on" : ""} onClick={() => { setTab(t.k); setHexIn(vals[t.k] || ""); }}>
+            <i style={{ background: vals[t.k] || "transparent" }} />{t.label}
+          </button>
+        ))}
+      </div>
       <div className="bgp-sw">
         {SWATCHES.map(s => (
           <button key={s.hex} title={`${s.name} ${s.hex}`} aria-label={s.name} onClick={() => pick(s.hex)}
@@ -68,8 +74,10 @@ export default function BgPalette() {
         <input type="text" value={hexIn} placeholder="#4B1425" onChange={e => setHexIn(e.target.value)} onKeyDown={e => e.key === "Enter" && pick(hexIn)} aria-label="Hex" />
         <button onClick={() => pick(hexIn)}>Set</button>
       </div>
-      <div className="bgp-now">{cur ? <>{SWATCHES.find(s => s.hex === cur)?.name || "Custom"} · <code>{cur}</code></> : "Site default"}</div>
-      <button className="bgp-reset" onClick={reset}>Back to site default</button>
+      <div className="bgp-now">
+        {TARGETS.find(t => t.k === tab)!.label}: {cur ? <><code>{cur}</code> · <button className="bgp-x" onClick={() => clear(tab)}>default</button></> : tab === "bg" ? "site default" : "automatic (matches background)"}
+      </div>
+      <button className="bgp-reset" onClick={resetAll}>Reset everything</button>
     </div>
   );
 }
