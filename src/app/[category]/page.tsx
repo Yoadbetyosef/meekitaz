@@ -31,7 +31,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
   const { category } = await params;
   const sp = await searchParams;
   const NO_FILTERS = ["earrings"]; // pages shown as one plain collection for now: no style circles, no style filter
-  const plain = NO_FILTERS.includes(p.slug);
+  const plain = NO_FILTERS.includes(category);
   const one = (k: string) => { if (plain && k === "style") return ""; const v = sp[k]; return typeof v === "string" ? v : ""; };
   const p = categories.find(c => c.slug === category);
   if (!p) notFound();
