@@ -2813,3 +2813,34 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 @keyframes mkSigW{0%{opacity:var(--o);stroke-dashoffset:.999}100%{opacity:var(--o);stroke-dashoffset:0}}
 @media(max-width:767px){.mkopen{height:220vh}.mk-sig{width:84vw}.mko-cta p{font-size:16px}}
 @media(prefers-reduced-motion:reduce){.mk-sig.on path{animation:none;opacity:var(--o);stroke-dashoffset:0}}
+
+/* ===== One of One page: the tennis-court photo after two rows (preview layouts a–d) ===== */
+.op{position:relative;margin:18px 0 26px}
+.op .op-m{display:none}
+@media(max-width:767px){.op .op-d{display:none}.op .op-m{display:block}}
+.op small{display:block;font:700 10px var(--body);letter-spacing:.24em;text-transform:uppercase}
+/* A */
+.op-a{aspect-ratio:21/9;border-radius:22px;overflow:hidden}
+.op-a::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(20,8,8,.5))}
+.op-cap{position:absolute;left:28px;bottom:24px;z-index:2;color:#fff}.op-cap b{display:block;font:400 clamp(24px,2.6vw,38px)/1.1 var(--display);margin-top:6px}
+/* B */
+.op-b{display:grid;grid-template-columns:2fr 1fr;gap:22px;align-items:stretch}
+.op-b .op-img{position:relative;aspect-ratio:16/10;border-radius:22px;overflow:hidden}
+.op-b .op-txt{background:#FBF8F3;border-radius:22px;padding:34px 30px;display:flex;flex-direction:column;justify-content:center}
+.op-b small{color:#7E0508}.op-b h3{font:400 clamp(28px,2.6vw,40px)/1.05 var(--display);margin:12px 0 14px}.op-b h3 em{font-style:italic}
+.op-b p{font:400 17px/1.55 var(--sub);margin:0 0 20px;color:#444}.op-link{font:700 11px var(--body);letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+/* C */
+.op-c{display:flex;flex-direction:column;align-items:center;padding:30px 0 10px}
+.op-print{background:#FFFDF8;padding:16px 16px 18px;box-shadow:0 40px 70px -40px rgba(28,26,27,.45);transform:rotate(-1.6deg);width:min(820px,100%)}
+.op-c .op-img{position:relative;aspect-ratio:16/10;overflow:hidden}
+.op-c .op-img img{filter:sepia(.12) saturate(.94)}
+.op-sign{margin-top:18px;text-align:center}.op-sign .mk-sig{width:min(440px,70vw);margin:0 auto}.op-sign small{color:#7a7a7a;margin-top:2px}
+.mk-sig.ink path.g{stroke:#1C1A1B;--o:.08}.mk-sig.ink path.s{stroke:#1C1A1B}
+/* D */
+.op-dd{display:flex;justify-content:center}
+.op-win{position:relative;width:46%;aspect-ratio:16/10;border-radius:30px;overflow:hidden;transition:width 1.2s cubic-bezier(.2,.7,.2,1),border-radius 1.2s}
+.op-win.on{width:100%;border-radius:22px}
+.op-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(20,8,8,.45))}
+.op-over{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;z-index:2}
+.op-over .mk-sig{width:min(620px,60%)}.op-over small{margin-top:4px;opacity:.9}
+@media(max-width:767px){.op-a{aspect-ratio:4/5}.op-b{grid-template-columns:1fr}.op-b .op-img,.op-c .op-img{aspect-ratio:4/5}.op-win{width:70%;aspect-ratio:4/5}.op-over .mk-sig{width:84%}}

@@ -6,14 +6,16 @@ import { fillPage } from "@/lib/designs";
 import OneCircles from "@/components/OneCircles";
 import { oneOfOneQuery } from "@/lib/ringfilters";
 import { getProductsByQuery } from "@/lib/shopify";
+import OooPhoto from "@/components/OooPhoto";
 
 export const dynamic = "force-dynamic";
 export const metadata = { title: "One of One — MEEKITAZ", description: "Made once. Never again. One stone, one setting, one ring; when it’s claimed, it’s gone." };
 
 /* /one-of-one — the one-of-ones, in the supplier's order (newest first). The hero repeats the home-page block: the model coming in from the right,
    the big M behind her; the rings follow in the usual grid with "Show more". */
-export default async function OneOfOnePage({ searchParams }: { searchParams: Promise<{ style?: string }> }) {
-  const { style: asked } = await searchParams;
+export default async function OneOfOnePage({ searchParams }: { searchParams: Promise<{ style?: string; photo?: string }> }) {
+  const { style: asked, photo } = await searchParams;
+  const pv = photo && /^[abcd]$/.test(photo) ? photo : ""; // preview of the tennis-court photo after two rows (?photo=a|b|c|d) until a layout is approved
   const style = asked === undefined ? "Rings" : asked === "all" ? "" : asked; // the page opens on rings; "All" is ?style=all
   let r: { products: Product[]; hasNext: boolean; cursor: string | null } | null = null;
   if (shopifyConfigured) {
@@ -28,7 +30,7 @@ export default async function OneOfOnePage({ searchParams }: { searchParams: Pro
       </section>
       <div className="catbody" id="results">
         <section className="shapes" aria-label="Jewelry type"><div className="wrap"><OneCircles current={style} /></div></section>
-        {r ? <Suspense fallback={null}><ProductBrowser key={style} handle="one-of-one" style={style} sort0="new" initial={r.products} hasNext={r.hasNext} cursor={r.cursor} /></Suspense>
+        {r ? <Suspense fallback={null}><ProductBrowser key={style} handle="one-of-one" style={style} sort0="new" initial={r.products} hasNext={r.hasNext} cursor={r.cursor} slot={pv ? <OooPhoto v={pv} /> : undefined} slotAt={6} /></Suspense>
            : <section className="grid-wrap"><div className="wrap"><h2>The collection</h2><p>The one-of-ones are on their way. Check back in a moment.</p></div></section>}
       </div>
     </main>
