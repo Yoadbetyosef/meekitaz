@@ -39,6 +39,10 @@
     {
       "path": "/api/seo/rename",
       "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/one-of-one/dedupe",
+      "schedule": "*/30 * * * *"
     }
   ]
 }
