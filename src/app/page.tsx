@@ -9,6 +9,7 @@ import PressRow from "@/components/PressRow";
 import LooksReel from "@/components/LooksReel";
 import Reviews from "@/components/Reviews";
 import PrivateClients from "@/components/PrivateClients";
+import BgPalette from "@/components/BgPalette";
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
       <LooksReel />
       <Reviews />
       <PrivateClients />
+      <BgPalette />
     </main>
   );
 }
