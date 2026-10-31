@@ -2787,3 +2787,29 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 #film .hc-win::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(160deg,rgba(247,211,218,.38),rgba(239,197,202,.12) 45%,rgba(220,235,244,.22));mix-blend-mode:soft-light}
 #film .hc-win::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;mix-blend-mode:color-dodge;opacity:.28;background:linear-gradient(115deg,transparent 25%,rgba(255,120,200,.7) 40%,rgba(120,220,255,.6) 50%,rgba(255,240,140,.6) 60%,transparent 75%);background-size:240% 240%;background-position:var(--hx,50%) var(--hy,50%)}
 #film .hc-stats div{background:rgba(255,255,255,.55);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7)}
+
+/* ===== Home film, "opens up" (2026-10-31): small under the title, opens to a big window as you scroll; white handwritten signature writes on it ===== */
+.mkopen{position:relative;z-index:6;background:var(--blue-light);height:250vh}
+.mko-stick{position:sticky;top:0;height:100vh;overflow:hidden}
+.mko-head{position:absolute;left:0;right:0;top:12vh;text-align:center;color:var(--ink)}
+.mko-head small{display:block;font:700 11px var(--body);letter-spacing:.24em;text-transform:uppercase;color:#7E0508;margin-bottom:10px}
+.mko-head h2{font:400 clamp(30px,3.4vw,50px)/1.04 var(--display);margin:0}
+.mko-box{position:absolute;left:50%;top:56%;width:300px;height:300px;transform:translate(-50%,-50%);border-radius:28px;overflow:hidden;box-shadow:0 40px 80px -40px rgba(28,26,27,.5);background:#111}
+.mko-box video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.12) saturate(.92)}
+.mko-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.08) 45%,rgba(20,8,8,.55));opacity:0;transition:opacity .4s}
+.mko-box.open .mko-shade{opacity:1}
+.mko-over{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;padding:0 6%}
+.mko-cta{display:flex;flex-direction:column;align-items:center;gap:16px;opacity:0;transform:translateY(12px);transition:opacity .5s,transform .5s}
+.mko-box.open .mko-cta{opacity:1;transform:none;transition:opacity .6s 2.8s,transform .6s 2.8s;pointer-events:auto}
+.mko-cta p{font:400 18px/1.5 var(--sub);color:rgba(255,255,255,.92);margin:0;text-align:center;max-width:40ch;text-shadow:0 1px 12px rgba(0,0,0,.35)}
+.mko-cta .pill{background:#fff !important;color:var(--ink) !important}
+.mko-snd{position:absolute;left:16px;bottom:16px;width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.9);color:var(--ink);display:grid;place-items:center;cursor:pointer;z-index:3}
+.mko-snd svg{width:18px;height:18px}
+.mk-sig{display:block;width:min(760px,52vw);height:auto;overflow:visible}
+.mk-sig path{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:0}
+.mk-sig path.g{stroke:#fff2d9;stroke-width:8;filter:url(#mkSigGlow);--o:.65}
+.mk-sig path.s{stroke:#fffaf0;stroke-width:2.8;--o:1}
+.mk-sig.on path{animation:mkSigW var(--t) cubic-bezier(.5,.1,.4,1) var(--b) forwards}
+@keyframes mkSigW{0%{opacity:var(--o);stroke-dashoffset:.999}100%{opacity:var(--o);stroke-dashoffset:0}}
+@media(max-width:767px){.mkopen{height:220vh}.mk-sig{width:84vw}.mko-cta p{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.mk-sig.on path{animation:none;opacity:var(--o);stroke-dashoffset:0}}
