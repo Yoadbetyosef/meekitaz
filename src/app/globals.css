@@ -3083,3 +3083,11 @@ html{background:#E4E8EC}
 }
 /* Floating: the section takes the film's own studio backdrop (#E5E3EF) so the film melts into the page with no box */
 .mkfilm.fl{background:#E5E3EF}
+/* home One of One on computers — "P1" (approved 2026-11-01): Never again. moves left to sit right beside her and down onto the line where
+   her body ends; the two pieces come down beside it on the same bottom line */
+@media(min-width:768px){
+.oo2-copy{left:47.5vw;right:auto;top:auto;bottom:3.9vw;width:23vw}
+.oo2-h{font-size:4.2vw}
+.oo2-rail{position:absolute;top:auto;bottom:0;right:-24.6vw;left:auto}
+.oo2-rail .ooo-card{width:10.4vw}
+}
