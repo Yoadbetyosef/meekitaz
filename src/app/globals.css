@@ -3048,3 +3048,9 @@ html{background:#E4E8EC}
 
 /* One of One hero on phones: the tall lipstick portrait, sunglasses at the top */
 @media(max-width:767px){.cat-ooo img{object-position:50% 0% !important}}
+/* home hero on computers (2026-11-01): the big vertical Meekitaz watermark is back up the right edge — same size and place as before
+   (124vh long, cut off top and bottom, white at 60%); on the lavender it reads all the way down, no letter lost in a white glare */
+@media(min-width:768px){
+.cover.one .cv-edge{display:block !important;position:absolute;z-index:2;top:-12vh;left:calc(100% + 3vh);width:124vh;transform:rotate(90deg);transform-origin:0 0;color:#fff;opacity:.6;pointer-events:none}
+.cover.one .cv-edge svg{display:block;width:100%;height:auto}
+}
