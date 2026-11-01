@@ -37,8 +37,9 @@ export const slides = [
 export const menuTiles: { href: string; img: string; label: string; pos?: string; posM?: string; sub?: string }[] = [
   {
     "href": "/engagement-rings",
-    "img": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261017_224958_f9640324-0cb1-4393-b5a6-2bf07b91b7a1.png",
-    "label": "Engagement Rings"
+    "img": "/media/menu-engagement.webp", // the champagne-sunglasses grin with the pear three-stone ring (2026-11-01)
+    "label": "Engagement Rings",
+    "pos": "50% 50%"
   },
   {
     "href": "/diamonds",
