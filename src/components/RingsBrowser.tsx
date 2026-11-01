@@ -2,6 +2,7 @@
 import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
 import GridMood from "./GridMood";
+import Link from "next/link";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { Product } from "@/lib/shopify";
@@ -122,6 +123,13 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
               {/* Fancy Colors: the walking film (yellow cushion on her hand), same opening as the necklaces; the crop keeps the hand in view */}
               {handle === "fancy-colors" && i === 4 && items.length > 4 && <GridMood src="/media/fancy-mood.mp4" poster="/media/fancy-mood-poster.jpg" pos="62% 92%" reveal={{ tag: "Fancy colors", l1: "Pack light.", l2: "Wear the yellow.", cta: "Shop the look", href: "/products/yellow-gold-fancy-yellow-cushion-cut-diamond-classic-solitaire-engagement-ring" }} />}
               {/* Fancy Colors: the yellow-headscarf photo, two rows after the film (four rows in), the same tile as the One of One page */}
+              {/* Engagement rings: two rows after the film, the pink-halo portrait → Fancy Colors; two rows after that, the lipstick portrait → One of One */}
+              {handle === "engagement-rings" && i === 10 && items.length > 10 && (
+                <div className="pgrid-slot"><Link href="/fancy-colors" className="op-tile op-link"><img src="/media/rings-fancy-tile.webp" alt="A fancy pink oval diamond ring with a halo, worn against oxblood silk" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "45% 40%" }} /><span className="op-cap"><small>Fancy colors</small><b>Explore fancy &rarr;</b></span></Link></div>
+              )}
+              {handle === "engagement-rings" && i === 20 && items.length > 20 && (
+                <div className="pgrid-slot"><Link href="/one-of-one" className="op-tile op-link"><img src="/media/rings-ooo-tile.webp" alt="Laughing in red sunglasses, lipstick in hand, a one-of-one elongated hexagon diamond ring on her finger" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%" }} /><span className="op-cap"><small>One of One</small><b>Made once.<br />Never again. &rarr;</b></span></Link></div>
+              )}
               {handle === "fancy-colors" && i === 10 && items.length > 10 && (
                 <div className="pgrid-slot"><div className="op-tile"><img src="/media/fancy-yellow-tile.jpg" alt="Hand over her mouth in a yellow headscarf and oval sunglasses, a fancy yellow cushion diamond ring on her finger" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 55%" }} /><div className="op-cap"><small>Fancy yellow</small><b>Say less.<br />Wear yellow.</b></div></div></div>
               )}

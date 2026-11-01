@@ -3097,3 +3097,6 @@ body:has(.home-page){--blue-light:var(--home-bg,#E5E3EF)}
 .home-page .ooo-wrap,.home-page .ooo-circ-wrap,.home-page .rh-wrap,.home-page .oo2,.home-page .sec,.home-page .mkfilm,.home-page .mkopen{background:var(--home-bg,#E5E3EF)}
 html{background:#E5E3EF}
 @media(max-width:767px){html{background:#E5E3EF}.edge-t,.edge-b{background:#E5E3EF}}
+
+/* photo tiles that lead somewhere (Engagement rings → Fancy Colors / One of One) */
+.op-link{display:block;color:#fff;text-decoration:none}.op-link img{transition:transform .8s cubic-bezier(.2,.8,.2,1)}.op-link:hover img{transform:scale(1.04)}
