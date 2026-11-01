@@ -29,12 +29,13 @@ export const metadata: Metadata = {
   title: "MEEKITAZ — Serious diamonds, worn lightly.",
   description: "Lab-grown diamond jewelry. IGI / GIA certified. Engagement rings, diamonds, earrings, necklaces, bracelets and bands.",
 };
-export const viewport: Viewport = { themeColor: "#C4DEEE", viewportFit: "cover" };
+export const viewport: Viewport = { themeColor: "#E4E8EC", viewportFit: "cover" }; // the browser bars take the home page colour (Mist)
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable} ${didact.variable} ${script.variable}`}>
       <body>
+        <div className="edge-t" aria-hidden="true" /><div className="edge-b" aria-hidden="true" />{/* phones: the browser bars always take the home page colour, whatever scrolls under them */}
         <DailyMode>
         <CartProvider>
           <DailyBar />

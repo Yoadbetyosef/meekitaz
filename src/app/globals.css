@@ -3032,3 +3032,13 @@ body{--nav-bg:#F08AAE;--nav-a:72%}
 @keyframes lrFill{to{transform:scaleX(1)}}
 @media(max-width:767px){.lr-story .lr-pin{padding:40px 0 24px}.lr-story .lr-stage{max-height:none}.lr-story .lr-next{display:none}}
 @media(prefers-reduced-motion:reduce){.lr-story .lr-segs i.on::after{animation:none;transform:scaleX(1)}}
+
+/* phones: Safari tints its top and bottom bars from whatever sits under them (a yellow NEW card, a green one…). Two thin fixed strips in the
+   home page colour (Mist #E4E8EC) at the very top and bottom edges make the bars always that colour. */
+.edge-t,.edge-b{display:none}
+@media(max-width:767px){
+html{background:#E4E8EC}
+.edge-t,.edge-b{display:block;position:fixed;left:0;right:0;z-index:9990;background:#E4E8EC;pointer-events:none}
+.edge-t{top:0;height:env(safe-area-inset-top,0px)}
+.edge-b{bottom:0;height:max(2px,env(safe-area-inset-bottom,0px))}
+}
