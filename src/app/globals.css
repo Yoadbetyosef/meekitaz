@@ -2851,3 +2851,35 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 .cover.one .cv-pill{width:auto;height:48px;padding:0 28px;font-size:12px;letter-spacing:.16em}
 .cover.one .cv-claims{font-size:2vw;gap:4px 12px}
 }
+
+/* ===== Home · One of One — O2 (desktop) / M1 (phone), approved 2026-10-31 ===== */
+.oo2{position:relative;z-index:6;overflow:hidden;background:#DFE4EA;color:var(--ink)}
+.oo2-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.oo2-big{margin:0;font:400 17.36vw/.84 var(--display);text-transform:uppercase;letter-spacing:-.02em;pointer-events:none;white-space:nowrap}
+.oo2-her{display:block;height:auto;pointer-events:none}
+.oo2-h{margin:0;font:italic 500 4.86vw/1 var(--sub);color:#7E0508}
+.oo2-lead{font:italic 500 1.46vw/1.4 var(--sub);margin:.8vw 0 0;color:#333}
+.oo2 .ooo-btn{margin-top:1.4vw}
+@media(min-width:768px){
+  .oo2{height:62.5vw}
+  .oo2-stage{position:absolute;inset:0}
+  .oo2-big{position:absolute;left:20.83vw;top:10.42vw;z-index:1}
+  .oo2-her{position:absolute;left:0;bottom:0;height:61.1vw;width:auto;z-index:2;filter:drop-shadow(30px 40px 60px rgba(60,10,20,.16))}
+  .oo2-copy{position:absolute;right:4.86vw;top:42.36vw;width:36.1vw;z-index:3}
+  .oo2-rail{position:absolute;right:4.86vw;top:10.42vw;z-index:3;display:flex;gap:1.1vw}
+  .oo2-rail .ooo-card{width:max(120px,9.7vw)}
+  .oo2-rail .ooo-card:nth-child(n+3){display:none}
+}
+@media(max-width:767px){
+  .oo2{padding-bottom:40px}
+  .oo2-stage{position:relative;height:150vw}
+  .oo2-big{position:absolute;left:6vw;top:8vw;z-index:1;font-size:26vw}
+  .oo2-her{position:absolute;left:0;bottom:0;height:118vw;width:auto;z-index:2}
+  .oo2-copy{position:relative;z-index:3;padding:14px 6vw 0}
+  .oo2-h{font-size:14vw;margin-top:8px}
+  .oo2-lead{font-size:4.8vw;margin-top:10px}
+  .oo2 .ooo-btn{margin-top:18px}
+  .oo2-rail{display:flex;gap:10px;overflow-x:auto;padding:22px 6vw 4px;scroll-padding:0 6vw;scrollbar-width:none;scroll-snap-type:x mandatory}
+  .oo2-rail::-webkit-scrollbar{display:none}
+  .oo2-rail .ooo-card{flex:0 0 38vw;width:auto;scroll-snap-align:start}
+}
