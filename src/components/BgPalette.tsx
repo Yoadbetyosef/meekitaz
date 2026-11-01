@@ -57,8 +57,11 @@ export default function BgPalette() {
       TARGETS.forEach(({ k }) => { if (LOCKED.has(k)) { localStorage.removeItem(key(k)); return; } v[k] = localStorage.getItem(key(k)); if (v[k]) apply(k, v[k]); }); on = localStorage.getItem(ON) === "1";
       localStorage.removeItem(GLASS);
     } catch {}
-    if (new URLSearchParams(location.search).has("palette")) { on = true; try { localStorage.setItem(ON, "1"); } catch {} }
-    setVals(v); setHexIn(v.bg || ""); setOpen(on);
+    const q = new URLSearchParams(location.search);
+    if (q.has("palette")) { on = true; try { localStorage.setItem(ON, "1"); } catch {} }
+    // ?palette=menu opens the menu page with the "Menu bg" tab ready
+    if (q.get("palette") === "menu") { setTab("menu"); setTimeout(() => (document.querySelector(".burger") as HTMLButtonElement | null)?.click(), 400); }
+    setVals(v); setHexIn((q.get("palette") === "menu" ? v.menu : v.bg) || ""); setOpen(on);
   }, []);
 
   const pick = (hex: string) => {
