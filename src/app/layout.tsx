@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   title: "MEEKITAZ — Serious diamonds, worn lightly.",
   description: "Lab-grown diamond jewelry. IGI / GIA certified. Engagement rings, diamonds, earrings, necklaces, bracelets and bands.",
 };
-export const viewport: Viewport = { themeColor: "#E4E8EC", viewportFit: "cover" }; // the browser bars take the home page colour (Mist)
+export const viewport: Viewport = { themeColor: "#E5E3EF", viewportFit: "cover" }; // the browser bars take the home page colour (Mist)
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

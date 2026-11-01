@@ -3091,3 +3091,9 @@ html{background:#E4E8EC}
 .oo2-rail{position:absolute;top:auto;bottom:3.9vw;right:4.9vw;left:auto}
 .oo2-rail .ooo-card{width:10.4vw}
 }
+/* ===== Home page background, one colour everywhere (2026-11-01): the soft lavender-grey of the floating film's studio, #E5E3EF —
+   every home section, the browser bars and the page behind them (was Mist #E4E8EC / #DFE4EA) ===== */
+body:has(.home-page){--blue-light:var(--home-bg,#E5E3EF)}
+.home-page .ooo-wrap,.home-page .ooo-circ-wrap,.home-page .rh-wrap,.home-page .oo2,.home-page .sec,.home-page .mkfilm,.home-page .mkopen{background:var(--home-bg,#E5E3EF)}
+html{background:#E5E3EF}
+@media(max-width:767px){html{background:#E5E3EF}.edge-t,.edge-b{background:#E5E3EF}}
