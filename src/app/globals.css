@@ -2890,3 +2890,31 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
 .mgrid a span{color:var(--menu-fg,#fff)}
 .mgrid a span small{color:var(--menu-sub,var(--blue))}
 body[style*="--menu-shade"] .mgrid a::before{background:linear-gradient(180deg,transparent 50%,color-mix(in srgb,var(--menu-shade) 60%,transparent))}
+
+/* ===== Ready to Ship (approved A, 2026-10-31): ~20% smaller, inside a solid #0D4FE7 panel; white type, white button ===== */
+.rh-wrap{padding:70px 0 84px}
+.rh{width:min(1080px,88vw);background:#0D4FE7;color:#fff;border-radius:34px;padding:54px 60px;gap:40px;overflow:hidden;isolation:isolate}
+.rh::before{content:"";position:absolute;inset:0;background:radial-gradient(600px 300px at 85% 30%,rgba(255,255,255,.18),transparent 60%);pointer-events:none;z-index:0}
+.rh .rh-eye{color:#fff}.rh .rh-eye i{background:#fff}
+.rh .rh-h{font-size:clamp(38px,4.5vw,66px);margin-bottom:28px;color:#fff}
+.rh .rh-btn{background:#fff;color:var(--ink);padding:16px 26px;font-size:11.5px}
+.rh-hand{height:500px}
+.rh-card{width:240px;margin:-255px 0 0 -120px;border-radius:18px}
+.rh-card[data-pos="1"]{transform:rotate(-9deg) translate(-21px,6px)}
+.rh-card[data-pos="2"]{transform:rotate(9deg) translate(21px,6px)}
+.rh-card[data-pos="3"]{transform:rotate(-17deg) translate(-42px,18px)}
+.rh-card[data-pos="4"]{transform:rotate(17deg) translate(42px,18px)}
+.rh-card[data-pos="out"]{transform:rotate(-28deg) translate(-110px,-430px)}
+@media(max-width:767px){
+.rh-wrap{padding:40px 0 48px}
+.rh{width:92vw;border-radius:26px;padding:34px 18px 30px}
+.rh .rh-h{font-size:40px;margin:0}
+.rh-hand{height:320px}
+.rh-card{width:180px;margin:-140px 0 0 -90px}
+.rh-card[data-pos="1"]{transform:rotate(-9deg) translate(-16px,5px)}
+.rh-card[data-pos="2"]{transform:rotate(9deg) translate(16px,5px)}
+.rh-card[data-pos="3"]{transform:rotate(-17deg) translate(-32px,14px)}
+.rh-card[data-pos="4"]{transform:rotate(17deg) translate(32px,14px)}
+.rh-card[data-pos="out"]{transform:rotate(-26deg) translate(-80px,-380px)}
+.rh .rh-cur{color:#fff}
+}
