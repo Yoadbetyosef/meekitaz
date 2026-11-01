@@ -4,6 +4,7 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import DesignLabGate from "@/components/DesignLabGate";
 import BgPalette from "@/components/BgPalette";
+import BarStudio from "@/components/BarStudio";
 import Footer from "@/components/Footer";
 import Toast from "@/components/Toast";
 import FreeStuds from "@/components/FreeStuds";
@@ -50,6 +51,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <CartDrawer />
           <DesignLabGate />
           <BgPalette />
+          <BarStudio />
         </CartProvider>
         </DailyMode>
       </body>

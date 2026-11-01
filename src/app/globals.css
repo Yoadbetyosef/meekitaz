@@ -2956,3 +2956,31 @@ body[style*="--menu-shade"] .mgrid a::before{background:linear-gradient(180deg,t
 .cover.one .cv-row{align-items:center;margin-top:18px;gap:0}
 .cover.one .cv-pill{width:76%;height:50px;padding:0 10px;font-size:12px;letter-spacing:.16em}
 }
+
+/* ===== Bar studio (?palette=bar) — only while it's on in Yoad's browser ===== */
+body.bs-on .nav{top:var(--bs-top) !important;border-radius:var(--bs-rad) !important;padding-top:var(--bs-ph) !important;padding-bottom:var(--bs-ph) !important;-webkit-backdrop-filter:blur(var(--bs-blur)) saturate(1.3) !important;backdrop-filter:blur(var(--bs-blur)) saturate(1.3) !important}
+body.bs-on .cart{top:var(--bs-ctop) !important;width:var(--bs-cs) !important;height:var(--bs-cs) !important;-webkit-backdrop-filter:blur(var(--bs-blur)) saturate(1.3) !important;backdrop-filter:blur(var(--bs-blur)) saturate(1.3) !important}
+body.bs-on .brand-logo{height:var(--bs-logo) !important}
+body.bs-on .nav,body.bs-on .nav .brand,body.bs-on .nav button,body.bs-on .cart{color:var(--bs-fg) !important}
+body.bs-on .nav .burger i{background:var(--bs-fg) !important}
+body.bs-on.bs-split .cart{background:linear-gradient(100deg,color-mix(in srgb,var(--cart-bg) var(--cart-a),transparent),color-mix(in srgb,color-mix(in srgb,var(--cart-bg) 82%,#000) var(--cart-a),transparent) 45%,color-mix(in srgb,color-mix(in srgb,var(--cart-bg) 72%,#fff) var(--cart-a),transparent) 80%,color-mix(in srgb,var(--cart-bg) var(--cart-a),transparent)) !important}
+@media(min-width:768px){
+body.bs-on .nav{width:var(--bs-pw) !important;max-width:calc(100% - 40px) !important;transform:translateX(calc(-50% - 37px + var(--bs-x))) !important}
+body.bs-on .cart{left:calc(50% + var(--bs-pw) / 2 + 12px + var(--bs-x) + var(--bs-cx)) !important}
+}
+@media(max-width:767px){
+body.bs-on .nav{left:var(--bs-pl) !important;right:var(--bs-pr) !important}
+body.bs-on .cart{right:var(--bs-cright) !important}
+}
+.bs{position:fixed;z-index:10000;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:320px;max-height:78vh;overflow:auto;background:rgba(251,248,243,.97);backdrop-filter:blur(12px);color:#1C1A1B;border-radius:18px;box-shadow:0 20px 50px rgba(0,0,0,.3);font:500 12px var(--body)}
+.bs.mini{max-height:none}
+.bs-top{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:inherit;border-bottom:1px solid rgba(0,0,0,.06)}.bs-top b{font:400 15px var(--display)}
+.bs-top button{border:0;background:none;font-size:18px;cursor:pointer;color:#1C1A1B;padding:0 4px}
+.bs-body{padding:6px 14px 14px}
+.bs-h{margin:12px 0 4px;font:700 10px var(--body);letter-spacing:.18em;text-transform:uppercase;color:#0D4FE7}
+.bs-r{display:grid;grid-template-columns:96px 1fr 58px;align-items:center;gap:8px;margin:5px 0}.bs-r span{opacity:.8}.bs-r b{font:600 11px var(--body);text-align:right}
+.bs-r input[type=range]{width:100%;accent-color:#1C1A1B}.bs-c input{width:34px;height:26px;border:0;padding:0;background:none}
+.bs-k{grid-template-columns:auto 1fr}
+.bs-act{display:flex;gap:8px;margin-top:12px}.bs-act button{flex:1;height:34px;border-radius:999px;border:1px solid rgba(0,0,0,.2);background:#fff;font:700 11px var(--body);letter-spacing:.06em;cursor:pointer;color:#1C1A1B}.bs-act button:first-child{background:#1C1A1B;color:#fff;border:0}
+.bs-note{margin:10px 0 0;font-size:11px;opacity:.6}
+@media(max-width:767px){.bs{left:8px;right:8px;width:auto;max-height:52vh}}
