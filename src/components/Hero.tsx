@@ -123,7 +123,7 @@ export default function Hero() {
           <button key={k} type="button" aria-label={`${sl.big.replace(".", "")}`} aria-current={k === i} onClick={() => go(k)}><i ref={el => { segs.current[k] = el; }} /></button>
         ))}
       </div>
-      {slides.length < 2 && <div className="cv-edge" aria-hidden="true"><Logo /></div>}{/* desktop, one-photo trial: a big translucent white wordmark running up the right edge, cut off top and bottom */}
+      {slides.length < 2 && <div className="cv-edge" aria-hidden="true"><Logo /></div>}{slides.length < 2 && <span className="cv-glow" aria-hidden="true" />}{/* a soft light over the watermark, aimed by Yoad */}{/* desktop, one-photo trial: a big translucent white wordmark running up the right edge, cut off top and bottom */}
       <div className="cv-mast" aria-hidden="true">
         <Logo />
         <div className="cv-issue"><span>New York</span><span>Serious diamonds, worn lightly.</span></div>

@@ -3054,3 +3054,12 @@ html{background:#E4E8EC}
 .cover.one .cv-edge{display:block !important;position:absolute;z-index:2;top:-12vh;left:calc(100% + 3vh);width:124vh;transform:rotate(90deg);transform-origin:0 0;color:#fff;opacity:.6;pointer-events:none}
 .cover.one .cv-edge svg{display:block;width:100%;height:auto}
 }
+
+/* home hero on computers: the vertical watermark at 22%, with the light Yoad aimed over it (2026-11-01: x 1475, y 414, 501×971, 9°,
+   strength 100%, softness 68% on a 1440×900 screen) — some letters melt into the light */
+.cv-glow{display:none}
+@media(min-width:768px){
+.cover.one .cv-edge{opacity:.22}
+.cover.one .cv-glow{display:block;position:absolute;z-index:3;pointer-events:none;left:calc(102.43vw - 17.4vw);top:calc(46vh - 53.94vh);width:34.79vw;height:107.89vh;transform:rotate(9deg);border-radius:50%;
+ background:radial-gradient(ellipse,rgba(255,255,255,1),rgba(255,255,255,.5) 30.6%,transparent 68%)}
+}
