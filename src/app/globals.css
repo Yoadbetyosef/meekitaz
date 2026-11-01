@@ -2927,3 +2927,32 @@ body[style*="--menu-shade"] .mgrid a::before{background:linear-gradient(180deg,t
 .rh-card{width:160px;margin:-125px 0 0 -80px}
 .rh .rh-h{font-size:36px}
 }
+
+/* ===== HOME HERO — the lavender scarf portrait (approved 2026-10-31, from Yoad's mocks). Framed per screen: the photo keeps its own
+   proportions, only size and place change. Phones: she's big, the menu crosses the sunglasses, the smile shows under it, hand and ring in
+   the middle, "Serious diamonds. / Worn lightly." and the button centred at the bottom. Computers: same crop idea, words and button on the left. ===== */
+.hero.cover.one{background:linear-gradient(180deg,#9C98C8 0%,#B4B0DE 55%,#C9C5EA 100%)}
+.cover.one .hs img{position:absolute !important;inset:auto !important;max-width:none;object-fit:fill !important;animation:none !important;transform:none !important}
+.cover.one .cv-mast,.cover.one .cv-edge,.cover.one .cv-seal,.cover.one .cv-claims{display:none !important}
+.cover.one .cv-line h1::before{content:none !important;display:none !important}
+.cover.one .cv-line h1 .cv-sub{display:block;font:400 2.1vw var(--display);letter-spacing:.32em;text-transform:uppercase;margin-top:10px;text-shadow:0 2px 14px rgba(0,0,0,.25)}
+@media(min-width:768px){
+.hero.cover.one{height:100vh;height:100svh}
+.cover.one .hs img{width:137.95vw !important;height:auto !important;left:-42.22vw !important;top:-7.18vw !important;-webkit-mask-image:linear-gradient(90deg,#000 94%,transparent);mask-image:linear-gradient(90deg,#000 94%,transparent)}
+.cover.one::after{background:linear-gradient(90deg,rgba(30,20,40,.32),rgba(30,20,40,.06) 38%,transparent 55%),linear-gradient(0deg,rgba(30,20,40,.25),transparent 25%)}
+.cover.one .cv-bot{left:5.7vw;right:auto;top:36vh;bottom:auto;gap:0}
+.cover.one .cv-line h1{font-size:5.8vw;line-height:.95}
+.cover.one .cv-line h1 .word{display:block;max-width:6.6em;white-space:normal}
+.cover.one .cv-row{margin-top:1.8vw}
+.cover.one .cv-pill{height:3.7vw;min-height:46px;padding:0 3.7vw;font-size:max(12px,.95vw)}
+}
+@media(max-width:767px){
+.hero.cover.one{height:100svh}
+.cover.one .hs img{width:173.94vw !important;height:auto !important;left:-40.4vw !important;top:-78vw !important}
+.cover.one::after{background:linear-gradient(180deg,transparent 60%,rgba(30,20,40,.18) 72%,rgba(30,20,40,.62))}
+.cover.one .cv-bot{left:5vw;right:5vw;bottom:calc(24px + env(safe-area-inset-bottom,0px));text-align:center;gap:0}
+.cover.one .cv-line h1{font-size:9.3vw;line-height:1;white-space:nowrap}
+.cover.one .cv-line h1 .cv-sub{font-size:4.2vw;letter-spacing:.3em;margin-top:6px}
+.cover.one .cv-row{align-items:center;margin-top:18px;gap:0}
+.cover.one .cv-pill{width:76%;height:50px;padding:0 10px;font-size:12px;letter-spacing:.16em}
+}

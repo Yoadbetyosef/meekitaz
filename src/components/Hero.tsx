@@ -10,8 +10,8 @@ import { slides as allSlides } from "@/lib/data";
 /* TRIAL (2026-10-30): one still photo instead of the changing slides.
    To go back to the original changing slides: set ONE_PHOTO = false (or delete this block and the "slides" line below). */
 const ONE_PHOTO = true;
-const ONE = { small: "", big: "Engagement rings.", href: "/engagement-rings",
-  desktop: "/media/hero/one-yellow.webp", mobile: "/media/hero/one-yellow-tall-m.webp", pos: "50% 50%", posM: "50% 0%" }; // phone: the clean tall photo (851×1848), full width at its own ratio
+const ONE = { small: "", big: "Serious diamonds.", sub: "Worn lightly.", cta: "Shop the collection", href: "/engagement-rings",
+  desktop: "/media/hero/lav-d.webp", mobile: "/media/hero/lav-m.webp", pos: "50% 0%", posM: "50% 0%" }; // the lavender scarf portrait (approved 2026-10-31): framed by CSS (.cover.one img) from the mocks
 const slides = ONE_PHOTO ? [ONE] : allSlides;
 import Logo from "./Logo";
 
@@ -108,8 +108,8 @@ export default function Hero() {
         <div key={k} className={`hs${k === i ? " on" : ""}`} style={{ "--pos-m": (sl as { posM?: string }).posM || sl.pos, "--zoom-m": (sl as { zoomM?: number }).zoomM || 1 } as React.CSSProperties}>
           {(k <= seen || k <= i + 1 || (i === slides.length - 1 && k === 0)) && ( /* the photo on screen and the next one always load, whether or not the page has finished loading */
             <picture>
-              <source media="(max-width:767px)" srcSet={optimised(sl.mobile).srcSet} sizes="100vw" />
-              <Image src={sl.desktop} alt="" fill loading={k === 0 ? "eager" : "lazy"} fetchPriority={k === 0 ? "high" : "auto"} sizes="100vw" quality={78} style={{ objectFit: "cover", objectPosition: sl.pos }} />
+              <source media="(max-width:767px)" srcSet={optimised(sl.mobile).srcSet} sizes={ONE_PHOTO ? "174vw" : "100vw"} />
+              <Image src={sl.desktop} alt="" fill loading={k === 0 ? "eager" : "lazy"} fetchPriority={k === 0 ? "high" : "auto"} sizes={ONE_PHOTO ? "138vw" : "100vw"} quality={82} style={{ objectFit: "cover", objectPosition: sl.pos }} />
             </picture>
           )}
         </div>
@@ -130,10 +130,10 @@ export default function Hero() {
       </div>
       <div className="cv-seal" role="img" aria-label="Rated 4.9 stars. Trusted brand, 2026"><svg className="rg" viewBox="0 0 100 100" aria-hidden="true"><defs><path id="cvring" d="M50,50 m-41,0 a41,41 0 1,1 82,0 a41,41 0 1,1 -82,0" /></defs><text><textPath href="#cvring" textLength="252" lengthAdjust="spacing">TRUSTED BRAND · 2026 · TRUSTED BRAND · 2026 ·</textPath></text></svg><div className="fc fa"><div><div className="five">4.9</div><div className="st"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.6 7.1.7-5.4 4.8 1.6 7L12 17.3 5.8 21l1.6-7L2 9.3l7.1-.7z" /></svg></div></div></div><div className="fc fb"><div><div className="yr">2026</div><div className="tr">Trusted brand</div></div></div></div>
       <div className="cv-bot" ref={blockRef}>
-        {daily ? <DailyHeroHeadline /> : <Link href={s.href} className="cv-line"><h1>{s.small && <small>{s.small}</small>}<span className="word" ref={wordRef}>{s.big}</span></h1></Link>}
+        {daily ? <DailyHeroHeadline /> : <Link href={s.href} className="cv-line"><h1>{s.small && <small>{s.small}</small>}<span className="word" ref={wordRef}>{s.big}</span>{(s as { sub?: string }).sub && <span className="cv-sub">{(s as { sub?: string }).sub}</span>}</h1></Link>}
         <div className="cv-row">
           {daily ? <><DailyProof /><Link href="/engagement-rings" className="pill cv-pill dly-go">Shop engagement rings<span className="dly-go-ar" aria-hidden="true">→</span></Link><DailyQuote /></> : <>
-          <Link href="/engagement-rings" className="pill cv-pill">Shop Engagement Rings</Link>
+          <Link href="/engagement-rings" className="pill cv-pill">{(s as { cta?: string }).cta || "Shop Engagement Rings"}</Link>
           <DailyHeroBadge />
           <ul className="cv-claims"><li>30-day free returns</li><li>Lifetime warranty</li><li>IGI / GIA certified</li></ul></>}
         </div>
