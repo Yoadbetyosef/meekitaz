@@ -3074,3 +3074,10 @@ html{background:#E4E8EC}
 .fl-min .fl-btn{margin-top:30px}
 @media(min-width:768px){.fl-min .mkfilm-in{padding-right:max(0px,calc(300px - (100vw - 1180px) / 2))}}
 @media(max-width:767px){.fl-min .fl-m{left:auto;right:-160px;top:auto;bottom:-80px;width:320px;transform:none}.fl-min .fl-txt{max-width:none}}
+/* home hero on computers: "Serious diamonds." block 30% smaller (S2, approved 2026-11-01) — headline, Worn lightly. and button together */
+@media(min-width:768px){
+.cover.one .cv-line h1{font-size:4.06vw}
+.cover.one .cv-line h1 .cv-sub{font-size:1.47vw;margin-top:7px}
+.cover.one .cv-row{margin-top:1.26vw}
+.cover.one .cv-pill{height:2.59vw;min-height:44px;padding:0 2.59vw;font-size:max(11px,.8vw)}
+}
