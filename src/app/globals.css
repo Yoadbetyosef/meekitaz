@@ -3100,3 +3100,11 @@ html{background:#E5E3EF}
 
 /* photo tiles that lead somewhere (Engagement rings → Fancy Colors / One of One) */
 .op-link{display:block;color:#fff;text-decoration:none}.op-link img{transition:transform .8s cubic-bezier(.2,.8,.2,1)}.op-link:hover img{transform:scale(1.04)}
+/* home One of One on computers — "P3" (2026-11-01): text and the two pieces as two equal columns to her right; the button's bottom,
+   the cards' bottom and the bottom of her photo all on one line (3.9vw above the section's edge) */
+@media(min-width:768px){
+.oo2-her{bottom:3.9vw}
+.oo2-copy{left:47.5vw;bottom:3.9vw;width:22.3vw}
+.oo2-rail{left:72.8vw;right:auto;bottom:3.9vw;width:22.3vw;justify-content:flex-start}
+.oo2-rail .ooo-card{width:10.6vw}
+}
