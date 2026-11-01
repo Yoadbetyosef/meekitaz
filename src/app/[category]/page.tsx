@@ -44,7 +44,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
   const heroMobile = getImageProps({ src: p.mobile, alt: "", fill: true, sizes: "100vw", quality: 78 }).props;
   return (
     <main>
-      <section className="cat-hero" aria-label={p.nav}>
+      <section className={`cat-hero cat-${p.slug}`} aria-label={p.nav}>
         <picture>
           <source media="(max-width:767px)" srcSet={heroMobile.srcSet} sizes="100vw" />
           <Image src={p.desktop} alt="" fill loading="eager" fetchPriority="high" sizes="100vw" quality={78} style={{ "--hero-pos": p.heroPos || "50% 50%", "--hero-zoom": p.heroZoom || 1 } as React.CSSProperties} />
