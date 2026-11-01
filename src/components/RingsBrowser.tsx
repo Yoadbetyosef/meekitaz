@@ -125,6 +125,10 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
               {handle === "fancy-colors" && i === 10 && items.length > 10 && (
                 <div className="pgrid-slot"><div className="op-tile"><img src="/media/fancy-yellow-tile.jpg" alt="Hand over her mouth in a yellow headscarf and oval sunglasses, a fancy yellow cushion diamond ring on her finger" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 55%" }} /><div className="op-cap"><small>Fancy yellow</small><b>Say less.<br />Wear yellow.</b></div></div></div>
               )}
+              {/* Fancy Colors: the oxblood-silk portrait with the pink oval halo ring, four rows after the yellow photo — the same tile */}
+              {handle === "fancy-colors" && i === 22 && items.length > 22 && (
+                <div className="pgrid-slot"><div className="op-tile"><img src="/media/fancy-pink-tile.webp" alt="Hand against her cheek in oxblood silk, a fancy pink oval diamond ring with a diamond halo on her finger" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "45% 40%" }} /><div className="op-cap"><small>Fancy pink</small><b>Pink is<br />a neutral.</b></div></div></div>
+              )}
               <DesignCard p={p} />
             </Fragment>
           ))}
