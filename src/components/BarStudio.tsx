@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
    Everything stays in this browser (localStorage); visitors see the site's own bar until the values are copied into the code. */
 type V = Record<string, number | string | boolean>;
 const ON = "mk-barstudio";
-const DEF_D: V = { pw: 680, ph: 28, top: 30, x: 0, rad: 999, logo: 34, cs: 74, ctop: 30, cx: 0, color: "#F42A3B", alpha: 42, blur: 16, light: 0, fg: "#FFFFFF", split: false, ccolor: "#F42A3B", calpha: 42 };
+const DEF_D: V = { pw: 462, ph: 11, top: 48, x: 29, rad: 60, logo: 48, cs: 72, ctop: 50, cx: 8, color: "#E1145C", alpha: 72, blur: 1, light: 50, fg: "#FFFFFF", split: false, ccolor: "#F42A3B", calpha: 42 };
 const DEF_M: V = { pl: 14, pr: 86, ph: 18, top: 18, rad: 999, logo: 28, cs: 58, ctop: 18, cright: 14, color: "#F42A3B", alpha: 42, blur: 16, light: 0, fg: "#FFFFFF", split: false, ccolor: "#F42A3B", calpha: 42 };
 
 const shade = (hex: string, amt: number) => { // amt −50…50: darker … lighter
