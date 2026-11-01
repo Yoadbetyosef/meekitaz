@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 import { Suspense } from "react";
 import ProductBrowser from "@/components/ProductBrowser";
 import { getCollectionPage, shopifyConfigured, type Product } from "@/lib/shopify";
@@ -21,10 +21,14 @@ export default async function OneOfOnePage({ searchParams }: { searchParams: Pro
     const f = await fillPage([], { cursor: null, hasNext: true }, after => style ? getProductsByQuery(oneOfOneQuery("one-of-one", style), { first: 24, after, sort: "new" }) : getCollectionPage("one-of-one", { first: 24, after, sort: "new" }), 24, 5).catch(() => null);
     if (f && (f.items.length || !f.failed)) r = { products: f.items, hasNext: f.hasNext, cursor: f.cursor };
   }
+  const heroM = getImageProps({ src: "/media/ooo/hero-m.webp", alt: "", fill: true, sizes: "100vw", quality: 80 }).props;
   return (
     <main>
-      <section className="cat-hero" aria-label="One of One">
-        <Image src="https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261021_005300_520e34ad-6539-4260-82ac-59d4202aeb20.png" alt="" fill loading="eager" fetchPriority="high" sizes="100vw" quality={78} style={{ "--hero-pos": "50% 35%", "--hero-zoom": 1 } as import("react").CSSProperties} />
+      <section className="cat-hero cat-ooo" aria-label="One of One">
+        <picture>{/* the red-sunglasses lipstick portrait (2026-11-01): wide on computers, tall on phones */}
+          <source media="(max-width:767px)" srcSet={heroM.srcSet} sizes="100vw" />
+          <Image src="/media/ooo/hero-d.webp" alt="" fill loading="eager" fetchPriority="high" sizes="100vw" quality={80} style={{ "--hero-pos": "30% 22%", "--hero-zoom": 1 } as import("react").CSSProperties} />
+        </picture>
         <div className="wrap"><h1>One of One.</h1></div>
       </section>
       <div className="catbody" id="results">

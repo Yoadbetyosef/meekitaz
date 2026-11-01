@@ -3045,3 +3045,6 @@ html{background:#E4E8EC}
 
 /* Fancy Colors hero (2026-11-01): the coral-satin portrait with the yellow cushion ring — her face kept in frame on computers, glasses at the top on phones */
 @media(max-width:767px){.cat-fancy-colors img{object-position:50% 0% !important}}
+
+/* One of One hero on phones: the tall lipstick portrait, sunglasses at the top */
+@media(max-width:767px){.cat-ooo img{object-position:50% 0% !important}}
