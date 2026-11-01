@@ -3081,3 +3081,5 @@ html{background:#E4E8EC}
 .cover.one .cv-row{margin-top:1.26vw}
 .cover.one .cv-pill{height:2.59vw;min-height:44px;padding:0 2.59vw;font-size:max(11px,.8vw)}
 }
+/* Floating: the section takes the film's own studio backdrop (#E5E3EF) so the film melts into the page with no box */
+.mkfilm.fl{background:#E5E3EF}
