@@ -3111,3 +3111,9 @@ html{background:#E5E3EF}
 
 /* a taller photo tile (Engagement rings → Shop the style): on phones it stays long, 3:4.4, instead of 4:5 */
 @media(max-width:767px){.op-tile.op-tall{aspect-ratio:3/4.4}}
+/* "Shop the style" tile on computers: two columns wide and two rows tall, always starting at the left edge of its row
+   (the grid packs the cards around it so no gaps are left) */
+@media(min-width:768px){
+.pgrid:has(.op-tall){grid-auto-flow:row dense}
+.pgrid-slot:has(.op-tall){grid-column:1 / span 2;grid-row:span 2}
+}
