@@ -39,7 +39,8 @@ export const menuTiles: { href: string; img: string; label: string; pos?: string
     "href": "/engagement-rings",
     "img": "/media/menu-engagement.webp", // the champagne-sunglasses grin with the pear three-stone ring (2026-11-01)
     "label": "Engagement Rings",
-    "pos": "50% 16%"
+    "pos": "50% 38%",
+    "posM": "50% 16%"
   },
   {
     "href": "/diamonds",
