@@ -3014,3 +3014,21 @@ body{--nav-bg:#F08AAE;--nav-a:72%}
 .nav,.cart{-webkit-backdrop-filter:blur(1px) saturate(1.3) !important;backdrop-filter:blur(1px) saturate(1.3) !important}
 .cover.one .hs img{width:135.67vw !important;left:-24.51vw !important;top:calc(104px - 79.3vw) !important;-webkit-mask-image:linear-gradient(180deg,#000 93%,transparent);mask-image:linear-gradient(180deg,#000 93%,transparent)}
 }
+/* ===== Shop the look as stories (2026-10-31): a normal block, no scroll pinning; tap = next look (left third = back), auto every 7 s;
+   progress bars on top on every screen; no big title over the films ===== */
+.lr-story .lr-track{height:auto}
+.lr-story .lr-pin{position:relative;height:auto;padding:clamp(40px,6vw,80px) 0}
+.lr-story .lr-stage{cursor:pointer;max-height:none}
+.lr-story .lr-look{transform:none !important;filter:none !important;opacity:0;transition:opacity .55s ease;box-shadow:none}
+.lr-story .lr-look.on{opacity:1}
+.lr-story .lr-big,.lr-story .lr-count{display:none !important}
+.lr-story .lr-next{display:inline-flex}
+.lr-story .lr-segs{display:flex}
+.lr-story .lr-segs i{position:relative;overflow:hidden;background:rgba(255,255,255,.35)}
+.lr-story .lr-segs i.done{background:#fff}
+.lr-story .lr-segs i.on{background:rgba(255,255,255,.35)}
+.lr-story .lr-segs i.on::after{content:"";position:absolute;inset:0;background:#fff;transform-origin:0 50%;transform:scaleX(0)}
+.lr-story.live .lr-segs i.on::after{animation:lrFill 7s linear forwards}
+@keyframes lrFill{to{transform:scaleX(1)}}
+@media(max-width:767px){.lr-story .lr-pin{padding:40px 0 24px}.lr-story .lr-stage{max-height:none}.lr-story .lr-next{display:none}}
+@media(prefers-reduced-motion:reduce){.lr-story .lr-segs i.on::after{animation:none;transform:scaleX(1)}}
