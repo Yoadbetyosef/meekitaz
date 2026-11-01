@@ -2918,3 +2918,12 @@ body[style*="--menu-shade"] .mgrid a::before{background:linear-gradient(180deg,t
 .rh-card[data-pos="out"]{transform:rotate(-26deg) translate(-80px,-380px)}
 .rh .rh-cur{color:#fff}
 }
+/* Ready to Ship panel = exactly the NEW card's size (same width as .wrap's content, 70vh tall, 32px corners; phones: 76vh, 22px) */
+.rh{width:min(1132px,calc(100vw - 48px));height:70vh;min-height:480px;border-radius:32px;padding:0 clamp(28px,4.5vw,72px);align-content:center}
+.rh-hand{height:100%;max-height:560px}
+@media(max-width:767px){
+.rh{width:calc(100vw - 48px);height:76vh;min-height:0;border-radius:22px;padding:24px 16px;justify-content:center}
+.rh-hand{height:280px;flex:none}
+.rh-card{width:160px;margin:-125px 0 0 -80px}
+.rh .rh-h{font-size:36px}
+}
