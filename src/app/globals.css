@@ -3108,3 +3108,6 @@ html{background:#E5E3EF}
 .oo2-rail{left:72.8vw;right:auto;bottom:3.9vw;width:22.3vw;justify-content:flex-start}
 .oo2-rail .ooo-card{width:10.6vw}
 }
+
+/* a taller photo tile (Engagement rings → Shop the style): on phones it stays long, 3:4.4, instead of 4:5 */
+@media(max-width:767px){.op-tile.op-tall{aspect-ratio:3/4.4}}

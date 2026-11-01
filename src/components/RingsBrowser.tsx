@@ -130,6 +130,10 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
               {handle === "engagement-rings" && i === 20 && items.length > 20 && (
                 <div className="pgrid-slot"><Link href="/one-of-one" className="op-tile op-link"><img src="/media/rings-ooo-tile.webp" alt="Laughing in red sunglasses, lipstick in hand, a one-of-one elongated hexagon diamond ring on her finger" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%" }} /><span className="op-cap"><small>One of One</small><b>Made once.<br />Never again. &rarr;</b></span></Link></div>
               )}
+              {/* Engagement rings: two rows after the One of One tile, a tall "shop the style" photo → the oval hidden-halo pavé ring */}
+              {handle === "engagement-rings" && i === 30 && items.length > 30 && (
+                <div className="pgrid-slot"><Link href="/products/white-gold-oval-diamond-hidden-halo-engagement-ring-with-pave-band" className="op-tile op-link op-tall"><img src="/media/rings-style-tile.webp" alt="A hand on oxblood tailored trousers wearing an oval diamond engagement ring with a hidden halo and pavé band" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "45% 55%" }} /><span className="op-cap"><small>The oval, hidden halo</small><b>Shop the style &rarr;</b></span></Link></div>
+              )}
               {handle === "fancy-colors" && i === 10 && items.length > 10 && (
                 <div className="pgrid-slot"><div className="op-tile"><img src="/media/fancy-yellow-tile.jpg" alt="Hand over her mouth in a yellow headscarf and oval sunglasses, a fancy yellow cushion diamond ring on her finger" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 55%" }} /><div className="op-cap"><small>Fancy yellow</small><b>Say less.<br />Wear yellow.</b></div></div></div>
               )}
