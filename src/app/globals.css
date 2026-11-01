@@ -3004,3 +3004,13 @@ body{--nav-bg:#F98C95;--nav-a:31%}
 }
 /* the menu page: our blue #0D4FE7 behind the photo tiles, everywhere (locked 2026-10-31; was the pink --rose) */
 .menu{background:var(--menu-bg,#0D4FE7)}
+/* ===== Phones (approved 2026-10-31): the computer's pill colour and glass (#F08AAE, 72%, blur 1px, 60px corners), logo 34px;
+   the bag exactly as tall as the pill (58px); the hero portrait zoomed out 22% ("Z2"), smile just under the pill, ring at 31% across ===== */
+@media(max-width:767px){
+body{--nav-bg:#F08AAE;--nav-a:72%}
+.nav{top:24px;left:13px;right:83px;height:58px;padding-top:0;padding-bottom:0;padding-left:20px;padding-right:18px;border-radius:60px}
+.nav .brand-logo{height:34px}
+.cart{top:24px;right:15px;width:58px;height:58px}
+.nav,.cart{-webkit-backdrop-filter:blur(1px) saturate(1.3) !important;backdrop-filter:blur(1px) saturate(1.3) !important}
+.cover.one .hs img{width:135.67vw !important;left:-24.51vw !important;top:calc(104px - 79.3vw) !important;-webkit-mask-image:linear-gradient(180deg,#000 93%,transparent);mask-image:linear-gradient(180deg,#000 93%,transparent)}
+}
