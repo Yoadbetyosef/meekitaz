@@ -188,6 +188,8 @@ export async function searchDiamonds(q: DiamondQuery) {
     price_asc: (a, b) => a.price - b.price, price_desc: (a, b) => b.price - a.price,
     carat_desc: (a, b) => b.carat - a.carat || a.price - b.price, carat_asc: (a, b) => a.carat - b.carat || a.price - b.price,
   };
+  // our copy can miss a shape × carat range (a shard the cron could not finish); never show "nothing" — ask the supplier live then
+  if (!r.length) return searchDiamondsLive(q).catch(() => ({ total: 0, items: [] as Diamond[] }));
   r.sort(by[q.sort || "price_asc"] || by.price_asc);
   const size = Math.min(q.pageSize || 24, 50), page = Math.max(1, q.page || 1);
   return { total: r.length, items: r.slice((page - 1) * size, page * size) };
@@ -298,6 +300,8 @@ export async function searchFancy(q: FancyQuery) {
     price_asc: (a, b) => a.price - b.price, price_desc: (a, b) => b.price - a.price,
     carat_desc: (a, b) => b.carat - a.carat, intensity_desc: (a, b) => (b.intensity! - a.intensity!) || a.price - b.price,
   };
+  // our copy can miss a shape × carat range (a shard the cron could not finish); never show "nothing" — ask the supplier live then
+  if (!r.length) return searchDiamondsLive(q).catch(() => ({ total: 0, items: [] as Diamond[] }));
   r.sort(by[q.sort || "price_asc"] || by.price_asc);
   const page = Math.max(1, q.page || 1);
   return { total: r.length, items: r.slice((page - 1) * 24, page * 24), facets };

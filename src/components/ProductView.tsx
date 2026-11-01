@@ -20,7 +20,6 @@ import { dailyPlan } from "@/lib/daily";
 import { fancyColorOf } from "@/lib/fancy";
 import { METAL_LINE } from "@/lib/designs";
 import { addonFor, completeSel, optionRows, type ProductOptions, type Sel } from "@/lib/options";
-import StoneSwatch from "./StoneSwatch";
 import TopPicks from "./TopPicks";
 import { GOLD_COLORS, hasKarat, isGoldMetal, karatsFor, karatStep } from "@/lib/karat";
 import { toast } from "./Toast";
@@ -198,18 +197,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
     <>
       {ring && cv && (
         <>
-                {(ring.palette?.length ?? 0) > 0 && (<>
-                  <span className="pp-lbl">Stone colour · {ring.color || "White"}</span>
-                  <div className="rp-colors">
-                    {[{ color: ring.color || "", items: [] as { handle: string; shape: string; metal: string }[] }, ...(ring.palette || [])].map(pc => {
-                      const on = pc.color === (ring.color || "");
-                      const hit = on ? null : pc.items.find(v => v.shape === cv.shape && v.metal === cv.metal) || pc.items.find(v => v.shape === cv.shape) || pc.items[0];
-                      return (
-                        <button key={pc.color || "white"} type="button" className={`rp-mt${on ? " on" : ""}`} aria-pressed={on} disabled={!on && !hit} onClick={() => hit && router.push(`/products/${hit.handle}`)}>
-                          <StoneSwatch color={pc.color} src={ring.swatches?.[pc.color]} />{pc.color || "White"}</button>);
-                    })}
-                  </div>
-                </>)}
+                {/* no stone-colour row on ring pages (decided): fancy-colour rings live on the Fancy Colors page */}
                 <span className="pp-lbl">Shape · {cv.shape}</span>
                 <div className="rp-shapes">{shapesHere.map(sh => (
                   <button key={sh.label} type="button" className={`rp-sh${cv.shape === sh.label ? " on" : ""}`} aria-pressed={cv.shape === sh.label} onClick={() => pickRing(sh.label, cv.metal)}>
