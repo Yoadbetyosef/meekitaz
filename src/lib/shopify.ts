@@ -407,7 +407,7 @@ export async function getReel(first = 24, after: string | null = null, type = ""
   // a search, not a collection: collection filters are ignored on this store, search terms are not
   const q = `tag:'Ready to Ship' AND available_for_sale:true${type ? ` AND product_type:${type}` : ""}`;
   const d = await sf<{ products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; nodes: ReelNode[] } }>(
-    `query($first:Int!,$after:String,$q:String!,$key:ProductSortKeys!,$rev:Boolean!){ products(first:$first, after:$after, query:$q, sortKey:$key, reverse:$rev){ pageInfo{ hasNextPage endCursor } nodes{ ${REEL_FIELDS} } } }`, { first, after, q, key: sort.startsWith("price") ? "PRICE" : "CREATED_AT", rev: sort !== "price_asc" }, { fresh: true });
+    `query($first:Int!,$after:String,$q:String!,$key:ProductSortKeys!,$rev:Boolean!){ products(first:$first, after:$after, query:$q, sortKey:$key, reverse:$rev){ pageInfo{ hasNextPage endCursor } nodes{ ${REEL_FIELDS} } } }`, { first, after, q, key: sort.startsWith("price") ? "PRICE" : "CREATED_AT", rev: sort !== "price_asc" }); // cached 5 min: six uncached Shopify searches per visit made the page hang
   const p = d?.products;
   return { items: (p?.nodes || []).filter(n => n.availableForSale).map(reelItem), hasNext: !!p?.pageInfo.hasNextPage, cursor: p?.pageInfo.endCursor || null };
 }

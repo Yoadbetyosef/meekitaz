@@ -14,26 +14,41 @@ const MOODS: Mood[] = [
 
 /* Ready to Ship · design C ("night & day"): the black films stay black and dramatic, each card carries a thin band and a tag in one of
    our colours, and two fashion blocks break the grid. The film plays on hover (desktop) or when the card is in view (phone). */
+/* Shopify's CDN resizes on the fly: the supplier's photos are multi-megabyte PNGs, a card needs ~600px */
+const sized = (u: string | null | undefined, w: number) => !u ? "" : u.includes("cdn.shopify.com") ? `${u}${u.includes("?") ? "&" : "?"}width=${w}` : u;
+
+/* Only ONE film plays (and downloads) at a time. The supplier's films are big and come from a slow server; letting every card in view
+   play at once froze the page. A film starts only after its card has settled in view (or been hovered) for a moment, and a film that
+   stops is unloaded so its download is cancelled too. */
+let current: HTMLVideoElement | null = null;
+function stopFilm(v: HTMLVideoElement | null) { if (!v) return; v.pause(); if (v.getAttribute("src")) { v.removeAttribute("src"); v.load(); } if (current === v) current = null; }
+function startFilm(v: HTMLVideoElement) { if (current && current !== v) stopFilm(current); current = v; if (!v.getAttribute("src") && v.dataset.src) v.src = v.dataset.src; v.muted = true; v.play().catch(() => {}); }
+
 function Card({ it, k }: { it: ReelItem; k: number }) {
-  const v = useRef<HTMLVideoElement>(null), box = useRef<HTMLAnchorElement>(null);
+  const v = useRef<HTMLVideoElement>(null), box = useRef<HTMLAnchorElement>(null), timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [playing, setPlaying] = useState(false); // the photo stays until the film is really playing — never a black square
+  const later = (fn: () => void, ms: number) => { if (timer.current) clearTimeout(timer.current); timer.current = setTimeout(fn, ms); };
+  const cancel = () => { if (timer.current) clearTimeout(timer.current); timer.current = null; };
   useEffect(() => {
     const el = box.current, vid = v.current; if (!el || !vid) return;
-    vid.muted = true; vid.defaultMuted = true;
-    if (!window.matchMedia("(hover: none)").matches) return;
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) vid.play().catch(() => {}); else vid.pause(); }, { threshold: 0.6 });
-    io.observe(el); return () => io.disconnect();
+    if (!window.matchMedia("(hover: none)").matches) return () => { cancel(); stopFilm(vid); };
+    // phones: the card most in view plays, once scrolling has paused on it for 700 ms
+    const io = new IntersectionObserver(([e]) => {
+      if (e.intersectionRatio >= 0.75) later(() => startFilm(vid), 700);
+      else { cancel(); stopFilm(vid); }
+    }, { threshold: [0, 0.75] });
+    io.observe(el); return () => { io.disconnect(); cancel(); stopFilm(vid); };
   }, []);
   const [ct, rest] = [it.title.split(" · ")[1] || "", it.title.split(" · ")[0]];
   return (
     <Link ref={box} href={`/products/${it.handle}`} className="rts-card" style={{ ["--mat" as string]: MATS[k % MATS.length] }}
-      onMouseEnter={() => v.current?.play().catch(() => {})} onMouseLeave={() => v.current?.pause()}>
+      onMouseEnter={() => { const vid = v.current; if (vid) later(() => startFilm(vid), 220); }} onMouseLeave={() => { cancel(); stopFilm(v.current); }}>
       <div className="rts-media">
         <span className="rts-tag">Ready to ship</span>
         <span className="rts-heart" onClick={e => e.preventDefault()}><WishHeart item={{ handle: it.handle, title: it.title, image: it.image || "", price: it.price, compareAt: it.compare || null }} /></span>
-        {it.image && <img src={it.image} alt={it.title} loading={k < 6 ? "eager" : "lazy"} />}
-        {it.video && <video ref={v} className={playing ? "on" : ""} src={it.video} poster={it.image || undefined} muted loop playsInline preload="none" onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} />}
-        {it.video && !playing && <span className="rts-play" aria-hidden="true" onClick={e => { e.preventDefault(); v.current?.play().catch(() => {}); }}><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg></span>}
+        {it.image && <img src={sized(it.image, 640)} alt={it.title} loading={k < 6 ? "eager" : "lazy"} decoding="async" />}
+        {it.video && <video ref={v} className={playing ? "on" : ""} data-src={it.video} poster={sized(it.image, 640) || undefined} muted loop playsInline preload="none" onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} onEmptied={() => setPlaying(false)} />}
+        {it.video && !playing && <span className="rts-play" aria-hidden="true" onClick={e => { e.preventDefault(); if (v.current) startFilm(v.current); }}><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg></span>}
       </div>
       <div className="rts-meta"><div><b>{rest}</b><span>{ct ? `${ct} · ` : ""}lab-grown</span></div><em>{usd(it.price)}</em></div>
     </Link>

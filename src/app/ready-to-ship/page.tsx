@@ -24,7 +24,7 @@ export default async function ReadyToShipPage({ searchParams }: { searchParams: 
         <section className="shapes" aria-label="Jewelry type"><div className="wrap"><div className="ooo-circles rts-circles"><div className="sp-row">
           {KINDS.map(([t, label], i) => pics[i] && (
             <Link key={t} href={type === t ? "/ready-to-ship#results" : `/ready-to-ship?type=${t}#results`} scroll={false} className={`sp${type === t ? " on" : ""}`} aria-current={type === t ? "page" : undefined}>
-              <span className="sp-img"><img src={pics[i] as string} alt="" loading="lazy" /></span><b>{label}</b>
+              <span className="sp-img"><img src={`${pics[i]}${(pics[i] as string).includes("?") ? "&" : "?"}width=240`} alt="" loading="lazy" /></span><b>{label}</b>
             </Link>
           ))}
         </div></div></div></section>
