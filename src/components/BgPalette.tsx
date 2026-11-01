@@ -12,14 +12,16 @@ const SWATCHES: { name: string; hex: string }[] = [
   { name: "Sky", hex: "#DCEBF4" }, { name: "Baby pink", hex: "#F7D3DA" }, { name: "Blush", hex: "#EFC5CA" },
   { name: "Butter", hex: "#F7E9A8" }, { name: "Sage", hex: "#D6E4C8" }, { name: "Rose", hex: "#E8B4B8" },
 ];
-type T = "bg" | "head" | "fg" | "accent" | "nav" | "navfg" | "badge" | "badgefg";
+type T = "bg" | "head" | "fg" | "accent" | "nav" | "navfg" | "badge" | "badgefg" | "menu" | "menufg" | "menusub" | "menushade";
 const TARGETS: { k: T; label: string; v: string }[] = [
   { k: "bg", label: "Background", v: "--home-bg" }, { k: "head", label: "Headings", v: "--home-head" },
   { k: "fg", label: "Text", v: "--home-fg" }, { k: "accent", label: "Accent", v: "--home-accent" },
   { k: "nav", label: "Bar", v: "--nav-bg" }, { k: "navfg", label: "Bar icons", v: "--nav-fg" },
   { k: "badge", label: "Bag count", v: "--badge-bg" }, { k: "badgefg", label: "Count number", v: "--badge-fg" },
+  { k: "menu", label: "Menu bg", v: "--menu-bg" }, { k: "menufg", label: "Menu titles", v: "--menu-fg" },
+  { k: "menusub", label: "Menu small", v: "--menu-sub" }, { k: "menushade", label: "Menu shade", v: "--menu-shade" },
 ];
-const EMPTY: Record<T, string | null> = { bg: null, head: null, fg: null, accent: null, nav: null, navfg: null, badge: null, badgefg: null };
+const EMPTY: Record<T, string | null> = { bg: null, head: null, fg: null, accent: null, nav: null, navfg: null, badge: null, badgefg: null, menu: null, menufg: null, menusub: null, menushade: null };
 const GLASS = "mk-nav-glass";
 const ON = "mk-palette", key = (t: T) => "mk-home-" + t;
 const isLight = (hex: string) => {

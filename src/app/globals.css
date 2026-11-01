@@ -2884,3 +2884,9 @@ body.navfg-custom .nav .burger i{background:var(--nav-fg) !important}
   .oo2-rail .ooo-card{flex:0 0 38vw;width:auto;scroll-snap-align:start}
 }
 
+
+/* menu colours for the ?palette tester — each falls back to the site's own colour, so nothing changes unless a colour is picked there */
+.menu{background:var(--menu-bg,var(--rose))}
+.mgrid a span{color:var(--menu-fg,#fff)}
+.mgrid a span small{color:var(--menu-sub,var(--blue))}
+body[style*="--menu-shade"] .mgrid a::before{background:linear-gradient(180deg,transparent 50%,color-mix(in srgb,var(--menu-shade) 60%,transparent))}
