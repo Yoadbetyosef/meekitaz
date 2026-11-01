@@ -3063,3 +3063,14 @@ html{background:#E4E8EC}
 .cover.one .cv-glow{display:block;position:absolute;z-index:3;pointer-events:none;left:calc(102.43vw - 17.4vw);top:calc(46vh - 53.94vh);width:34.79vw;height:107.89vh;transform:rotate(9deg);border-radius:50%;
  background:radial-gradient(ellipse,rgba(255,255,255,1),rgba(255,255,255,.5) 30.6%,transparent 68%)}
 }
+
+/* Floating, minimal "A" (approved 2026-11-01) */
+.fl-min{position:relative;overflow:hidden}
+.fl-min .fl-m{position:absolute;z-index:0;top:50%;left:calc(100% - 300px);width:640px;height:auto;transform:translateY(-50%);opacity:.22;pointer-events:none}
+.fl-min .mkfilm-in{position:relative;z-index:1}
+.fl-min .fl-txt{max-width:420px}
+.fl-min .fl-txt h2{font:400 clamp(40px,4.6vw,66px)/1 var(--display);margin:0}
+.fl-min .fl-one{font:italic 500 21px/1.5 var(--sub);color:#444;margin:18px 0 0;max-width:30ch;opacity:1}
+.fl-min .fl-btn{margin-top:30px}
+@media(min-width:768px){.fl-min .mkfilm-in{padding-right:max(0px,calc(300px - (100vw - 1180px) / 2))}}
+@media(max-width:767px){.fl-min .fl-m{left:auto;right:-160px;top:auto;bottom:-80px;width:320px;transform:none}.fl-min .fl-txt{max-width:none}}
