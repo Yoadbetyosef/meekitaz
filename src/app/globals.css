@@ -3122,3 +3122,10 @@ html{background:#E5E3EF}
 .pgrid-slot:has(.op-film){grid-row:auto !important}
 .op-tile.op-film{height:auto !important;min-height:0 !important;aspect-ratio:1/1 !important}
 .op-film video{object-fit:contain !important}
+
+/* colour tester (?palette=page) for collection and product-list pages — only when a colour is picked there; visitors see nothing different */
+body[style*="--page-bg"] .catbody,body[style*="--page-bg"] main{background:var(--page-bg) !important}
+body[style*="--page-bg"]{background:var(--page-bg) !important}
+body[style*="--page-card"] .pcard-img{background:var(--page-card) !important}
+body[style*="--page-head"] .grid-wrap h2,body[style*="--page-head"] .catbody h2{color:var(--page-head) !important}
+body[style*="--page-fg"] .pcard-txt,body[style*="--page-fg"] .pcard-txt *{color:var(--page-fg) !important}

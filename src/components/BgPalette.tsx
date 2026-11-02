@@ -12,7 +12,7 @@ const SWATCHES: { name: string; hex: string }[] = [
   { name: "Sky", hex: "#DCEBF4" }, { name: "Baby pink", hex: "#F7D3DA" }, { name: "Blush", hex: "#EFC5CA" },
   { name: "Butter", hex: "#F7E9A8" }, { name: "Sage", hex: "#D6E4C8" }, { name: "Rose", hex: "#E8B4B8" },
 ];
-type T = "bg" | "head" | "fg" | "accent" | "nav" | "navfg" | "badge" | "badgefg" | "menu" | "menufg" | "menusub" | "menushade";
+type T = "bg" | "head" | "fg" | "accent" | "nav" | "navfg" | "badge" | "badgefg" | "menu" | "menufg" | "menusub" | "menushade" | "pbg" | "pcard" | "phead" | "pfg";
 const TARGETS: { k: T; label: string; v: string }[] = [
   { k: "bg", label: "Background", v: "--home-bg" }, { k: "head", label: "Headings", v: "--home-head" },
   { k: "fg", label: "Text", v: "--home-fg" }, { k: "accent", label: "Accent", v: "--home-accent" },
@@ -20,8 +20,10 @@ const TARGETS: { k: T; label: string; v: string }[] = [
   { k: "badge", label: "Bag count", v: "--badge-bg" }, { k: "badgefg", label: "Count number", v: "--badge-fg" },
   { k: "menu", label: "Menu bg", v: "--menu-bg" }, { k: "menufg", label: "Menu titles", v: "--menu-fg" },
   { k: "menusub", label: "Menu small", v: "--menu-sub" }, { k: "menushade", label: "Menu shade", v: "--menu-shade" },
+  { k: "pbg", label: "Page bg", v: "--page-bg" }, { k: "pcard", label: "Page cards", v: "--page-card" },
+  { k: "phead", label: "Page titles", v: "--page-head" }, { k: "pfg", label: "Page text", v: "--page-fg" },
 ];
-const EMPTY: Record<T, string | null> = { bg: null, head: null, fg: null, accent: null, nav: null, navfg: null, badge: null, badgefg: null, menu: null, menufg: null, menusub: null, menushade: null };
+const EMPTY: Record<T, string | null> = { bg: null, head: null, fg: null, accent: null, nav: null, navfg: null, badge: null, badgefg: null, menu: null, menufg: null, menusub: null, menushade: null, pbg: null, pcard: null, phead: null, pfg: null };
 const GLASS = "mk-nav-glass";
 const ON = "mk-palette", key = (t: T) => "mk-home-" + t;
 const isLight = (hex: string) => {
@@ -60,6 +62,7 @@ export default function BgPalette() {
     const q = new URLSearchParams(location.search);
     if (q.has("palette")) { on = true; try { localStorage.setItem(ON, "1"); } catch {} }
     // ?palette=menu opens the menu page with the "Menu bg" tab ready
+    if (q.get("palette") === "page") setTab("pbg");
     if (q.get("palette") === "menu") { setTab("menu"); setTimeout(() => (document.querySelector(".burger") as HTMLButtonElement | null)?.click(), 400); }
     setVals(v); setHexIn((q.get("palette") === "menu" ? v.menu : v.bg) || ""); setOpen(on);
   }, []);
