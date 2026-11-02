@@ -3118,3 +3118,7 @@ html{background:#E5E3EF}
 
 /* the film tile is black like the films themselves */
 .op-film{background:#000}
+/* the Ready-to-Ship film tile is square (the films are square): the whole film and the ring show, on every screen */
+.pgrid-slot:has(.op-film){grid-row:auto !important}
+.op-tile.op-film{height:auto !important;min-height:0 !important;aspect-ratio:1/1 !important}
+.op-film video{object-fit:contain !important}
