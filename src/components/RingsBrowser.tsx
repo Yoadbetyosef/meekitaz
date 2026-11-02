@@ -137,6 +137,10 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
               )}
               {/* Engagement rings: further down, a Ready-to-Ship film → the in-stock rings */}
               {handle === "engagement-rings" && i === 40 && items.length > 40 && <RtsVideoTile />}
+              {/* Engagement rings: two rows after the Ready-to-Ship film, a tall "shop the style" photo → the three-stone pear ring */}
+              {handle === "engagement-rings" && i === 46 && items.length > 46 && (
+                <div className="pgrid-slot"><Link href="/products/white-gold-three-stone-pear-diamond-ring-with-pear-side-stones" className="op-tile op-link op-tall"><img src="/media/rings-pear-style-tile.webp" alt="Smiling in champagne sunglasses, a three-stone pear diamond engagement ring with pear side stones on her finger" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%" }} /><span className="op-cap"><small>The three-stone pear</small><b>Shop the style &rarr;</b></span></Link></div>
+              )}
               {handle === "fancy-colors" && i === 10 && items.length > 10 && (
                 <div className="pgrid-slot"><div className="op-tile"><img src="/media/fancy-yellow-tile.jpg" alt="Hand over her mouth in a yellow headscarf and oval sunglasses, a fancy yellow cushion diamond ring on her finger" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 55%" }} /><div className="op-cap"><small>Fancy yellow</small><b>Say less.<br />Wear yellow.</b></div></div></div>
               )}
