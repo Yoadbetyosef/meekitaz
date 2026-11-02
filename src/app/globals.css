@@ -3115,3 +3115,6 @@ html{background:#E5E3EF}
 .pgrid:has(.op-tall){grid-auto-flow:row dense}
 .pgrid-slot:has(.op-tall){grid-column:1 / span 2;grid-row:span 2}
 }
+
+/* the film tile is black like the films themselves */
+.op-film{background:#000}

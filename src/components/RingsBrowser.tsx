@@ -3,6 +3,7 @@ import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
 import GridMood from "./GridMood";
 import Link from "next/link";
+import RtsVideoTile from "./RtsVideoTile";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { Product } from "@/lib/shopify";
@@ -134,6 +135,8 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
               {handle === "engagement-rings" && i === 30 && items.length > 30 && (
                 <div className="pgrid-slot"><Link href="/products/white-gold-oval-diamond-hidden-halo-engagement-ring-with-pave-band" className="op-tile op-link op-tall"><img src="/media/rings-style-tile.webp" alt="A hand on oxblood tailored trousers wearing an oval diamond engagement ring with a hidden halo and pavé band" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "45% 55%" }} /><span className="op-cap"><small>The oval, hidden halo</small><b>Shop the style &rarr;</b></span></Link></div>
               )}
+              {/* Engagement rings: further down, a Ready-to-Ship film → the in-stock rings */}
+              {handle === "engagement-rings" && i === 40 && items.length > 40 && <RtsVideoTile />}
               {handle === "fancy-colors" && i === 10 && items.length > 10 && (
                 <div className="pgrid-slot"><div className="op-tile"><img src="/media/fancy-yellow-tile.jpg" alt="Hand over her mouth in a yellow headscarf and oval sunglasses, a fancy yellow cushion diamond ring on her finger" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 55%" }} /><div className="op-cap"><small>Fancy yellow</small><b>Say less.<br />Wear yellow.</b></div></div></div>
               )}
