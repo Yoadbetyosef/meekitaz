@@ -24,6 +24,8 @@ let current: HTMLVideoElement | null = null;
 function stopFilm(v: HTMLVideoElement | null) { if (!v) return; v.pause(); if (v.getAttribute("src")) { v.removeAttribute("src"); v.load(); } if (current === v) current = null; }
 function startFilm(v: HTMLVideoElement) { if (current && current !== v) stopFilm(current); current = v; if (!v.getAttribute("src") && v.dataset.src) v.src = v.dataset.src; v.muted = true; v.play().catch(() => {}); }
 
+const finePointer = () => typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
 function Card({ it, k }: { it: ReelItem; k: number }) {
   const v = useRef<HTMLVideoElement>(null), box = useRef<HTMLAnchorElement>(null), timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [playing, setPlaying] = useState(false); // the photo stays until the film is really playing — never a black square
@@ -31,7 +33,7 @@ function Card({ it, k }: { it: ReelItem; k: number }) {
   const cancel = () => { if (timer.current) clearTimeout(timer.current); timer.current = null; };
   useEffect(() => {
     const el = box.current, vid = v.current; if (!el || !vid) return;
-    if (!window.matchMedia("(hover: none)").matches) return () => { cancel(); stopFilm(vid); };
+    if (finePointer()) return () => { cancel(); stopFilm(vid); };
     // phones: the card most in view plays, once scrolling has paused on it for 700 ms
     const io = new IntersectionObserver(([e]) => {
       if (e.intersectionRatio >= 0.75) later(() => startFilm(vid), 700);
@@ -42,7 +44,7 @@ function Card({ it, k }: { it: ReelItem; k: number }) {
   const [ct, rest] = [it.title.split(" · ")[1] || "", it.title.split(" · ")[0]];
   return (
     <Link ref={box} href={`/products/${it.handle}`} className="rts-card" style={{ ["--mat" as string]: MATS[k % MATS.length] }}
-      onMouseEnter={() => { const vid = v.current; if (vid) later(() => startFilm(vid), 220); }} onMouseLeave={() => { cancel(); stopFilm(v.current); }}>
+      onMouseEnter={() => { if (!finePointer()) return; const vid = v.current; if (vid) later(() => startFilm(vid), 220); }} onMouseLeave={() => { if (!finePointer()) return; cancel(); stopFilm(v.current); }}>
       <div className="rts-media">
         <span className="rts-tag">Ready to ship</span>
         <span className="rts-heart" onClick={e => e.preventDefault()}><WishHeart item={{ handle: it.handle, title: it.title, image: it.image || "", price: it.price, compareAt: it.compare || null }} /></span>
@@ -56,13 +58,23 @@ function Card({ it, k }: { it: ReelItem; k: number }) {
 }
 
 export default function RtsGrid({ initial, hasNext: h0, cursor: c0, type, sort: s0 }: { initial: ReelItem[]; hasNext: boolean; cursor: string | null; type: string; sort: string }) {
-  const [items, setItems] = useState(initial), [hasNext, setHasNext] = useState(h0), [cursor, setCursor] = useState(c0), [busy, setBusy] = useState(false), [sort, setSort] = useState(s0);
+  const [items, setItems] = useState(() => initial.filter((it, k) => initial.findIndex(x => x.handle === it.handle) === k)), [hasNext, setHasNext] = useState(h0), [cursor, setCursor] = useState(c0), [busy, setBusy] = useState(false), [sort, setSort] = useState(s0);
+  const inflight = useRef(false), end = useRef<HTMLDivElement>(null);
   const load = async (after: string | null, s = sort, append = true) => {
-    setBusy(true);
+    if (inflight.current) return; inflight.current = true; setBusy(true);
     const r = await fetch(`/api/reel?first=24&sort=${s}${type ? `&type=${type}` : ""}${after ? `&after=${encodeURIComponent(after)}` : ""}`).then(x => x.json()).catch(() => null);
-    if (r) { setItems(x => append ? [...x, ...r.items] : r.items); setHasNext(r.hasNext); setCursor(r.cursor); }
-    setBusy(false);
+    if (r) {
+      setItems(x => { if (!append) return r.items; const seen = new Set(x.map(i => i.handle)); return [...x, ...r.items.filter((i: ReelItem) => !seen.has(i.handle))]; });
+      setHasNext(r.hasNext); setCursor(r.cursor);
+    }
+    inflight.current = false; setBusy(false);
   };
+  // the next page loads by itself when the end of the grid comes near (the button stays as a fallback)
+  useEffect(() => {
+    const el = end.current; if (!el || !hasNext) return;
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) load(cursor); }, { rootMargin: "900px 0px" });
+    io.observe(el); return () => io.disconnect();
+  }, [cursor, hasNext]); // eslint-disable-line react-hooks/exhaustive-deps
   const cells: React.ReactNode[] = [];
   items.forEach((it, k) => {
     const m = MOODS.find(x => x.at === k);
@@ -78,6 +90,7 @@ export default function RtsGrid({ initial, hasNext: h0, cursor: c0, type, sort: 
           </select></label>
         </div>
         <div className="rts-grid">{cells}</div>
+        <div ref={end} aria-hidden="true" />
         {hasNext && <div className="dmore"><button type="button" onClick={() => load(cursor)} disabled={busy}>{busy ? "Loading…" : "Show more"}</button></div>}
       </div>
     </section>
