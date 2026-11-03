@@ -1,5 +1,6 @@
 import Hero from "@/components/Hero";
 import Film from "@/components/Film";
+import YellowCurtain from "@/components/YellowCurtain";
 import FloatingFilm from "@/components/FloatingFilm";
 import Categories from "@/components/Categories";
 import HouseCodes from "@/components/HouseCodes";
@@ -15,6 +16,7 @@ export default function Home() {
   return (
     <main className="home-page">
       <Hero />
+      <YellowCurtain />
       <Film />
       <Categories />
       <FloatingFilm />
