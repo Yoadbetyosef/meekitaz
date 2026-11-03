@@ -3149,12 +3149,11 @@ h1,h2,h3{letter-spacing:.03em}
 
 
 
-/* ===== Home · the yellow curtain (2026-11-03): 75% of the screen in our butter yellow with a huge white watermark, lifting off a photo ===== */
-.ycur{position:relative;z-index:6;height:calc(100vh + 75vh);height:calc(100svh + 75svh);background:#E5E3EF}
-.ycur-photo{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
-.ycur-photo picture,.ycur-photo img{display:block;width:100%;height:100%;object-fit:cover;object-position:60% 20%}
-.ycur-cta{position:absolute;right:4vw;bottom:calc(6vh + env(safe-area-inset-bottom,0px));display:flex;align-items:center;justify-content:space-between;gap:40px;min-width:min(380px,80vw);height:64px;padding:0 26px;border-radius:999px;background:#1C1A1B;color:#fff;font:400 15px var(--body);letter-spacing:.14em;text-transform:uppercase;text-decoration:none}
-.ycur-panel{position:absolute;left:0;right:0;top:0;height:75vh;height:75svh;z-index:2;background:#F7E9A8;overflow:hidden}
-.ycur-wm{position:absolute;left:50%;top:50%;width:118vw;transform:translate(-50%,-50%);color:#fff;opacity:.6;pointer-events:none}
+/* ===== Home · the yellow curtain (2026-11-03): the page opens on butter yellow over the top 75% of the hero, a huge white watermark, no menu;
+   scrolling lifts it off the hero photo (the hero stays put underneath) and brings the menu and bag in ===== */
+.home-page{position:relative}
+.ycur-panel{position:absolute;left:0;right:0;top:0;height:75vh;height:75svh;z-index:5;background:#F7E9A8;overflow:hidden;pointer-events:none}
+.ycur-wm{position:absolute;left:50%;top:50%;width:118vw;transform:translate(-50%,-50%);color:#fff;opacity:.6}
 .ycur-wm svg{display:block;width:100%;height:auto}
-@media(max-width:767px){.ycur-photo img{object-position:40% 30%}.ycur-cta{left:5vw;right:5vw;min-width:0}}
+.nav,.cart{transition:opacity .45s ease,visibility .45s}
+body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}

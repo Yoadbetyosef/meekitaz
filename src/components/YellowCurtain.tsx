@@ -1,18 +1,16 @@
+"use client";
+import { useEffect } from "react";
 import Logo from "./Logo";
 
-/* Home, straight after the hero (approved 2026-11-03): a butter-yellow curtain, three-quarters of the screen, with a huge white Meekitaz
-   watermark and no words. As you scroll it lifts away and uncovers the photo waiting underneath (the photo stays put — sticky). */
+/* Home (2026-11-03): the page opens on a butter-yellow curtain covering the top three-quarters of the hero, with a huge white Meekitaz
+   watermark and nothing else — not even the menu pill. The moment you start to scroll, the menu and bag fade in and the curtain lifts
+   away, uncovering the hero photo underneath (which stays put). */
 export default function YellowCurtain() {
-  return (
-    <section className="ycur" aria-label="Meekitaz">
-      <div className="ycur-photo">
-        <picture>
-          <source media="(max-width:767px)" srcSet="/media/hero/lav-m.webp" />
-          <img src="/media/hero/lav-d.webp" alt="Laughing in a burgundy silk headscarf and cat-eye sunglasses, reaching out with a pear diamond ring" loading="lazy" />
-        </picture>
-        <a className="ycur-cta" href="/engagement-rings">Shop the collection <span aria-hidden="true">&rarr;</span></a>
-      </div>
-      <div className="ycur-panel" aria-hidden="true"><div className="ycur-wm"><Logo /></div></div>
-    </section>
-  );
+  useEffect(() => {
+    const b = document.body;
+    const set = () => b.classList.toggle("ycur-top", window.scrollY < 24);
+    set(); window.addEventListener("scroll", set, { passive: true });
+    return () => { window.removeEventListener("scroll", set); b.classList.remove("ycur-top"); };
+  }, []);
+  return <div className="ycur-panel" aria-hidden="true"><div className="ycur-wm"><Logo /></div></div>;
 }
