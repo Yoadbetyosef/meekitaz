@@ -42,7 +42,7 @@ function apply(t: T, hex: string | null) {
   if (t === "navfg") b.classList.toggle("navfg-custom", !!hex);
 }
 const setGlass = (g: number) => document.body.style.setProperty("--nav-a", g + "%");
-const LOCKED = new Set<T>(["nav", "navfg"]); // the bar was locked as the site default on 2026-10-30
+const LOCKED = new Set<T>(["nav", "navfg", "pbg", "pcard", "phead", "pfg"]); // the bar was locked 2026-10-30; page colours are tried live but never kept (an old saved green page background kept showing, 2026-11-03)
 
 export default function BgPalette() {
   const [open, setOpen] = useState(false);
