@@ -52,7 +52,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
         {(p.videoDesktop || p.videoMobile) && <HeroVideo desktop={p.videoDesktop} mobile={p.videoMobile} />}
         <div className="wrap"><h1><small>{p.small}</small>{p.title}</h1><DailyHeroBadge /></div>
       </section>
-      <div className={`catbody${p.slug === "diamonds" ? " dm-page" : ""}`}>
+      <div className={`catbody cb-${p.slug}${p.slug === "diamonds" ? " dm-page" : ""}`}>
         {p.slug === "diamonds" && <RingSteps step={2} />}
         {p.slug === "diamonds" && <Suspense fallback={null}><SettingBar /></Suspense>}
         {p.slug === "engagement-rings" && <Suspense fallback={null}><StoneBar /></Suspense>}
