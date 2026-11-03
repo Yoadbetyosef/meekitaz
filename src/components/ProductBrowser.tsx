@@ -2,6 +2,7 @@
 import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
 import GridMood, { type Reveal } from "./GridMood";
+import Link from "next/link";
 import { Fragment, useState } from "react";
 import type { Product } from "@/lib/shopify";
 
@@ -48,6 +49,14 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
               {/* earrings: the silent mood clip sits after the first two rows (CSS order places it; 6 cards before it on desktop, 4 on phones) */}
               {MOOD[handle] && i === 4 && items.length > 4 && <GridMood src={MOOD[handle].src} poster={MOOD[handle].poster} reveal={MOOD[handle].reveal} />}
               {slot && i === slotAt && <div className="pgrid-slot">{slot}</div>}
+              {/* Bracelets: two rows after the film, the floating-bracelet portrait → the Floating collection */}
+              {handle === "bracelets" && i === 12 && items.length > 12 && (
+                <div className="pgrid-slot"><Link href="/floating" className="op-tile op-link"><img src="/media/floating-bracelet-tile.webp" alt="Smiling in a burgundy silk headscarf, a floating marquise diamond bracelet on her wrist" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "55% 55%" }} /><span className="op-cap"><small>Only at Meekitaz</small><b>Explore floating &rarr;</b></span></Link></div>
+              )}
+              {/* One of One: the same portrait, four rows after the first photo tile */}
+              {handle === "one-of-one" && i === 18 && items.length > 18 && (
+                <div className="pgrid-slot"><div className="op-tile"><img src="/media/floating-bracelet-tile.webp" alt="Smiling in a burgundy silk headscarf, a floating marquise diamond bracelet on her wrist" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "55% 55%" }} /><span className="op-cap"><small>One of One</small><b>Made once.<br />Worn every day.</b></span></div></div>
+              )}
               <DesignCard p={p} />
             </Fragment>
           ))}
