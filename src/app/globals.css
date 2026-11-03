@@ -3148,14 +3148,3 @@ body.fp-on h1,body.fp-on h2,body.fp-on h3{letter-spacing:var(--fp-head)}
 h1,h2,h3{letter-spacing:.03em}
 
 
-/* ===== The Studs (earrings) — "S1, same water going deep" (trial 2026-11-03): the page carries on from the dark water at the bottom of
-   the pool photo and sinks slowly into a deep night-pool blue-green; light type; the white cards float on it; no line between photo and page ===== */
-.cat-earrings::after{background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(52,40,38,.6) 78%,#3F322F 100%)}
-.catbody.cb-earrings{background:linear-gradient(180deg,#3F322F 0,#33403F 700px,#22343A 1500px,#1B2B31 100%);color:#F4EEE8}
-.catbody.cb-earrings::before{content:"";position:absolute;left:0;right:0;top:-140px;height:140px;background:linear-gradient(180deg,rgba(63,50,47,0),#3F322F);pointer-events:none}
-.cb-earrings .grid-wrap h2,.cb-earrings .eyebrow,.cb-earrings .dsort,.cb-earrings .dsort label,.cb-earrings .dres,.cb-earrings .sp-head h2,.cb-earrings .sp-row a,.cb-earrings .sp-row span{color:#F4EEE8}
-.cb-earrings .eyebrow{color:#C9D8D3}
-.cb-earrings .dsort select{background:rgba(255,255,255,.08);color:#F4EEE8;border-color:rgba(255,255,255,.35)}
-.cb-earrings .pcard-txt,.cb-earrings .pcard-txt *{color:#F4EEE8}
-.cb-earrings .pcard-txt s,.cb-earrings .pcard-txt del{color:rgba(244,238,232,.6)}
-.cb-earrings .dmore button{background:#F4EEE8;color:#1C1A1B}
