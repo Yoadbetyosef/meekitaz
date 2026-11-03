@@ -3142,3 +3142,6 @@ body.fp-on h1,body.fp-on h2,body.fp-on h3{letter-spacing:var(--fp-head)}
 .fpal-n{font:600 11px Arial,sans-serif;color:#777;margin-top:4px}
 .fpal-list p{margin:4px 2px 0;font:400 11px Arial,sans-serif;color:#888}
 @media(max-width:767px){.fpal{left:8px;right:8px;width:auto;max-height:58vh}}
+
+/* site fonts = the "White Lotus" set (Marcellus headings, Marcellus SC labels, Cormorant Garamond text), approved 2026-11-03 */
+h1,h2,h3{letter-spacing:.03em}

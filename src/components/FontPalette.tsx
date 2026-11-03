@@ -48,7 +48,7 @@ export default function FontPalette() {
             <span className="fpal-n">{s.name} · {s.note}</span>
           </button>
         ))}
-        <button className={cur === null ? "on" : ""} onClick={() => pick(null)}><span className="fpal-n">Site fonts (Prata · Archivo · Cormorant)</span></button>
+        <button className={cur === null ? "on" : ""} onClick={() => pick(null)}><span className="fpal-n">Site fonts (Marcellus · Cormorant)</span></button>
         <p>Only you see this. Tell me the number you like and I&rsquo;ll set it for everyone.</p>
       </div>}
     </div>

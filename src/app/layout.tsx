@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Prata, Cormorant_Garamond, Archivo, Didact_Gothic, Mrs_Saint_Delafield } from "next/font/google";
+import { Marcellus, Marcellus_SC, Cormorant_Garamond, Mrs_Saint_Delafield } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import DesignLabGate from "@/components/DesignLabGate";
@@ -20,11 +20,11 @@ import CartDrawer from "@/components/CartDrawer";
 import HeroWarm from "@/components/HeroWarm";
 import { categories } from "@/lib/data";
 
-const prata = Prata({ weight: "400", subsets: ["latin"], variable: "--f-display", display: "swap" });
+const prata = Marcellus({ weight: "400", subsets: ["latin"], variable: "--f-display", display: "swap" }); // headings — Marcellus (2026-11-03, "White Lotus" set)
 const cormorant = Cormorant_Garamond({ weight: ["500"], style: ["italic"], subsets: ["latin"], variable: "--f-sub", display: "swap" });
-const didact = Didact_Gothic({ weight: "400", subsets: ["latin"], variable: "--f-title", display: "swap" }); // jewelry (product) titles
+const didact = Cormorant_Garamond({ weight: ["400", "500", "600"], style: ["normal", "italic"], subsets: ["latin"], variable: "--f-title", display: "swap" }); // jewelry (product) titles and regular text — Cormorant Garamond
 const script = Mrs_Saint_Delafield({ weight: "400", subsets: ["latin"], variable: "--f-script", display: "swap" }); // handwritten Meekitaz signature (home film card)
-const archivo = Archivo({ weight: ["300", "400", "600", "700"], subsets: ["latin"], variable: "--f-body", display: "swap" });
+const archivo = Marcellus_SC({ weight: "400", subsets: ["latin"], variable: "--f-body", display: "swap" }); // small spaced labels, buttons, prices — Marcellus SC
 
 export const metadata: Metadata = {
   title: "MEEKITAZ — Serious diamonds, worn lightly.",
