@@ -1,7 +1,8 @@
 :root{
   --red:#0D4FE7; /* was #0D4FE7 (dark red), replaced site-wide 2026-10-31 */ --pink:#F7D3DA; --blue:#C4DEEE; --blue-light:#DCEBF4; --sage:#D6E4C8; --ivory:#FDF8F3; --ink:#1C1A1B; --gold:#C29A55; --rose:#E8B4B8; --star:#FFC53D;
-  --f-title:"Didact Gothic",Helvetica,Arial,sans-serif;
-  --f-display:Prata,Georgia,serif; --f-sub:'Cormorant Garamond',Georgia,serif; --f-body:Archivo,Helvetica,Arial,sans-serif;
+  /* site fonts (2026-11-03): Marcellus headings, Marcellus SC labels/buttons/prices, Cormorant Garamond text — these names must match layout.tsx */
+  --f-title:"Cormorant Garamond",Georgia,serif;
+  --f-display:"Marcellus",Georgia,serif; --f-sub:'Cormorant Garamond',Georgia,serif; --f-body:"Marcellus SC",Georgia,serif;
   --display:var(--f-display); --sub:var(--f-sub); --body:var(--f-body);
   --nav-h:70px;
 }
