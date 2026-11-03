@@ -3147,14 +3147,3 @@ body.fp-on h1,body.fp-on h2,body.fp-on h3{letter-spacing:var(--fp-head)}
 /* site fonts = the "White Lotus" set (Marcellus headings, Marcellus SC labels, Cormorant Garamond text), approved 2026-11-03 */
 h1,h2,h3{letter-spacing:.03em}
 
-/* ===== One base, one boom (trial: Engagement rings, 2026-11-03) — the page sits on the home's lavender-grey; only the block under the
-   photo takes the page's signature colour (hotel pink #F29C93) ===== */
-.catbody.cb-engagement-rings,.catbody.cb-engagement-rings .grid-wrap{background:#E5E3EF !important}
-.boom{display:grid;grid-template-columns:1.2fr 1fr;gap:5vw;align-items:end;padding:clamp(44px,6vw,96px) 6%;color:#1C1A1B}
-.boom-eng{background:#F29C93}
-.boom h2{font:400 clamp(40px,6vw,96px)/.92 var(--display);margin:0;letter-spacing:.02em}
-.boom h2 em{display:block;font:italic 500 .55em var(--sub);margin-top:14px;letter-spacing:.02em}
-.boom p{font:italic 500 clamp(18px,1.6vw,23px)/1.5 var(--sub);margin:0 0 22px;max-width:34ch}
-.boom-stats{display:flex;gap:30px;flex-wrap:wrap;font:400 11px var(--body);letter-spacing:.2em;text-transform:uppercase}
-.boom-stats b{display:block;font:400 32px var(--display);letter-spacing:0;margin-bottom:4px;text-transform:none}
-@media(max-width:767px){.boom{grid-template-columns:1fr;gap:18px;padding:44px 22px}.boom h2{font-size:44px}.boom-stats{gap:22px}.boom-stats b{font-size:26px}}
