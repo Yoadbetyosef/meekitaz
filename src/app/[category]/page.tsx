@@ -52,7 +52,15 @@ export default async function CategoryPage({ params, searchParams }: { params: P
         {(p.videoDesktop || p.videoMobile) && <HeroVideo desktop={p.videoDesktop} mobile={p.videoMobile} />}
         <div className="wrap"><h1><small>{p.small}</small>{p.title}</h1><DailyHeroBadge /></div>
       </section>
-      <div className={`catbody${p.slug === "diamonds" ? " dm-page" : ""}`}>
+      <div className={`catbody cb-${p.slug}${p.slug === "diamonds" ? " dm-page" : ""}`}>
+        {/* the page's one "boom": a full-width block in its signature colour, straight under the photo (trial on Engagement rings, 2026-11-03) */}
+        {p.slug === "engagement-rings" && (
+          <section className="boom boom-eng" aria-label="One stone. The whole conversation.">
+            <h2>One stone.<em>The whole conversation.</em></h2>
+            <div><p>Set it on the stone you choose, in the metal you love &mdash; certified, and made in New York.</p>
+              <div className="boom-stats"><span><b>3,000+</b>settings</span><span><b>IGI &middot; GIA</b>graded</span><span><b>48h</b>in stock</span></div></div>
+          </section>
+        )}
         {p.slug === "diamonds" && <RingSteps step={2} />}
         {p.slug === "diamonds" && <Suspense fallback={null}><SettingBar /></Suspense>}
         {p.slug === "engagement-rings" && <Suspense fallback={null}><StoneBar /></Suspense>}
