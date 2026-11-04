@@ -3168,3 +3168,10 @@ body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
 .ycur-hold{height:75vh;height:75svh;pointer-events:none}
 /* category pages — background locked 2026-11-03: soft butter cream #FBF7DF (was ivory #FDF8F3) */
 .catbody{background:#FBF7DF}
+
+/* film opens out of our M ("D"): two halves of the M, ink, that slide apart as the film opens between them */
+.mko-m{position:absolute;left:50%;top:56%;width:min(30vw,340px);transform:translate(-50%,-50%);z-index:2;pointer-events:none}
+.mko-m img{display:block;width:100%;height:auto;filter:brightness(0)}
+.mko-ml img{clip-path:inset(0 50% 0 0)}.mko-mr img{clip-path:inset(0 0 0 50%)}
+.mko-box{visibility:hidden}
+@media(max-width:767px){.mko-m{width:52vw}}
