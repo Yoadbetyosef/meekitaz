@@ -3177,3 +3177,16 @@ body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
 @media(max-width:767px){.mko-m{width:52vw}}
 /* product pages and diamond pages — the same soft butter cream as the category pages (locked 2026-11-03) */
 .pp,.pp.ih-on,.pp-below,.dd,.df{background:#FBF7DF}
+
+/* home hero on computers (V1, 2026-11-03): after the yellow lifts, the still dissolves into the studio film; the vertical watermark and
+   Yoad's light stay above it, the shade, headline and button above all */
+.cv-film{display:none}
+@media(min-width:768px){
+.cover.one .cv-film{display:block;position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 1s ease;pointer-events:none}
+.cover.one .cv-film video{width:100%;height:100%;object-fit:cover;object-position:55% 50%;display:block}
+body.hero-film .cover.one .cv-film{opacity:1}
+.cover.one .cv-edge{z-index:2}
+.cover.one .cv-glow{z-index:3}
+.cover.one::after{z-index:3}
+.cover.one .cv-bot{z-index:5}
+}
