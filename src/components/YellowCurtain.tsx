@@ -16,16 +16,17 @@ export default function YellowCurtain() {
     // the one-second hold: freezes the page where it is — on computers via overflow, on phones by swallowing the touch and wheel moves
     const block = (e: Event) => e.preventDefault();
     const hold = (ms: number) => {
-      // a hard stop — also against a strong flick on iPhone, where momentum keeps the page moving even with scrolling turned off:
-      // the body is pinned in place (position:fixed at the current offset), then released at the same spot
-      const y = window.scrollY, bs = document.body.style;
-      bs.position = "fixed"; bs.top = `-${y}px`; bs.left = "0"; bs.right = "0"; bs.width = "100%";
+      // a hard stop, also against a strong flick on iPhone: for the whole second the page is pushed back to the same spot on every
+      // frame (which kills the momentum), and finger/wheel moves are swallowed
+      const y = window.scrollY, until = performance.now() + ms;
       window.addEventListener("touchmove", block, { passive: false }); window.addEventListener("wheel", block, { passive: false });
-      setTimeout(() => {
-        bs.position = ""; bs.top = ""; bs.left = ""; bs.right = ""; bs.width = "";
-        window.scrollTo({ top: y });
-        window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block);
-      }, ms);
+      document.documentElement.style.overflow = "hidden";
+      const pin = () => {
+        if (window.scrollY !== y) window.scrollTo(0, y);
+        if (performance.now() < until) requestAnimationFrame(pin);
+        else { document.documentElement.style.overflow = ""; window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block); }
+      };
+      requestAnimationFrame(pin);
     };
     const set = () => {
       const y = window.scrollY, H = window.innerHeight;
