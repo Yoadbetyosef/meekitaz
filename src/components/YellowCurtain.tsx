@@ -16,9 +16,16 @@ export default function YellowCurtain() {
     // the one-second hold: freezes the page where it is — on computers via overflow, on phones by swallowing the touch and wheel moves
     const block = (e: Event) => e.preventDefault();
     const hold = (ms: number) => {
-      document.documentElement.style.overflow = "hidden";
+      // a hard stop — also against a strong flick on iPhone, where momentum keeps the page moving even with scrolling turned off:
+      // the body is pinned in place (position:fixed at the current offset), then released at the same spot
+      const y = window.scrollY, bs = document.body.style;
+      bs.position = "fixed"; bs.top = `-${y}px`; bs.left = "0"; bs.right = "0"; bs.width = "100%";
       window.addEventListener("touchmove", block, { passive: false }); window.addEventListener("wheel", block, { passive: false });
-      setTimeout(() => { document.documentElement.style.overflow = ""; window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block); }, ms);
+      setTimeout(() => {
+        bs.position = ""; bs.top = ""; bs.left = ""; bs.right = ""; bs.width = "";
+        window.scrollTo({ top: y });
+        window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block);
+      }, ms);
     };
     const set = () => {
       const y = window.scrollY, H = window.innerHeight;
