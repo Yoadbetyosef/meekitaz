@@ -3153,8 +3153,15 @@ h1,h2,h3{letter-spacing:.03em}
    scrolling lifts it off the hero photo (the hero stays put underneath) and brings the menu and bag in ===== */
 .home-page{position:relative}
 .ycur-panel{position:absolute;left:0;right:0;top:0;height:75vh;height:75svh;z-index:5;background:#F7E9A8;overflow:hidden;pointer-events:none}
-.ycur-wm{position:absolute;right:-6vw;top:58%;width:230vw;transform:translateY(-50%);color:#fff;opacity:.6} /* huge and off to the side: the word runs off the left edge, its end ("…az") sits on the right */
-@media(max-width:767px){.ycur-wm{width:420vw;right:-14vw;top:56%}}
+/* "Q1" (approved 2026-11-03): the watermark runs vertically up the right edge — the same size and place as on the hero (124vh, 3vh off
+   the edge, 12vh above the top), white; on the left a small spaced line "Quite the catch." and two tiny plus marks in the left corners */
+.ycur-wm{position:absolute;top:-12vh;left:calc(100% + 3vh);width:124vh;transform:rotate(90deg);transform-origin:0 0;color:#fff;opacity:.6}
+.ycur-plus{position:absolute;left:30px;width:14px;height:14px}
+.ycur-plus::before,.ycur-plus::after{content:"";position:absolute;background:#1C1A1B}
+.ycur-plus::before{left:0;right:0;top:50%;height:1.5px;transform:translateY(-50%)}.ycur-plus::after{top:0;bottom:0;left:50%;width:1.5px;transform:translateX(-50%)}
+.ycur-p1{top:30px}.ycur-p2{bottom:30px}
+.ycur-qt{position:absolute;left:64px;top:50%;transform:translateY(-50%);font:400 15px var(--body);letter-spacing:.32em;text-transform:uppercase;color:#1C1A1B}
+@media(max-width:767px){.ycur-plus{left:18px;width:11px;height:11px}.ycur-p1{top:calc(18px + env(safe-area-inset-top,0px))}.ycur-p2{bottom:18px}.ycur-qt{left:24px;font-size:12px}}
 .ycur-wm svg{display:block;width:100%;height:auto}
 .nav,.cart{transition:opacity .45s ease,visibility .45s}
 body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}

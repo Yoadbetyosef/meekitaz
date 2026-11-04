@@ -12,5 +12,11 @@ export default function YellowCurtain() {
     set(); window.addEventListener("scroll", set, { passive: true });
     return () => { window.removeEventListener("scroll", set); b.classList.remove("ycur-top"); };
   }, []);
-  return <div className="ycur-panel" aria-hidden="true"><div className="ycur-wm"><Logo /></div></div>;
+  return (
+    <div className="ycur-panel" aria-hidden="true">
+      <div className="ycur-wm"><Logo /></div>
+      <span className="ycur-plus ycur-p1" /><span className="ycur-plus ycur-p2" />
+      <span className="ycur-qt">Quite the catch.</span>
+    </div>
+  );
 }
