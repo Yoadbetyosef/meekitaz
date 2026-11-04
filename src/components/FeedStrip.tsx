@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useRef } from "react";
 
-/* Floating section: the brand reel as a tall tile under "Light, all the way through." — the same size and shape as the photo tiles in
-   the ring grid (one column, two rows; full width 4:5 on phones). Loads and plays only while on screen. */
+/* Below the Floating section (approved 2026-11-04, "B"): the brand reel centred, in the shape of the ring-grid photo tiles (370×900 on
+   computers; full width, 3:5.2 on phones), with plus marks in the corners and "MEEKITAZ · FROM THE FEED" vertical on the side.
+   Loads and plays only while on screen. */
 export default function FeedStrip() {
   const v = useRef<HTMLVideoElement>(null);
   useEffect(() => {
@@ -14,9 +15,12 @@ export default function FeedStrip() {
     io.observe(vid); return () => io.disconnect();
   }, []);
   return (
-    <div className="fl-reel" aria-hidden="true">
-      <video ref={v} muted loop playsInline preload="none" poster="/media/feed-strip-poster.jpg" />
-      <span>Meekitaz &middot; From the feed</span>
-    </div>
+    <section className="fl-reel-wrap" aria-label="From the feed">
+      <div className="fl-reel">
+        <video ref={v} muted loop playsInline preload="none" poster="/media/feed-strip-poster.jpg" aria-hidden="true" />
+        <i className="fl-plus p1" /><i className="fl-plus p2" /><i className="fl-plus p3" />
+        <span>Meekitaz &middot; From the feed</span>
+      </div>
+    </section>
   );
 }

@@ -2,6 +2,7 @@ import Hero from "@/components/Hero";
 import Film from "@/components/Film";
 import YellowCurtain from "@/components/YellowCurtain";
 import FloatingFilm from "@/components/FloatingFilm";
+import FeedStrip from "@/components/FeedStrip";
 import Categories from "@/components/Categories";
 import HouseCodes from "@/components/HouseCodes";
 import NewFancy from "@/components/NewFancy";
@@ -21,6 +22,7 @@ export default function Home() {
       <Film />
       <Categories />
       <FloatingFilm />
+      <FeedStrip />
       <NewFancy />
       <OneOfOne />
       <ReelStrip />

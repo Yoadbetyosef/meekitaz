@@ -13,7 +13,6 @@ export default function FloatingFilm() {
           </span>
           <h2>Light, all the<br />way through.</h2>
           <p className="fl-one">No prongs. 360&deg; of light.</p>
-          <FeedStrip />
           <a href="/floating" className="pill fl-btn">Shop floating</a>
         </div>
       </div>
