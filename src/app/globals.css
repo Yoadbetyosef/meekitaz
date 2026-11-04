@@ -3217,3 +3217,6 @@ body.hero-film .cover.one .cv-film{opacity:1}
 .ycur-panel{animation:ycurC1 4.2s linear infinite}
 @keyframes ycurC1{0%{background:#F7E9A8}16%{background:#F7D3DA}33%{background:#F29C93}50%{background:#C9C1F2}66%{background:#C4DEEE}83%{background:#D6E4C8}100%{background:#F7E9A8}}
 @media(prefers-reduced-motion:reduce){.ycur-panel{animation:none}}
+
+/* during the one-second stop the body is frozen in place; the sticky hero is held at the top of the screen so nothing shifts */
+body.ycur-freeze .hero.cover.one{position:fixed;top:0;left:0;right:0}
