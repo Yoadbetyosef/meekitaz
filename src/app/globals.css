@@ -3166,3 +3166,5 @@ h1,h2,h3{letter-spacing:.03em}
 .nav,.cart{transition:opacity .45s ease,visibility .45s}
 body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
 .ycur-hold{height:75vh;height:75svh;pointer-events:none}
+/* category pages — background locked 2026-11-03: soft butter cream #FBF7DF (was ivory #FDF8F3) */
+.catbody{background:#FBF7DF}
