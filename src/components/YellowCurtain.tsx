@@ -22,7 +22,7 @@ export default function YellowCurtain() {
         if (want && v.getAttribute("src") !== want) { if (phone.matches && v.dataset.posterM) v.poster = v.dataset.posterM; v.src = want; }
         v.currentTime = 0; v.play().catch(() => {}); b.classList.add("hero-film");
         // a one-second pause on the film (approved 2026-11-04): the page holds here, then the scroll goes on
-        if (armed) { armed = false; window.scrollTo({ top: H * .75 }); document.documentElement.style.overflow = "hidden"; setTimeout(() => { document.documentElement.style.overflow = ""; }, 1000); }
+        if (armed) { armed = false; document.documentElement.style.overflow = "hidden"; setTimeout(() => { document.documentElement.style.overflow = ""; }, 1000); } // no snap-back: the page simply holds where it is
       }
       else if (y < H * .4 && b.classList.contains("hero-film")) { b.classList.remove("hero-film"); v.pause(); armed = true; }
     };
