@@ -3175,3 +3175,5 @@ body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
 .mko-ml img{clip-path:inset(0 50% 0 0)}.mko-mr img{clip-path:inset(0 0 0 50%)}
 .mko-box{visibility:hidden}
 @media(max-width:767px){.mko-m{width:52vw}}
+/* product pages and diamond pages — the same soft butter cream as the category pages (locked 2026-11-03) */
+.pp,.pp.ih-on,.pp-below,.dd,.df{background:#FBF7DF}
