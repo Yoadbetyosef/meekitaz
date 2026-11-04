@@ -13,6 +13,13 @@ export default function YellowCurtain() {
     const film = () => document.querySelector<HTMLVideoElement>(".cover.one .cv-film video");
     const phone = window.matchMedia("(max-width:767px)");
     let armed = true;
+    // the one-second hold: freezes the page where it is — on computers via overflow, on phones by swallowing the touch and wheel moves
+    const block = (e: Event) => e.preventDefault();
+    const hold = (ms: number) => {
+      document.documentElement.style.overflow = "hidden";
+      window.addEventListener("touchmove", block, { passive: false }); window.addEventListener("wheel", block, { passive: false });
+      setTimeout(() => { document.documentElement.style.overflow = ""; window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block); }, ms);
+    };
     const set = () => {
       const y = window.scrollY, H = window.innerHeight;
       b.classList.toggle("ycur-top", y < 24);
@@ -22,12 +29,12 @@ export default function YellowCurtain() {
         if (want && v.getAttribute("src") !== want) { if (phone.matches && v.dataset.posterM) v.poster = v.dataset.posterM; v.src = want; }
         v.currentTime = 0; v.play().catch(() => {}); b.classList.add("hero-film");
         // a one-second pause on the film (approved 2026-11-04): the page holds here, then the scroll goes on
-        if (armed) { armed = false; document.documentElement.style.overflow = "hidden"; setTimeout(() => { document.documentElement.style.overflow = ""; }, 1000); } // no snap-back: the page simply holds where it is
+        if (armed) { armed = false; hold(1000); } // no snap-back: the page simply holds where it is
       }
       else if (y < H * .4 && b.classList.contains("hero-film")) { b.classList.remove("hero-film"); v.pause(); armed = true; }
     };
     set(); window.addEventListener("scroll", set, { passive: true });
-    return () => { window.removeEventListener("scroll", set); b.classList.remove("ycur-top", "hero-film"); document.documentElement.style.overflow = ""; };
+    return () => { window.removeEventListener("scroll", set); window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block); b.classList.remove("ycur-top", "hero-film"); document.documentElement.style.overflow = ""; };
   }, []);
   return (
     <div className="ycur-panel" aria-hidden="true">

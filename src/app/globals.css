@@ -3183,7 +3183,8 @@ body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
 .cv-film{display:none}
 @media(min-width:768px){
 .cover.one .cv-film{display:block;position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 1s ease;pointer-events:none}
-.cover.one .cv-film video{width:100%;height:100%;object-fit:cover;object-position:55% 50%;display:block}
+/* the film sits exactly where the still sits (same size, same place, same fade on the right) — she starts moving from where she stands */
+.cover.one .cv-film video{position:absolute;left:-42.22vw;top:-7.18vw;width:137.95vw;height:auto;max-width:none;display:block;-webkit-mask-image:linear-gradient(90deg,#000 94%,transparent);mask-image:linear-gradient(90deg,#000 94%,transparent)}
 body.hero-film .cover.one .cv-film{opacity:1}
 .cover.one .cv-edge{z-index:2}
 .cover.one .cv-glow{z-index:3}
