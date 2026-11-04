@@ -8,7 +8,7 @@ import { useState } from "react";
    on the side, and a small Enter. */
 const TILES = [
   { href: "/engagement-rings", title: "Engagement rings", sub: "One stone. The whole conversation.", lab: "The rings", img: "/media/cats/engagement-rings.webp" },
-  { href: "/diamonds", title: "Diamonds", sub: "Loose stones, serious sizes.", lab: "The stones", img: "/media/cats/diamonds.webp" },
+  { href: "/diamonds", title: "Diamonds", sub: "Loose stones, serious sizes.", lab: "The stones", img: "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261104_202102_c2afd35d-2395-4d43-bcc1-c6e2113deeb4.png", pos: "50% 50%" } // the emerald in tweezers, colourised (Higgsfield, 2026-11-04),
   { href: "/earrings", title: "Earrings", sub: "A ball cap. Two carats.", lab: "The studs", img: "/media/cats/earrings.webp" },
   { href: "/necklaces", title: "Necklaces", sub: "Layered. Then layered again.", lab: "The neck", img: "/media/cats/necklaces.webp" },
   { href: "/bracelets", title: "Bracelets", sub: "Stacked for breakfast.", lab: "The wrist", img: "/media/cats/bracelets.webp" },
@@ -27,7 +27,7 @@ export default function Categories() {
           {TILES.map((t, i) => (
             <Link key={t.href} href={t.href} className={`ct pt${on === i ? " on" : ""}`}
               onMouseEnter={() => setOn(i)} onTouchStart={() => setOn(i)} onFocus={() => setOn(i)}>
-              <img src={t.img} alt={t.title} loading={i < 4 ? "eager" : "lazy"} />
+              <img src={t.img} alt={t.title} loading={i < 4 ? "eager" : "lazy"} style={"pos" in t ? { objectPosition: (t as { pos: string }).pos } : undefined} />
               <span className="pt-ov" aria-hidden="true" />
               <i className="pt-plus p1" aria-hidden="true" /><i className="pt-plus p2" aria-hidden="true" />
               <span className="pt-vl" aria-hidden="true">Meekitaz &middot; {t.lab}</span>
