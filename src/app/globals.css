@@ -2937,7 +2937,7 @@ body[style*="--menu-shade"] .mgrid a::before{background:linear-gradient(180deg,t
 .cover.one .cv-line h1 .cv-sub{display:block;font:400 2.1vw var(--display);letter-spacing:.32em;text-transform:uppercase;margin-top:10px;text-shadow:0 2px 14px rgba(0,0,0,.25)}
 @media(min-width:768px){
 .hero.cover.one{height:100vh;height:100svh}
-.cover.one .hs img{width:112vw !important;height:auto !important;left:-6vw !important;top:-.3vw !important} /* 112%, centred, eyes under the pill, legs off the edge (approved 2026-11-04) */
+.cover.one .hs img{width:130vw !important;height:auto !important;left:-30vw !important;top:-.5vw !important} /* 130%, pulled left so she sits nearer the middle; eyes under the pill; the frame still covers the full width */
 .cover.one::after{background:linear-gradient(90deg,rgba(30,20,40,.32),rgba(30,20,40,.06) 38%,transparent 55%),linear-gradient(0deg,rgba(30,20,40,.25),transparent 25%)}
 .cover.one .cv-bot{left:5.7vw;right:auto;top:36vh;bottom:auto;gap:0}
 .cover.one .cv-line h1{font-size:5.8vw;line-height:.95}
@@ -3182,9 +3182,9 @@ body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
    Yoad's light stay above it, the shade, headline and button above all */
 .cv-film{display:none}
 @media(min-width:768px){
-.cover.one .cv-film{display:block;position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 1s ease;pointer-events:none}
+.cover.one .cv-film{display:block;position:absolute;inset:0;z-index:1;opacity:0;transition:opacity .35s ease;pointer-events:none}
 /* the film sits exactly where the still sits (same size, same place, same fade on the right) — she starts moving from where she stands */
-.cover.one .cv-film video{position:absolute;left:-6vw;top:-.3vw;width:112vw;height:auto;max-width:none;display:block}
+.cover.one .cv-film video{position:absolute;left:-30vw;top:-.5vw;width:130vw;height:auto;max-width:none;display:block}
 body.hero-film .cover.one .cv-film{opacity:1}
 .cover.one .cv-edge{z-index:2}
 .cover.one .cv-glow{z-index:3}
@@ -3194,7 +3194,7 @@ body.hero-film .cover.one .cv-film{opacity:1}
 
 /* home hero on phones: the same — after the yellow lifts the still dissolves into the tall studio film; headline and button stay on top */
 @media(max-width:767px){
-.cover.one .cv-film{display:block;position:absolute;inset:0;z-index:1;opacity:0;transition:opacity 1s ease;pointer-events:none}
+.cover.one .cv-film{display:block;position:absolute;inset:0;z-index:1;opacity:0;transition:opacity .35s ease;pointer-events:none}
 .cover.one .cv-film video{width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block}
 body.hero-film .cover.one .cv-film{opacity:1}
 .cover.one::after{z-index:2}

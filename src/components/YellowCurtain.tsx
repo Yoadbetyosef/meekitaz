@@ -11,21 +11,26 @@ export default function YellowCurtain() {
     // when the yellow has lifted, the hero's still photo dissolves into the film (computers: the wide film, the watermark and its light
     // on top; phones: the tall film); scrolling back up brings the still back. The film only loads then.
     const film = () => document.querySelector<HTMLVideoElement>(".cover.one .cv-film video");
+    { const v = film(); if (v) { const phone0 = window.matchMedia("(max-width:767px)").matches; const want = phone0 ? v.dataset.srcM : v.dataset.src; if (want && !v.getAttribute("src")) { if (phone0 && v.dataset.posterM) v.poster = v.dataset.posterM; v.preload = "auto"; v.src = want; v.load(); } } }
     const phone = window.matchMedia("(max-width:767px)");
     let armed = true;
     // the one-second hold: freezes the page where it is — on computers via overflow, on phones by swallowing the touch and wheel moves
     const block = (e: Event) => e.preventDefault();
-    const hold = (ms: number) => {
-      // a hard stop, also against a strong flick on iPhone: for the whole second the page is pushed back to the same spot on every
-      // frame (which kills the momentum), and finger/wheel moves are swallowed
-      const y = window.scrollY, until = performance.now() + ms;
+    const hold = (minMs: number) => {
+      // the page is pinned exactly where the yellow meets the top (not where a flick happened to land), and stays pinned — every frame —
+      // until the person makes a NEW scroll gesture (a new touch, wheel or key) after the minimum hold; momentum from the old flick is
+      // swallowed, so nothing bounces back down
+      const y = Math.round(window.innerHeight * .75), start = performance.now();
+      let holding = true;
+      const release = () => { if (!holding || performance.now() - start < minMs) return; holding = false;
+        document.documentElement.style.overflow = ""; window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block);
+        window.removeEventListener("touchstart", release); window.removeEventListener("wheel", release, true); window.removeEventListener("keydown", release); };
       window.addEventListener("touchmove", block, { passive: false }); window.addEventListener("wheel", block, { passive: false });
+      window.addEventListener("touchstart", release, { passive: true }); window.addEventListener("wheel", release, true); window.addEventListener("keydown", release);
       document.documentElement.style.overflow = "hidden";
-      const pin = () => {
-        if (window.scrollY !== y) window.scrollTo(0, y);
-        if (performance.now() < until) requestAnimationFrame(pin);
-        else { document.documentElement.style.overflow = ""; window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block); }
-      };
+      const pin = () => { if (!holding) return; if (window.scrollY !== y) window.scrollTo(0, y); requestAnimationFrame(pin); };
+      requestAnimationFrame(pin);
+    };
       requestAnimationFrame(pin);
     };
     const set = () => {
@@ -37,7 +42,7 @@ export default function YellowCurtain() {
         if (want && v.getAttribute("src") !== want) { if (phone.matches && v.dataset.posterM) v.poster = v.dataset.posterM; v.src = want; }
         v.currentTime = 0; v.play().catch(() => {}); b.classList.add("hero-film");
         // a one-second pause on the film (approved 2026-11-04): the page holds here, then the scroll goes on
-        if (armed) { armed = false; hold(1000); } // no snap-back: the page simply holds where it is
+        if (armed) { armed = false; hold(600); } // pinned until the next scroll gesture
       }
       else if (y < H * .4 && b.classList.contains("hero-film")) { b.classList.remove("hero-film"); v.pause(); armed = true; }
     };
