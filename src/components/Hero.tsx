@@ -123,7 +123,7 @@ export default function Hero() {
           <button key={k} type="button" aria-label={`${sl.big.replace(".", "")}`} aria-current={k === i} onClick={() => go(k)}><i ref={el => { segs.current[k] = el; }} /></button>
         ))}
       </div>
-      {slides.length < 2 && <div className="cv-film" aria-hidden="true"><video muted loop playsInline preload="none" data-src="/media/hero/lav-film.mp4" poster="/media/hero/lav-film-poster.jpg" /></div>}{/* computers: once the yellow has lifted, the still dissolves into this film (V1, 2026-11-03) */}{slides.length < 2 && <div className="cv-edge" aria-hidden="true"><Logo /></div>}{slides.length < 2 && <span className="cv-glow" aria-hidden="true" />}{/* a soft light over the watermark, aimed by Yoad */}{/* desktop, one-photo trial: a big translucent white wordmark running up the right edge, cut off top and bottom */}
+      {slides.length < 2 && <div className="cv-film" aria-hidden="true"><video muted loop playsInline preload="none" data-src="/media/hero/lav-film.mp4" data-src-m="/media/hero/lav-film-m.mp4" data-poster-m="/media/hero/lav-film-m-poster.jpg" poster="/media/hero/lav-film-poster.jpg" /></div>}{/* computers: once the yellow has lifted, the still dissolves into this film (V1, 2026-11-03) */}{slides.length < 2 && <div className="cv-edge" aria-hidden="true"><Logo /></div>}{slides.length < 2 && <span className="cv-glow" aria-hidden="true" />}{/* a soft light over the watermark, aimed by Yoad */}{/* desktop, one-photo trial: a big translucent white wordmark running up the right edge, cut off top and bottom */}
       <div className="cv-mast" aria-hidden="true">
         <Logo />
         <div className="cv-issue"><span>New York</span><span>Serious diamonds, worn lightly.</span></div>

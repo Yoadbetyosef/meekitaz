@@ -8,15 +8,19 @@ import Logo from "./Logo";
 export default function YellowCurtain() {
   useEffect(() => {
     const b = document.body;
-    // computers: when the yellow has lifted, the hero's still photo dissolves into the film (watermark and its light stay on top);
-    // scrolling back up brings the still back. The film only loads on computers, and only then.
+    // when the yellow has lifted, the hero's still photo dissolves into the film (computers: the wide film, the watermark and its light
+    // on top; phones: the tall film); scrolling back up brings the still back. The film only loads then.
     const film = () => document.querySelector<HTMLVideoElement>(".cover.one .cv-film video");
-    const big = window.matchMedia("(min-width:768px)");
+    const phone = window.matchMedia("(max-width:767px)");
     const set = () => {
       const y = window.scrollY, H = window.innerHeight;
       b.classList.toggle("ycur-top", y < 24);
-      const v = film(); if (!v || !big.matches) return;
-      if (y > H * .72 && !b.classList.contains("hero-film")) { if (!v.getAttribute("src") && v.dataset.src) v.src = v.dataset.src; v.currentTime = 0; v.play().catch(() => {}); b.classList.add("hero-film"); }
+      const v = film(); if (!v) return;
+      if (y > H * .72 && !b.classList.contains("hero-film")) {
+        const want = phone.matches ? v.dataset.srcM : v.dataset.src;
+        if (want && v.getAttribute("src") !== want) { if (phone.matches && v.dataset.posterM) v.poster = v.dataset.posterM; v.src = want; }
+        v.currentTime = 0; v.play().catch(() => {}); b.classList.add("hero-film");
+      }
       else if (y < H * .4 && b.classList.contains("hero-film")) { b.classList.remove("hero-film"); v.pause(); }
     };
     set(); window.addEventListener("scroll", set, { passive: true });
