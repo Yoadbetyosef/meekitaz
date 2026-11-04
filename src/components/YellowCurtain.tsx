@@ -17,19 +17,12 @@ export default function YellowCurtain() {
     // the one-second hold: freezes the page where it is — on computers via overflow, on phones by swallowing the touch and wheel moves
     const block = (e: Event) => e.preventDefault();
     const hold = (ms: number) => {
-      // the one-second stop. On phones a swipe's momentum keeps the page moving even with scrolling switched off, so the body itself is
-      // frozen in place (position:fixed at the current offset) — that kills the momentum on the spot. The hero, which is sticky, is kept
-      // at the top of the screen meanwhile (body.ycur-freeze), so nothing shifts; after the second everything is put back at the same spot.
-      const y = window.scrollY, bs = document.body.style;
-      b.classList.add("ycur-freeze");
-      bs.position = "fixed"; bs.top = `-${y}px`; bs.left = "0"; bs.right = "0"; bs.width = "100%"; bs.overflow = "hidden";
-      window.addEventListener("touchmove", block, { passive: false }); window.addEventListener("wheel", block, { passive: false });
-      setTimeout(() => {
-        bs.position = ""; bs.top = ""; bs.left = ""; bs.right = ""; bs.width = ""; bs.overflow = "";
-        b.classList.remove("ycur-freeze");
-        window.scrollTo(0, y);
-        window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block);
-      }, ms);
+      // computers only: scrolling is switched off for a second, then back on (this is the version that worked).
+      // Phones get no stop for now: every way of fighting Safari's swipe momentum either slid through or froze the page.
+      if (phone.matches) return;
+      document.documentElement.style.overflow = "hidden";
+      window.addEventListener("wheel", block, { passive: false });
+      setTimeout(() => { document.documentElement.style.overflow = ""; window.removeEventListener("wheel", block); }, ms);
     };
     const set = () => {
       const y = window.scrollY, H = window.innerHeight;
