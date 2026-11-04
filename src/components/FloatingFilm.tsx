@@ -4,7 +4,7 @@ import FeedStrip from "./FeedStrip";
 export default function FloatingFilm() {
   return (
     <section className="mkfilm flip fl fl-min" aria-label="Floating collection">
-      <img className="fl-m" src="/brand/meekitaz-m-white.png" alt="" aria-hidden="true" loading="lazy" /><FeedStrip />{/* our M, 22%, on the right edge — never under the words */}
+      <img className="fl-m" src="/brand/meekitaz-m-white.png" alt="" aria-hidden="true" loading="lazy" />{/* our M, 22%, on the right edge — never under the words */}
       <div className="mkfilm-in">
         <div className="mkfilm-vid fl-img"><video src="/media/floating-diamond.mp4" poster="/media/floating-diamond-poster.webp" muted loop playsInline autoPlay preload="metadata" aria-label="A marquise diamond threaded onto a gold chain through a drilled channel, with no prongs" /></div>
         <div className="mkfilm-txt fl-txt">
@@ -13,6 +13,7 @@ export default function FloatingFilm() {
           </span>
           <h2>Light, all the<br />way through.</h2>
           <p className="fl-one">No prongs. 360&deg; of light.</p>
+          <FeedStrip />
           <a href="/floating" className="pill fl-btn">Shop floating</a>
         </div>
       </div>
