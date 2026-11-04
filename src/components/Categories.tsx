@@ -18,7 +18,7 @@ const TILES = [
 ];
 
 export default function Categories() {
-  const [on, setOn] = useState(0); // the "awake" tile — the first one to begin with
+  const [on, setOn] = useState(-1); // the "awake" tile — none to begin with: every tile starts in black and white (2026-11-04)
   return (
     <section className="sec" id="shop" aria-label="Shop by category">
       <div className="wrap">
