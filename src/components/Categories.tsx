@@ -1,17 +1,39 @@
-import Image from "next/image";
+"use client";
 import Link from "next/link";
-import { categoryTiles } from "@/lib/data";
+import { useState } from "react";
+
+/* Home · Shop by category — "poster tiles" (approved 2026-11-04). One row that slides sideways, as before. Each tile is one of our
+   editorial photos in black and white with the category name at the bottom; the tile that is "awake" (hover on computers, tap on
+   phones; the first one to begin with) shows in colour with our line above the name, two small plus marks, "MEEKITAZ · …" vertical
+   on the side, and a small Enter. */
+const TILES = [
+  { href: "/engagement-rings", title: "Engagement rings", sub: "One stone. The whole conversation.", lab: "The rings", img: "/media/cats/engagement-rings.webp" },
+  { href: "/diamonds", title: "Diamonds", sub: "Loose stones, serious sizes.", lab: "The stones", img: "/media/cats/diamonds.webp" },
+  { href: "/earrings", title: "Earrings", sub: "A ball cap. Two carats.", lab: "The studs", img: "/media/cats/earrings.webp" },
+  { href: "/necklaces", title: "Necklaces", sub: "Layered. Then layered again.", lab: "The neck", img: "/media/cats/necklaces.webp" },
+  { href: "/bracelets", title: "Bracelets", sub: "Stacked for breakfast.", lab: "The wrist", img: "/media/cats/bracelets.webp" },
+  { href: "/bands", title: "Bands", sub: "The one you never take off.", lab: "The bands", img: "/media/cats/bands.webp" },
+  { href: "/fancy-colors", title: "Fancy colors", sub: "Pink is a neutral.", lab: "The colours", img: "/media/cats/fancy-colors.webp" },
+  { href: "/one-of-one", title: "One of One", sub: "Made once. Never again.", lab: "Made once", img: "/media/cats/one-of-one.webp" },
+];
 
 export default function Categories() {
+  const [on, setOn] = useState(0); // the "awake" tile — the first one to begin with
   return (
     <section className="sec" id="shop" aria-label="Shop by category">
       <div className="wrap">
         <div className="sec-head"><small className="eyebrow">The collection</small><h2 className="h2">Shop by category</h2></div>
         <div className="ct-row">
-          {categoryTiles.map(t => (
-            <Link key={t.href} href={t.href} className="ct">
-              <div className="ct-img"><Image src={t.img} alt={t.title} fill sizes="(max-width:767px) 72vw, 300px" quality={75} /></div>
-              <div className="ct-txt"><b>{t.title}</b><small>{t.sub}</small></div>
+          {TILES.map((t, i) => (
+            <Link key={t.href} href={t.href} className={`ct pt${on === i ? " on" : ""}`}
+              onMouseEnter={() => setOn(i)} onTouchStart={() => setOn(i)} onFocus={() => setOn(i)}>
+              <img src={t.img} alt={t.title} loading={i < 4 ? "eager" : "lazy"} />
+              <span className="pt-ov" aria-hidden="true" />
+              <i className="pt-plus p1" aria-hidden="true" /><i className="pt-plus p2" aria-hidden="true" />
+              <span className="pt-vl" aria-hidden="true">Meekitaz &middot; {t.lab}</span>
+              <span className="pt-s">{t.sub}</span>
+              <b className="pt-t">{t.title}</b>
+              <span className="pt-e" aria-hidden="true">Enter <span>&rarr;</span></span>
             </Link>
           ))}
         </div>
