@@ -31,8 +31,6 @@ export default function YellowCurtain() {
       const pin = () => { if (!holding) return; if (window.scrollY !== y) window.scrollTo(0, y); requestAnimationFrame(pin); };
       requestAnimationFrame(pin);
     };
-      requestAnimationFrame(pin);
-    };
     const set = () => {
       const y = window.scrollY, H = window.innerHeight;
       b.classList.toggle("ycur-top", y < 24);
