@@ -12,19 +12,22 @@ export default function YellowCurtain() {
     // on top; phones: the tall film); scrolling back up brings the still back. The film only loads then.
     const film = () => document.querySelector<HTMLVideoElement>(".cover.one .cv-film video");
     const phone = window.matchMedia("(max-width:767px)");
+    let armed = true;
     const set = () => {
       const y = window.scrollY, H = window.innerHeight;
       b.classList.toggle("ycur-top", y < 24);
       const v = film(); if (!v) return;
-      if (y > H * .72 && !b.classList.contains("hero-film")) {
+      if (y >= H * .75 - 1 && !b.classList.contains("hero-film")) {
         const want = phone.matches ? v.dataset.srcM : v.dataset.src;
         if (want && v.getAttribute("src") !== want) { if (phone.matches && v.dataset.posterM) v.poster = v.dataset.posterM; v.src = want; }
         v.currentTime = 0; v.play().catch(() => {}); b.classList.add("hero-film");
+        // a one-second pause on the film (approved 2026-11-04): the page holds here, then the scroll goes on
+        if (armed) { armed = false; window.scrollTo({ top: H * .75 }); document.documentElement.style.overflow = "hidden"; setTimeout(() => { document.documentElement.style.overflow = ""; }, 1000); }
       }
-      else if (y < H * .4 && b.classList.contains("hero-film")) { b.classList.remove("hero-film"); v.pause(); }
+      else if (y < H * .4 && b.classList.contains("hero-film")) { b.classList.remove("hero-film"); v.pause(); armed = true; }
     };
     set(); window.addEventListener("scroll", set, { passive: true });
-    return () => { window.removeEventListener("scroll", set); b.classList.remove("ycur-top", "hero-film"); };
+    return () => { window.removeEventListener("scroll", set); b.classList.remove("ycur-top", "hero-film"); document.documentElement.style.overflow = ""; };
   }, []);
   return (
     <div className="ycur-panel" aria-hidden="true">
