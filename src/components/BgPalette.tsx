@@ -60,19 +60,23 @@ export default function BgPalette() {
       localStorage.removeItem(GLASS);
     } catch {}
     const q = new URLSearchParams(location.search);
+    const PAGE: T[] = ["pbg", "pcard", "phead", "pfg"];
+    try { PAGE.forEach(k => { const x = sessionStorage.getItem(key(k)); if (x) { v[k] = x; apply(k, x); } }); } catch {}
+    // ?palette=page&bg=F7E9A8 — open with that page background already on (for this tab)
+    const want = q.get("bg"); if (q.get("palette") === "page" && want && /^[0-9a-f]{6}$/i.test(want)) { const h = "#" + want.toUpperCase(); v.pbg = h; apply("pbg", h); try { sessionStorage.setItem(key("pbg"), h); } catch {} }
     if (q.has("palette")) { on = true; try { localStorage.setItem(ON, "1"); } catch {} }
     // ?palette=menu opens the menu page with the "Menu bg" tab ready
     if (q.get("palette") === "page") setTab("pbg");
     if (q.get("palette") === "menu") { setTab("menu"); setTimeout(() => (document.querySelector(".burger") as HTMLButtonElement | null)?.click(), 400); }
-    setVals(v); setHexIn((q.get("palette") === "menu" ? v.menu : v.bg) || ""); setOpen(on);
+    setVals(v); setHexIn((q.get("palette") === "menu" ? v.menu : q.get("palette") === "page" ? v.pbg : v.bg) || ""); setOpen(on);
   }, []);
 
   const pick = (hex: string) => {
     const h = (hex.startsWith("#") ? hex : "#" + hex).toUpperCase();
     if (!/^#[0-9A-F]{6}$/.test(h)) return;
-    apply(tab, h); setVals(s => ({ ...s, [tab]: h })); setHexIn(h); try { localStorage.setItem(key(tab), h); } catch {}
+    apply(tab, h); setVals(s => ({ ...s, [tab]: h })); setHexIn(h); try { (["pbg", "pcard", "phead", "pfg"].includes(tab) ? sessionStorage : localStorage).setItem(key(tab), h); } catch {}
   };
-  const clear = (t: T) => { apply(t, null); setVals(s => ({ ...s, [t]: null })); if (t === tab) setHexIn(""); try { localStorage.removeItem(key(t)); } catch {} };
+  const clear = (t: T) => { apply(t, null); setVals(s => ({ ...s, [t]: null })); if (t === tab) setHexIn(""); try { localStorage.removeItem(key(t)); sessionStorage.removeItem(key(t)); } catch {} };
   const resetAll = () => { TARGETS.forEach(({ k }) => clear(k)); document.body.style.removeProperty("--nav-a"); setG(42); try { localStorage.removeItem(GLASS); } catch {} };
   const glassTo = (g: number) => { setGlass(g); setG(g); try { localStorage.setItem(GLASS, String(g)); } catch {} };
   const hide = () => { setOpen(false); try { localStorage.removeItem(ON); } catch {} };
