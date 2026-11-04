@@ -16,16 +16,15 @@ export default function YellowCurtain() {
     let armed = true;
     // the one-second hold: freezes the page where it is — on computers via overflow, on phones by swallowing the touch and wheel moves
     const block = (e: Event) => e.preventDefault();
-    const hold = (minMs: number) => {
-      // the page has just landed on the yellow's top edge (native scroll-snap brings it there smoothly, no bounce). Now it stays:
-      // touch and wheel are swallowed until the person makes a NEW gesture after the minimum hold
-      const start = performance.now();
-      let holding = true;
-      const release = () => { if (!holding || performance.now() - start < minMs) return; holding = false;
-        window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block);
-        window.removeEventListener("touchstart", release); window.removeEventListener("wheel", release, true); window.removeEventListener("keydown", release); };
+    const hold = (ms: number) => {
+      // the one-second stop, the way it worked on computers: scrolling is switched off for a second, then switched back on.
+      // On phones one extra thing: a single scrollTo to the current spot, which kills the swipe's momentum right there
+      // (no pinning, no snapping back), plus the finger moves are swallowed for the second.
+      const y = window.scrollY;
+      document.documentElement.style.overflow = "hidden";
+      window.scrollTo(0, y);
       window.addEventListener("touchmove", block, { passive: false }); window.addEventListener("wheel", block, { passive: false });
-      window.addEventListener("touchstart", release, { passive: true }); window.addEventListener("wheel", release, true); window.addEventListener("keydown", release);
+      setTimeout(() => { document.documentElement.style.overflow = ""; window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block); }, ms);
     };
     const set = () => {
       const y = window.scrollY, H = window.innerHeight;
@@ -37,7 +36,7 @@ export default function YellowCurtain() {
         if (want && v.getAttribute("src") !== want) { if (phone.matches && v.dataset.posterM) v.poster = v.dataset.posterM; v.src = want; }
         v.currentTime = 0; v.play().catch(() => {}); b.classList.add("hero-film");
         // a one-second pause on the film (approved 2026-11-04): the page holds here, then the scroll goes on
-        if (armed) { armed = false; hold(600); } // held until the next scroll gesture
+        if (armed) { armed = false; hold(1000); } // one second
       }
       else if (y < H * .4 && b.classList.contains("hero-film")) { b.classList.remove("hero-film"); v.pause(); armed = true; }
     };
@@ -45,7 +44,6 @@ export default function YellowCurtain() {
     return () => { window.removeEventListener("scroll", set); window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block); b.classList.remove("ycur-top", "hero-film"); document.documentElement.style.overflow = ""; };
   }, []);
   return (<>
-    <i className="ycur-snap" aria-hidden="true" />{/* the one snap point: where the yellow's top meets the screen's top */}
     <div className="ycur-panel" aria-hidden="true">
       <div className="ycur-wm"><Logo /></div>
       <span className="ycur-plus ycur-p1" /><span className="ycur-plus ycur-p2" />
