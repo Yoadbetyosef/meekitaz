@@ -3217,3 +3217,15 @@ body.hero-film .cover.one .cv-film{opacity:1}
 .ycur-panel{animation:ycurC1 4.2s linear infinite}
 @keyframes ycurC1{0%{background:#F7E9A8}16%{background:#F7D3DA}33%{background:#F29C93}50%{background:#C9C1F2}66%{background:#C4DEEE}83%{background:#D6E4C8}100%{background:#F7E9A8}}
 @media(prefers-reduced-motion:reduce){.ycur-panel{animation:none}}
+
+/* ===== Phones: the yellow + hero as their own scroll page (2026-11-04). The first swipe scrolls only this box; with mandatory snap it
+   lands exactly where the yellow has left (its bottom), and a swipe's momentum ends there — Safari never passes momentum to the page.
+   The next swipe, with the box at its end, moves the page on. On computers the wrapper is transparent. ===== */
+.ycur-stage{display:contents}
+@media(max-width:767px){
+.ycur-stage{display:block;position:relative;height:100vh;height:100svh;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.ycur-stage::-webkit-scrollbar{display:none}
+.ycur-stage .ycur-panel{position:absolute;top:0;scroll-snap-align:start;scroll-snap-stop:always}
+.ycur-stage .ycur-hold{height:75vh;height:75svh;scroll-snap-align:end}
+.ycur-stage .hero.cover.one{position:sticky;top:0}
+}

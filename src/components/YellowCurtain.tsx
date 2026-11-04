@@ -24,11 +24,14 @@ export default function YellowCurtain() {
       window.addEventListener("wheel", block, { passive: false });
       setTimeout(() => { document.documentElement.style.overflow = ""; window.removeEventListener("wheel", block); }, ms);
     };
+    // on phones the yellow and the hero live inside their own scroller (#ycur-stage); on computers the window scrolls
+    const stage = document.getElementById("ycur-stage");
+    const scroller = () => (phone.matches && stage ? stage : null);
     const set = () => {
-      const y = window.scrollY, H = window.innerHeight;
+      const sc = scroller(), y = sc ? sc.scrollTop : window.scrollY, H = window.innerHeight;
       b.classList.toggle("ycur-top", y < 24);
       const v = film(); if (!v) return;
-      const Y = H * .75;
+      const Y = sc ? sc.scrollHeight - sc.clientHeight : H * .75; // phones: the end of the stage box is exactly where the yellow has left
       if (y >= Y - 1 && !b.classList.contains("hero-film")) {
         const want = phone.matches ? v.dataset.srcM : v.dataset.src;
         if (want && v.getAttribute("src") !== want) { if (phone.matches && v.dataset.posterM) v.poster = v.dataset.posterM; v.src = want; }
@@ -38,8 +41,8 @@ export default function YellowCurtain() {
       }
       else if (y < H * .4 && b.classList.contains("hero-film")) { b.classList.remove("hero-film"); v.pause(); armed = true; }
     };
-    set(); window.addEventListener("scroll", set, { passive: true });
-    return () => { window.removeEventListener("scroll", set); window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block); b.classList.remove("ycur-top", "hero-film", "ycur-freeze"); document.documentElement.style.overflow = ""; };
+    set(); window.addEventListener("scroll", set, { passive: true }); stage?.addEventListener("scroll", set, { passive: true });
+    return () => { window.removeEventListener("scroll", set); stage?.removeEventListener("scroll", set); window.removeEventListener("touchmove", block); window.removeEventListener("wheel", block); b.classList.remove("ycur-top", "hero-film", "ycur-freeze"); document.documentElement.style.overflow = ""; };
   }, []);
   return (<>
     <div className="ycur-panel" aria-hidden="true">

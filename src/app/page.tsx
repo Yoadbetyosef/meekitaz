@@ -16,9 +16,13 @@ import PrivateClients from "@/components/PrivateClients";
 export default function Home() {
   return (
     <main className="home-page">
-      <YellowCurtain />
-      <Hero />
-      <div className="ycur-hold" aria-hidden="true" />{/* the first 75% of scrolling only lifts the yellow off the hero; then the page moves on as before */}
+      {/* On phones this wrapper is its own scroll "page" (like a Reel): the first swipe lifts the yellow and stops on its own at the end;
+          the next swipe moves the page on. On computers it is transparent (display:contents) and the page scrolls as before. */}
+      <div className="ycur-stage" id="ycur-stage">
+        <YellowCurtain />
+        <Hero />
+        <div className="ycur-hold" aria-hidden="true" />{/* the first 75% of scrolling only lifts the yellow off the hero; then the page moves on as before */}
+      </div>
       <Film />
       <Categories />
       <FloatingFilm />
