@@ -3211,3 +3211,11 @@ body.hero-film .cover.one .cv-film{opacity:1}
 .fl-plus.p1{left:16px;top:16px}.fl-plus.p2{left:16px;bottom:16px}.fl-plus.p3{right:16px;bottom:16px}
 .fl-min .fl-txt{max-width:460px}
 @media(max-width:767px){.fl-reel-wrap{padding:0 22px 60px}.fl-reel{width:100%;height:auto;aspect-ratio:3/5.2;border-radius:14px}.fl-plus{width:11px;height:11px}.fl-plus.p1{left:14px;top:14px}.fl-plus.p2{left:14px;bottom:14px}.fl-plus.p3{right:14px;bottom:14px}.fl-reel span{left:16px}}
+
+/* ===== Yellow curtain: C1 (approved 2026-11-04) — the yellow glides seamlessly through our colours and back; and the first scroll
+   lands exactly on the yellow's top edge with native scroll-snap (smooth deceleration, no bounce), then holds for a moment ===== */
+.ycur-panel{animation:ycurC1 4.2s linear infinite}
+@keyframes ycurC1{0%{background:#F7E9A8}16%{background:#F7D3DA}33%{background:#F29C93}50%{background:#C9C1F2}66%{background:#C4DEEE}83%{background:#D6E4C8}100%{background:#F7E9A8}}
+@media(prefers-reduced-motion:reduce){.ycur-panel{animation:none}}
+html:has(.ycur-snap){scroll-snap-type:y proximity}
+.ycur-snap{position:absolute;left:0;width:100%;height:1px;top:75vh;top:75svh;scroll-snap-align:start;scroll-snap-stop:always;pointer-events:none}
