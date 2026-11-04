@@ -3157,3 +3157,4 @@ h1,h2,h3{letter-spacing:.03em}
 .ycur-wm svg{display:block;width:100%;height:auto}
 .nav,.cart{transition:opacity .45s ease,visibility .45s}
 body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
+.ycur-hold{height:75vh;height:75svh;pointer-events:none}

@@ -17,6 +17,7 @@ export default function Home() {
     <main className="home-page">
       <YellowCurtain />
       <Hero />
+      <div className="ycur-hold" aria-hidden="true" />{/* the first 75% of scrolling only lifts the yellow off the hero; then the page moves on as before */}
       <Film />
       <Categories />
       <FloatingFilm />
