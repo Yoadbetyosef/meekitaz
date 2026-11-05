@@ -3268,5 +3268,5 @@ html.mk-intro-on .mk-intro{display:block}
 
 /* ===== Home · Brand stories (2026-11-05) — the film alone on the page background, centred, no frame ===== */
 .bstories{position:relative;z-index:6;background:var(--home-bg,#E5E3EF);display:grid;place-items:center;padding:clamp(40px,6vw,80px) 0}
-.bstories video{width:min(64vw,900px);aspect-ratio:16/9;display:block;object-fit:cover}
+.bstories video{width:min(88vw,1360px);aspect-ratio:16/9;display:block;object-fit:cover} /* bigger on computers (2026-11-05) */
 @media(max-width:767px){.bstories{padding:0}.bstories video{width:100%;aspect-ratio:9/16}}
