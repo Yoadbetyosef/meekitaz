@@ -3223,7 +3223,7 @@ body.hero-film .cover.one .cv-film{opacity:1}
    The next swipe, with the box at its end, moves the page on. On computers the wrapper is transparent. ===== */
 .ycur-stage{display:contents}
 @media(max-width:767px){
-.ycur-stage{display:block;position:relative;height:100vh;height:100svh;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.ycur-stage{display:block;position:sticky;top:0;z-index:1;height:100vh;height:100svh;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none} /* sticky in the page too: after the stop, the next section slides up over the film, as on computers */
 .ycur-stage::-webkit-scrollbar{display:none}
 .ycur-stage .ycur-panel{position:absolute;top:0;scroll-snap-align:start;scroll-snap-stop:always}
 .ycur-stage .ycur-hold{height:75vh;height:75svh;scroll-snap-align:end}
