@@ -1,4 +1,5 @@
 import { NextRequest } from "next/server";
+import { copyFor } from "@/lib/seoCopy";
 
 export const maxDuration = 300;
 export const dynamic = "force-dynamic"; // streamed on request and cached at the edge for 6 hours — a prerendered page this size (34 MB) is over Vercel's 20 MB ISR limit and broke the deploy
@@ -48,7 +49,7 @@ function item(n: N): string {
   const v = n.variants.nodes[0], price = +v.price.amount, compare = v.compareAtPrice ? +v.compareAtPrice.amount : 0;
   const id = v.sku || v.id.split("/").pop()!;
   const extra = n.images.nodes.map(x => x.url).filter(u => u !== n.featuredImage!.url).slice(0, 3);
-  const desc = strip(n.description || n.title).slice(0, 4900);
+  const desc = strip(copyFor(n)?.desc || n.description || n.title).slice(0, 4900);
   return `<item>
 <g:id>${esc(id)}</g:id><g:item_group_id>${esc(n.handle)}</g:item_group_id>
 <title>${esc(strip(n.title).slice(0, 150))}</title>

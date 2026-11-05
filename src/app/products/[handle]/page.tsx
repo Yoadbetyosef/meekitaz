@@ -8,6 +8,8 @@ import { adminConfigured, getProductOptions } from "@/lib/shopifyAdmin";
 import BrandEnd from "@/components/BrandEnd";
 import { healOptions } from "@/lib/nsHeal";
 import ProductView from "@/components/ProductView";
+import { SITE, canonicalHandle, metaDesc } from "@/lib/seo";
+import { copyFor } from "@/lib/seoCopy";
 
 export const revalidate = 300;
 
@@ -19,8 +21,9 @@ async function load(handle: string) {
 export async function generateMetadata({ params }: { params: Promise<{ handle: string }> }) {
   const p = await load((await params).handle);
   if (!p) return { title: "MEEKITAZ" };
-  const desc = brandify(p.seoDescription || p.description).replace(/\s+/g, " ").slice(0, 160);
-  return { title: `${brandify(p.seoTitle || p.title)} — MEEKITAZ`, description: desc, alternates: { canonical: `https://www.meekitaz.com/products/${p.handle}` }, openGraph: { title: brandify(p.title), description: desc, images: p.images[0] ? [p.images[0].url] : [] } };
+  const c = copyFor(p);
+  const desc = metaDesc(c ? c.desc : brandify(p.seoDescription || p.description));
+  return { title: `${c ? c.title : brandify(p.seoTitle || p.title)} — MEEKITAZ`, description: desc, alternates: { canonical: `${SITE}/products/${canonicalHandle(p.handle)}` }, openGraph: { title: c ? c.title : brandify(p.title), description: desc, images: p.images[0] ? [p.images[0].url] : [] } };
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
@@ -49,8 +52,9 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
   // the on-model photo is made once per design (in yellow gold): every metal of the design shows it
   if (!p.modelImage) { const m = siblings.find(x => x.modelImage)?.modelImage; if (m) p = { ...p, modelImage: m }; }
   const v = p.variants[0];
+  const c = copyFor(p);
   const ld = {
-    "@context": "https://schema.org", "@type": "Product", name: brandify(p.title), image: p.images.map(i => i.url), description: brandify(p.description).slice(0, 500),
+    "@context": "https://schema.org", "@type": "Product", name: brandify(p.title), image: p.images.map(i => i.url), description: c ? c.desc : brandify(p.description).slice(0, 500),
     brand: { "@type": "Brand", name: "Meekitaz" },
     offers: { "@type": "Offer", priceCurrency: p.currency, price: v?.price, availability: p.variants.some(x => x.available) ? "https://schema.org/InStock" : "https://schema.org/OutOfStock" },
   };
@@ -58,7 +62,7 @@ export default async function ProductPage({ params }: { params: Promise<{ handle
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
       <ProductView
-        product={{ ...p, title: brandify(p.title), descriptionHtml: brandify(p.descriptionHtml), description: brandify(p.description) }}
+        product={{ ...p, title: brandify(p.title), descriptionHtml: c ? `<p>${c.desc}</p>` : brandify(p.descriptionHtml), description: c ? c.desc : brandify(p.description) }}
         siblings={siblings.map(s => ({ ...s, title: brandify(s.title) }))}
         related={related.map(r => ({ ...r, title: brandify(r.title) }))}
         ring={ring}

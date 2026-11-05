@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Marcellus, Marcellus_SC, Cormorant_Garamond, Mrs_Saint_Delafield } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
+import { SITE } from "@/lib/seo";
 import DesignLabGate from "@/components/DesignLabGate";
 import BgPalette from "@/components/BgPalette";
 import BarStudio from "@/components/BarStudio";
@@ -27,14 +28,23 @@ const script = Mrs_Saint_Delafield({ weight: "400", subsets: ["latin"], variable
 const archivo = Marcellus_SC({ weight: "400", subsets: ["latin"], variable: "--f-body", display: "swap" }); // small spaced labels, buttons, prices — Marcellus SC
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE),
   title: "MEEKITAZ — Serious diamonds, worn lightly.",
   description: "Lab-grown diamond jewelry. IGI / GIA certified. Engagement rings, diamonds, earrings, necklaces, bracelets and bands.",
+  openGraph: { siteName: "Meekitaz", type: "website", locale: "en_US", title: "MEEKITAZ — Serious diamonds, worn lightly.", description: "Lab-grown diamond jewelry. IGI / GIA certified. Engagement rings, diamonds, earrings, necklaces, bracelets and bands." },
 };
+
+// schema.org: who we are, once per page (the product pages add their own Product data)
+const ORG_LD = [
+  { "@context": "https://schema.org", "@type": "Organization", name: "Meekitaz", url: SITE, address: { "@type": "PostalAddress", addressLocality: "New York", addressRegion: "NY", addressCountry: "US" } },
+  { "@context": "https://schema.org", "@type": "WebSite", name: "Meekitaz", url: SITE },
+];
 export const viewport: Viewport = { themeColor: "#E5E3EF", viewportFit: "cover" }; // the browser bars take the home page colour (Mist)
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable} ${didact.variable} ${script.variable}`}>
+      <head><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_LD) }} /></head>
       <body>
         <div className="edge-t" aria-hidden="true" /><div className="edge-b" aria-hidden="true" />{/* phones: the browser bars always take the home page colour, whatever scrolls under them */}
         <DailyMode>

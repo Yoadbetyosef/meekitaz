@@ -14,7 +14,7 @@ async function load(id: string) {
 }
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const d = await load((await params).id);
-  return { title: d ? `${d.carat.toFixed(2)} ct ${d.shape} lab-grown diamond — MEEKITAZ` : "Diamond — MEEKITAZ" };
+  return { title: d ? `${d.carat.toFixed(2)} ct ${d.shape} lab-grown diamond — MEEKITAZ` : "Diamond — MEEKITAZ", robots: { index: false, follow: true } };
 }
 
 const flow = (d: Diamond): FlowStone => ({

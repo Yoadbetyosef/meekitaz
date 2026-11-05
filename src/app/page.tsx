@@ -13,6 +13,8 @@ import LooksReel from "@/components/LooksReel";
 import Reviews from "@/components/Reviews";
 import PrivateClients from "@/components/PrivateClients";
 
+export const metadata = { alternates: { canonical: "/" } };
+
 export default function Home() {
   return (
     <main className="home-page">

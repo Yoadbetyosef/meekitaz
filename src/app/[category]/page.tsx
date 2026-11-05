@@ -1,3 +1,4 @@
+import { CATEGORY_SEO } from "@/lib/seo";
 import RingSteps from "@/components/RingSteps";
 import Image, { getImageProps } from "next/image";
 import HeroVideo from "@/components/HeroVideo";
@@ -24,7 +25,8 @@ export function generateStaticParams() { return categories.map(c => ({ category:
 export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params; const p = categories.find(c => c.slug === category);
-  return { title: p ? `${p.nav} — MEEKITAZ` : "MEEKITAZ" };
+  const s = p && CATEGORY_SEO[p.slug];
+  return p ? { title: `${s ? s.title : p.nav} — MEEKITAZ`, ...(s ? { description: s.description } : {}), alternates: { canonical: `/${p.slug}` } } : { title: "MEEKITAZ" };
 }
 
 export default async function CategoryPage({ params, searchParams }: { params: Promise<{ category: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
