@@ -10,40 +10,40 @@ const msvg = (outline: boolean) => `<svg viewBox="0 0 ${M.w} ${M.h}" fill-rule="
 const wm = `<img src="${WM}" alt="" />`;
 const SEQ: [string, number, number | "full"][] = [[msvg(true), 110, .3], [msvg(false), 110, .5], [wm, 110, .8], [msvg(false), 110, 1.0], [wm, 110, 1.4], [msvg(false), 120, 1.6], [wm, 120, 2.2], [wm, 520, "full"]];
 
+/* decided before React runs (inline script in the page), so the first frame is on screen at once even while the page is still loading */
+export const INTRO_GATE = `(function(){try{if(sessionStorage.getItem("mk-intro"))return;var r=document.referrer;if(r&&new URL(r).origin===location.origin)return;sessionStorage.setItem("mk-intro","1");document.documentElement.classList.add("mk-intro-on");}catch(e){}})();`;
+
 export default function Intro() {
-  const [show, setShow] = useState(false);
+  const [done, setDone] = useState(false);
   useEffect(() => {
-    try {
-      if (sessionStorage.getItem("mk-intro")) return;
-      const ref = document.referrer; if (ref && new URL(ref).origin === location.origin) return; // came from inside the site
-      sessionStorage.setItem("mk-intro", "1");
-    } catch { return; }
-    setShow(true);
-  }, []);
-  useEffect(() => {
-    if (!show) return;
+    if (!document.documentElement.classList.contains("mk-intro-on")) { setDone(true); return; }
     const it = document.getElementById("mk-intro"), fr = document.getElementById("mk-intro-fr"), cnt = document.getElementById("mk-intro-cnt");
     if (!it || !fr) return;
     document.documentElement.style.overflow = "hidden";
-    const tm: number[] = []; let t = 120;
-    const phone = window.innerWidth < 768;
-    SEQ.forEach(([h, ms, sc]) => { tm.push(window.setTimeout(() => {
-      fr.innerHTML = h; fr.style.opacity = "1";
-      if (sc === "full") { fr.style.width = phone ? "150vw" : "130vw"; fr.style.opacity = ".28"; fr.style.transform = "translate(-50%,-50%)"; fr.style.transition = "transform .25s cubic-bezier(.2,.8,.2,1),opacity .25s"; }
-      else { fr.style.width = ""; fr.style.transition = ""; fr.style.transform = `translate(-50%,-50%) scale(${sc})`; }
-    }, t)); t += ms; });
-    const total = t;
-    for (let i = 0; i <= 20; i++) tm.push(window.setTimeout(() => { if (cnt) cnt.textContent = String(i * 5).padStart(3, "0"); }, 120 + i * (total - 120) / 20));
-    tm.push(window.setTimeout(() => { it.classList.add("out"); }, total + 80));
-    tm.push(window.setTimeout(() => { document.documentElement.style.overflow = ""; setShow(false); }, total + 700));
-    return () => { tm.forEach(clearTimeout); document.documentElement.style.overflow = ""; };
-  }, [show]);
-  if (!show) return null;
+    // a timeline driven by real elapsed time (not stacked timeouts), so a slow first load cannot collapse the whole sequence into its last frame
+    const starts: number[] = []; let t = 120; SEQ.forEach(([, ms]) => { starts.push(t); t += ms; }); const total = t;
+    let t0 = 0, step = -1, raf = 0, lifted = false, finished = false;
+    const tick = (now: number) => {
+      if (!t0) t0 = now; const e = now - t0;
+      while (step + 1 < SEQ.length && e >= starts[step + 1]) {
+        step++; const [h, , sc] = SEQ[step]; fr.innerHTML = h; fr.style.opacity = "1";
+        if (sc === "full") { fr.style.width = window.innerWidth < 768 ? "150vw" : "130vw"; fr.style.opacity = ".28"; fr.style.transform = "translate(-50%,-50%)"; fr.style.transition = "transform .25s cubic-bezier(.2,.8,.2,1),opacity .25s"; }
+        else { fr.style.width = ""; fr.style.transition = ""; fr.style.transform = `translate(-50%,-50%) scale(${sc})`; }
+      }
+      if (cnt) cnt.textContent = String(Math.min(100, Math.round(Math.max(0, e - 120) / (total - 120) * 20) * 5)).padStart(3, "0");
+      if (e >= total + 80 && !lifted) { lifted = true; it.classList.add("out"); }
+      if (e >= total + 700 && !finished) { finished = true; document.documentElement.style.overflow = ""; document.documentElement.classList.remove("mk-intro-on"); window.dispatchEvent(new Event("mk-intro-done")); setDone(true); return; }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => { cancelAnimationFrame(raf); document.documentElement.style.overflow = ""; };
+  }, []);
+  if (done) return null;
   return (
     <div className="mk-intro" id="mk-intro" aria-hidden="true">
       <i className="mki-grid" /><i className="mki-x x1" /><i className="mki-x x2" /><i className="mki-x x3" /><i className="mki-x x4" />
       <span className="mki-lab l1">Meekitaz</span><span className="mki-lab l2">Est. New York</span><span className="mki-lab l3">Lab-grown &middot; IGI certified</span>
-      <div className="mki-fr" id="mk-intro-fr" />
+      <div className="mki-fr" id="mk-intro-fr" dangerouslySetInnerHTML={{ __html: msvg(true) }} style={{ opacity: 1, transform: "translate(-50%,-50%) scale(.3)" }} />
       <span className="mki-cnt" id="mk-intro-cnt">000</span>
     </div>
   );

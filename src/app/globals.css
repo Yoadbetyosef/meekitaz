@@ -3252,7 +3252,8 @@ body.hero-film .cover.one .cv-film{opacity:1}
 .pcard-txt .price .from{font-style:normal;font-size:.72em;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-right:6px}
 
 /* ===== Site opening (F4, 2026-11-05) ===== */
-.mk-intro{position:fixed;inset:0;z-index:100000;background:#0D4FE7;color:#fff;overflow:hidden}
+.mk-intro{display:none;position:fixed;inset:0;z-index:100000;background:#0D4FE7;color:#fff;overflow:hidden}
+html.mk-intro-on .mk-intro{display:block}
 .mk-intro.out{animation:mkiLift .55s cubic-bezier(.8,0,.2,1) forwards}
 @keyframes mkiLift{to{transform:translateY(-100%)}}
 .mki-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:64px 64px}

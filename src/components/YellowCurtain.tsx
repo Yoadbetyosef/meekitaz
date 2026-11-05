@@ -11,7 +11,8 @@ export default function YellowCurtain() {
     // when the yellow has lifted, the hero's still photo dissolves into the film (computers: the wide film, the watermark and its light
     // on top; phones: the tall film); scrolling back up brings the still back. The film only loads then.
     const film = () => document.querySelector<HTMLVideoElement>(".cover.one .cv-film video");
-    { const v = film(); if (v) { const phone0 = window.matchMedia("(max-width:767px)").matches; const want = phone0 ? v.dataset.srcM : v.dataset.src; if (want && !v.getAttribute("src")) { if (phone0 && v.dataset.posterM) v.poster = v.dataset.posterM; v.preload = "auto"; v.src = want; v.load(); } } }
+    const preload = () => { const v = film(); if (v) { const phone0 = window.matchMedia("(max-width:767px)").matches; const want = phone0 ? v.dataset.srcM : v.dataset.src; if (want && !v.getAttribute("src")) { if (phone0 && v.dataset.posterM) v.poster = v.dataset.posterM; v.preload = "auto"; v.src = want; v.load(); } } };
+    if (document.documentElement.classList.contains("mk-intro-on")) window.addEventListener("mk-intro-done", preload, { once: true }); else preload(); // not while the opening plays
     const phone = window.matchMedia("(max-width:767px)");
     let armed = true;
     // the one-second hold: freezes the page where it is — on computers via overflow, on phones by swallowing the touch and wheel moves
