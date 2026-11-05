@@ -27,30 +27,14 @@ function startFilm(v: HTMLVideoElement) { if (current && current !== v) stopFilm
 const finePointer = () => typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
 function Card({ it, k }: { it: ReelItem; k: number }) {
-  const v = useRef<HTMLVideoElement>(null), box = useRef<HTMLAnchorElement>(null), timer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [playing, setPlaying] = useState(false); // the photo stays until the film is really playing — never a black square
-  const later = (fn: () => void, ms: number) => { if (timer.current) clearTimeout(timer.current); timer.current = setTimeout(fn, ms); };
-  const cancel = () => { if (timer.current) clearTimeout(timer.current); timer.current = null; };
-  useEffect(() => {
-    const el = box.current, vid = v.current; if (!el || !vid) return;
-    if (finePointer()) return () => { cancel(); stopFilm(vid); };
-    // phones: the card most in view plays, once scrolling has paused on it for 700 ms
-    const io = new IntersectionObserver(([e]) => {
-      if (e.intersectionRatio >= 0.75) later(() => startFilm(vid), 700);
-      else { cancel(); stopFilm(vid); }
-    }, { threshold: [0, 0.75] });
-    io.observe(el); return () => { io.disconnect(); cancel(); stopFilm(vid); };
-  }, []);
+  // a plain card (2026-11-05): the black photo only — no film in the grid, no hover, no autoplay. The film plays on the product page.
   const [ct, rest] = [it.title.split(" · ")[1] || "", it.title.split(" · ")[0]];
   return (
-    <Link ref={box} href={`/products/${it.handle}`} className="rts-card" style={{ ["--mat" as string]: MATS[k % MATS.length] }}
-      onMouseEnter={() => { if (!finePointer()) return; const vid = v.current; if (vid) later(() => startFilm(vid), 220); }} onMouseLeave={() => { if (!finePointer()) return; cancel(); stopFilm(v.current); }}>
+    <Link href={`/products/${it.handle}`} className="rts-card" style={{ ["--mat" as string]: MATS[k % MATS.length] }}>
       <div className="rts-media">
         <span className="rts-tag">Ready to ship</span>
         <span className="rts-heart" onClick={e => e.preventDefault()}><WishHeart item={{ handle: it.handle, title: it.title, image: it.image || "", price: it.price, compareAt: it.compare || null }} /></span>
         {it.image && <img src={sized(it.image, 640)} alt={it.title} loading={k < 6 ? "eager" : "lazy"} decoding="async" />}
-        {it.video && <video ref={v} className={playing ? "on" : ""} data-src={it.video} poster={sized(it.image, 640) || undefined} muted loop playsInline preload="none" onPlaying={() => setPlaying(true)} onPause={() => setPlaying(false)} onEmptied={() => setPlaying(false)} />}
-        {it.video && !playing && <span className="rts-play" aria-hidden="true" onClick={e => { e.preventDefault(); if (v.current) startFilm(v.current); }}><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" fill="currentColor" /></svg></span>}
       </div>
       <div className="rts-meta"><div><b>{rest}</b><span>{ct ? `${ct} · ` : ""}lab-grown</span></div><em>{usd(it.price)}</em></div>
     </Link>
@@ -77,7 +61,7 @@ export default function RtsGrid({ initial, hasNext: h0, cursor: c0, type, sort: 
   }, [cursor, hasNext]); // eslint-disable-line react-hooks/exhaustive-deps
   const cells: React.ReactNode[] = [];
   items.forEach((it, k) => {
-    const m = MOODS.find(x => x.at === k);
+    const m = null as unknown as (typeof MOODS)[number] | null; // mood blocks off (2026-11-05): a plain, steady grid
     if (m) cells.push(<div key={"m" + k} className="rts-mood"><img src={m.img} alt="" loading="lazy" /><div><small>{m.tag}</small><h3>{m.l1}<em>{m.l2}</em></h3></div></div>);
     cells.push(<Card key={it.handle} it={it} k={k} />);
   });
