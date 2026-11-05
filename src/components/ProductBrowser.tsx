@@ -1,5 +1,5 @@
-import GridReelTile from "./GridReelTile";
 "use client";
+import GridReelTile from "./GridReelTile";
 import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
 import GridMood, { type Reveal } from "./GridMood";
