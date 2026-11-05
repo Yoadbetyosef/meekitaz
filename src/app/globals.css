@@ -3156,12 +3156,12 @@ h1,h2,h3{letter-spacing:.03em}
 /* "Q1" (approved 2026-11-03): the watermark runs vertically up the right edge — the same size and place as on the hero (124vh, 3vh off
    the edge, 12vh above the top), white; on the left a small spaced line "Quite the catch." and two tiny plus marks in the left corners */
 .ycur-wm{position:absolute;top:-12vh;left:calc(100% + 3vh);width:124vh;transform:rotate(90deg);transform-origin:0 0;color:#fff;opacity:.6}
-.ycur-plus{position:absolute;left:30px;width:14px;height:14px}
+.ycur-plus{position:absolute;left:30px;width:9px;height:9px} /* the same size as the category tiles' pluses (2026-11-05) */
 .ycur-plus::before,.ycur-plus::after{content:"";position:absolute;background:#1C1A1B}
-.ycur-plus::before{left:0;right:0;top:50%;height:1.5px;transform:translateY(-50%)}.ycur-plus::after{top:0;bottom:0;left:50%;width:1.5px;transform:translateX(-50%)}
+.ycur-plus::before{left:0;right:0;top:50%;height:1.2px;transform:translateY(-50%)}.ycur-plus::after{top:0;bottom:0;left:50%;width:1.2px;transform:translateX(-50%)}
 .ycur-p1{top:30px}.ycur-p2{bottom:30px}
 .ycur-qt{position:absolute;left:64px;top:50%;transform:translateY(-50%);font:400 15px var(--body);letter-spacing:.32em;text-transform:uppercase;color:#1C1A1B}
-@media(max-width:767px){.ycur-plus{left:18px;width:11px;height:11px}.ycur-p1{top:calc(18px + env(safe-area-inset-top,0px))}.ycur-p2{bottom:18px}.ycur-qt{left:24px;font-size:12px}}
+@media(max-width:767px){.ycur-plus{left:18px;width:9px;height:9px}.ycur-p1{top:calc(18px + env(safe-area-inset-top,0px))}.ycur-p2{bottom:18px}.ycur-qt{left:24px;font-size:12px}}
 .ycur-wm svg{display:block;width:100%;height:auto}
 .nav,.cart{transition:opacity .45s ease,visibility .45s}
 body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
@@ -3206,11 +3206,11 @@ body.hero-film .cover.one .cv-film{opacity:1}
 .fl-reel{position:relative;width:370px;height:900px;max-width:100%;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 30px 60px -36px rgba(28,26,27,.45)}
 .fl-reel video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .fl-reel span{position:absolute;left:18px;top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:left center;color:#fff;font:400 9px var(--body);letter-spacing:.32em;text-transform:uppercase;white-space:nowrap}
-.fl-plus{position:absolute;width:14px;height:14px}.fl-plus::before,.fl-plus::after{content:"";position:absolute;background:#fff}
-.fl-plus::before{left:0;right:0;top:50%;height:1.5px;transform:translateY(-50%)}.fl-plus::after{top:0;bottom:0;left:50%;width:1.5px;transform:translateX(-50%)}
+.fl-plus{position:absolute;width:9px;height:9px}.fl-plus::before,.fl-plus::after{content:"";position:absolute;background:#fff}
+.fl-plus::before{left:0;right:0;top:50%;height:1.2px;transform:translateY(-50%)}.fl-plus::after{top:0;bottom:0;left:50%;width:1.2px;transform:translateX(-50%)}
 .fl-plus.p1{left:16px;top:16px}.fl-plus.p2{left:16px;bottom:16px}.fl-plus.p3{right:16px;bottom:16px}
 .fl-min .fl-txt{max-width:460px}
-@media(max-width:767px){.fl-reel-wrap{padding:0 22px 60px}.fl-reel{width:100%;height:auto;aspect-ratio:3/5.2;border-radius:14px}.fl-plus{width:11px;height:11px}.fl-plus.p1{left:14px;top:14px}.fl-plus.p2{left:14px;bottom:14px}.fl-plus.p3{right:14px;bottom:14px}.fl-reel span{left:16px}}
+@media(max-width:767px){.fl-reel-wrap{padding:0 22px 60px}.fl-reel{width:100%;height:auto;aspect-ratio:3/5.2;border-radius:14px}.fl-plus{width:9px;height:9px}.fl-plus.p1{left:14px;top:14px}.fl-plus.p2{left:14px;bottom:14px}.fl-plus.p3{right:14px;bottom:14px}.fl-reel span{left:16px}}
 
 /* ===== Yellow curtain: C1 (approved 2026-11-04) — the yellow glides seamlessly through our colours and back; and the first scroll
    lands exactly on the yellow's top edge with native scroll-snap (smooth deceleration, no bounce), then holds for a moment ===== */
