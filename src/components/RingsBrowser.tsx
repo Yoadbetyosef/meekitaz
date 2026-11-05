@@ -148,7 +148,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
               {handle === "fancy-colors" && i === 22 && items.length > 22 && (
                 <div className="pgrid-slot"><div className="op-tile"><img src="/media/fancy-pink-tile.webp" alt="Hand against her cheek in oxblood silk, a fancy pink oval diamond ring with a diamond halo on her finger" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "45% 40%" }} /><div className="op-cap"><small>Fancy pink</small><b>Pink is<br />a neutral.</b></div></div></div>
               )}
-              <DesignCard p={p} />
+              <DesignCard p={p} from={!fancy} />
             </Fragment>
           ))}
         </div>

@@ -12,7 +12,7 @@ const usd = (n: number | string, cur = "USD") => new Intl.NumberFormat("en-US", 
 const Gem = () => <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round"><path d="M12 8h24l8 12-20 22L4 20z" /><path d="M4 20h40M12 8l12 34M36 8L24 42M18 20l6-12 6 12" /></svg>;
 
 /** One card per design. The three gold dots swap the photo, link and price in place; the product page still offers every metal. */
-export default function DesignCard({ p }: { p: Product }) {
+export default function DesignCard({ p, from }: { p: Product; from?: boolean }) {
   const metals = shownMetals(p);
   const [metal, setMetal] = useState(p.metal || metals[0]?.metal || "");
   const cur = metals.find(v => v.metal === metal) || { metal: p.metal || "", handle: p.handle, title: p.title, image: p.image, modelImage: p.modelImage, price: p.price, compareAt: p.compareAt };
@@ -42,7 +42,7 @@ export default function DesignCard({ p }: { p: Product }) {
           </span>
         )}
         <DailyCardPrice price={Number(cur.price)} />
-        <span className="price">{usd(cur.price, p.currency)}{cur.compareAt ? <s className="was">{usd(cur.compareAt, p.currency)}</s> : null}</span>
+        <span className="price">{from && <em className="from">From</em>}{usd(cur.price, p.currency)}{cur.compareAt ? <s className="was">{usd(cur.compareAt, p.currency)}</s> : null}</span>{/* settings: the price is the setting alone, so "From" (2026-11-04) */}
       </div>
     </Link>
   );

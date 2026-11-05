@@ -3247,3 +3247,6 @@ body.hero-film .cover.one .cv-film{opacity:1}
 .ct.pt.on .pt-vl,.ct.pt:hover .pt-vl{transform:translateY(-50%) rotate(-90deg)}
 @media(hover:none){.ct.pt:hover img{filter:grayscale(1);transform:none}.ct.pt:hover .pt-ov{opacity:.85}.ct.pt:hover .pt-s,.ct.pt:hover .pt-e,.ct.pt:hover .pt-plus,.ct.pt:hover .pt-vl{opacity:0}.ct.pt.on img{filter:none;transform:scale(1.06)}.ct.pt.on .pt-ov{opacity:1}.ct.pt.on .pt-s,.ct.pt.on .pt-e,.ct.pt.on .pt-plus,.ct.pt.on .pt-vl{opacity:1}}
 @media(max-width:767px){.ct.pt .pt-t{font-size:28px}.ct.pt .pt-s{bottom:calc(18px + 28px*2.1 + 6px);font-size:16px}}
+
+/* ring settings: "From $1,089" — the setting alone, the stone comes later */
+.pcard-txt .price .from{font-style:normal;font-size:.72em;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-right:6px}
