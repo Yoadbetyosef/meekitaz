@@ -1,3 +1,4 @@
+import GridReelTile from "./GridReelTile";
 "use client";
 import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
@@ -53,6 +54,8 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
               {handle === "bracelets" && i === 12 && items.length > 12 && (
                 <div className="pgrid-slot"><Link href="/floating" className="op-tile op-link"><img src="/media/floating-bracelet-tile.webp" alt="Smiling in a burgundy silk headscarf, a floating marquise diamond bracelet on her wrist" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "55% 55%" }} /><span className="op-cap"><small>Only at Meekitaz</small><b>Explore floating &rarr;</b></span></Link></div>
               )}
+              {/* Necklaces: the tennis-necklace film as a tall tile on the side, two rows after the first film (2026-11-05) */}
+              {handle === "necklaces" && i === 12 && items.length > 12 && <GridReelTile src="/media/necklaces-reel.mp4" poster="/media/necklaces-reel-poster.jpg" label="Meekitaz · The neck" />}
               {/* One of One: the same portrait, four rows after the first photo tile */}
               {handle === "one-of-one" && i === 18 && items.length > 18 && (
                 <div className="pgrid-slot"><div className="op-tile"><img src="/media/floating-bracelet-tile.webp" alt="Smiling in a burgundy silk headscarf, a floating marquise diamond bracelet on her wrist" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "55% 55%" }} /><span className="op-cap"><small>One of One</small><b>Made once.<br />Worn every day.</b></span></div></div>

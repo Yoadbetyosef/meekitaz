@@ -3279,3 +3279,9 @@ html.mk-intro-on .mk-intro{display:block}
 .mkd-lab{position:absolute;font:400 9px var(--body);letter-spacing:.34em;text-transform:uppercase;white-space:nowrap;opacity:.9}
 .mkd-lab.l1{left:40px;top:50%;transform:rotate(-90deg);transform-origin:left center}.mkd-lab.l2{right:40px;top:50%;transform:rotate(90deg);transform-origin:right center}.mkd-lab.l3{left:0;right:0;bottom:30px;text-align:center}
 @media(max-width:767px){.mkd-lab{font-size:8px}.mkd-lab.l1{left:22px}.mkd-lab.l2{right:22px}.mkd-x.x1{left:16px;top:16px}.mkd-x.x2{right:16px;top:16px}.mkd-x.x3{left:16px;bottom:16px}.mkd-x.x4{right:16px;bottom:16px}}
+
+/* a film tile inside a product grid */
+.op-tile.grt{background:#000}
+.op-tile.grt video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block}
+.op-tile.grt .fl-plus{position:absolute;width:9px;height:9px;z-index:2}.op-tile.grt .fl-plus.p1{left:14px;top:14px}.op-tile.grt .fl-plus.p3{right:14px;bottom:14px}
+.grt-lab{position:absolute;left:16px;top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:left center;color:#fff;font:400 8px var(--body);letter-spacing:.3em;text-transform:uppercase;white-space:nowrap;z-index:2}
