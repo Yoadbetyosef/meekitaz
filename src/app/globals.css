@@ -3184,7 +3184,10 @@ body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
 @media(min-width:768px){
 .cover.one .cv-film{display:block;position:absolute;inset:0;z-index:1;opacity:0;transition:opacity .35s ease;pointer-events:none}
 /* the film sits exactly where the still sits (same size, same place, same fade on the right) — she starts moving from where she stands */
-.cover.one .cv-film video{position:absolute;left:-30vw;top:-.5vw;width:130vw;height:auto;max-width:none;display:block}
+/* 2026-11-05: the tall (9:16) film keeps its own shape on computers — full height, standing where she stands in the still — on the still's lavender;
+   the watermark stays on the right, the headline and button on the left */
+.cover.one .cv-film{background:#A9A5D2}
+.cover.one .cv-film video{position:absolute;left:62vw;top:0;height:100%;width:auto;max-width:none;transform:translateX(-50%);display:block}
 body.hero-film .cover.one .cv-film{opacity:1}
 .cover.one .cv-edge{z-index:2}
 .cover.one .cv-glow{z-index:3}
