@@ -58,6 +58,8 @@ export default function ReelHand({ items }: { items: Item[] }) {
   return (
     <section className="rh-wrap" aria-label="Ready to Ship" ref={ref}>
       <div className="rh">
+        {/* R1 (approved 2026-11-05): lavender card, "ALWAYS" as a huge faint blue watermark behind the hand, two small plus marks */}
+        <span className="rh-wm" aria-hidden="true">ALWAYS</span><i className="rh-plus p1" aria-hidden="true" /><i className="rh-plus p2" aria-hidden="true" />
         <div className="rh-copy">
           <p className="rh-eye"><i />In stock</p>
           <h2 className="rh-h">Ready to ship.</h2>

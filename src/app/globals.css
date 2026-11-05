@@ -3285,3 +3285,14 @@ html.mk-intro-on .mk-intro{display:block}
 .op-tile.grt video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%;display:block}
 .op-tile.grt .fl-plus{position:absolute;width:9px;height:9px;z-index:2}.op-tile.grt .fl-plus.p1{left:14px;top:14px}.op-tile.grt .fl-plus.p3{right:14px;bottom:14px}
 .grt-lab{position:absolute;left:16px;top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:left center;color:#fff;font:400 8px var(--body);letter-spacing:.3em;text-transform:uppercase;white-space:nowrap;z-index:2}
+
+/* ===== Ready to ship block · R1 (approved 2026-11-05): no blue — the site's lavender, ink type, "ALWAYS" watermark, two pluses ===== */
+.rh{background:#E5E3EF !important;color:var(--ink) !important}
+.rh .rh-h,.rh .rh-name,.rh .rh-price,.rh .rh-name *,.rh .rh-price *{color:var(--ink) !important}
+.rh .rh-eye{color:#0D4FE7 !important}.rh .rh-eye i{background:#0D4FE7 !important}
+.rh .rh-btn{background:var(--ink) !important;color:#fff !important}
+.rh-wm{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);font:400 min(22vw,320px)/1 var(--display);letter-spacing:.02em;color:#0D4FE7;opacity:.14;white-space:nowrap;pointer-events:none;z-index:0}
+.rh-plus{position:absolute;width:9px;height:9px;z-index:3;pointer-events:none}.rh-plus::before,.rh-plus::after{content:"";position:absolute;background:var(--ink)}
+.rh-plus::before{left:0;right:0;top:50%;height:1.2px;transform:translateY(-50%)}.rh-plus::after{top:0;bottom:0;left:50%;width:1.2px;transform:translateX(-50%)}
+.rh-plus.p1{right:22px;top:22px}.rh-plus.p2{left:22px;bottom:22px}
+@media(max-width:767px){.rh-wm{font-size:min(44vw,170px)}.rh-plus.p1{right:16px;top:16px}.rh-plus.p2{left:16px;bottom:16px}}
