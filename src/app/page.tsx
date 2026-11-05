@@ -10,7 +10,7 @@ import NewFancy from "@/components/NewFancy";
 import OneOfOne from "@/components/OneOfOne";
 import ReelStrip from "@/components/ReelStrip";
 import PressRow from "@/components/PressRow";
-import LooksReel from "@/components/LooksReel";
+import BrandStories from "@/components/BrandStories";
 import Reviews from "@/components/Reviews";
 import PrivateClients from "@/components/PrivateClients";
 
@@ -37,7 +37,7 @@ export default function Home() {
       <ReelStrip />
       <HouseCodes />
       <PressRow />
-      <LooksReel />
+      <BrandStories />
       <Reviews />
       <PrivateClients />
     </main>

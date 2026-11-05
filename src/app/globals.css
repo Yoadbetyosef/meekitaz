@@ -3265,3 +3265,8 @@ html.mk-intro-on .mk-intro{display:block}
 .mki-fr svg,.mki-fr img{width:100%;height:auto;display:block}
 .mki-cnt{position:absolute;right:40px;bottom:40px;font:400 12px var(--body);letter-spacing:.3em;opacity:.8}
 @media(max-width:767px){.mki-fr{width:60vw}.mki-lab{font-size:8px}.mki-lab.l1{left:22px}.mki-lab.l2{right:22px}.mki-cnt{right:22px;bottom:24px}}
+
+/* ===== Home · Brand stories (2026-11-05) — the film alone on the page background, centred, no frame ===== */
+.bstories{position:relative;z-index:6;background:var(--home-bg,#E5E3EF);display:grid;place-items:center;padding:clamp(40px,6vw,80px) 0}
+.bstories video{width:min(64vw,900px);aspect-ratio:16/9;display:block;object-fit:cover}
+@media(max-width:767px){.bstories{padding:36px 0}.bstories video{width:88%}}
