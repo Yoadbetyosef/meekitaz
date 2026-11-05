@@ -3170,11 +3170,11 @@ body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
 .catbody{background:#FBF7DF}
 
 /* film opens out of our M ("D"): two halves of the M, ink, that slide apart as the film opens between them */
-.mko-m{position:absolute;left:50%;top:56%;width:min(30vw,340px);transform:translate(-50%,-50%);z-index:2;pointer-events:none}
-.mko-m img{display:block;width:100%;height:auto;filter:brightness(0)}
-.mko-ml img{clip-path:inset(0 50% 0 0)}.mko-mr img{clip-path:inset(0 0 0 50%)}
+.mko-m{position:absolute;left:50%;top:56%;width:min(22vw,240px);transform:translate(-50%,-50%);z-index:2;pointer-events:none;color:#0D4FE7} /* smaller, blue (2026-11-05) */
+.mko-m svg{display:block;width:100%;height:auto;fill:currentColor}
+.mko-ml svg{clip-path:inset(0 50% 0 0)}.mko-mr svg{clip-path:inset(0 0 0 50%)}
 .mko-box{visibility:hidden}
-@media(max-width:767px){.mko-m{width:52vw}}
+@media(max-width:767px){.mko-m{width:40vw}}
 /* product pages and diamond pages — the same soft butter cream as the category pages (locked 2026-11-03) */
 .pp,.pp.ih-on,.pp-below,.dd,.df{background:#FBF7DF}
 
@@ -3270,3 +3270,12 @@ html.mk-intro-on .mk-intro{display:block}
 .bstories{position:relative;z-index:6;background:var(--home-bg,#E5E3EF);display:grid;place-items:center;padding:clamp(40px,6vw,80px) 0}
 .bstories video{width:min(88vw,1360px);aspect-ratio:16/9;display:block;object-fit:cover} /* bigger on computers (2026-11-05) */
 @media(max-width:767px){.bstories{padding:0}.bstories video{width:100%;aspect-ratio:9/16}}
+
+/* film section · the opening's look in blue on the lavender (2026-11-05) */
+.mko-deco{position:absolute;inset:0;pointer-events:none;z-index:1;color:#0D4FE7}
+.mkd-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(13,79,231,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(13,79,231,.07) 1px,transparent 1px);background-size:64px 64px}
+.mkd-x{position:absolute;width:9px;height:9px}.mkd-x::before,.mkd-x::after{content:"";position:absolute;background:currentColor}.mkd-x::before{left:0;right:0;top:50%;height:1.2px;transform:translateY(-50%)}.mkd-x::after{top:0;bottom:0;left:50%;width:1.2px;transform:translateX(-50%)}
+.mkd-x.x1{left:28px;top:28px}.mkd-x.x2{right:28px;top:28px}.mkd-x.x3{left:28px;bottom:28px}.mkd-x.x4{right:28px;bottom:28px}
+.mkd-lab{position:absolute;font:400 9px var(--body);letter-spacing:.34em;text-transform:uppercase;white-space:nowrap;opacity:.9}
+.mkd-lab.l1{left:40px;top:50%;transform:rotate(-90deg);transform-origin:left center}.mkd-lab.l2{right:40px;top:50%;transform:rotate(90deg);transform-origin:right center}.mkd-lab.l3{left:0;right:0;bottom:30px;text-align:center}
+@media(max-width:767px){.mkd-lab{font-size:8px}.mkd-lab.l1{left:22px}.mkd-lab.l2{right:22px}.mkd-x.x1{left:16px;top:16px}.mkd-x.x2{right:16px;top:16px}.mkd-x.x3{left:16px;bottom:16px}.mkd-x.x4{right:16px;bottom:16px}}
