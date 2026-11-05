@@ -1,4 +1,5 @@
 import Hero from "@/components/Hero";
+import Intro from "@/components/Intro";
 import Film from "@/components/Film";
 import YellowCurtain from "@/components/YellowCurtain";
 import FloatingFilm from "@/components/FloatingFilm";
@@ -18,6 +19,7 @@ export const metadata = { alternates: { canonical: "/" } };
 export default function Home() {
   return (
     <main className="home-page">
+      <Intro />
       {/* On phones this wrapper is its own scroll "page" (like a Reel): the first swipe lifts the yellow and stops on its own at the end;
           the next swipe moves the page on. On computers it is transparent (display:contents) and the page scrolls as before. */}
       <div className="ycur-stage" id="ycur-stage">

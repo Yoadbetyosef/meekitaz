@@ -3250,3 +3250,17 @@ body.hero-film .cover.one .cv-film{opacity:1}
 
 /* ring settings: "From $1,089" — the setting alone, the stone comes later */
 .pcard-txt .price .from{font-style:normal;font-size:.72em;letter-spacing:.14em;text-transform:uppercase;opacity:.75;margin-right:6px}
+
+/* ===== Site opening (F4, 2026-11-05) ===== */
+.mk-intro{position:fixed;inset:0;z-index:100000;background:#0D4FE7;color:#fff;overflow:hidden}
+.mk-intro.out{animation:mkiLift .55s cubic-bezier(.8,0,.2,1) forwards}
+@keyframes mkiLift{to{transform:translateY(-100%)}}
+.mki-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:64px 64px}
+.mki-x{position:absolute;width:9px;height:9px}.mki-x::before,.mki-x::after{content:"";position:absolute;background:#fff}.mki-x::before{left:0;right:0;top:50%;height:1.2px;transform:translateY(-50%)}.mki-x::after{top:0;bottom:0;left:50%;width:1.2px;transform:translateX(-50%)}
+.mki-x.x1{left:28px;top:28px}.mki-x.x2{right:28px;top:28px}.mki-x.x3{left:28px;bottom:28px}.mki-x.x4{right:28px;bottom:28px}
+.mki-lab{position:absolute;font:400 9px var(--body);letter-spacing:.34em;text-transform:uppercase;opacity:.8;white-space:nowrap}
+.mki-lab.l1{left:40px;top:50%;transform:rotate(-90deg);transform-origin:left center}.mki-lab.l2{right:40px;top:50%;transform:rotate(90deg);transform-origin:right center}.mki-lab.l3{left:0;right:0;bottom:40px;text-align:center}
+.mki-fr{position:absolute;left:50%;top:50%;width:min(30vw,300px);transform:translate(-50%,-50%);opacity:0}
+.mki-fr svg,.mki-fr img{width:100%;height:auto;display:block}
+.mki-cnt{position:absolute;right:40px;bottom:40px;font:400 12px var(--body);letter-spacing:.3em;opacity:.8}
+@media(max-width:767px){.mki-fr{width:60vw}.mki-lab{font-size:8px}.mki-lab.l1{left:22px}.mki-lab.l2{right:22px}.mki-cnt{right:22px;bottom:24px}}
