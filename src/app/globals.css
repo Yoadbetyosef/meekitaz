@@ -3288,7 +3288,7 @@ html.mk-intro-on .mk-intro{display:block}
 
 /* ===== Ready to ship block · R1 (approved 2026-11-05): no blue — the site's lavender, ink type, "ALWAYS" watermark, two pluses ===== */
 .rh{background:#E5E3EF !important;color:var(--ink) !important}
-.rh .rh-h,.rh .rh-name,.rh .rh-price,.rh .rh-name *,.rh .rh-price *{color:var(--ink) !important}
+.rh .rh-h,.rh .rh-cur,.rh .rh-cur *{color:var(--ink) !important}
 .rh .rh-eye{color:#0D4FE7 !important}.rh .rh-eye i{background:#0D4FE7 !important}
 .rh .rh-btn{background:var(--ink) !important;color:#fff !important}
 .rh-wm{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);font:400 min(22vw,320px)/1 var(--display);letter-spacing:.02em;color:#0D4FE7;opacity:.14;white-space:nowrap;pointer-events:none;z-index:0}
