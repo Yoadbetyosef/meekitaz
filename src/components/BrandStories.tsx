@@ -8,14 +8,14 @@ export default function BrandStories() {
   useEffect(() => {
     const vid = v.current; if (!vid) return;
     const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { if (!vid.getAttribute("src")) vid.src = "/media/brand-stories.mp4"; vid.muted = true; vid.play().catch(() => {}); }
+      if (e.isIntersecting) { if (!vid.getAttribute("src")) vid.src = "/media/brand-stories-lilac.mp4"; vid.muted = true; vid.play().catch(() => {}); }
       else vid.pause();
     }, { threshold: 0.2 });
     io.observe(vid); return () => io.disconnect();
   }, []);
   return (
     <section className="bstories" aria-label="Brand stories">
-      <video ref={v} muted loop playsInline preload="none" poster="/media/brand-stories-poster.jpg" />
+      <video ref={v} muted loop playsInline preload="none" poster="/media/brand-stories-lilac-poster.jpg" />
     </section>
   );
 }
