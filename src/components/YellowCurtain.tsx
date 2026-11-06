@@ -28,9 +28,9 @@ export default function YellowCurtain() {
       // when her film ends the first time: the page scrolls itself to the next section, and on into the M opening — unless the person has moved
       let fired = false;
       v.addEventListener("timeupdate", () => {
-        if (fired || !v.duration || v.currentTime < v.duration - .15) return; fired = true;
+        if (fired || !v.duration || v.currentTime < v.duration - .45) return; fired = true;
         if (userMoved || window.scrollY > 40) return;
-        const sec = document.querySelector<HTMLElement>(".mkfilm.mko"); if (!sec) return;
+        const sec = document.getElementById("film"); if (!sec) return;
         const target = sec.offsetTop + Math.round((sec.offsetHeight - window.innerHeight) * .86); // where the M has fully opened
         const y0 = window.scrollY, t0 = performance.now(), dur = 2200;
         const ease = (p: number) => 1 - Math.pow(1 - p, 3);
