@@ -42,12 +42,17 @@ export default function YellowCurtain() {
       // when the curtain has left: her film starts and, on computers, the page holds for two seconds (a strong flick must not
       // drag the next section up before she has even moved)
       const block = (e: Event) => e.preventDefault();
-      const hold = (ms: number) => { if (phone) return; document.documentElement.style.overflow = "hidden"; window.addEventListener("wheel", block, { passive: false }); window.setTimeout(() => { document.documentElement.style.overflow = ""; window.removeEventListener("wheel", block); }, ms); };
+      const hold = (ms: number) => {
+        const y = Math.round(window.innerHeight * .75), until = performance.now() + ms;
+        document.documentElement.style.overflow = "hidden"; window.addEventListener("wheel", block, { passive: false }); window.addEventListener("touchmove", block, { passive: false });
+        const pin = () => { if (window.scrollY !== y) window.scrollTo({ top: y, behavior: "instant" as ScrollBehavior }); if (performance.now() < until) requestAnimationFrame(pin); else { document.documentElement.style.overflow = ""; window.removeEventListener("wheel", block); window.removeEventListener("touchmove", block); } };
+        requestAnimationFrame(pin);
+      };
       const set = () => { const y = window.scrollY, H = window.innerHeight; b.classList.toggle("ycur-top", y < 24);
         if (y >= H * .75 - 1 && !b.classList.contains("hero-film")) { start(); b.classList.add("hero-film"); window.scrollTo({ top: H * .75, behavior: "instant" as ScrollBehavior }); hold(2000); } };
       set(); window.addEventListener("scroll", set, { passive: true });
       tm.push(window.setTimeout(() => {}, 0));
-      return () => { window.removeEventListener("scroll", set); window.removeEventListener("wheel", block); document.documentElement.style.overflow = ""; tm.forEach(clearTimeout); b.classList.remove("ycur-top", "hero-film", "ycur-return"); ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); };
+      return () => { window.removeEventListener("scroll", set); window.removeEventListener("wheel", block); window.removeEventListener("touchmove", block); document.documentElement.style.overflow = ""; tm.forEach(clearTimeout); b.classList.remove("ycur-top", "hero-film", "ycur-return"); ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); };
     }
     return () => { tm.forEach(clearTimeout); b.classList.remove("ycur-top", "ycur-beat"); ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); };
   }, []);

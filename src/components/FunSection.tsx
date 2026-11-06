@@ -14,9 +14,11 @@ export default function FunSection() {
     const s = sec.current, vid = v.current, para = p.current; if (!s || !vid || !para) return;
     const words = [...para.querySelectorAll("span")];
     let started = false, goneAt = 0, raf = 0;
-    const start = () => { if (started) return; started = true; if (!vid.getAttribute("src")) vid.src = "/media/dancer.mp4"; vid.muted = true; vid.currentTime = 0; vid.play().catch(() => {}); s.classList.add("fun-in"); };
+    const src = window.matchMedia("(max-width:767px)").matches ? "/media/dancer-m.mp4" : "/media/dancer.mp4";
+    const reset = () => { started = false; goneAt = 0; s.classList.remove("fun-in", "fun-gone", "fun-cta"); words.forEach(w => w.classList.remove("on")); setSig(false); vid.pause(); };
+    const start = () => { if (started) return; started = true; if (!vid.getAttribute("src")) vid.src = src; vid.muted = true; vid.currentTime = 0; vid.play().catch(() => {}); s.classList.add("fun-in"); };
     (s as HTMLElement & { __start?: () => void }).__start = start; // HeroLift calls this the moment the board reaches the top
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) start(); }, { threshold: .55 });
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) start(); else if (started) reset(); }, { threshold: .55 }); // every return to this section plays her again
     io.observe(s);
     const tick = () => {
       const gone = started && (vid.ended || (vid.duration > 0 && vid.currentTime >= vid.duration - .25));
