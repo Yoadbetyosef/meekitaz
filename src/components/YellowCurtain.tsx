@@ -18,7 +18,8 @@ export default function YellowCurtain() {
     const entry = html.classList.contains("mk-intro-on") || sessionStorage.getItem("mk-entry") === "1";
     try { sessionStorage.removeItem("mk-entry"); } catch {}
     setMode(entry ? "entry" : "return");
-    b.classList.add("ycur-top"); if (!entry) b.classList.add("ycur-return"); // return mode: the spacer after the hero gives the scroll room
+    b.classList.add("ycur-top"); b.classList.remove("hero-film", "hero-lift-up"); // a fresh start every time the home page mounts
+    if (!entry) b.classList.add("ycur-return"); // return mode: the spacer after the hero gives the scroll room
     const tm: number[] = [];
     let userMoved = false;
     const stop = () => { userMoved = true; };
@@ -54,7 +55,7 @@ export default function YellowCurtain() {
       tm.push(window.setTimeout(() => {}, 0));
       return () => { window.removeEventListener("scroll", set); window.removeEventListener("wheel", block); window.removeEventListener("touchmove", block); document.documentElement.style.overflow = ""; tm.forEach(clearTimeout); b.classList.remove("ycur-top", "hero-film", "ycur-return"); ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); };
     }
-    return () => { tm.forEach(clearTimeout); b.classList.remove("ycur-top", "ycur-beat"); ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); };
+    return () => { tm.forEach(clearTimeout); b.classList.remove("ycur-top", "ycur-beat", "hero-film", "hero-lift-up"); ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); };
   }, []);
   if (gone) return null; // the curtain is on screen from the first paint; its mode (fast/slow) is decided right after
   return (<>
