@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import Link from "next/link";
 import RingSteps from "@/components/RingSteps";
 import DiamondFlow, { type FlowStone, type Similar } from "@/components/DiamondFlow";
 import { getDiamond, searchDiamonds, searchFancy, vdbConfigured, SHAPES, type Diamond } from "@/lib/vdb";
@@ -39,16 +41,41 @@ async function similarOf(d: Diamond): Promise<Diamond[]> {
   } catch { return []; }
 }
 
+const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
+
+/* the similar stones, streamed after the main stone (2026-11-06): the page no longer waits for a second search and four photo reads */
+async function SimilarStones({ d }: { d: Diamond }) {
+  const sim = await similarOf(d);
+  if (!sim.length) return null;
+  const simBg = await Promise.all(sim.map(x => stoneBg(x.image, 1200)));
+  const similar: Similar[] = sim.map((x, i) => ({ ...flow(x), bg: simBg[i] }));
+  const shape = d.shape === "Elongated Cushion" ? "Cushion" : d.shape, kind = d.fancy ? "fancy color" : "";
+  return (
+    <section className="df-sec">
+      <span className="eyebrow">Similar stones</span><h2>Other {shape.toLowerCase()} {kind && kind + " "}diamonds you may like</h2>
+      <div className="df-sim">
+        {similar.map(x => {
+          const dc = x.carat - d.carat, dp = x.price - d.price;
+          return (
+            <Link key={`${x.vendor}-${x.stock}`} href={`/diamonds/${x.vendor}-${encodeURIComponent(x.stock)}`}>
+              <div className="df-im" style={{ "--bgc": x.bg } as React.CSSProperties}>{/* eslint-disable-next-line @next/next/no-img-element */}<img src={x.image} alt={`${x.carat.toFixed(2)} carat ${x.shape} diamond`} referrerPolicy="no-referrer" loading="lazy" /></div>
+              <div className="df-tx"><b>{x.carat.toFixed(2)} ct</b><span>{x.fancy || `${x.color} · ${x.clarity}`} · {x.lab}</span><span className="df-pr">{usd(x.price)}</span><em>{dc >= 0 ? "+" : "−"}{Math.abs(dc).toFixed(2)} ct · {dp >= 0 ? "+" : "−"}{usd(Math.abs(dp))}</em></div>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 export default async function DiamondPage({ params }: { params: Promise<{ id: string }> }) {
   const d = await load((await params).id);
   if (!d) notFound();
-  const [bg, sim] = await Promise.all([stoneBg(d.image), similarOf(d)]);
-  const simBg = await Promise.all(sim.map(x => stoneBg(x.image, 1200)));
-  const similar: Similar[] = sim.map((x, i) => ({ ...flow(x), bg: simBg[i] }));
+  const bg = await stoneBg(d.image, 900); // the backdrop colour of the stone's photo (capped, cached)
   return (
     <main className="df">
       {!d.fancy && <RingSteps step={2} />}
-      <DiamondFlow d={flow(d)} bg={bg} similar={similar} />
+      <DiamondFlow d={flow(d)} bg={bg} similar={[]} similarSlot={<Suspense fallback={null}><SimilarStones d={d} /></Suspense>} />
     </main>
   );
 }

@@ -49,7 +49,7 @@ function StoneWindow({ d, bg, alt, children }: { d: FlowStone; bg: string; alt: 
   );
 }
 
-export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: string; similar: Similar[] }) {
+export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowStone; bg: string; similar: Similar[]; similarSlot?: React.ReactNode }) {
   const router = useRouter(); const { addRing } = useCart();
   const [set, setSet] = useState<Setting | null>(null);       // what the customer chose in step 1
   const [shown, setShown] = useState<Setting | null>(null);   // that same design in this diamond's shape
@@ -201,6 +201,7 @@ export default function DiamondFlow({ d, bg, similar }: { d: FlowStone; bg: stri
       </section>
 
       {/* 3 · the ending */}
+      {similarSlot}
       {similar.length > 0 && (
         <section className="df-sec">
           <span className="eyebrow">Similar stones</span><h2>Other {shape.toLowerCase()} {kind && kind + " "}diamonds you may like</h2>

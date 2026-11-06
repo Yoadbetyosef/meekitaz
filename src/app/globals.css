@@ -3337,3 +3337,11 @@ body.hero-lift-up .cover.one::after,body.hero-lift-up .cover.one .cv-edge,body.h
 .fun.fun-cta .fun-btn{opacity:1;transform:none}
 .home-page .mkopen{display:none}
 @media(max-width:767px){.fun .fl-plus{width:9px;height:9px}.fun-line{width:88vw;padding:30px 16px}.fun-line p{font-size:17px}.fun-line .mk-sig.fun-sig{width:46vw}}
+
+/* the diamond page's instant loading screen (2026-11-06) */
+.df-loading{min-height:100vh;display:grid;place-items:center;align-content:center;gap:18px;padding:120px 24px 60px}
+.dfl-stone{width:min(46vw,420px);aspect-ratio:1;border-radius:24px;background:#dfe2e6;overflow:hidden;display:grid;place-items:center;animation:dflPulse 1.4s ease-in-out infinite alternate}
+.dfl-stone img{width:86%;height:86%;object-fit:contain}
+.dfl-tx{text-align:center}.dfl-tx b{display:block;font:400 26px var(--display)}.dfl-tx span{font:italic 500 17px var(--sub);color:#555}
+@keyframes dflPulse{to{opacity:.82}}
+@media(max-width:767px){.dfl-stone{width:78vw}}
