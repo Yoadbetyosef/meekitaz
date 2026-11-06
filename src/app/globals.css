@@ -3325,6 +3325,6 @@ body.hero-lift-up .cover.one::after,body.hero-lift-up .cover.one .cv-edge,body.h
 .fun-line .mk-sig.fun-sig{width:min(24vw,260px);margin:22px auto 0}
 .fun-line .mk-sig.fun-sig path.g{display:none}.fun-line .mk-sig.fun-sig path.s{stroke:#0D4FE7;stroke-width:2.6}
 .fun-btn{display:inline-flex;align-items:center;height:50px;padding:0 30px;border-radius:999px;background:var(--ink);color:#fff;font:400 12px var(--body);letter-spacing:.2em;text-transform:uppercase;text-decoration:none;margin-top:24px;opacity:0;transform:translateY(10px);transition:all .6s cubic-bezier(.2,.8,.2,1)}
-.fun.fun-btn .fun-btn{opacity:1;transform:none}
+.fun.fun-cta .fun-btn{opacity:1;transform:none}
 @media(max-width:767px){.fun{display:none}}
 @media(min-width:768px){.home-page .mkopen{display:none}}

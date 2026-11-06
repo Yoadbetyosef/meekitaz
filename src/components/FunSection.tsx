@@ -22,7 +22,7 @@ export default function FunSection() {
       const gone = started && (vid.ended || (vid.duration > 0 && vid.currentTime >= vid.duration - .25));
       if (gone && !goneAt) goneAt = performance.now();
       s.classList.toggle("fun-gone", gone);
-      if (goneAt) { const el = (performance.now() - goneAt) / 1000; const q = Math.max(0, Math.min(1, (el - .5) / 1.6)), n = Math.round(q * words.length); words.forEach((w, i) => w.classList.toggle("on", i < n)); if (el > 2.2) setSig(true); if (el > 3.6) s.classList.add("fun-btn"); }
+      if (goneAt) { const el = (performance.now() - goneAt) / 1000; const q = Math.max(0, Math.min(1, (el - .5) / 1.6)), n = Math.round(q * words.length); words.forEach((w, i) => w.classList.toggle("on", i < n)); if (el > 2.2) setSig(true); if (el > 3.6) s.classList.add("fun-cta"); }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
