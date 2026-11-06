@@ -3309,18 +3309,22 @@ body.hero-lift-up .cover.one::after,body.hero-lift-up .cover.one .cv-edge,body.h
 .mk-board-m{position:absolute;left:50%;top:56%;width:min(22vw,240px);transform:translate(-50%,-50%)}.mk-board-m svg{width:100%;height:auto;fill:currentColor;display:block}
 @media(max-width:767px){.mk-board-m{width:40vw}.mk-board .mkd-lab{font-size:8px}}
 
-/* ===== Home · the page she lifted (computers, 2026-11-06): the dancer full-bleed, then the line fills ===== */
-.fun{position:relative;z-index:6;height:300vh;background:var(--home-bg,#E5E3EF)}
-.fun-stick{position:sticky;top:0;height:100vh;overflow:hidden}
+/* ===== Home · the page she lifted (computers, 2026-11-06, "O3 + S2") ===== */
+.fun{position:relative;z-index:6;height:100vh;background:var(--home-bg,#E5E3EF)}
+.fun-stick{position:relative;height:100vh;overflow:hidden}
+.fun-dance{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .33s}
+.fun.fun-in .fun-dance{opacity:1}
+.fun.fun-gone .fun-dance{opacity:0;transition:opacity .5s}
+.fun-tint{position:absolute;inset:0;pointer-events:none;background:var(--home-bg,#E5E3EF);mix-blend-mode:multiply;opacity:0;transition:opacity .33s}
+.fun.fun-in .fun-tint{opacity:.55}.fun.fun-gone .fun-tint{opacity:0}
+.fun .fl-plus{position:absolute;width:9px;height:9px;z-index:3}.fun .fl-plus::before,.fun .fl-plus::after{background:#0D4FE7}.fun .fl-plus.p1{left:28px;top:28px}.fun .fl-plus.p3{right:28px;bottom:28px}
 .fun-line{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;padding:0 6vw;opacity:0;transition:opacity .6s}
 .fun.fun-gone .fun-line{opacity:1}
-.fun-line p{margin:0;font:400 clamp(40px,6.4vw,104px)/1.02 var(--display);letter-spacing:.005em;color:rgba(28,26,27,.14)}
+.fun-line p{margin:0;font:400 clamp(18px,1.9vw,28px)/1.15 var(--display);letter-spacing:.01em}
 .fun-line p span{color:rgba(28,26,27,.14);transition:color .2s}.fun-line p span.on{color:#0D4FE7}
-/* the one dancer: fixed over the page, clipped to the board while it rises, full once the board is up; gone when she has left */
-.mk-dancer{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;display:block;z-index:8;pointer-events:none;mix-blend-mode:multiply;opacity:0;clip-path:inset(100% 0 0 0);
-  /* her own studio floor and walls fade away at the edges, so there is no second rectangle — only her on the page */
-  -webkit-mask-image:radial-gradient(ellipse 62% 64% at 50% 44%,#000 50%,transparent 84%);mask-image:radial-gradient(ellipse 62% 64% at 50% 44%,#000 50%,transparent 84%)}
-body.dancer-on .mk-dancer{opacity:1}
-body.dancer-gone .mk-dancer{opacity:0;transition:opacity .6s}
+.fun-line .mk-sig.fun-sig{width:min(24vw,260px);margin:22px auto 0}
+.fun-line .mk-sig.fun-sig path.g{display:none}.fun-line .mk-sig.fun-sig path.s{stroke:#0D4FE7;stroke-width:2.6}
+.fun-btn{display:inline-flex;align-items:center;height:50px;padding:0 30px;border-radius:999px;background:var(--ink);color:#fff;font:400 12px var(--body);letter-spacing:.2em;text-transform:uppercase;text-decoration:none;margin-top:24px;opacity:0;transform:translateY(10px);transition:all .6s cubic-bezier(.2,.8,.2,1)}
+.fun.fun-btn .fun-btn{opacity:1;transform:none}
 @media(max-width:767px){.fun{display:none}}
 @media(min-width:768px){.home-page .mkopen{display:none}}
