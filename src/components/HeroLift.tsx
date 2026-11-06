@@ -25,11 +25,27 @@ export default function HeroLift({ mPath }: { mPath: string }) {
     const stop = () => { moved = true; };
     ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.addEventListener(e, stop, { passive: true }));
     const K = EDGES[mode];
+    if (!phone) { const d2 = document.getElementById("fun-dance") as HTMLVideoElement | null; if (d2 && !d2.getAttribute("src")) { d2.src = "/media/dancer.mp4"; d2.preload = "auto"; d2.load(); } }
     const edge = () => { const t = v.currentTime; if (t < K[0][0]) return 1; for (let i = 0; i < K.length - 1; i++) { const a = K[i], b = K[i + 1]; if (t >= a[0] && t <= b[0]) { const u = (t - a[0]) / (b[0] - a[0]); return a[1] + (b[1] - a[1]) * u; } } return K[K.length - 1][1]; };
     const box = () => { const r = v.getBoundingClientRect(), h = hero.getBoundingClientRect(); return { y: r.top - h.top, h: r.height }; };
     const handoff = () => {
       done = true; const sec = document.getElementById(phone ? "film" : "fun"); if (!sec) return;
-      if (!phone) { const d2 = document.getElementById("fun-dance") as HTMLVideoElement | null; if (d2 && dancer) { if (!d2.getAttribute("src")) d2.src = "/media/dancer.mp4"; d2.muted = true; d2.currentTime = dancer.currentTime; d2.play().catch(() => {}); } }
+      if (!phone) {
+        // the section's own copy of the dancer takes over EXACTLY where the board's copy is — the board stays until that copy is really
+        // showing the same moment (seeked + playing), so there is never a restart from the top or a second rise
+        const d2 = document.getElementById("fun-dance") as HTMLVideoElement | null;
+        if (d2 && dancer) {
+          const go = () => { const at = dancer.currentTime; const onSeek = () => { d2.removeEventListener("seeked", onSeek); d2.play().then(() => finish()).catch(() => finish()); }; d2.addEventListener("seeked", onSeek); d2.currentTime = at; };
+          if (!d2.getAttribute("src")) { d2.src = "/media/dancer.mp4"; d2.preload = "auto"; d2.load(); }
+          d2.muted = true;
+          if (d2.readyState >= 1) go(); else d2.addEventListener("loadedmetadata", go, { once: true });
+          return;
+        }
+      }
+      finish();
+    };
+    const finish = () => {
+      const sec = document.getElementById(phone ? "film" : "fun"); if (!sec) return;
       const rest = () => { v.pause(); v.currentTime = 1.0; board.style.top = "100%"; document.body.classList.remove("hero-lift-up"); };
       if (moved || window.scrollY > 40) { rest(); return; }
       const H = window.innerHeight, secTop = sec.offsetTop, openAt = secTop + Math.round((sec.offsetHeight - H) * .86);
