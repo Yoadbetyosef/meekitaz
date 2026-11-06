@@ -17,7 +17,7 @@ export default function BrandStories() {
     }, { threshold: 0.2 });
     io.observe(vid);
     // it is a film, not a carousel — but on phones a swipe or a tap on a side jumps it one card forward/back (6 cards over 18.9s)
-    const STEP = 3.15; // about one card let x0 = 0, t0 = 0;
+    const STEP = 3.15; let x0 = 0, t0 = 0; // about one card
     const jump = (dir: number) => { const d = vid.duration || 56.7; vid.currentTime = ((Math.round(vid.currentTime / STEP) + dir) * STEP + d) % d; vid.play().catch(() => {}); };
     const ts = (e: TouchEvent) => { x0 = e.touches[0].clientX; t0 = Date.now(); };
     const te = (e: TouchEvent) => { const dx = e.changedTouches[0].clientX - x0; if (Date.now() - t0 > 600) return;
