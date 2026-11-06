@@ -19,21 +19,21 @@ export default function HeroLift({ mPath }: { mPath: string }) {
     board.innerHTML = `<div class="mk-board-in"><i class="mkd-grid"></i><i class="mkd-x x1"></i><i class="mkd-x x2"></i><i class="mkd-x x3"></i><i class="mkd-x x4"></i><span class="mkd-lab l1">Meekitaz</span><span class="mkd-lab l2">Est. New York</span><span class="mkd-lab l3">Lab-grown &middot; IGI certified</span><div class="mk-board-hd"><small>Made, not mined</small><h2>Worn loudly.</h2></div><div class="mk-board-m"><svg viewBox="0 0 ${M_W} ${M_H}" fill-rule="evenodd"><path d="${mPath}"/></svg></div></div>`;
     if (phone) hero.appendChild(board);
     const inner = board.firstElementChild as HTMLElement;
-    let done = false, lifting = false, raf = 0, armed = false, moved = false;
+    let done = false, lifting = false, raf = 0, armed = false, moved = false, armedAt = 0;
     const stop = () => { moved = true; }; ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.addEventListener(e, stop, { passive: true }));
     const edge = () => { const t = v.currentTime; if (t < K[0][0]) return 1; for (let i = 0; i < K.length - 1; i++) { const a = K[i], b = K[i + 1]; if (t >= a[0] && t <= b[0]) { const u = (t - a[0]) / (b[0] - a[0]); return a[1] + (b[1] - a[1]) * u; } } return K[K.length - 1][1]; };
     const box = () => { const r = v.getBoundingClientRect(), h = hero.getBoundingClientRect(); return { y: r.top - h.top, h: r.height }; };
     const resetLift = () => { lifting = false; board.style.top = "100%"; document.body.classList.remove("hero-lift-up"); };
-    const armBack = () => { if (armed) return; armed = true; const onScroll = () => { if (window.scrollY < window.innerHeight * .5) { window.removeEventListener("scroll", onScroll); armed = false; done = false; resetLift(); v.loop = true; v.currentTime = 0; v.play().catch(() => {}); } }; window.addEventListener("scroll", onScroll, { passive: true }); };
+    const armBack = () => { if (armed) return; armed = true; armedAt = performance.now(); const onScroll = () => { if (!armedAt || performance.now() - armedAt < 800) return; if (window.scrollY < window.innerHeight * .5) { window.removeEventListener("scroll", onScroll); armed = false; done = false; resetLift(); v.loop = true; v.currentTime = 0; v.play().catch(() => {}); } }; window.addEventListener("scroll", onScroll, { passive: true }); };
     const handoff = () => {
       done = true;
       const sec = document.getElementById(phone ? "film" : "fun"); if (!sec) { armBack(); return; }
       if (window.scrollY > 40 || (phone && moved)) { armBack(); return; } // the person already scrolled on: leave it
       const H = window.innerHeight, secTop = sec.offsetTop;
       if (!phone) (sec as HTMLElement & { __start?: () => void }).__start?.(); // the dancer appears on the page — a cut
-      window.scrollTo(0, secTop);
+      window.scrollTo({ top: secTop, behavior: "instant" as ScrollBehavior }); // one frame, no sliding — the section is the same colour
       v.pause(); v.currentTime = 1.0; resetLift();
-      if (phone) { const openAt = secTop + Math.round((sec.offsetHeight - H) * .86), inout = (p: number) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; window.setTimeout(() => { if (moved) return; const y0 = window.scrollY, t0 = performance.now(); const step = (now: number) => { if (moved) return; const p = Math.min(1, (now - t0) / 1200); window.scrollTo(0, y0 + (openAt - y0) * inout(p)); if (p < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }, 450); }
+      if (phone) { const openAt = secTop + Math.round((sec.offsetHeight - H) * .86), inout = (p: number) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; window.setTimeout(() => { if (moved) return; const y0 = window.scrollY, t0 = performance.now(); const step = (now: number) => { if (moved) return; const p = Math.min(1, (now - t0) / 1200); window.scrollTo({ top: y0 + (openAt - y0) * inout(p), behavior: "instant" as ScrollBehavior }); if (p < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }, 450); }
       armBack();
     };
     const tick = () => {
