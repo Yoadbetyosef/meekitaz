@@ -3312,12 +3312,13 @@ body.hero-lift-up .cover.one::after,body.hero-lift-up .cover.one .cv-edge,body.h
 /* ===== Home · the page she lifted (computers, 2026-11-06): the dancer full-bleed, then the line fills ===== */
 .fun{position:relative;z-index:6;height:300vh;background:var(--home-bg,#E5E3EF)}
 .fun-stick{position:sticky;top:0;height:100vh;overflow:hidden}
-.fun-dance{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;mix-blend-mode:multiply;opacity:1;transition:opacity .6s}
-.fun.fun-gone .fun-dance{opacity:0}
 .fun-line{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;padding:0 6vw;opacity:0;transition:opacity .6s}
 .fun.fun-gone .fun-line{opacity:1}
 .fun-line p{margin:0;font:400 clamp(40px,6.4vw,104px)/1.02 var(--display);letter-spacing:.005em;color:rgba(28,26,27,.14)}
 .fun-line p span{color:rgba(28,26,27,.14);transition:color .2s}.fun-line p span.on{color:#0D4FE7}
-.mk-board-dance{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;mix-blend-mode:multiply}
+/* the one dancer: fixed over the page, clipped to the board while it rises, full once the board is up; gone when she has left */
+.mk-dancer{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:8;pointer-events:none;mix-blend-mode:multiply;opacity:0;clip-path:inset(100% 0 0 0)}
+body.dancer-on .mk-dancer{opacity:1}
+body.dancer-gone .mk-dancer{opacity:0;transition:opacity .6s}
 @media(max-width:767px){.fun{display:none}}
 @media(min-width:768px){.home-page .mkopen{display:none}}
