@@ -3160,8 +3160,8 @@ h1,h2,h3{letter-spacing:.03em}
 .ycur-plus::before,.ycur-plus::after{content:"";position:absolute;background:#1C1A1B}
 .ycur-plus::before{left:0;right:0;top:50%;height:1.2px;transform:translateY(-50%)}.ycur-plus::after{top:0;bottom:0;left:50%;width:1.2px;transform:translateX(-50%)}
 .ycur-p1{top:30px}.ycur-p2{bottom:30px}
-.ycur-qt{position:absolute;left:64px;top:50%;transform:translateY(-50%);font:400 15px var(--body);letter-spacing:.32em;text-transform:uppercase;color:#1C1A1B}
-@media(max-width:767px){.ycur-plus{left:18px;width:9px;height:9px}.ycur-p1{top:calc(18px + env(safe-area-inset-top,0px))}.ycur-p2{bottom:18px}.ycur-qt{left:24px;font-size:12px}}
+.ycur-qt{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font:400 15px var(--body);letter-spacing:.32em;text-transform:uppercase;color:#1C1A1B} /* centred (2026-11-06) */
+@media(max-width:767px){.ycur-plus{left:18px;width:9px;height:9px}.ycur-p1{top:calc(18px + env(safe-area-inset-top,0px))}.ycur-p2{bottom:18px}.ycur-qt{left:0;right:0;text-align:center;font-size:12px}}
 .ycur-wm svg{display:block;width:100%;height:auto}
 .nav,.cart{transition:opacity .45s ease,visibility .45s}
 body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
