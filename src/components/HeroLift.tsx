@@ -32,7 +32,8 @@ export default function HeroLift({ mPath }: { mPath: string }) {
       const H = window.innerHeight, secTop = sec.offsetTop, openAt = secTop + Math.round((sec.offsetHeight - H) * .86);
       const tween = (to: number, dur: number, ease: (p: number) => number, then?: () => void) => { const y0 = window.scrollY, t0 = performance.now(); const step = (now: number) => { if (moved) { rest(); return; } const p = Math.min(1, (now - t0) / dur); window.scrollTo(0, y0 + (to - y0) * ease(p)); if (p < 1) requestAnimationFrame(step); else if (then) then(); }; requestAnimationFrame(step); };
       const out = (p: number) => 1 - Math.pow(1 - p, 3), inout = (p: number) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
-      tween(secTop, 700, out, () => { rest(); window.setTimeout(() => { if (!moved) tween(openAt, 1200, inout); }, 350); });
+      // the board already IS the page: no second rise. Jump to the real section in one frame (it looks identical), then open the M.
+      void out; window.scrollTo(0, secTop); rest(); window.setTimeout(() => { if (!moved) tween(openAt, 1200, inout); }, 450);
     };
     const tick = () => {
       if (!done && document.body.classList.contains("hero-film")) {
