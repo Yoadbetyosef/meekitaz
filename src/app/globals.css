@@ -3317,7 +3317,9 @@ body.hero-lift-up .cover.one::after,body.hero-lift-up .cover.one .cv-edge,body.h
 .fun-line p{margin:0;font:400 clamp(40px,6.4vw,104px)/1.02 var(--display);letter-spacing:.005em;color:rgba(28,26,27,.14)}
 .fun-line p span{color:rgba(28,26,27,.14);transition:color .2s}.fun-line p span.on{color:#0D4FE7}
 /* the one dancer: fixed over the page, clipped to the board while it rises, full once the board is up; gone when she has left */
-.mk-dancer{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;display:block;z-index:8;pointer-events:none;mix-blend-mode:multiply;opacity:0;clip-path:inset(100% 0 0 0)}
+.mk-dancer{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;display:block;z-index:8;pointer-events:none;mix-blend-mode:multiply;opacity:0;clip-path:inset(100% 0 0 0);
+  /* her own studio floor and walls fade away at the edges, so there is no second rectangle — only her on the page */
+  -webkit-mask-image:radial-gradient(ellipse 62% 64% at 50% 44%,#000 50%,transparent 84%);mask-image:radial-gradient(ellipse 62% 64% at 50% 44%,#000 50%,transparent 84%)}
 body.dancer-on .mk-dancer{opacity:1}
 body.dancer-gone .mk-dancer{opacity:0;transition:opacity .6s}
 @media(max-width:767px){.fun{display:none}}

@@ -26,7 +26,13 @@ export default function HeroLift({ mPath }: { mPath: string }) {
     if (!phone) { dancer = document.createElement("video"); dancer.className = "mk-dancer"; dancer.muted = true; dancer.playsInline = true; dancer.preload = "auto"; dancer.src = "/media/dancer.mp4"; dancer.setAttribute("aria-hidden", "true"); dancer.load(); document.body.appendChild(dancer); }
     let moved = false, done = false, dancing = false, raf = 0, armed = false;
     const stop = () => { moved = true; };
-    ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.addEventListener(e, stop, { passive: true }));
+    ["keydown", "pointerdown"].forEach(e => window.addEventListener(e, stop, { passive: true }));
+    const nudge = (e: Event) => {
+      const down = e.type === "wheel" ? (e as WheelEvent).deltaY > 0 : true;
+      if (!done && !dancing && down && document.body.classList.contains("hero-film") && window.scrollY < 40 && v.currentTime < K[0][0]) { v.currentTime = K[0][0] - .05; v.play().catch(() => {}); if (e.cancelable) e.preventDefault(); return; }
+      if (done || dancing) moved = true;
+    };
+    window.addEventListener("wheel", nudge, { passive: false }); window.addEventListener("touchmove", nudge, { passive: false });
     const edge = () => { const t = v.currentTime; if (t < K[0][0]) return 1; for (let i = 0; i < K.length - 1; i++) { const a = K[i], b = K[i + 1]; if (t >= a[0] && t <= b[0]) { const u = (t - a[0]) / (b[0] - a[0]); return a[1] + (b[1] - a[1]) * u; } } return K[K.length - 1][1]; };
     const box = () => { const r = v.getBoundingClientRect(), h = hero.getBoundingClientRect(); return { y: r.top - h.top, h: r.height }; };
     const resetLift = () => { dancing = false; board.style.top = "100%"; document.body.classList.remove("hero-lift-up", "dancer-on", "dancer-gone"); if (dancer) { dancer.pause(); dancer.currentTime = 0; dancer.style.clipPath = "inset(100% 0 0 0)"; } };
@@ -63,7 +69,7 @@ export default function HeroLift({ mPath }: { mPath: string }) {
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    return () => { cancelAnimationFrame(raf); ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); board.remove(); dancer?.remove(); document.body.classList.remove("hero-lift-up", "dancer-on", "dancer-gone"); };
+    return () => { cancelAnimationFrame(raf); ["keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); window.removeEventListener("wheel", nudge); window.removeEventListener("touchmove", nudge); board.remove(); dancer?.remove(); document.body.classList.remove("hero-lift-up", "dancer-on", "dancer-gone"); };
   }, [mPath]);
   return null;
 }
