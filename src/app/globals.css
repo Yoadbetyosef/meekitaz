@@ -3300,13 +3300,11 @@ body.ycur-beat .nav{animation:navBeat 1.6s cubic-bezier(.2,.8,.2,1) .15s both}
 body.ycur-beat .cart{animation:bagBeat 1.4s cubic-bezier(.2,.8,.2,1) .3s both}
 @keyframes bagBeat{0%{scale:.4;opacity:0}30%{scale:1.12;opacity:1}55%{scale:.95}100%{scale:1;opacity:1}}
 
-/* ===== Hero · she lifts the next section (computers, 2026-11-06) ===== */
-.cover.one .cv-film .cv-lift{position:absolute;left:-30vw;top:-.5vw;width:130vw;height:auto;max-width:none;display:block;opacity:0}
-body.hero-lift .cover.one .cv-film video:not(.cv-lift){opacity:0}
+/* ===== Hero · she lifts the page (2026-11-06): the next section's look is printed on the board and rides up with it ===== */
 body.hero-lift-up .cover.one::after,body.hero-lift-up .cover.one .cv-edge,body.hero-lift-up .cover.one .cv-glow,body.hero-lift-up .cover.one .cv-bot{opacity:0;transition:opacity .6s}
-.mk-liftov{position:fixed;inset:0;z-index:7;background:#E5E3EF;opacity:0;pointer-events:none;transition:opacity .45s,background .9s;color:#0D4FE7}
-.mk-liftov.on{opacity:1}
-.mk-liftov .mkd-grid,.mk-liftov .mkd-x,.mk-liftov .mkd-lab{opacity:0;transition:opacity .8s .3s}.mk-liftov.on .mkd-grid,.mk-liftov.on .mkd-x,.mk-liftov.on .mkd-lab{opacity:1}
-.mk-liftov .mkd-lab{opacity:0}.mk-liftov.on .mkd-lab{opacity:.9}
-.mk-liftm{position:absolute;left:50%;top:56%;width:min(22vw,240px);transform:translate(-50%,-50%) scale(.6);opacity:0;transition:transform .9s cubic-bezier(.2,.8,.2,1) .25s,opacity .6s .25s}
-.mk-liftov.on .mk-liftm{transform:translate(-50%,-50%) scale(1);opacity:1}.mk-liftm svg{width:100%;height:auto;fill:currentColor;display:block}
+.mk-board{position:absolute;left:0;right:0;bottom:0;top:100%;overflow:hidden;z-index:6;pointer-events:none;color:#0D4FE7}
+.mk-board-in{position:absolute;left:0;right:0;top:0;height:100vh;height:100svh}
+.mk-board .mkd-lab{opacity:.9}
+.mk-board-hd{position:absolute;left:0;right:0;top:12vh;text-align:center;color:var(--ink)}.mk-board-hd small{display:block;font:400 11px var(--body);letter-spacing:.3em;text-transform:uppercase;color:#0D4FE7}.mk-board-hd h2{font:400 clamp(34px,4vw,56px)/1 var(--display);margin:8px 0 0}
+.mk-board-m{position:absolute;left:50%;top:56%;width:min(22vw,240px);transform:translate(-50%,-50%)}.mk-board-m svg{width:100%;height:auto;fill:currentColor;display:block}
+@media(max-width:767px){.mk-board-m{width:40vw}.mk-board .mkd-lab{font-size:8px}}
