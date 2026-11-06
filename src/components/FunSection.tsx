@@ -33,8 +33,8 @@ export default function FunSection() {
       <div className="fun-stick">
         <video ref={v} className="fun-dance" muted playsInline preload="auto" aria-hidden="true" />
         <i className="fun-tint" aria-hidden="true" />
-        <i className="fl-plus p1" aria-hidden="true" /><i className="fl-plus p3" aria-hidden="true" />
         <div className="fun-line">
+          <i className="fl-plus p1" aria-hidden="true" /><i className="fl-plus p3" aria-hidden="true" />
           <p ref={p}>{"Well, at least someone’s having fun.".split(" ").map((w, i) => <span key={i}>{w} </span>)}</p>
           <Signature on={sig} className="fun-sig" />
           <Link href="/engagement-rings" className="fun-btn">Shop engagement rings</Link>

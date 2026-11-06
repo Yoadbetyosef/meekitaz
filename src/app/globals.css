@@ -3317,8 +3317,14 @@ body.hero-lift-up .cover.one::after,body.hero-lift-up .cover.one .cv-edge,body.h
 .fun.fun-gone .fun-dance{opacity:0;transition:opacity .5s}
 .fun-tint{position:absolute;inset:0;pointer-events:none;background:var(--home-bg,#E5E3EF);mix-blend-mode:multiply;opacity:0;transition:opacity .33s}
 .fun.fun-in .fun-tint{opacity:.55}.fun.fun-gone .fun-tint{opacity:0}
-.fun .fl-plus{position:absolute;width:9px;height:9px;z-index:3}.fun .fl-plus::before,.fun .fl-plus::after{background:#0D4FE7}.fun .fl-plus.p1{left:28px;top:28px}.fun .fl-plus.p3{right:28px;bottom:28px}
-.fun-line{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;padding:0 6vw;opacity:0;transition:opacity .6s}
+/* two small plus marks framing the line, the signature and the button (not the section's corners) */
+.fun .fl-plus{position:absolute;width:9px;height:9px;z-index:3;opacity:0;transition:opacity .6s .4s}.fun .fl-plus::before,.fun .fl-plus::after{background:#0D4FE7}
+.fun.fun-gone .fl-plus{opacity:1}
+.fun-line{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(640px,80vw);text-align:center;padding:38px 24px;opacity:0;transition:opacity .6s}
+.fun-line .fl-plus.p1{left:0;top:0}.fun-line .fl-plus.p3{right:0;bottom:0}
+/* the button: the site's hover arrow */
+.fun-btn::after{content:"\2192";display:inline-block;width:0;overflow:hidden;opacity:0;transition:width .3s,margin .3s,opacity .3s;white-space:nowrap}
+.fun-btn:hover::after{width:18px;margin-left:10px;opacity:1}
 .fun.fun-gone .fun-line{opacity:1}
 .fun-line p{margin:0;font:400 clamp(18px,1.9vw,28px)/1.15 var(--display);letter-spacing:.01em}
 .fun-line p span{color:rgba(28,26,27,.14);transition:color .2s}.fun-line p span.on{color:#0D4FE7}
