@@ -28,25 +28,31 @@ export default function HeroLift({ mPath }: { mPath: string }) {
     if (!phone) { const d2 = document.getElementById("fun-dance") as HTMLVideoElement | null; if (d2 && !d2.getAttribute("src")) { d2.src = "/media/dancer.mp4"; d2.preload = "auto"; d2.load(); } }
     const edge = () => { const t = v.currentTime; if (t < K[0][0]) return 1; for (let i = 0; i < K.length - 1; i++) { const a = K[i], b = K[i + 1]; if (t >= a[0] && t <= b[0]) { const u = (t - a[0]) / (b[0] - a[0]); return a[1] + (b[1] - a[1]) * u; } } return K[K.length - 1][1]; };
     const box = () => { const r = v.getBoundingClientRect(), h = hero.getBoundingClientRect(); return { y: r.top - h.top, h: r.height }; };
+    let switching = false;
     const handoff = () => {
       done = true; const sec = document.getElementById(phone ? "film" : "fun"); if (!sec) return;
       if (!phone) {
-        // the section's own copy of the dancer takes over EXACTLY where the board's copy is — the board stays until that copy is really
-        // showing the same moment (seeked + playing), so there is never a restart from the top or a second rise
+        // the section's copy of the dancer must show the SAME moment as the board's copy before the switch: keep syncing it every frame,
+        // switch as soon as it is in step (or after 1.5s at most) — never a restart, never a jump back
         const d2 = document.getElementById("fun-dance") as HTMLVideoElement | null;
         if (d2 && dancer) {
-          const go = () => { const at = dancer.currentTime; const onSeek = () => { d2.removeEventListener("seeked", onSeek); d2.play().then(() => finish()).catch(() => finish()); }; d2.addEventListener("seeked", onSeek); d2.currentTime = at; };
           if (!d2.getAttribute("src")) { d2.src = "/media/dancer.mp4"; d2.preload = "auto"; d2.load(); }
-          d2.muted = true;
-          if (d2.readyState >= 1) go(); else d2.addEventListener("loadedmetadata", go, { once: true });
-          return;
+          d2.muted = true; switching = true; const t0 = performance.now();
+          const sync = () => {
+            if (!switching) return;
+            const want = dancer.currentTime; if (Math.abs(d2.currentTime - want) > .12) { try { d2.currentTime = want; } catch {} }
+            if (d2.paused) d2.play().catch(() => {});
+            const inStep = d2.readyState >= 3 && Math.abs(d2.currentTime - dancer.currentTime) <= .12;
+            if (inStep || performance.now() - t0 > 1500) { switching = false; finish(); } else requestAnimationFrame(sync);
+          };
+          requestAnimationFrame(sync); return;
         }
       }
       finish();
     };
     const finish = () => {
       const sec = document.getElementById(phone ? "film" : "fun"); if (!sec) return;
-      const rest = () => { v.pause(); v.currentTime = 1.0; board.style.top = "100%"; document.body.classList.remove("hero-lift-up"); };
+      const rest = () => { v.pause(); v.currentTime = 1.0; board.style.top = "100%"; document.body.classList.remove("hero-lift-up"); armBack(); };
       if (moved || window.scrollY > 40) { rest(); return; }
       const H = window.innerHeight, secTop = sec.offsetTop, openAt = secTop + Math.round((sec.offsetHeight - H) * .86);
       const tween = (to: number, dur: number, ease: (p: number) => number, then?: () => void) => { const y0 = window.scrollY, t0 = performance.now(); const step = (now: number) => { if (moved) { rest(); return; } const p = Math.min(1, (now - t0) / dur); window.scrollTo(0, y0 + (to - y0) * ease(p)); if (p < 1) requestAnimationFrame(step); else if (then) then(); }; requestAnimationFrame(step); };
@@ -54,9 +60,16 @@ export default function HeroLift({ mPath }: { mPath: string }) {
       // the board already IS the page: no second rise. Jump to the real section in one frame (it looks identical), then open the M.
       void out; window.scrollTo(0, secTop); rest(); if (phone) window.setTimeout(() => { if (!moved) tween(openAt, 1200, inout); }, 450);
     };
+    // after the hand-off: when the hero comes back into view, her film plays again from the start (looping), the board rides up again
+    // with the dancer — but nothing scrolls the page any more; the person is in charge
+    let back = false;
+    const armBack = () => { if (back) return; back = true;
+      const onScroll = () => { if (window.scrollY < window.innerHeight * .5) { window.removeEventListener("scroll", onScroll); done = false; dancing = false; moved = true; v.loop = true; v.currentTime = 0; v.play().catch(() => {}); if (dancer) { dancer.pause(); dancer.currentTime = 0; } back = false; } };
+      window.addEventListener("scroll", onScroll, { passive: true }); };
     const tick = () => {
       if (!done && document.body.classList.contains("hero-film")) {
         const e = edge();
+        if (v.currentTime < .5 && dancing) { dancing = false; board.style.top = "100%"; document.body.classList.remove("hero-lift-up"); if (dancer) { dancer.pause(); dancer.currentTime = 0; } }
         if (e < 1) { const b = box(); const yv = b.y + e * b.h; board.style.top = Math.max(0, yv) + "px"; inner.style.top = Math.min(0, yv) + "px"; document.body.classList.add("hero-lift-up");
           if (dancer && !dancing) { dancing = true; dancer.currentTime = 0; dancer.play().catch(() => {}); } if (yv <= 1 || v.ended) handoff(); }
         else if (v.ended) handoff();
