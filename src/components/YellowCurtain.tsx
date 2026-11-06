@@ -39,11 +39,15 @@ export default function YellowCurtain() {
     } else {
       // return mode: the slow curtain, lifted by scrolling; her film starts when the curtain has left
       load();
+      // when the curtain has left: her film starts and, on computers, the page holds for two seconds (a strong flick must not
+      // drag the next section up before she has even moved)
+      const block = (e: Event) => e.preventDefault();
+      const hold = (ms: number) => { if (phone) return; document.documentElement.style.overflow = "hidden"; window.addEventListener("wheel", block, { passive: false }); window.setTimeout(() => { document.documentElement.style.overflow = ""; window.removeEventListener("wheel", block); }, ms); };
       const set = () => { const y = window.scrollY, H = window.innerHeight; b.classList.toggle("ycur-top", y < 24);
-        if (y >= H * .75 - 1 && !b.classList.contains("hero-film")) { start(); b.classList.add("hero-film"); } };
+        if (y >= H * .75 - 1 && !b.classList.contains("hero-film")) { start(); b.classList.add("hero-film"); window.scrollTo({ top: H * .75, behavior: "instant" as ScrollBehavior }); hold(2000); } };
       set(); window.addEventListener("scroll", set, { passive: true });
       tm.push(window.setTimeout(() => {}, 0));
-      return () => { window.removeEventListener("scroll", set); tm.forEach(clearTimeout); b.classList.remove("ycur-top", "hero-film", "ycur-return"); ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); };
+      return () => { window.removeEventListener("scroll", set); window.removeEventListener("wheel", block); document.documentElement.style.overflow = ""; tm.forEach(clearTimeout); b.classList.remove("ycur-top", "hero-film", "ycur-return"); ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); };
     }
     return () => { tm.forEach(clearTimeout); b.classList.remove("ycur-top", "ycur-beat"); ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); };
   }, []);
