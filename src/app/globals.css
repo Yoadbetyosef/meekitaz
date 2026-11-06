@@ -3299,3 +3299,14 @@ body.ycur-beat .nav{animation:navBeat 1.6s cubic-bezier(.2,.8,.2,1) .15s both}
 @keyframes navBeat{0%{scale:.6;opacity:0}25%{scale:1.08;opacity:1}45%{scale:.96}65%{scale:1.05}100%{scale:1;opacity:1}} /* the "scale" property leaves each screen's own transform alone */
 body.ycur-beat .cart{animation:bagBeat 1.4s cubic-bezier(.2,.8,.2,1) .3s both}
 @keyframes bagBeat{0%{scale:.4;opacity:0}30%{scale:1.12;opacity:1}55%{scale:.95}100%{scale:1;opacity:1}}
+
+/* ===== Hero · she lifts the next section (computers, 2026-11-06) ===== */
+.cover.one .cv-film .cv-lift{position:absolute;left:-30vw;top:-.5vw;width:130vw;height:auto;max-width:none;display:block;opacity:0}
+body.hero-lift .cover.one .cv-film video:not(.cv-lift){opacity:0}
+body.hero-lift-up .cover.one::after,body.hero-lift-up .cover.one .cv-edge,body.hero-lift-up .cover.one .cv-glow,body.hero-lift-up .cover.one .cv-bot{opacity:0;transition:opacity .6s}
+.mk-liftov{position:fixed;inset:0;z-index:7;background:#E5E3EF;opacity:0;pointer-events:none;transition:opacity .45s,background .9s;color:#0D4FE7}
+.mk-liftov.on{opacity:1}
+.mk-liftov .mkd-grid,.mk-liftov .mkd-x,.mk-liftov .mkd-lab{opacity:0;transition:opacity .8s .3s}.mk-liftov.on .mkd-grid,.mk-liftov.on .mkd-x,.mk-liftov.on .mkd-lab{opacity:1}
+.mk-liftov .mkd-lab{opacity:0}.mk-liftov.on .mkd-lab{opacity:.9}
+.mk-liftm{position:absolute;left:50%;top:56%;width:min(22vw,240px);transform:translate(-50%,-50%) scale(.6);opacity:0;transition:transform .9s cubic-bezier(.2,.8,.2,1) .25s,opacity .6s .25s}
+.mk-liftov.on .mk-liftm{transform:translate(-50%,-50%) scale(1);opacity:1}.mk-liftm svg{width:100%;height:auto;fill:currentColor;display:block}
