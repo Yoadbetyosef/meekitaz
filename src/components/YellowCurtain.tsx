@@ -31,11 +31,16 @@ export default function YellowCurtain() {
         if (fired || !v.duration || v.currentTime < v.duration - .45) return; fired = true;
         if (userMoved || window.scrollY > 40) return;
         const sec = document.getElementById("film"); if (!sec) return;
-        const target = sec.offsetTop + Math.round((sec.offsetHeight - window.innerHeight) * .86); // where the M has fully opened
-        const y0 = window.scrollY, t0 = performance.now(), dur = 2200;
-        const ease = (p: number) => 1 - Math.pow(1 - p, 3);
-        const step = (now: number) => { if (userMoved) return; const p = Math.min(1, (now - t0) / dur); window.scrollTo(0, y0 + (target - y0) * ease(p)); if (p < 1) requestAnimationFrame(step); };
-        requestAnimationFrame(step);
+        // two moves, like the preview (O1): 1) the white page rises over her — quick, decisive (1.1s, eased out);
+        // 2) a short breath, then the M splits and the film opens (1.2s, eased in-out). Each move stops if the person moves.
+        const H = window.innerHeight, secTop = sec.offsetTop, openAt = secTop + Math.round((sec.offsetHeight - H) * .86);
+        const tween = (to: number, dur: number, ease: (p: number) => number, then?: () => void) => {
+          const y0 = window.scrollY, t0 = performance.now();
+          const step = (now: number) => { if (userMoved) return; const p = Math.min(1, (now - t0) / dur); window.scrollTo(0, y0 + (to - y0) * ease(p)); if (p < 1) requestAnimationFrame(step); else if (then) then(); };
+          requestAnimationFrame(step);
+        };
+        const out = (p: number) => 1 - Math.pow(1 - p, 4), inout = (p: number) => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+        tween(secTop, 1100, out, () => { tm.push(window.setTimeout(() => { if (!userMoved) tween(openAt, 1200, inout); }, 350)); });
       });
     };
     if (entry) {
