@@ -3165,7 +3165,7 @@ h1,h2,h3{letter-spacing:.03em}
 .ycur-wm svg{display:block;width:100%;height:auto}
 .nav,.cart{transition:opacity .45s ease,visibility .45s}
 body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
-.ycur-hold{height:92vh;height:92svh;pointer-events:none} /* a little longer than the yellow, so the next section never peeks in during the one-second hold */
+.ycur-hold{display:none} /* the curtain lifts by itself now (P1, 2026-11-06) */
 /* category pages — background locked 2026-11-03: soft butter cream #FBF7DF (was ivory #FDF8F3) */
 .catbody{background:#FBF7DF}
 
@@ -3214,20 +3214,14 @@ body.hero-film .cover.one .cv-film{opacity:1}
 
 /* ===== Yellow curtain: C1 (approved 2026-11-04) — the yellow glides seamlessly through our colours and back; and the first scroll
    lands exactly on the yellow's top edge with native scroll-snap (smooth deceleration, no bounce), then holds for a moment ===== */
-.ycur-panel{animation:ycurC1 4.2s linear infinite}
+.ycur-panel{animation:ycurC1 1s linear infinite} /* P1 (2026-11-06): one second a cycle */
+.ycur-panel.ycur-up{animation:ycurC1 1s linear infinite,ycurLift .65s cubic-bezier(.7,0,.2,1) forwards}
+@keyframes ycurLift{to{transform:translateY(-100%)}}
 @keyframes ycurC1{0%{background:#F7E9A8}16%{background:#F7D3DA}33%{background:#F29C93}50%{background:#C9C1F2}66%{background:#C4DEEE}83%{background:#D6E4C8}100%{background:#F7E9A8}}
 @media(prefers-reduced-motion:reduce){.ycur-panel{animation:none}}
 
-/* ===== Phones: the yellow + hero as their own scroll page (2026-11-04). The first swipe scrolls only this box; with mandatory snap it
-   lands exactly where the yellow has left (its bottom), and a swipe's momentum ends there — Safari never passes momentum to the page.
-   The next swipe, with the box at its end, moves the page on. On computers the wrapper is transparent. ===== */
+/* the phone "stage" scroller is retired (P1, 2026-11-06): the curtain lifts by itself on every screen */
 .ycur-stage{display:contents}
-@media(max-width:767px){
-.ycur-stage{display:block;position:sticky;top:0;z-index:1;height:100vh;height:100svh;overflow-y:auto;overflow-x:hidden;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none} /* sticky in the page too: after the stop, the next section slides up over the film, as on computers */
-.ycur-stage::-webkit-scrollbar{display:none}
-.ycur-stage .ycur-panel{position:absolute;top:0;scroll-snap-align:start;scroll-snap-stop:always}
-.ycur-stage .ycur-hold{height:75vh;height:75svh;scroll-snap-align:end}
-.ycur-stage .hero.cover.one{position:sticky;top:0}
 }
 /* ===== Home · Shop by category — poster tiles (approved 2026-11-04) ===== */
 .ct.pt{position:relative;aspect-ratio:3/4;border-radius:18px;overflow:hidden;color:#fff;background:#1C1A1B;display:block}
@@ -3298,3 +3292,9 @@ html.mk-intro-on .mk-intro{display:block}
 @media(max-width:767px){.rh-wm{font-size:min(44vw,170px)}.rh-plus.p1{right:16px;top:16px}.rh-plus.p2{left:16px;bottom:16px}}
 /* phones already play this reel up in the hero, so the tile below Floating is off there (2026-11-06) */
 @media(max-width:767px){.fl-reel-wrap{display:none}}
+
+/* the menu pill lands with two heartbeats, the bag hops in after it (P1) */
+body.ycur-beat .nav{animation:navBeat 1.6s cubic-bezier(.2,.8,.2,1) .15s both}
+@keyframes navBeat{0%{scale:.6;opacity:0}25%{scale:1.08;opacity:1}45%{scale:.96}65%{scale:1.05}100%{scale:1;opacity:1}} /* the "scale" property leaves each screen's own transform alone */
+body.ycur-beat .cart{animation:bagBeat 1.4s cubic-bezier(.2,.8,.2,1) .3s both}
+@keyframes bagBeat{0%{scale:.4;opacity:0}30%{scale:1.12;opacity:1}55%{scale:.95}100%{scale:1;opacity:1}}
