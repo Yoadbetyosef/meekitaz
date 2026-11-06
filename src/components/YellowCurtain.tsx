@@ -19,7 +19,7 @@ export default function YellowCurtain() {
     try { sessionStorage.removeItem("mk-entry"); } catch {}
     setMode(entry ? "entry" : "return");
     b.classList.add("ycur-top"); b.classList.remove("hero-film", "hero-lift-up"); // a fresh start every time the home page mounts
-    if (!entry) b.classList.add("ycur-return"); // return mode: the spacer after the hero gives the scroll room
+    // (return mode no longer needs the scroll spacer)
     const tm: number[] = [];
     let userMoved = false;
     const stop = () => { userMoved = true; };
@@ -38,22 +38,28 @@ export default function YellowCurtain() {
       };
       if (html.classList.contains("mk-intro-on")) window.addEventListener("mk-intro-done", run, { once: true }); else run();
     } else {
-      // return mode: the slow curtain, lifted by scrolling; her film starts when the curtain has left
+      // RETURN mode (2026-11-06): the page itself does not scroll during the curtain. It is locked; the first scroll gesture
+      // (wheel down, swipe up, a key) lifts the yellow with the same animation as on entry, starts her film, and keeps the lock for
+      // two more seconds — nothing to fight, nothing to flicker — then the page is released.
       load();
-      // when the curtain has left: her film starts and, on computers, the page holds for two seconds (a strong flick must not
-      // drag the next section up before she has even moved)
-      const block = (e: Event) => e.preventDefault();
-      const hold = (ms: number) => {
-        const y = Math.round(window.innerHeight * .75), until = performance.now() + ms;
-        document.documentElement.style.overflow = "hidden"; window.addEventListener("wheel", block, { passive: false }); window.addEventListener("touchmove", block, { passive: false });
-        const pin = () => { if (window.scrollY !== y) window.scrollTo({ top: y, behavior: "instant" as ScrollBehavior }); if (performance.now() < until) requestAnimationFrame(pin); else { document.documentElement.style.overflow = ""; window.removeEventListener("wheel", block); window.removeEventListener("touchmove", block); } };
-        requestAnimationFrame(pin);
-      };
-      const set = () => { const y = window.scrollY, H = window.innerHeight; b.classList.toggle("ycur-top", y < 24);
-        if (y >= H * .75 - 1 && !b.classList.contains("hero-film")) { start(); b.classList.add("hero-film"); window.scrollTo({ top: H * .75, behavior: "instant" as ScrollBehavior }); hold(2000); } };
-      set(); window.addEventListener("scroll", set, { passive: true });
-      tm.push(window.setTimeout(() => {}, 0));
-      return () => { window.removeEventListener("scroll", set); window.removeEventListener("wheel", block); window.removeEventListener("touchmove", block); document.documentElement.style.overflow = ""; tm.forEach(clearTimeout); b.classList.remove("ycur-top", "hero-film", "ycur-return"); ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); };
+      let lifted = false;
+      const block = (e: Event) => { if (e.cancelable) e.preventDefault(); };
+      const lock = () => { document.documentElement.style.overflow = "hidden"; window.addEventListener("wheel", block, { passive: false }); window.addEventListener("touchmove", block, { passive: false }); };
+      const unlock = () => { document.documentElement.style.overflow = ""; window.removeEventListener("wheel", block); window.removeEventListener("touchmove", block); };
+      let ty = 0;
+      const lift = () => { if (lifted) return; lifted = true;
+        document.getElementById("ycur-panel")?.classList.add("ycur-up");
+        tm.push(window.setTimeout(() => { start(); b.classList.add("hero-film"); b.classList.remove("ycur-top"); }, 600));
+        tm.push(window.setTimeout(() => setGone(true), 700));
+        tm.push(window.setTimeout(() => { unlock(); cleanupGestures(); }, 600 + 2000)); };
+      const onWheel = (e: WheelEvent) => { if (e.deltaY > 0) lift(); };
+      const onKey = (e: KeyboardEvent) => { if (["ArrowDown", "PageDown", " ", "End"].includes(e.key)) lift(); };
+      const onTs = (e: TouchEvent) => { ty = e.touches[0].clientY; };
+      const onTm = (e: TouchEvent) => { if (ty - e.touches[0].clientY > 12) lift(); };
+      const cleanupGestures = () => { window.removeEventListener("wheel", onWheel); window.removeEventListener("keydown", onKey); window.removeEventListener("touchstart", onTs); window.removeEventListener("touchmove", onTm); };
+      lock(); window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+      window.addEventListener("wheel", onWheel, { passive: true }); window.addEventListener("keydown", onKey); window.addEventListener("touchstart", onTs, { passive: true }); window.addEventListener("touchmove", onTm, { passive: true });
+      return () => { tm.forEach(clearTimeout); unlock(); cleanupGestures(); b.classList.remove("ycur-top", "hero-film", "hero-lift-up", "ycur-return"); };
     }
     return () => { tm.forEach(clearTimeout); b.classList.remove("ycur-top", "ycur-beat", "hero-film", "hero-lift-up"); ["wheel", "touchstart", "keydown", "pointerdown"].forEach(e => window.removeEventListener(e, stop)); };
   }, []);
