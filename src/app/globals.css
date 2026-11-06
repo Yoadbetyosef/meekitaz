@@ -3296,3 +3296,5 @@ html.mk-intro-on .mk-intro{display:block}
 .rh-plus::before{left:0;right:0;top:50%;height:1.2px;transform:translateY(-50%)}.rh-plus::after{top:0;bottom:0;left:50%;width:1.2px;transform:translateX(-50%)}
 .rh-plus.p1{right:22px;top:22px}.rh-plus.p2{left:22px;bottom:22px}
 @media(max-width:767px){.rh-wm{font-size:min(44vw,170px)}.rh-plus.p1{right:16px;top:16px}.rh-plus.p2{left:16px;bottom:16px}}
+/* phones already play this reel up in the hero, so the tile below Floating is off there (2026-11-06) */
+@media(max-width:767px){.fl-reel-wrap{display:none}}
