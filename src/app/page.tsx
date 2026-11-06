@@ -26,7 +26,7 @@ export default function Home() {
       <div className="ycur-stage" id="ycur-stage">
         <YellowCurtain />
         <Hero />
-        <div className="ycur-hold" aria-hidden="true" />{/* the first 75% of scrolling only lifts the yellow off the hero; then the page moves on as before */}
+        <div className="ycur-hold" aria-hidden="true" />{/* return mode only: the first 75% of scrolling lifts the curtain off the hero */}
       </div>
       <Film />
       <Categories />

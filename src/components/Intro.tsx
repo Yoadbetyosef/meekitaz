@@ -11,7 +11,7 @@ const wm = `<img src="${WM}" alt="" />`;
 const SEQ: [string, number, number | "full"][] = [[msvg(true), 110, .3], [msvg(false), 110, .5], [wm, 110, .8], [msvg(false), 110, 1.0], [wm, 110, 1.4], [msvg(false), 120, 1.6], [wm, 120, 2.2], [wm, 520, "full"]];
 
 /* decided before React runs (inline script in the page), so the first frame is on screen at once even while the page is still loading */
-export const INTRO_GATE = `(function(){try{if(sessionStorage.getItem("mk-intro"))return;var r=document.referrer;if(r&&new URL(r).origin===location.origin)return;sessionStorage.setItem("mk-intro","1");document.documentElement.classList.add("mk-intro-on");}catch(e){}})();`;
+export const INTRO_GATE = `(function(){try{if(sessionStorage.getItem("mk-intro"))return;var r=document.referrer;if(r&&new URL(r).origin===location.origin)return;sessionStorage.setItem("mk-intro","1");sessionStorage.setItem("mk-entry","1");document.documentElement.classList.add("mk-intro-on");}catch(e){}})();`;
 
 export default function Intro() {
   const [done, setDone] = useState(false);

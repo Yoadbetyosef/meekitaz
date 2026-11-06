@@ -3165,7 +3165,8 @@ h1,h2,h3{letter-spacing:.03em}
 .ycur-wm svg{display:block;width:100%;height:auto}
 .nav,.cart{transition:opacity .45s ease,visibility .45s}
 body.ycur-top .nav,body.ycur-top .cart{opacity:0;visibility:hidden}
-.ycur-hold{display:none} /* the curtain lifts by itself now (P1, 2026-11-06) */
+.ycur-hold{display:none}
+body.ycur-return .ycur-hold{display:block;height:75vh;height:75svh;pointer-events:none} /* return mode: the first 75% of scrolling lifts the curtain off the hero */
 /* category pages — background locked 2026-11-03: soft butter cream #FBF7DF (was ivory #FDF8F3) */
 .catbody{background:#FBF7DF}
 
@@ -3214,7 +3215,8 @@ body.hero-film .cover.one .cv-film{opacity:1}
 
 /* ===== Yellow curtain: C1 (approved 2026-11-04) — the yellow glides seamlessly through our colours and back; and the first scroll
    lands exactly on the yellow's top edge with native scroll-snap (smooth deceleration, no bounce), then holds for a moment ===== */
-.ycur-panel{animation:ycurC1 1s linear infinite} /* P1 (2026-11-06): one second a cycle */
+.ycur-panel{animation:ycurC1 1s linear infinite} /* entry: one second a cycle */
+.ycur-panel.ycur-slow{animation:ycurC1 4.2s linear infinite} /* return: slow, lifted by scrolling */
 .ycur-panel.ycur-up{animation:ycurC1 1s linear infinite,ycurLift .65s cubic-bezier(.7,0,.2,1) forwards}
 @keyframes ycurLift{to{transform:translateY(-100%)}}
 @keyframes ycurC1{0%{background:#F7E9A8}16%{background:#F7D3DA}33%{background:#F29C93}50%{background:#C9C1F2}66%{background:#C4DEEE}83%{background:#D6E4C8}100%{background:#F7E9A8}}
