@@ -24,7 +24,8 @@ export default function FunSection() {
       const gone = started && (vid.ended || (vid.duration > 0 && vid.currentTime >= vid.duration - .25));
       if (gone && !goneAt) goneAt = performance.now();
       s.classList.toggle("fun-gone", gone);
-      if (goneAt) { const el = (performance.now() - goneAt) / 1000; const q = Math.max(0, Math.min(1, (el - .5) / 1.6)), n = Math.round(q * words.length); words.forEach((w, i) => w.classList.toggle("on", i < n)); if (el > 2.2) setSig(true); if (el > 3.6) s.classList.add("fun-cta"); }
+      // "V3" (2026-11-06): all together — the line fills in .7s, the signature writes meanwhile (at half speed), the button rises with the last word
+      if (goneAt) { const el = (performance.now() - goneAt) / 1000; const q = Math.max(0, Math.min(1, (el - .05) / .7)), n = Math.round(q * words.length); words.forEach((w, i) => w.classList.toggle("on", i < n)); if (el > .1) setSig(true); if (el > .9) s.classList.add("fun-cta"); }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);

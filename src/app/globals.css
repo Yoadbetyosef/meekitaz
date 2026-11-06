@@ -3330,6 +3330,9 @@ body.hero-lift-up .cover.one::after,body.hero-lift-up .cover.one .cv-edge,body.h
 .fun-line p span{color:rgba(28,26,27,.14);transition:color .2s}.fun-line p span.on{color:#0D4FE7}
 .fun-line .mk-sig.fun-sig{width:min(24vw,260px);margin:22px auto 0}
 .fun-line .mk-sig.fun-sig path.g{display:none}.fun-line .mk-sig.fun-sig path.s{stroke:#0D4FE7;stroke-width:2.6}
+.fun-line .mk-sig.fun-sig.on path.s{animation-duration:calc(var(--t) * .5);animation-delay:calc(var(--b) * .5)} /* the signature at half its time */
+.fun-line p span{transition:color .12s}
+.fun-btn{transition:all .4s cubic-bezier(.2,.8,.2,1)}
 .fun-btn{display:inline-flex;align-items:center;height:50px;padding:0 30px;border-radius:999px;background:var(--ink);color:#fff;font:400 12px var(--body);letter-spacing:.2em;text-transform:uppercase;text-decoration:none;margin-top:24px;opacity:0;transform:translateY(10px);transition:all .6s cubic-bezier(.2,.8,.2,1)}
 .fun.fun-cta .fun-btn{opacity:1;transform:none}
 .home-page .mkopen{display:none}
