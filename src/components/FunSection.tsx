@@ -49,7 +49,7 @@ export default function FunSection({ items }: { items: DailyItem[] }) {
           <i className="fl-plus p1" aria-hidden="true" /><i className="fl-plus p3" aria-hidden="true" />
           <div className="dly-l">
             <span className="dly-kick dly-rv">Meekitaz Daily</span>
-            <p className="dly-st" ref={p}>{STATEMENT.split(" ").slice(0, -2).map((w, i) => <span key={i}>{w} </span>)}<span className="dly-yours"><i className="dly-hl" aria-hidden="true" /><span>It’s </span><span>yours.</span></span></p>
+            <p className="dly-st" ref={p}>{STATEMENT.split(" ").slice(0, -2).map((w, i) => <span key={i}>{w} </span>)}<span className="dly-its"><i className="dly-its-hl" aria-hidden="true" /><span>It’s </span><span>yours.</span></span></p>
             <div className="dly-three dly-rv d2"><div><b>$1–$50</b><span>a day</span></div><div><b>4 mo.</b><span>at most</span></div><div><b>5 swaps</b><span>a year</span></div></div>
             <div className="dly-badges dly-rv d3"><i>No interest</i><i>No credit score</i><i>No loans</i><i>No rentals</i><i>Everyone’s approved</i><i className="hl">5 swaps a year</i></div>
             <div className="dly-rev dly-rv d4">
