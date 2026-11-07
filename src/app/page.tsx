@@ -1,6 +1,6 @@
 import Hero from "@/components/Hero";
 import Intro, { INTRO_GATE } from "@/components/Intro";
-import FunSection from "@/components/FunSection";
+import DailyFun from "@/components/DailyFun";
 import Film from "@/components/Film";
 import YellowCurtain from "@/components/YellowCurtain";
 import FloatingFilm from "@/components/FloatingFilm";
@@ -29,7 +29,7 @@ export default function Home() {
         <Hero />
         <div className="ycur-hold" aria-hidden="true" />{/* return mode only: the first 75% of scrolling lifts the curtain off the hero */}
       </div>
-      <FunSection />{/* computers */}
+      <DailyFun />
       <Film />{/* phones */}
       <Categories />
       <FloatingFilm />

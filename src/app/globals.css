@@ -3429,3 +3429,8 @@ html,body{overflow-x:clip}
 .dly-badges{display:grid;grid-template-columns:repeat(3,max-content);gap:8px}
 .dly-badges i{justify-content:flex-start}
 @media(max-width:767px){.dly-badges{grid-template-columns:1fr 1fr}.dly-badges i{justify-content:center}}
+
+/* Daily: the store's own photos (white backgrounds) sit on white */
+.dly-stage img{filter:none}
+.dly-track button{background:#fff;box-shadow:0 0 0 1px rgba(28,26,27,.08) inset}
+.dly-track button.cur{box-shadow:0 0 0 1.5px #0D4FE7 inset}
