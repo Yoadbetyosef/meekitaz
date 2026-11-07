@@ -32,9 +32,11 @@ export async function GET(req: NextRequest) {
   const ok = process.env.CRON_SECRET && (req.headers.get("authorization") === `Bearer ${process.env.CRON_SECRET}` || sp.get("key") === process.env.CRON_SECRET);
   if (!ok) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const t0 = Date.now(), log: string[] = []; let products = 0, replaced = 0, failed = 0;
-  const d = await adminGraphql<{ products: { nodes: Node[] } }>(`query{ products(first:12, query:"status:active AND -tag:'photos-clean' AND -tag:'One of One' AND -tag:'Ready to Ship'", sortKey:UPDATED_AT){ nodes{ id title tags media(first:5){ nodes{ ... on MediaImage { id alt image{ url } } } } } } }`, {});
-  for (const n of d?.products.nodes || []) {
-    if (Date.now() - t0 > 230_000) break;
+  const d = await adminGraphql<{ products: { nodes: Node[] } }>(`query{ products(first:40, query:"status:active AND -tag:'photos-clean' AND -tag:'One of One' AND -tag:'Ready to Ship'", sortKey:UPDATED_AT){ nodes{ id title tags media(first:5){ nodes{ ... on MediaImage { id alt image{ url } } } } } } }`, {});
+  // four products at a time (each photo is downloaded, checked and, when needed, replaced): about four times the old throughput per run
+  const queue = [...(d?.products.nodes || [])];
+  const worker = async () => { for (let n = queue.shift(); n; n = queue.shift()) {
+    if (Date.now() - t0 > 230_000) return;
     const mode = EARRING.test(n.title) ? "gold" : "ring";
     if (!RING.test(n.title) && mode !== "gold") { await tag(n.id); products++; continue; } // nothing to clean on this kind of piece
     let changed = 0;
@@ -70,7 +72,8 @@ export async function GET(req: NextRequest) {
       }
       await tag(n.id); products++; log.push(`${n.title}: ${changed} cleaned`);
     } catch (e) { failed++; log.push(`! ${n.title}: ${e instanceof Error ? e.message : String(e)}`); }
-  }
+  } };
+  await Promise.all([worker(), worker(), worker(), worker()]);
   console.log(`[photos-clean] ${products} products, ${replaced} photos replaced, ${failed} failed`, log.slice(0, 20).join(" | "));
   return NextResponse.json({ products, replaced, failed, log });
 }
