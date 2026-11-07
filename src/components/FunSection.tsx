@@ -39,7 +39,6 @@ export default function FunSection({ items }: { items: DailyItem[] }) {
   const total = day * months * 30;
   let best = -1; ITEMS.forEach((x, i) => { if (x[1] <= total) best = i; });
   const cur = pinned >= 0 && ITEMS[pinned][1] <= total ? pinned : best >= 0 ? best : 0;
-  const n = ITEMS.filter(x => x[1] <= total).length;
   const choose = (i: number) => { setPinned(i); if (ITEMS[i][1] > total) setDay(Math.min(50, Math.ceil(ITEMS[i][1] / (months * 30)))); };
   return (
     <section className="fun" id="fun" ref={sec} aria-label="Meekitaz Daily">
@@ -78,7 +77,6 @@ export default function FunSection({ items }: { items: DailyItem[] }) {
                 ))}
               </div>
             </div>
-            <div className="dly-cnt">{n ? `${n} of ${ITEMS.length} pieces are yours at this price` : "Move the day — the collection opens up"}</div>
             <span className="dly-perf" aria-hidden="true" />
             <div className="dly-ln"><span>A day</span><b>{usd(day)}</b></div>
             <div className="dly-sl">
