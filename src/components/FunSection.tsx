@@ -49,7 +49,7 @@ export default function FunSection() {
             <span className="dly-kick dly-rv">Meekitaz Daily</span>
             <p className="dly-st" ref={p}>{STATEMENT.split(" ").map((w, i) => <span key={i}>{w} </span>)}</p>
             <div className="dly-three dly-rv d2"><div><b>$1–$50</b><span>a day</span></div><div><b>4 mo.</b><span>at most</span></div><div><b>5 swaps</b><span>a year</span></div></div>
-            <div className="dly-badges dly-rv d3"><i>No interest</i><i>No credit score</i><i>Everyone’s approved</i><i className="hl">5 swaps a year</i></div>
+            <div className="dly-badges dly-rv d3"><i>No interest</i><i>No credit score</i><i>No loans</i><i>No rentals</i><i>Everyone’s approved</i><i className="hl">5 swaps a year</i></div>
             <div className="dly-rev dly-rv d4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <div className="dly-faces">{["maya", "david", "jess", "linda"].map(k => <img key={k} src={`/media/daily/faces/${k}.jpg`} alt="" />)}</div>

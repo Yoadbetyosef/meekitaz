@@ -3425,3 +3425,7 @@ html,body{overflow-x:clip}
 .dly-track button.off{opacity:.25;filter:grayscale(1);transform:scale(.88)}.dly-track button.cur{box-shadow:0 0 0 1.5px #0D4FE7 inset;transform:scale(1.06)}
 .dly-rail{display:none}
 @media(max-width:767px){.dly-strip{height:40px;margin-top:8px}.dly-track{--step:40px;--half:18px}.dly-track button{flex-basis:36px;height:36px}}
+
+.dly-badges{display:grid;grid-template-columns:repeat(3,max-content);gap:8px}
+.dly-badges i{justify-content:flex-start}
+@media(max-width:767px){.dly-badges{grid-template-columns:1fr 1fr}.dly-badges i{justify-content:center}}
