@@ -6,7 +6,7 @@ import Link from "next/link";
    and leaves; then Meekitaz Daily ("W2 · the ticket rail") takes the same screen — the statement fills with blue word by word, the
    three numbers, the badges (5 swaps in yellow), the reviews and the trust marks come in, and the plan ticket: the whole collection
    lights up with the price, the button says the day you chose. One screen, no scrolling. Every return to this section plays her again. */
-const ITEMS: [string, number, string][] = [["Hidden halo ring \u00b7 0.7 ct", 1089, "p00.webp"], ["Tennis bracelet", 1800, "p01.webp"], ["Hidden halo ring", 2045, "p02.webp"], ["Three-stone pink ring", 2341, "p03.webp"], ["Diamond bracelet \u00b7 2.25 ctw", 2352, "p04.webp"], ["Diamond bracelet \u00b7 2 ctw", 2730, "p05.webp"], ["Diamond bracelet \u00b7 2.45 ctw", 3066, "p06.webp"], ["Ring \u00b7 1 ctw", 3640, "p07.webp"], ["Diamond earrings \u00b7 2 ctw", 4452, "p08.webp"], ["Diamond pendant \u00b7 2 ctw", 5082, "p09.webp"], ["Diamond bracelet \u00b7 3.68 ctw", 5376, "p10.webp"]];
+const ITEMS: [string, number, string, string][] = [["Baguette cluster studs · Silver", 349, "q00.webp", "silver-baguette-diamond-cluster-stud-earrings"], ["Round basket-set studs · Yellow gold", 363, "q01.webp", "yellow-gold-round-diamond-basket-set-stud-earrings-with-diamond-accent"], ["Marquise ivy climbers · Yellow gold", 573, "q02.webp", "yellow-gold-marquise-and-round-diamond-ivy-climber-earrings"], ["Oval solitaire, pavé band · White gold", 699, "q03.webp", "oval-cut-diamond-solitaire-ring-in-white-gold-with-round-shared-prong-pave-band"], ["Emerald solitaire, pavé band · White gold", 699, "q04.webp", "emerald-cut-diamond-solitaire-ring-in-white-gold-with-round-shared-prong-pave-band"], ["Woven eternity band · Silver", 1133, "q05.webp", "silver-round-diamond-woven-full-eternity-band"], ["Oval floral halo studs · Platinum", 1763, "q06.webp", "platinum-oval-diamond-floral-halo-stud-earrings"], ["Mixed-shape bezel eternity band · Yellow gold", 3625, "q07.webp", "yellow-gold-mixed-shape-diamond-bezel-set-eternity-wedding-band"], ["Emerald bezel tennis bracelet · Yellow gold", 3709, "q08.webp", "yellow-gold-emerald-cut-diamond-tennis-bracelet-with-bezel-setting"], ["Round tennis necklace · Yellow gold", 3947, "q09.webp", "yellow-gold-round-diamond-tennis-necklace-with-three-prong-setting"], ["Emerald four-prong tennis bracelet · Yellow gold", 4213, "q10.webp", "yellow-gold-emerald-cut-diamond-tennis-bracelet-with-four-prong-setting"]]; // chosen by Yoad (2026-11-07): [name, price, image, handle]
 const STATEMENT = "Pay a little every day. Wear it from the first one. It’s yours.";
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 
@@ -62,13 +62,13 @@ export default function FunSection() {
             <div className="dly-h"><span className="dly-kick">Your plan</span><img src="/brand/meekitaz-logo-ink.png" alt="Meekitaz" /></div>
             <div className="dly-stage">{ITEMS.map((x, i) => (
               // eslint-disable-next-line @next/next/no-img-element
-              <img key={x[2]} src={`/media/daily/p/${x[2]}`} alt={i === cur ? x[0] : ""} className={i === cur ? "on" : ""} />
+              <img key={x[2]} src={`/media/daily/p2/${x[2]}`} alt={i === cur ? x[0] : ""} className={i === cur ? "on" : ""} />
             ))}</div>
             <div className="dly-pn">{best >= 0 ? `${ITEMS[cur][0]} · ${usd(ITEMS[cur][1])}` : `${ITEMS[0][0]} — ${usd(Math.ceil(ITEMS[0][1] / (months * 30)))} a day gets you there`}</div>
             <div className="dly-rail">{ITEMS.map((x, i) => (
               <button key={x[2]} type="button" className={`${x[1] > total ? "off" : ""}${i === cur ? " cur" : ""}`} onClick={() => choose(i)} aria-label={`${x[0]}, ${usd(x[1])}`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`/media/daily/p/${x[2]}`} alt="" />
+                <img src={`/media/daily/p2/${x[2]}`} alt="" />
               </button>
             ))}</div>
             <div className="dly-cnt">{n ? `${n} of ${ITEMS.length} pieces are yours at this price` : "Move the day — the collection opens up"}</div>
