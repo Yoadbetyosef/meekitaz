@@ -3413,3 +3413,15 @@ html,body{overflow-x:clip}
 .dly-faces img{width:34px;height:34px;border-width:2px}.dly-faces img+img{margin-left:-10px}.dly-sc b{font-size:18px}.dly-sc b em{font-size:13px}.dly-sc span{font-size:8px}
 .dly-sep{display:none}.dly-trust{grid-auto-flow:column;gap:12px;width:100%;justify-content:center}.dly-trust span{font-size:12px;gap:4px}.dly-trust span::before{flex-basis:14px;height:14px;background-size:9px}
 }
+
+/* Daily (2026-11-07): ~60 pieces — the big piece cross-fades, the strip glides to keep it centred and lights up with the price */
+.dly-stage img{opacity:1;transform:none;animation:dlyIn .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes dlyIn{from{opacity:0;transform:scale(.94) translateY(8px)}to{opacity:1;transform:none}}
+.dly-pn em{display:block;font:400 9px var(--body);font-style:normal;letter-spacing:.24em;text-transform:uppercase;color:#0D4FE7;margin-bottom:2px}
+.dly-strip{position:relative;overflow:hidden;margin-top:12px;height:50px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent)}
+.dly-track{--step:50px;--half:23px;position:absolute;left:50%;top:2px;display:flex;gap:4px;width:max-content;transform:translateX(calc(0px - var(--i,0) * var(--step) - var(--half)));transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.dly-track button{flex:0 0 46px;height:46px;border:0;border-radius:9px;background:#F4F3F8;display:grid;place-items:center;padding:0;cursor:pointer;transition:opacity .35s,transform .35s,filter .35s}
+.dly-track img{width:80%;height:80%;object-fit:contain}
+.dly-track button.off{opacity:.25;filter:grayscale(1);transform:scale(.88)}.dly-track button.cur{box-shadow:0 0 0 1.5px #0D4FE7 inset;transform:scale(1.06)}
+.dly-rail{display:none}
+@media(max-width:767px){.dly-strip{height:40px;margin-top:8px}.dly-track{--step:40px;--half:18px}.dly-track button{flex-basis:36px;height:36px}}
