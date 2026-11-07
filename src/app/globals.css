@@ -3345,3 +3345,10 @@ body.hero-lift-up .cover.one::after,body.hero-lift-up .cover.one .cv-edge,body.h
 .dfl-tx{text-align:center}.dfl-tx b{display:block;font:400 26px var(--display)}.dfl-tx span{font:italic 500 17px var(--sub);color:#555}
 @keyframes dflPulse{to{opacity:.82}}
 @media(max-width:767px){.dfl-stone{width:78vw}}
+
+/* ===== Phones (2026-11-06): Safari's floating bottom bar sits over the page, so a full-screen hero's title and button were hidden
+   behind it. Keep every hero's content above it, and never let anything make the page wider than the screen (that zoomed it). ===== */
+html,body{overflow-x:clip}
+@media(max-width:767px){
+.cat-hero .wrap{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 92px)}
+}
