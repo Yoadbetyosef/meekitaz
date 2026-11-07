@@ -83,9 +83,9 @@ export default function FunSection({ items }: { items: DailyItem[] }) {
             <div className="dly-ln"><span>A day</span><b>{usd(day)}</b></div>
             <div className="dly-sl">
               <input type="range" min={1} max={50} value={day} onChange={e => { setDay(+e.target.value); setPinned(-1); }} aria-label="Dollars a day" style={{ ["--p" as string]: ((day - 1) / 49 * 100) + "%" }} />
-              <div className="dly-mo">{[1, 2, 3, 4].map(m => <button key={m} type="button" className={m === months ? "on" : ""} onClick={() => setMonths(m)} aria-label={`${m} months`}>{m}</button>)}</div>
+              <div className="dly-mo-w"><div className="dly-mo" role="group" aria-label="Months">{[1, 2, 3, 4].map(m => <button key={m} type="button" className={m === months ? "on" : ""} onClick={() => setMonths(m)} aria-label={`${m} ${m > 1 ? "months" : "month"}`}>{m}</button>)}</div><span className="dly-mo-cap">{months > 1 ? "Months" : "Month"}</span></div>
             </div>
-            <div className="dly-tot"><span>Yours, up to</span><b>{usd(total)}</b></div>
+            <div className="dly-tot"><span>Yours, up to <em>· {usd(day)} a day for {months} {months > 1 ? "months" : "month"}</em></span><b>{usd(total)}</b></div>
             <Link href="/engagement-rings" className="dly-cta">Start at {usd(day)} a day</Link>
           </div>
         </div>

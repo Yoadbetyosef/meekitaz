@@ -3434,3 +3434,9 @@ html,body{overflow-x:clip}
 .dly-stage img{filter:none}
 .dly-track button{background:#fff;box-shadow:0 0 0 1px rgba(28,26,27,.08) inset}
 .dly-track button.cur{box-shadow:0 0 0 1.5px #0D4FE7 inset}
+
+/* the months: a caption under the four buttons, and the plan spelled out on the total line */
+.dly-mo-w{display:grid;justify-items:center;gap:5px}
+.dly-mo-cap{font:400 8px var(--body);letter-spacing:.26em;text-transform:uppercase;color:#777}
+.dly-tot span em{font:italic 500 13px var(--sub);letter-spacing:0;text-transform:none;color:#555;margin-left:4px}
+.dly-sl{align-items:start}.dly-sl input[type=range]{margin-top:14px}
