@@ -3,15 +3,16 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 /* Home (2026-11-07). The page she lifted: the dancer fills the section (a fast ⅓s appearance, tinted to the page colour), dances once
-   and leaves; then Meekitaz Daily ("W2 · the ticket") takes the same screen — the statement fills with blue word by word, then the
-   three numbers and the plan ticket come in. One screen, no scrolling. Every return to this section plays her again. */
-const PIECES: [string, string, number][] = [["ring", "Hidden halo ring", 1089], ["brac", "Tennis bracelet", 1800], ["neck", "Tennis necklace", 4800]];
+   and leaves; then Meekitaz Daily ("W2 · the ticket rail") takes the same screen — the statement fills with blue word by word, the
+   three numbers, the badges (5 swaps in yellow), the reviews and the trust marks come in, and the plan ticket: the whole collection
+   lights up with the price, the button says the day you chose. One screen, no scrolling. Every return to this section plays her again. */
+const ITEMS: [string, number, string][] = [["Hidden halo ring \u00b7 0.7 ct", 1089, "p00.webp"], ["Tennis bracelet", 1800, "p01.webp"], ["Hidden halo ring", 2045, "p02.webp"], ["Three-stone pink ring", 2341, "p03.webp"], ["Diamond bracelet \u00b7 2.25 ctw", 2352, "p04.webp"], ["Diamond bracelet \u00b7 2 ctw", 2730, "p05.webp"], ["Diamond bracelet \u00b7 2.45 ctw", 3066, "p06.webp"], ["Ring \u00b7 1 ctw", 3640, "p07.webp"], ["Diamond earrings \u00b7 2 ctw", 4452, "p08.webp"], ["Diamond pendant \u00b7 2 ctw", 5082, "p09.webp"], ["Diamond bracelet \u00b7 3.68 ctw", 5376, "p10.webp"]];
 const STATEMENT = "Pay a little every day. Wear it from the first one. It’s yours.";
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 
 export default function FunSection() {
   const sec = useRef<HTMLElement>(null), v = useRef<HTMLVideoElement>(null), p = useRef<HTMLParagraphElement>(null);
-  const [day, setDay] = useState(15), [months, setMonths] = useState(4);
+  const [day, setDay] = useState(15), [months, setMonths] = useState(4), [pinned, setPinned] = useState(-1);
   useEffect(() => {
     const s = sec.current, vid = v.current, para = p.current; if (!s || !vid || !para) return;
     const words = [...para.querySelectorAll("span")];
@@ -32,7 +33,11 @@ export default function FunSection() {
     raf = requestAnimationFrame(tick);
     return () => { io.disconnect(); cancelAnimationFrame(raf); };
   }, []);
-  const total = day * months * 30, reach = PIECES.filter(x => x[2] <= total).pop(), piece = reach || PIECES[0];
+  const total = day * months * 30;
+  let best = -1; ITEMS.forEach((x, i) => { if (x[1] <= total) best = i; });
+  const cur = pinned >= 0 && ITEMS[pinned][1] <= total ? pinned : best >= 0 ? best : 0;
+  const n = ITEMS.filter(x => x[1] <= total).length;
+  const choose = (i: number) => { setPinned(i); if (ITEMS[i][1] > total) setDay(Math.min(50, Math.ceil(ITEMS[i][1] / (months * 30)))); };
   return (
     <section className="fun" id="fun" ref={sec} aria-label="Meekitaz Daily">
       <div className="fun-stick">
@@ -44,21 +49,37 @@ export default function FunSection() {
             <span className="dly-kick dly-rv">Meekitaz Daily</span>
             <p className="dly-st" ref={p}>{STATEMENT.split(" ").map((w, i) => <span key={i}>{w} </span>)}</p>
             <div className="dly-three dly-rv d2"><div><b>$1–$50</b><span>a day</span></div><div><b>4 mo.</b><span>at most</span></div><div><b>5 swaps</b><span>a year</span></div></div>
-            <div className="dly-facts dly-rv d3">No interest<i>·</i>No credit score<i>·</i>Everyone’s approved<i>·</i>5 swaps a year</div>
+            <div className="dly-badges dly-rv d3"><i>No interest</i><i>No credit score</i><i>Everyone’s approved</i><i className="hl">5 swaps a year</i></div>
+            <div className="dly-rev dly-rv d4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <div className="dly-faces">{["maya", "david", "jess", "linda"].map(k => <img key={k} src={`/media/daily/faces/${k}.jpg`} alt="" />)}</div>
+              <div className="dly-sc"><b>5.0 <em aria-label="5 stars">★★★★★</em></b><span>Loved by our clients</span></div>
+              <i className="dly-sep" aria-hidden="true" />
+              <div className="dly-trust"><span>IGI / GIA certified</span><span>Lifetime warranty</span><span>30-day free returns</span></div>
+            </div>
           </div>
           <div className="dly-tk dly-rv d2">
             <div className="dly-h"><span className="dly-kick">Your plan</span><img src="/brand/meekitaz-logo-ink.png" alt="Meekitaz" /></div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <div className="dly-piece"><img src={`/media/daily/${piece[0]}.webp`} alt="" /></div>
-            <div className="dly-pn">{reach ? `${piece[1]} · ${usd(piece[2])}` : `${piece[1]} — ${usd(Math.ceil(piece[2] / (months * 30)))} a day gets you there`}</div>
+            <div className="dly-stage">{ITEMS.map((x, i) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img key={x[2]} src={`/media/daily/p/${x[2]}`} alt={i === cur ? x[0] : ""} className={i === cur ? "on" : ""} />
+            ))}</div>
+            <div className="dly-pn">{best >= 0 ? `${ITEMS[cur][0]} · ${usd(ITEMS[cur][1])}` : `${ITEMS[0][0]} — ${usd(Math.ceil(ITEMS[0][1] / (months * 30)))} a day gets you there`}</div>
+            <div className="dly-rail">{ITEMS.map((x, i) => (
+              <button key={x[2]} type="button" className={`${x[1] > total ? "off" : ""}${i === cur ? " cur" : ""}`} onClick={() => choose(i)} aria-label={`${x[0]}, ${usd(x[1])}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`/media/daily/p/${x[2]}`} alt="" />
+              </button>
+            ))}</div>
+            <div className="dly-cnt">{n ? `${n} of ${ITEMS.length} pieces are yours at this price` : "Move the day — the collection opens up"}</div>
             <span className="dly-perf" aria-hidden="true" />
             <div className="dly-ln"><span>A day</span><b>{usd(day)}</b></div>
             <div className="dly-sl">
-              <input type="range" min={1} max={50} value={day} onChange={e => setDay(+e.target.value)} aria-label="Dollars a day" style={{ ["--p" as string]: ((day - 1) / 49 * 100) + "%" }} />
+              <input type="range" min={1} max={50} value={day} onChange={e => { setDay(+e.target.value); setPinned(-1); }} aria-label="Dollars a day" style={{ ["--p" as string]: ((day - 1) / 49 * 100) + "%" }} />
               <div className="dly-mo">{[1, 2, 3, 4].map(m => <button key={m} type="button" className={m === months ? "on" : ""} onClick={() => setMonths(m)} aria-label={`${m} months`}>{m}</button>)}</div>
             </div>
             <div className="dly-tot"><span>Yours, up to</span><b>{usd(total)}</b></div>
-            <Link href="/engagement-rings" className="dly-cta">Start from $1 a day</Link>
+            <Link href="/engagement-rings" className="dly-cta">Start at {usd(day)} a day</Link>
           </div>
         </div>
       </div>
