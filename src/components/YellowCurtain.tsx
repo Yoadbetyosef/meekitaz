@@ -31,10 +31,9 @@ export default function YellowCurtain() {
     if (entry) {
       const run = () => {
         load();
-        tm.push(window.setTimeout(() => { if (!userMoved) document.getElementById("ycur-panel")?.classList.add("ycur-up"); }, 750));
-        tm.push(window.setTimeout(() => { start(); b.classList.add("hero-film", "ycur-beat"); b.classList.remove("ycur-top"); }, 1350));
-        tm.push(window.setTimeout(() => setGone(true), 1450));
-        tm.push(window.setTimeout(() => b.classList.remove("ycur-beat"), 3350));
+        // (2026-11-08) entry goes straight from the blue to her film — no yellow
+        setGone(true); start(); b.classList.add("hero-film", "ycur-beat"); b.classList.remove("ycur-top");
+        tm.push(window.setTimeout(() => b.classList.remove("ycur-beat"), 2000));
       };
       if (html.classList.contains("mk-intro-on")) window.addEventListener("mk-intro-done", run, { once: true }); else run();
     } else {

@@ -8,7 +8,9 @@ const M = {"w": 866, "h": 627, "d": ["M61 132 L63 163 L69 183 L82 209 L98 231 L1
 const WM = "/brand/meekitaz-logo-white.png";
 const msvg = (outline: boolean) => `<svg viewBox="0 0 ${M.w} ${M.h}" fill-rule="evenodd"><path d="${M.d.join(" ")}" style="${outline ? "fill:none;stroke:#fff;stroke-width:3;vector-effect:non-scaling-stroke" : "fill:#fff"}"/></svg>`;
 const wm = `<img src="${WM}" alt="" />`;
-const SEQ: [string, number, number | "full"][] = [[msvg(true), 110, .3], [msvg(false), 110, .5], [wm, 110, .8], [msvg(false), 110, 1.0], [wm, 110, 1.4], [msvg(false), 120, 1.6], [wm, 120, 2.2], [wm, 520, "full"]];
+const ill = (i: number) => `<img src="/media/intro/d${i}.png" alt="" />`;
+/* W1 (approved 2026-11-08): our M / Meekitaz flicker with his six ink drawings woven in at the same pace, ending on the big Meekitaz watermark */
+const SEQ: [string, number, number | "full" | "ill"][] = [[msvg(true), 220, .3], [msvg(false), 180, .5], [ill(0), 180, "ill"], [wm, 180, .8], [ill(1), 160, "ill"], [msvg(false), 180, 1.0], [ill(2), 180, "ill"], [wm, 180, 1.4], [ill(3), 160, "ill"], [msvg(false), 160, 1.6], [ill(4), 160, "ill"], [wm, 180, 2.2], [ill(5), 180, "ill"], [wm, 560, "full"]];
 
 /* decided before React runs (inline script in the page), so the first frame is on screen at once even while the page is still loading */
 export const INTRO_GATE = `(function(){try{if(sessionStorage.getItem("mk-intro"))return;var r=document.referrer;if(r&&new URL(r).origin===location.origin)return;sessionStorage.setItem("mk-intro","1");sessionStorage.setItem("mk-entry","1");document.documentElement.classList.add("mk-intro-on");}catch(e){}})();`;
@@ -20,6 +22,7 @@ export default function Intro() {
     const it = document.getElementById("mk-intro"), fr = document.getElementById("mk-intro-fr"), cnt = document.getElementById("mk-intro-cnt");
     if (!it || !fr) return;
     document.documentElement.style.overflow = "hidden";
+    [0, 1, 2, 3, 4, 5].forEach(i => { const im = new Image(); im.src = `/media/intro/d${i}.png`; });
     // a timeline driven by real elapsed time (not stacked timeouts), so a slow first load cannot collapse the whole sequence into its last frame
     const starts: number[] = []; let t = 120; SEQ.forEach(([, ms]) => { starts.push(t); t += ms; }); const total = t;
     let t0 = 0, step = -1, raf = 0, lifted = false, finished = false;
@@ -28,7 +31,9 @@ export default function Intro() {
       while (step + 1 < SEQ.length && e >= starts[step + 1]) {
         step++; const [h, , sc] = SEQ[step]; fr.innerHTML = h; fr.style.opacity = "1";
         if (sc === "full") { fr.style.width = window.innerWidth < 768 ? "150vw" : "130vw"; fr.style.opacity = ".28"; fr.style.transform = "translate(-50%,-50%)"; fr.style.transition = "transform .25s cubic-bezier(.2,.8,.2,1),opacity .25s"; }
+        else if (sc === "ill") { fr.style.width = "auto"; fr.style.transition = ""; fr.style.transform = "translate(-50%,-50%)"; fr.classList.add("ill"); }
         else { fr.style.width = ""; fr.style.transition = ""; fr.style.transform = `translate(-50%,-50%) scale(${sc})`; }
+        if (sc !== "ill") fr.classList.remove("ill");
       }
       if (cnt) cnt.textContent = String(Math.min(100, Math.round(Math.max(0, e - 120) / (total - 120) * 20) * 5)).padStart(3, "0");
       if (e >= total + 80 && !lifted) { lifted = true; it.classList.add("out"); }

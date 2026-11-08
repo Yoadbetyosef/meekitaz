@@ -3451,3 +3451,19 @@ html,body{overflow-x:clip}
 .fun.dly-page{min-height:100vh;height:auto}
 .fun.dly-page .fun-stick{height:auto;min-height:100vh;overflow:visible}
 .fun.dly-page .dly{position:relative;inset:auto;min-height:100vh}
+
+/* ===== 2026-11-08: the entry — W1 drawings in the blue, O1 hero, F2 ===== */
+.mki-fr.ill{width:auto !important;height:min(60vh,520px)}.mki-fr.ill img{height:100%;width:auto}
+@media(max-width:767px){.mki-fr.ill{height:44vh}}
+/* O1: nothing written on her — the film, the pill and the watermark only */
+.cover.one .cv-bot{opacity:0;pointer-events:none}
+/* F2: the button sits in ONE place for the whole section; above it "Take your shot." while she dances, then the line + signature */
+.fun-btn{position:absolute;left:50%;top:68%;transform:translateX(-50%);z-index:8;margin:0;opacity:0;transition:opacity .5s .3s}
+.fun.fun-in .fun-btn,.fun.fun-gone .fun-btn{opacity:1}
+.fun.fun-cta .fun-btn{transform:translateX(-50%)}
+.fun-tys{position:absolute;left:0;right:0;bottom:calc(32% + 80px);text-align:center;z-index:7;opacity:0;transition:opacity .6s .4s;pointer-events:none}
+.fun-tys span{font:400 clamp(40px,4.4vw,64px)/.95 var(--display);text-transform:uppercase;letter-spacing:.03em;color:var(--ink)}
+.fun.fun-in .fun-tys{opacity:1}.fun.fun-gone .fun-tys{opacity:0;transition:opacity .35s 0s}
+.fun-line{top:auto;bottom:calc(32% + 76px);transform:translateX(-50%);padding:0 24px}
+.fun-line .fl-plus.p1{left:0;top:-28px}.fun-line .fl-plus.p3{right:0;bottom:-104px}
+@media(max-width:767px){.fun-btn{top:72%}.fun-tys{bottom:calc(28% + 74px)}.fun-tys span{font-size:38px}.fun-line{bottom:calc(28% + 70px)}.fun-line .fl-plus.p3{bottom:-96px}}

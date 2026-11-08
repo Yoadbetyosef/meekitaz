@@ -11,7 +11,7 @@ import { slides as allSlides } from "@/lib/data";
    To go back to the original changing slides: set ONE_PHOTO = false (or delete this block and the "slides" line below). */
 const ONE_PHOTO = true;
 const ONE = { small: "", big: "Take your shot.", cta: "Shop engagement rings", href: "/engagement-rings", // 2026-11-04: after the yellow's "Quite the catch." — headline and button only
-  desktop: "/media/hero/lav-d.webp", mobile: "/media/hero/lav-m.webp", pos: "50% 0%", posM: "50% 0%" }; // the lavender scarf portrait (approved 2026-10-31): framed by CSS (.cover.one img) from the mocks
+  desktop: "/media/hero/crouch-d.webp", mobile: "/media/hero/crouch-m.webp", pos: "50% 0%", posM: "50% 0%" }; // the lavender scarf portrait (approved 2026-10-31): framed by CSS (.cover.one img) from the mocks
 const slides = ONE_PHOTO ? [ONE] : allSlides;
 import Logo from "./Logo";
 import HeroLift from "./HeroLift";
@@ -126,7 +126,7 @@ export default function Hero() {
           <button key={k} type="button" aria-label={`${sl.big.replace(".", "")}`} aria-current={k === i} onClick={() => go(k)}><i ref={el => { segs.current[k] = el; }} /></button>
         ))}
       </div>
-      {slides.length < 2 && <HeroLift mPath={M_PATH} />}{slides.length < 2 && <div className="cv-film" aria-hidden="true"><video muted loop playsInline preload="none" data-src="/media/hero/lav-film-v5.mp4" data-src-m="/media/hero/lav-film-v5-m.mp4" data-poster-m="/media/hero/lav-film-v5-m-poster.jpg" poster="/media/hero/lav-film-v5-poster.jpg" /></div>}{/* computers: once the yellow has lifted, the still dissolves into this film (V1, 2026-11-03) */}{slides.length < 2 && <div className="cv-edge" aria-hidden="true"><Logo /></div>}{slides.length < 2 && <span className="cv-glow" aria-hidden="true" />}{/* a soft light over the watermark, aimed by Yoad */}{/* desktop, one-photo trial: a big translucent white wordmark running up the right edge, cut off top and bottom */}
+      {slides.length < 2 && <HeroLift mPath={M_PATH} />}{slides.length < 2 && <div className="cv-film" aria-hidden="true"><video muted loop playsInline preload="none" data-src="/media/hero/lav-film-v6.mp4" data-src-m="/media/hero/lav-film-v6-m.mp4" data-poster-m="/media/hero/lav-film-v6-m-poster.jpg" poster="/media/hero/lav-film-v6-poster.jpg" /></div>}{/* computers: once the yellow has lifted, the still dissolves into this film (V1, 2026-11-03) */}{slides.length < 2 && <div className="cv-edge" aria-hidden="true"><Logo /></div>}{slides.length < 2 && <span className="cv-glow" aria-hidden="true" />}{/* a soft light over the watermark, aimed by Yoad */}{/* desktop, one-photo trial: a big translucent white wordmark running up the right edge, cut off top and bottom */}
       <div className="cv-mast" aria-hidden="true">
         <Logo />
         <div className="cv-issue"><span>New York</span><span>Serious diamonds, worn lightly.</span></div>
