@@ -3515,3 +3515,14 @@ html,body{overflow-x:clip}
 /* gemstones (G2): thrown in like a die — a spin in the air, then a bounce */
 .rp-toss .rp-d{transform:translate(-50%,-90%) rotate(calc(var(--r,0deg) - 200deg)) scale(.7);transition:opacity .06s,transform .5s cubic-bezier(.25,1.5,.35,1)}
 .rp-toss .rp-d.on{transform:translate(-50%,-50%) rotate(var(--r,0deg)) scale(1)}
+
+/* diamonds (D1): paparazzi — a white flash on every cut and three sparkle stars around each drawing */
+.rp-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:6;animation:rpFlash .22s ease-out}
+@keyframes rpFlash{0%{opacity:0}15%{opacity:.92}100%{opacity:0}}
+.rp-flashy .rp-d{transform:translate(-50%,-50%) scale(1.06) rotate(var(--r,0deg));transition:opacity .04s,transform .3s ease-out}
+.rp-flashy .rp-d.on{transform:translate(-50%,-50%) scale(1) rotate(var(--r,0deg))}
+.rp-spk{position:absolute;width:0;height:0;pointer-events:none;z-index:5}
+.rp-spk i{position:absolute;width:46px;height:46px;background:#1C1A1B;opacity:0;-webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0z'/></svg>") center/contain no-repeat;mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0z'/></svg>") center/contain no-repeat;animation:rpSpk .5s ease-out forwards}
+.rp-spk i:nth-child(1){left:120px;top:-120px}.rp-spk i:nth-child(2){left:-170px;top:20px;width:30px;height:30px;animation-delay:.06s}.rp-spk i:nth-child(3){left:90px;top:140px;width:34px;height:34px;animation-delay:.12s}
+@keyframes rpSpk{0%{opacity:0;transform:scale(.2) rotate(0)}40%{opacity:1;transform:scale(1.2) rotate(20deg)}100%{opacity:0;transform:scale(.6) rotate(45deg)}}
+@media(max-width:767px){.rp-spk i:nth-child(1){left:60px;top:-90px}.rp-spk i:nth-child(2){left:-100px;top:10px}.rp-spk i:nth-child(3){left:40px;top:90px}}
