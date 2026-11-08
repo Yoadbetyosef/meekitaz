@@ -3508,3 +3508,6 @@ html,body{overflow-x:clip}
 /* the earrings passage (E1): each drawing drops a little and dangles into place with a springy bounce */
 .rp-dangle .rp-d{transform:translate(-50%,-75%) rotate(var(--r,0deg));transition:opacity .07s,transform .55s cubic-bezier(.25,1.9,.35,1)}
 .rp-dangle .rp-d.on{transform:translate(-50%,-50%) rotate(var(--r,0deg))}
+
+/* fancy colors (C1): the drawing itself, colours and all, instead of a black-ink mask */
+.rp-d.col{background:var(--src) center/contain no-repeat;-webkit-mask:none;mask:none}

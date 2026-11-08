@@ -9,7 +9,7 @@ const M_W = 866, M_H = 627;
 type Lay = [number, number, number, number, number][]; // [drawing, x%, y%, height%, rotate]
 /* one passage per category, same rhythm, same airy yellow, black ink, no words:
    the rings (approved 2026-11-08, Z1) and the necklaces (approved 2026-11-08, N3 — each drawing swings in like a pendant) */
-const PASSAGES: Record<string, { set: string; label: string; swing?: boolean; roll?: boolean; stamp?: boolean; dangle?: boolean; seq?: [string, number][]; aspect: number[]; d: Lay; p: Lay }> = {
+const PASSAGES: Record<string, { set: string; label: string; swing?: boolean; roll?: boolean; stamp?: boolean; dangle?: boolean; color?: boolean; ext?: string; seq?: [string, number][]; aspect: number[]; d: Lay; p: Lay }> = {
   "/engagement-rings": { set: "r", label: "The rings", aspect: [.75, .75, .75, .75, .75, .75],
     d: [[0, 50, 52, 74, 0], [1, 24, 56, 42, -6], [2, 74, 48, 58, 4], [3, 50, 50, 34, 0], [4, 30, 48, 62, -3], [5, 72, 54, 44, 6]],
     p: [[0, 50, 52, 64, 0], [1, 32, 40, 34, -6], [2, 62, 58, 46, 4], [3, 50, 50, 30, 0], [4, 40, 50, 52, -3], [5, 60, 52, 40, 6]] },
@@ -30,6 +30,10 @@ const PASSAGES: Record<string, { set: string; label: string; swing?: boolean; ro
     seq: [["mo", 140], ["d0", 190], ["d1", 150], ["mf", 140], ["d2", 160], ["d3", 150], ["d4", 160], ["d5", 150], ["mf", 380]],
     d: [[1, 50, 50, 74, 0], [0, 26, 54, 48, -6], [2, 72, 48, 50, 5], [3, 32, 50, 58, -3], [4, 50, 52, 40, 0], [5, 72, 52, 52, 4]],
     p: [[1, 50, 50, 58, 0], [0, 34, 44, 32, -6], [2, 62, 56, 26, 5], [3, 44, 50, 40, -3], [4, 50, 52, 26, 0], [5, 58, 52, 30, 4]] },
+  // fancy colors (approved 2026-11-08, C1 — the rhythm of the rings, the stones in their own colours)
+  "/fancy-colors": { set: "f", label: "Fancy colors", color: true, ext: "webp", aspect: [0.951, 0.822, 0.624, 1.072, 0.558, 1.444],
+    d: [[0, 50, 52, 64, 0], [1, 26, 54, 50, -6], [2, 72, 48, 66, 5], [3, 34, 50, 40, -4], [4, 52, 50, 68, 0], [5, 70, 54, 38, 5]],
+    p: [[0, 50, 52, 32, 0], [1, 36, 46, 32, -6], [2, 62, 54, 42, 5], [3, 46, 50, 24, -4], [4, 52, 50, 46, 0], [5, 56, 52, 20, 5]] },
 };
 const SEQ: [string, number][] = [["mo", 140], ["d0", 170], ["d1", 140], ["mf", 140], ["d2", 160], ["d3", 130], ["d4", 160], ["d5", 150], ["mf", 360]];
 
@@ -38,7 +42,7 @@ export default function RingPassage({ mPath }: { mPath: string }) {
   const [run, setRun] = useState(0), [phone, setPhone] = useState(false), [frame, setFrame] = useState(""), [cnt, setCnt] = useState(0), [stage, setStage] = useState<"" | "in" | "out">("");
   const target = useRef<string | null>(null), dest = useRef(""), done = useRef(false), arrived = useRef(false);
   // preload the drawings once
-  useEffect(() => { Object.values(PASSAGES).forEach(P => [0, 1, 2, 3, 4, 5].forEach(i => { const im = new Image(); im.src = `/media/passage/${P.set}${i}.png`; })); }, []);
+  useEffect(() => { Object.values(PASSAGES).forEach(P => [0, 1, 2, 3, 4, 5].forEach(i => { const im = new Image(); im.src = `/media/passage/${P.set}${i}.${P.ext || "png"}`; })); }, []);
   // catch clicks on links to the rings page
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
@@ -83,7 +87,7 @@ export default function RingPassage({ mPath }: { mPath: string }) {
       <i className="rp-grid" /><i className="rp-x x1" /><i className="rp-x x2" /><i className="rp-x x3" /><i className="rp-x x4" />
       <span className="rp-lab l1">Meekitaz</span><span className="rp-lab l2">{P.label}</span><span className="rp-lab l3">Lab-grown &middot; IGI certified</span>
       <span className="rp-cnt">{String(cnt).padStart(3, "0")}</span>
-      {LAY.map(([i, x, y, h, r], k) => <i key={k} className={`rp-d${cur === "d" + k ? " on" : ""}`} style={{ left: x + "%", top: y + "%", height: h + "%", width: `calc(${h}vh * ${P.aspect[i]})`, ["--src" as string]: `url(/media/passage/${P.set}${i}.png)`, ["--r" as string]: r + "deg" }} />)}
+      {LAY.map(([i, x, y, h, r], k) => <i key={k} className={`rp-d${P.color ? " col" : ""}${cur === "d" + k ? " on" : ""}`} style={{ left: x + "%", top: y + "%", height: h + "%", width: `calc(${h}vh * ${P.aspect[i]})`, ["--src" as string]: `url(/media/passage/${P.set}${i}.${P.ext || "png"})`, ["--r" as string]: r + "deg" }} />)}
       <div className={`rp-m o${cur === "mo" ? " on" : ""}`}>{msvg}</div>
       <div className={`rp-m${cur === "mf" ? " on" : ""}`} key={frame}>{msvg}</div>
     </div>
