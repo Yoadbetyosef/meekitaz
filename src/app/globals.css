@@ -3491,3 +3491,7 @@ html,body{overflow-x:clip}
 /* the home page opens on the dancer (2026-11-08) */
 .fun-h1{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .home-page .fun{margin-top:0}
+
+/* the necklaces passage (N3): each drawing swings in from its top like a pendant, then settles */
+.rp-swing .rp-d{transform-origin:50% 0;transform:translate(-50%,-50%) rotate(calc(var(--r,0deg) - 14deg));transition:opacity .08s,transform .5s cubic-bezier(.2,1.8,.3,1)}
+.rp-swing .rp-d.on{transform:translate(-50%,-50%) rotate(var(--r,0deg))}
