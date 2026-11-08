@@ -3470,3 +3470,20 @@ html,body{overflow-x:clip}
 /* the F2 button: always one line (2026-11-08) */
 .fun-btn{white-space:nowrap;justify-content:center;width:max-content}
 @media(max-width:767px){.fun-btn{height:48px;padding:0 26px;font-size:11px;letter-spacing:.18em}}
+
+/* ===== The passage into Engagement Rings (approved 2026-11-08, Z1 · Rhythm, airy yellow L3, black ink, no words) ===== */
+.rp{position:fixed;inset:0;z-index:2000;background:#FDF8E6;color:#1C1A1B;overflow:hidden;transform:translateY(100%);pointer-events:none}
+.rp.rp-in{transform:none;transition:transform .34s cubic-bezier(.7,0,.2,1);pointer-events:auto}
+.rp.rp-out{transform:translateY(-100%);transition:transform .55s cubic-bezier(.8,0,.2,1)}
+.rp-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(28,26,27,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(28,26,27,.05) 1px,transparent 1px);background-size:64px 64px}
+.rp-x{position:absolute;width:9px;height:9px}.rp-x::before,.rp-x::after{content:"";position:absolute;background:#1C1A1B}.rp-x::before{left:0;right:0;top:50%;height:1.2px;transform:translateY(-50%)}.rp-x::after{top:0;bottom:0;left:50%;width:1.2px;transform:translateX(-50%)}
+.rp-x.x1{left:28px;top:28px}.rp-x.x2{right:28px;top:28px}.rp-x.x3{left:28px;bottom:28px}.rp-x.x4{right:28px;bottom:28px}
+.rp-lab{position:absolute;font:400 9px var(--body);letter-spacing:.34em;text-transform:uppercase;opacity:.75;white-space:nowrap}
+.rp-lab.l1{left:40px;top:50%;transform:rotate(-90deg);transform-origin:left center}.rp-lab.l2{right:40px;top:50%;transform:rotate(90deg);transform-origin:right center}.rp-lab.l3{left:0;right:0;bottom:40px;text-align:center}
+.rp-cnt{position:absolute;right:40px;bottom:40px;font:400 12px var(--body);letter-spacing:.3em;opacity:.75}
+.rp-d{position:absolute;background:#1C1A1B;-webkit-mask:var(--src) center/contain no-repeat;mask:var(--src) center/contain no-repeat;opacity:0;transform:translate(-50%,-50%) scale(.86) rotate(var(--r,0deg));transition:opacity .09s,transform .32s cubic-bezier(.2,1.4,.3,1)}
+.rp-d.on{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(var(--r,0deg))}
+.rp-m{position:absolute;left:50%;top:50%;width:min(18vw,260px);transform:translate(-50%,-50%) scale(.8);opacity:0;transition:opacity .1s,transform .35s cubic-bezier(.2,1.4,.3,1)}
+.rp-m.o{width:min(14vw,200px)}.rp-m svg{width:100%;height:auto;display:block;fill:#1C1A1B}.rp-m.o svg path{fill:none;stroke:#1C1A1B;stroke-width:3;vector-effect:non-scaling-stroke}
+.rp-m.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
+@media(max-width:767px){.rp-m{width:38vw}.rp-m.o{width:33vw}.rp-lab{font-size:8px}.rp-lab.l1{left:22px}.rp-lab.l2{right:22px}.rp-cnt{right:22px;bottom:24px}.rp-x.x1{left:16px;top:16px}.rp-x.x2{right:16px;top:16px}.rp-x.x3{left:16px;bottom:16px}.rp-x.x4{right:16px;bottom:16px}}
