@@ -3535,3 +3535,5 @@ html,body{overflow-x:clip}
 .fun-line .mk-sig.fun-sig{width:min(17vw,230px);margin:6px auto 0}
 .fun-line .fl-plus.p1{left:0;top:-24px}.fun-line .fl-plus.p3{right:0;bottom:-30px}
 @media(max-width:767px){.fun-line{top:13vh}.fun-hf{height:30vh;margin-top:8px}.fun-line .mk-sig.fun-sig{width:48vw}}
+/* phones: the block sits on the button — the signature ends just above it (2026-11-08) */
+@media(max-width:767px){.fun-line{top:auto;bottom:calc(28% + 18px)}.fun-line .fl-plus.p3{bottom:-14px}}
