@@ -1,8 +1,6 @@
-import Hero from "@/components/Hero";
 import Intro, { INTRO_GATE } from "@/components/Intro";
 import FunSection from "@/components/FunSection";
 import Film from "@/components/Film";
-import YellowCurtain from "@/components/YellowCurtain";
 import FloatingFilm from "@/components/FloatingFilm";
 import FeedStrip from "@/components/FeedStrip";
 import Categories from "@/components/Categories";
@@ -22,13 +20,7 @@ export default function Home() {
     <main className="home-page">
       <script dangerouslySetInnerHTML={{ __html: INTRO_GATE }} />
       <Intro />
-      {/* On phones this wrapper is its own scroll "page" (like a Reel): the first swipe lifts the yellow and stops on its own at the end;
-          the next swipe moves the page on. On computers it is transparent (display:contents) and the page scrolls as before. */}
-      <div className="ycur-stage" id="ycur-stage">
-        <YellowCurtain />
-        <Hero />
-        <div className="ycur-hold" aria-hidden="true" />{/* return mode only: the first 75% of scrolling lifts the curtain off the hero */}
-      </div>
+      {/* (2026-11-08) the home opens on the dancer: the blue lifts and she is already dancing — the crouch/lift hero is retired */}
       <FunSection />
       <Film />{/* phones */}
       <Categories />

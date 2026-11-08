@@ -18,7 +18,12 @@ export default function FunSection() {
     const reset = () => { started = false; goneAt = 0; s.classList.remove("fun-in", "fun-gone", "fun-cta"); words.forEach(w => w.classList.remove("on")); setSig(false); vid.pause(); };
     const start = () => { if (started) return; started = true; if (!vid.getAttribute("src")) vid.src = src; vid.muted = true; vid.currentTime = 0; vid.play().catch(() => {}); s.classList.add("fun-in"); };
     (s as HTMLElement & { __start?: () => void }).__start = start; // HeroLift calls this the moment the board reaches the top
-    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) start(); else if (started) reset(); }, { threshold: .55 }); // every return to this section plays her again
+    // (2026-11-08) this is the first screen now: she is ready before the blue lifts and starts dancing the moment it does
+    vid.src = src; vid.preload = "auto"; vid.load();
+    let gate = !document.documentElement.classList.contains("mk-intro-on"), seen = false;
+    const open = () => { gate = true; if (seen) start(); };
+    window.addEventListener("mk-intro-lift", open, { once: true }); window.addEventListener("mk-intro-done", open, { once: true });
+    const io = new IntersectionObserver(([e]) => { seen = e.isIntersecting; if (e.isIntersecting) { if (gate) start(); } else if (started) reset(); }, { threshold: .55 }); // every return to this section plays her again
     io.observe(s);
     const tick = () => {
       const gone = started && (vid.ended || (vid.duration > 0 && vid.currentTime >= vid.duration - .25));
@@ -29,10 +34,11 @@ export default function FunSection() {
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    return () => { io.disconnect(); cancelAnimationFrame(raf); };
+    return () => { io.disconnect(); cancelAnimationFrame(raf); window.removeEventListener("mk-intro-lift", open); window.removeEventListener("mk-intro-done", open); };
   }, []);
   return (
     <section className="fun" id="fun" ref={sec} aria-label="We take diamonds seriously. Life, a little less.">
+      <h1 className="fun-h1">Meekitaz — lab-grown diamond engagement rings and fine jewelry, made in New York</h1>
       <div className="fun-stick">
         <video ref={v} className="fun-dance" muted playsInline preload="auto" aria-hidden="true" />
         <i className="fun-tint" aria-hidden="true" />

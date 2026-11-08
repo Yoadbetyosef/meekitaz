@@ -3487,3 +3487,7 @@ html,body{overflow-x:clip}
 .rp-m.o{width:min(14vw,200px)}.rp-m svg{width:100%;height:auto;display:block;fill:#1C1A1B}.rp-m.o svg path{fill:none;stroke:#1C1A1B;stroke-width:3;vector-effect:non-scaling-stroke}
 .rp-m.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
 @media(max-width:767px){.rp-m{width:38vw}.rp-m.o{width:33vw}.rp-lab{font-size:8px}.rp-lab.l1{left:22px}.rp-lab.l2{right:22px}.rp-cnt{right:22px;bottom:24px}.rp-x.x1{left:16px;top:16px}.rp-x.x2{right:16px;top:16px}.rp-x.x3{left:16px;bottom:16px}.rp-x.x4{right:16px;bottom:16px}}
+
+/* the home page opens on the dancer (2026-11-08) */
+.fun-h1{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.home-page .fun{margin-top:0}
