@@ -36,7 +36,7 @@ export default function Intro() {
         if (sc !== "ill") fr.classList.remove("ill");
       }
       if (cnt) cnt.textContent = String(Math.min(100, Math.round(Math.max(0, e - 120) / (total - 120) * 20) * 5)).padStart(3, "0");
-      if (e >= total + 80 && !lifted) { lifted = true; it.classList.add("out"); }
+      if (e >= total + 80 && !lifted) { lifted = true; it.classList.add("out"); window.dispatchEvent(new Event("mk-intro-lift")); } // her film starts as the blue lifts
       if (e >= total + 700 && !finished) { finished = true; document.documentElement.style.overflow = ""; document.documentElement.classList.remove("mk-intro-on"); window.dispatchEvent(new Event("mk-intro-done")); setDone(true); return; }
       raf = requestAnimationFrame(tick);
     };
