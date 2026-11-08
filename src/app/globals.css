@@ -3537,3 +3537,7 @@ html,body{overflow-x:clip}
 @media(max-width:767px){.fun-line{top:13vh}.fun-hf{height:30vh;margin-top:8px}.fun-line .mk-sig.fun-sig{width:48vw}}
 /* phones: the block sits on the button — the signature ends just above it (2026-11-08) */
 @media(max-width:767px){.fun-line{top:auto;bottom:calc(28% + 18px)}.fun-line .fl-plus.p3{bottom:-14px}}
+
+/* (2026-11-08) while the blue opening plays, nothing of the site shows over it — the pill, the bag and Mia come in as it lifts */
+html.mk-intro-on .nav,html.mk-intro-on .cart,html.mk-intro-on .mia-launch{opacity:0;pointer-events:none;visibility:hidden}
+html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk-intro-on.mk-intro-lift .mia-launch{visibility:visible;opacity:1;transition:opacity .5s .25s}
