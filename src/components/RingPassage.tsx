@@ -9,7 +9,7 @@ const M_W = 866, M_H = 627;
 type Lay = [number, number, number, number, number][]; // [drawing, x%, y%, height%, rotate]
 /* one passage per category, same rhythm, same airy yellow, black ink, no words:
    the rings (approved 2026-11-08, Z1) and the necklaces (approved 2026-11-08, N3 — each drawing swings in like a pendant) */
-const PASSAGES: Record<string, { set: string; label: string; swing?: boolean; roll?: boolean; stamp?: boolean; dangle?: boolean; color?: boolean; ext?: string; seq?: [string, number][]; aspect: number[]; d: Lay; p: Lay }> = {
+const PASSAGES: Record<string, { set: string; label: string; swing?: boolean; roll?: boolean; stamp?: boolean; dangle?: boolean; color?: boolean; ext?: string; toss?: boolean; seq?: [string, number][]; aspect: number[]; d: Lay; p: Lay }> = {
   "/engagement-rings": { set: "r", label: "The rings", aspect: [.75, .75, .75, .75, .75, .75],
     d: [[0, 50, 52, 74, 0], [1, 24, 56, 42, -6], [2, 74, 48, 58, 4], [3, 50, 50, 34, 0], [4, 30, 48, 62, -3], [5, 72, 54, 44, 6]],
     p: [[0, 50, 52, 64, 0], [1, 32, 40, 34, -6], [2, 62, 58, 46, 4], [3, 50, 50, 30, 0], [4, 40, 50, 52, -3], [5, 60, 52, 40, 6]] },
@@ -34,6 +34,10 @@ const PASSAGES: Record<string, { set: string; label: string; swing?: boolean; ro
   "/fancy-colors": { set: "f", label: "Fancy colors", color: true, ext: "webp", aspect: [0.951, 0.822, 0.624, 1.072, 0.558, 1.444],
     d: [[0, 50, 52, 64, 0], [1, 26, 54, 50, -6], [2, 72, 48, 66, 5], [3, 34, 50, 40, -4], [4, 52, 50, 68, 0], [5, 70, 54, 38, 5]],
     p: [[0, 50, 52, 32, 0], [1, 36, 46, 32, -6], [2, 62, 54, 42, 5], [3, 46, 50, 24, -4], [4, 52, 50, 46, 0], [5, 56, 52, 20, 5]] },
+  // gemstones (approved 2026-11-08, G2 — each drawing is thrown in like the die: it spins in the air and lands with a bounce; stones in colour)
+  "/gemstones": { set: "g", label: "Gemstones", color: true, ext: "webp", toss: true, aspect: [0.662, 1.3, 0.941, 0.534, 0.594, 0.826],
+    d: [[0, 50, 52, 66, 0], [1, 28, 54, 42, -5], [2, 72, 48, 56, 6], [3, 34, 50, 70, -3], [4, 52, 50, 62, 0], [5, 70, 54, 58, 5]],
+    p: [[0, 50, 52, 44, 0], [1, 40, 46, 22, -5], [2, 60, 54, 30, 6], [3, 46, 50, 52, -3], [4, 52, 50, 48, 0], [5, 56, 52, 36, 5]] },
 };
 const SEQ: [string, number][] = [["mo", 140], ["d0", 170], ["d1", 140], ["mf", 140], ["d2", 160], ["d3", 130], ["d4", 160], ["d5", 150], ["mf", 360]];
 
@@ -83,7 +87,7 @@ export default function RingPassage({ mPath }: { mPath: string }) {
   const P = PASSAGES[dest.current] || PASSAGES["/engagement-rings"], LAY = phone ? P.p : P.d, cur = frame.split(":")[0];
   const msvg = <svg viewBox={`0 0 ${M_W} ${M_H}`} fillRule="evenodd"><path d={mPath} /></svg>;
   return (
-    <div className={`rp rp-${stage}${P.swing ? " rp-swing" : ""}${P.roll ? " rp-roll" : ""}${P.stamp ? " rp-stamp" : ""}${P.dangle ? " rp-dangle" : ""}`} aria-hidden="true">
+    <div className={`rp rp-${stage}${P.swing ? " rp-swing" : ""}${P.roll ? " rp-roll" : ""}${P.stamp ? " rp-stamp" : ""}${P.dangle ? " rp-dangle" : ""}${P.toss ? " rp-toss" : ""}`} aria-hidden="true">
       <i className="rp-grid" /><i className="rp-x x1" /><i className="rp-x x2" /><i className="rp-x x3" /><i className="rp-x x4" />
       <span className="rp-lab l1">Meekitaz</span><span className="rp-lab l2">{P.label}</span><span className="rp-lab l3">Lab-grown &middot; IGI certified</span>
       <span className="rp-cnt">{String(cnt).padStart(3, "0")}</span>

@@ -3511,3 +3511,7 @@ html,body{overflow-x:clip}
 
 /* fancy colors (C1): the drawing itself, colours and all, instead of a black-ink mask */
 .rp-d.col{background:var(--src) center/contain no-repeat;-webkit-mask:none;mask:none}
+
+/* gemstones (G2): thrown in like a die — a spin in the air, then a bounce */
+.rp-toss .rp-d{transform:translate(-50%,-90%) rotate(calc(var(--r,0deg) - 200deg)) scale(.7);transition:opacity .06s,transform .5s cubic-bezier(.25,1.5,.35,1)}
+.rp-toss .rp-d.on{transform:translate(-50%,-50%) rotate(var(--r,0deg)) scale(1)}
