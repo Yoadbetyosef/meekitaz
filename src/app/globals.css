@@ -3635,3 +3635,5 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .catd-c:active .catd-ic{transform:translateY(-4px) rotate(-6deg)}
 .catd-x{display:none}
 }
+@keyframes catdFlM{to{translate:0 -4px}}
+@media(max-width:767px){.catd-ic{animation-name:catdFlM}}
