@@ -3587,20 +3587,3 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .mk-404 .x1{left:28px;top:120px}.mk-404 .x3{right:28px;bottom:28px}
 .mk-oc-c{position:absolute;opacity:.9}
 @media(max-width:767px){.mk-oc-c{transform:scale(.7)!important}.mk-none{gap:12px}.mk-none b{font-size:19px}}
-
-/* ===== From the feed (approved 2026-11-08, F2 · butter collage): a butter band as tall as the reel, every drawing in our blue, breathing;
-   the band rises up the screen as it arrives ===== */
-.fl-reel-wrap.fd{padding:0 0 90px;background:var(--home-bg,#E5E3EF);--rise:1}
-.fd-band{position:relative;width:100%;background:#F7E9A8;display:grid;justify-items:center;overflow:hidden;transform:translateY(calc(var(--rise) * 140px));transition:transform .1s linear;will-change:transform}
-.fd-d{position:absolute;background:#0D4FE7;-webkit-mask:var(--src) center/contain no-repeat;mask:var(--src) center/contain no-repeat;rotate:var(--r);
-  transform:translateY(calc(var(--rise) * var(--z) * 90px));animation:fdBreathe var(--t) ease-in-out var(--dl) infinite alternate;pointer-events:none}
-@keyframes fdBreathe{to{translate:0 -9px;rotate:calc(var(--r) + 3deg)}}
-.fd-d.ph{display:none}
-.fd .fl-reel{z-index:2;box-shadow:0 0 0 12px #F7E9A8,0 40px 80px -30px rgba(13,79,231,.45)}
-@media(max-width:767px){
-.fl-reel-wrap.fd{padding:0 0 60px}
-.fd-d.dk{display:none}.fd-d.ph{display:block}
-.fd .fl-reel{width:56vw;height:auto;aspect-ratio:3/5.2;box-shadow:0 0 0 8px #F7E9A8,0 30px 60px -30px rgba(13,79,231,.45)}
-.fd-band{transform:translateY(calc(var(--rise) * 90px))}
-}
-@media(prefers-reduced-motion:reduce){.fd-band,.fd-d{transform:none!important;animation:none}}
