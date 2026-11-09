@@ -3742,3 +3742,11 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .mkfoot .hush h2{font-size:56px}.mkfoot .hush p{font-size:18px;margin:6px 0 12px}
 .mkfoot .mkf-under{position:absolute;left:0;right:0;bottom:0;padding-top:70px;background:linear-gradient(rgba(254,245,217,0),rgba(254,245,217,.97) 34%)}
 }
+/* footer on phones (2026-11-09): no "Shhh." and no line over the drawings — the button sits at the foot, right above the links */
+@media(max-width:767px){
+.mkfoot-in{justify-content:flex-end;padding-top:0}
+.mkfoot .hush h2,.mkfoot .hush p{display:none}
+.mkfoot .hush{position:relative;padding:60px 20px 4px;text-align:center;background:linear-gradient(rgba(254,245,217,0),rgba(254,245,217,.95) 70%);z-index:3}
+.mkfoot .hush-cta{margin:0}
+.mkfoot .mkf-under{position:relative;padding-top:12px;background:rgba(254,245,217,.95)}
+}
