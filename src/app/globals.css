@@ -3658,3 +3658,4 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .catd-c:nth-child(5) .catd-ic{height:90px!important}
 .catd-c b{font:400 8.5px/1.35 var(--body);letter-spacing:.14em;max-width:120px}
 }
+@media(max-width:767px){.catd-reel{left:auto;bottom:auto}.catd-field{left:auto;right:auto;top:auto;bottom:auto}.catd-h{left:auto;right:auto;top:auto}}
