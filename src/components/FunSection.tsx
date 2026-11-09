@@ -30,7 +30,7 @@ export default function FunSection() {
       if (gone && !goneAt) goneAt = performance.now();
       s.classList.toggle("fun-gone", gone);
       // "V3" (2026-11-06): all together — the line fills in .7s, the signature writes meanwhile (at half speed), the button rises with the last word
-      if (goneAt) { const el = (performance.now() - goneAt) / 1000; const q = Math.max(0, Math.min(1, (el - .05) / .7)), n = Math.round(q * words.length); words.forEach((w, i) => w.classList.toggle("on", i < n)); if (el > 1.0) setSig(true); if (el > .9) s.classList.add("fun-cta"); }
+      if (goneAt) { const el = (performance.now() - goneAt) / 1000; const q = Math.max(0, Math.min(1, (el - .15) / 2.0)), n = Math.round(q * words.length); words.forEach((w, i) => w.classList.toggle("on", i < n)); if (el > 2.25) setSig(true); if (el > .9) s.classList.add("fun-cta"); }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -45,7 +45,7 @@ export default function FunSection() {
         <div className="fun-tys" aria-hidden="true"><span>Take your shot.</span></div>
         <div className="fun-line">
           <i className="fl-plus p1" aria-hidden="true" /><i className="fl-plus p3" aria-hidden="true" />
-          <p ref={p}>{"We take diamonds seriously.".split(" ").map((w, i) => <span key={i}>{w} </span>)}<br />{"Life, a little less.".split(" ").map((w, i) => <span key={"b" + i}>{w} </span>)}</p>
+          <p ref={p} aria-label="We take diamonds seriously. Life, a little less.">{/* (2026-11-08, W2) written letter by letter, like a pen */}{[..."We take diamonds seriously."].map((c, i) => <span key={i} className="ch" aria-hidden="true">{c}</span>)}<br />{[..."Life, a little less."].map((c, i) => <span key={"b" + i} className="ch" aria-hidden="true">{c}</span>)}</p>
           <i className="fun-hf" aria-hidden="true" />{/* the hand reaching for the fries (approved 2026-11-08, H1 · drawn on) */}
           <Signature on={sig} className="fun-sig" />
         </div>

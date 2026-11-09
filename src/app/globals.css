@@ -3541,3 +3541,6 @@ html,body{overflow-x:clip}
 /* (2026-11-08) while the blue opening plays, nothing of the site shows over it — the pill, the bag and Mia come in as it lifts */
 html.mk-intro-on .nav,html.mk-intro-on .cart,html.mk-intro-on .mia-launch{opacity:0;pointer-events:none;visibility:hidden}
 html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk-intro-on.mk-intro-lift .mia-launch{visibility:visible;opacity:1;transition:opacity .5s .25s}
+
+/* the home line, written letter by letter (W2) — spaces keep their width */
+.fun-line p span.ch{white-space:pre;transition:color .25s}
