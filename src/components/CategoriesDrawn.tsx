@@ -4,7 +4,7 @@ import Link from "next/link";
 
 /* Shop by category on computers (approved 2026-11-08, "C1 · scattered, bare"): our long reel flush to the left edge of the screen, square,
    the full height of the section; on the right only "Find your thing." and his eight cobalt drawings scattered at playful sizes, each one
-   breathing, its category under it — hover lifts and turns it, the name turns blue with a line and an arrow. Phones keep the photo tiles. */
+   breathing, its category under it — hover lifts and turns it, the name turns blue with a line and an arrow. Phones (approved 2026-11-08, "M4", symmetric): the reel on the left half, the eight drawings in an even 2 × 4 beside it. */
 const CATS: [string, string, string, number, number, number, number, number][] = [
   // [href, name, drawing, x%, y%, height px, rotate, aspect]
   ["/engagement-rings", "Engagement rings", "rings", 14, 38, 190, -6, .626],
@@ -21,7 +21,6 @@ export default function CategoriesDrawn() {
   const v = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const vid = v.current; if (!vid) return;
-    if (!window.matchMedia("(min-width:768px)").matches) return; // computers only
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) { if (!vid.getAttribute("src")) vid.src = "/media/feed-strip.mp4"; vid.muted = true; vid.play().catch(() => {}); }
       else vid.pause();
