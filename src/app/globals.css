@@ -3771,3 +3771,13 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .hop.on .hop-pl{opacity:1}
 }
 @media(max-width:767px) and (prefers-reduced-motion:reduce){.hop-film,.hop-line,.hop-hand,.hop-cta{transition:none}}
+
+/* phones, round 2 (2026-11-09): the signature in our blue, as before; the film (now the tall 9:16 cut) flush to the bottom-left corner,
+   exactly as wide as the reel that rises next (half the screen) */
+@media(max-width:767px){
+.hop .mk-sig.hop-sig path.g{display:none}
+.hop .mk-sig.hop-sig path.s{stroke:#0D4FE7;stroke-width:2.6}
+.hop .mk-sig.hop-sig.on path.s{animation-duration:calc(var(--t) * .5);animation-delay:calc(var(--b) * .5)}
+.hop-film{bottom:0;width:50vw;aspect-ratio:9/16}
+.hop-pl.c{bottom:22px}
+}

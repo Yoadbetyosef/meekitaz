@@ -23,7 +23,7 @@ export default function HomeOpenPhone() {
       if (el > 2.1) setSig(true);
       if (el < 3.2) raf = requestAnimationFrame(tick);
     };
-    const go = () => { s.classList.add("on"); vid.src = "/media/home/open-film-m.mp4"; vid.muted = true; vid.play().catch(() => {}); raf = requestAnimationFrame(tick); };
+    const go = () => { s.classList.add("on"); vid.src = "/media/home/open-film-m.mp4?v=2"; vid.muted = true; vid.play().catch(() => {}); raf = requestAnimationFrame(tick); };
     const html = document.documentElement;
     if (html.classList.contains("mk-intro-on")) { window.addEventListener("mk-intro-lift", go, { once: true }); window.addEventListener("mk-intro-done", go, { once: true }); }
     else go();
@@ -32,7 +32,7 @@ export default function HomeOpenPhone() {
   const ch = (s: string, k: string) => [...s].map((c, i) => c === " " ? " " : <span key={k + i}>{c}</span>);
   return (
     <section className="hop" ref={sec} aria-label="We take diamonds seriously. Life, a little less.">
-      <div className="hop-film"><video ref={v} muted loop playsInline preload="none" poster="/media/home/open-film-m.jpg" aria-hidden="true" /><i className="hop-pl d" aria-hidden="true" /></div>
+      <div className="hop-film"><video ref={v} muted loop playsInline preload="none" poster="/media/home/open-film-m.jpg?v=2" aria-hidden="true" /><i className="hop-pl d" aria-hidden="true" /></div>
       <p className="hop-line" ref={p}>{ch(L1, "a")}<br />{ch(L2, "b")}</p>
       <Signature on={sig} className="hop-sig" />
       <Link href="/engagement-rings" className="hop-cta">Shop engagement rings</Link>
