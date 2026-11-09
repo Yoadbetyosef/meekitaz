@@ -59,7 +59,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
         {p.slug === "diamonds" && <Suspense fallback={null}><SettingBar /></Suspense>}
         {p.slug === "engagement-rings" && <Suspense fallback={null}><StoneBar /></Suspense>}
         <JumpToResults />
-        {n > 0 && p.styleHead && (
+        {n > 0 && p.styleHead && p.slug !== "necklaces" && p.slug !== "bands" && ( /* (2026-11-08) no style filter on Necklaces or Bands */
           <section className="shapes" aria-label={p.styleHead[0]}>
             <div className="wrap">
               <div className="sp-head"><small className="eyebrow">{p.styleHead[0]}</small><h2>{p.styleHead[1]}</h2></div>
