@@ -34,7 +34,10 @@ export default function FunSection() {
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    return () => { io.disconnect(); cancelAnimationFrame(raf); window.removeEventListener("mk-intro-lift", open); window.removeEventListener("mk-intro-done", open); };
+    // the section is sticky now (the page rises over it), so "left" means scrolled a screen away: reset, and play again on the way back
+    const onScroll = () => { const y = window.scrollY, H = window.innerHeight; if (y > H * 1.1 && started) reset(); else if (y < H * .4 && !started && gate) start(); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { window.removeEventListener("scroll", onScroll); io.disconnect(); cancelAnimationFrame(raf); window.removeEventListener("mk-intro-lift", open); window.removeEventListener("mk-intro-done", open); };
   }, []);
   return (
     <section className="fun" id="fun" ref={sec} aria-label="We take diamonds seriously. Life, a little less.">

@@ -22,6 +22,8 @@ export default function Home() {
       <Intro />
       {/* (2026-11-08) the home opens on the dancer: the blue lifts and she is already dancing — the crouch/lift hero is retired */}
       <FunSection />
+      {/* (2026-11-08) the dancer's screen stays put; everything below rises over it */}
+      <div className="over-fun">
       <Film />{/* phones */}
       <Categories />
       <FloatingFilm />
@@ -34,6 +36,7 @@ export default function Home() {
       <BrandStories />
       <Reviews />
       <PrivateClients />
+      </div>
     </main>
   );
 }

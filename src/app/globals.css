@@ -3587,3 +3587,8 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .mk-404 .x1{left:28px;top:120px}.mk-404 .x3{right:28px;bottom:28px}
 .mk-oc-c{position:absolute;opacity:.9}
 @media(max-width:767px){.mk-oc-c{transform:scale(.7)!important}.mk-none{gap:12px}.mk-none b{font-size:19px}}
+
+/* (2026-11-08) the dancer's screen stays where it is; the rest of the home page rises over it like a sheet */
+.home-page .fun{position:sticky;top:0}
+.over-fun{position:relative;z-index:7;background:var(--home-bg,#E5E3EF);border-radius:28px 28px 0 0;box-shadow:0 -28px 60px -30px rgba(28,26,27,.28)}
+@media(max-width:767px){.over-fun{border-radius:22px 22px 0 0}}
