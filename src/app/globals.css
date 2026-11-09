@@ -3812,3 +3812,5 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .hop-hand{top:auto;bottom:5vh;width:min(256px,32vh)}
 .hop-pl.a,.hop-pl.b{top:calc(27% - 6px)}
 }
+/* computers, round 3 (2026-11-09): the hand bigger and right under the button (about two thirds down), still from beyond the edge, whole */
+@media(min-width:768px){.hop-hand{bottom:auto;top:calc(27% + 196px);width:min(320px,38vh)}}
