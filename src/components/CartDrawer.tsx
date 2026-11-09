@@ -72,7 +72,7 @@ export default function CartDrawer() {
         </div>
         <div className="cd-body">
           {empty ? (
-            <div className="cd-empty"><i className="mk-ic mk-bob" aria-hidden="true" style={{ ["--src" as string]: "url(/media/icons/shrimp.png)", width: 124, height: 111 }} /><p>Your bag is empty.</p><small className="mk-it">The shrimp is dressed better than it.</small><Link href="/engagement-rings" onClick={() => setOpen(false)}>Shop engagement rings</Link></div>
+            <div className="cd-empty"><i className="mkm" aria-hidden="true" /><p>Nothing here yet.</p><small>Serious diamonds, worn lightly.</small><Link href="/" onClick={() => setOpen(false)}>Shop the collection</Link></div>
           ) : (<>
             {rings.map(r => (
               <div className="cd-ring cd-one" key={r.id} style={{ opacity: busy ? .6 : 1 }}>
