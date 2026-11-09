@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 
-/* Ready to ship on the home page (approved 2026-11-09, "V2 · the arch window"): butter ground, the bicycle film (the Meekitaz boxes in her
+/* Ready to ship on the home page (approved 2026-11-09, "V2 · the arch window"; then "R1 · the mirror": the film a full-height, square column on the right — 30% like the opening's on the left — the copy centred to its left): butter ground, the bicycle film (the Meekitaz boxes in her
    basket) in an arched window, a big "Ready to ship." The film plays only while on screen.
    The swallow (approved 2026-11-09, "W1"): one real wingbeat cut from his film (12 transparent frames, the white logo on the box kept),
    flapping steadily while she flies with the scroll — in from beyond the left edge, a gentle rise above the heading, over the top of the
@@ -18,7 +18,7 @@ export default function RtsBike() {
     const build = () => {
       const W = s.clientWidth, bw = b.offsetWidth, bh = b.offsetHeight;
       const y0 = Math.max(4, off(k) - bh - 16);
-      const beside = a.getBoundingClientRect().left > k.getBoundingClientRect().right; // computers: the arch sits beside the copy
+      const beside = false; // (2026-11-09, R1) the film is now a full-height column on the right — she simply rises and flies out over it
       const yA = beside ? Math.min(y0 - 40, off(a) - bh - 24) : y0 - 40;
       P = [[-bw * 1.2, y0], [W * .3, y0 - 14], [W * .6, yA], [W + bw * .4, yA - 40]];
     };
@@ -46,7 +46,7 @@ export default function RtsBike() {
   useEffect(() => {
     const vid = v.current; if (!vid) return;
     const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { if (!vid.getAttribute("src")) vid.src = "/media/rts/bike-arch.mp4"; vid.muted = true; vid.play().catch(() => {}); }
+      if (e.isIntersecting) { if (!vid.getAttribute("src")) vid.src = "/media/rts/bike-col.mp4"; vid.muted = true; vid.play().catch(() => {}); }
       else vid.pause();
     }, { threshold: .2 });
     io.observe(vid); return () => io.disconnect();
@@ -62,7 +62,7 @@ export default function RtsBike() {
           <Link href="/ready-to-ship" className="rtsb-btn">Shop in-stock jewelry &rarr;</Link>
         </div>
         <Link href="/ready-to-ship" ref={arch} className="rtsb-arch" aria-label="Shop ready to ship" tabIndex={-1}>
-          <video ref={v} muted loop playsInline preload="none" poster="/media/rts/bike-arch.jpg" aria-hidden="true" />
+          <video ref={v} muted loop playsInline preload="none" poster="/media/rts/bike-col.jpg" aria-hidden="true" />
         </Link>
         <i className="rtsb-dr d1" aria-hidden="true" /><i className="rtsb-dr d2" aria-hidden="true" />
       </div>

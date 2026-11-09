@@ -3814,3 +3814,20 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 }
 /* computers, round 3 (2026-11-09): the hand bigger and right under the button (about two thirds down), still from beyond the edge, whole */
 @media(min-width:768px){.hop-hand{bottom:auto;top:calc(27% + 196px);width:min(320px,38vh)}}
+
+/* ===== Ready to ship (approved 2026-11-09, R1 · the mirror): the film fills a square column flush right, top to bottom, 30% wide on
+   computers (half the screen on phones) — the opening's language on the other side; the copy centred in the space to its left ===== */
+.rtsb{min-height:100vh}
+.rtsb-in{display:block;max-width:none;min-height:100vh;padding:0;position:static}
+.rtsb-copy{position:absolute;left:0;right:30%;top:50%;transform:translateY(-50%);text-align:center;padding:0 40px}
+.rtsb-eye{justify-content:center}
+.rtsb-arch{position:absolute;right:0;top:0;bottom:0;width:30%;height:auto;border-radius:0;box-shadow:none}
+.rtsb-dr.d1{display:none}
+.rtsb-dr.d2{left:60px;right:auto;bottom:60px}
+@media(max-width:767px){
+.rtsb,.rtsb-in{min-height:100svh}
+.rtsb-copy{left:18px;right:52%;padding:0;text-align:left;top:50%}
+.rtsb-eye{justify-content:flex-start;font-size:9px}
+.rtsb-h{font-size:38px}.rtsb-it{font-size:16px;margin-bottom:16px}.rtsb-btn{height:42px;font-size:9px;padding:0 16px;letter-spacing:.16em}
+.rtsb-arch{width:50%;aspect-ratio:auto;justify-self:auto}
+}
