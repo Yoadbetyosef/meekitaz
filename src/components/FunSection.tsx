@@ -14,7 +14,7 @@ export default function FunSection() {
     const s = sec.current, vid = v.current, para = p.current; if (!s || !vid || !para) return;
     const words = [...para.querySelectorAll("span")];
     let started = false, goneAt = 0, raf = 0;
-    const src = window.matchMedia("(max-width:767px)").matches ? "/media/dancer-m.mp4" : "/media/dancer.mp4";
+    const src = window.matchMedia("(max-width:767px)").matches ? "/media/dancer-m.mp4?v=2" : "/media/dancer.mp4?v=2";
     const reset = () => { started = false; goneAt = 0; s.classList.remove("fun-in", "fun-gone", "fun-cta"); words.forEach(w => w.classList.remove("on")); setSig(false); vid.pause(); };
     const start = () => { if (started) return; started = true; if (!vid.getAttribute("src")) vid.src = src; vid.muted = true; vid.currentTime = 0; vid.play().catch(() => {}); s.classList.add("fun-in"); };
     (s as HTMLElement & { __start?: () => void }).__start = start; // HeroLift calls this the moment the board reaches the top
