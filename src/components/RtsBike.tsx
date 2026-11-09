@@ -25,7 +25,7 @@ export default function RtsBike() {
         // phones (approved 2026-11-09, "M1"): measured from where "In stock" really sits; she stays over the lavender half and leaves
         // through the top — never across the bright film, where her white body vanishes
         const yk = k.getBoundingClientRect().top - s.getBoundingClientRect().top - bh - 14;
-        P = [[-bw * 1.2, yk], [W * .22, yk - 6], [W * .4, yk - 60], [W * .36, -bh * 1.3]];
+        P = [[-bw * 1.2, yk], [W * .2, yk - 6], [W * .32, yk - 60], [W * .28, -bh * 1.3]];
       }
     };
     const bez = (t: number) => { const u = 1 - t; return [0, 1].map(i => u * u * u * P[0][i] + 3 * u * u * t * P[1][i] + 3 * u * t * t * P[2][i] + t * t * t * P[3][i]); };
