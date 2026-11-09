@@ -3714,3 +3714,11 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .mia-intro img{object-fit:contain;background:#FDF8F3;padding:6px}
 /* the "Top 3 AI picks" avatar is Marcel too */
 .ai-mia i{background:url(/media/marcel.png) 50% 50%/86% no-repeat!important}
+
+/* the menu's little shrimp (approved M3): tiny, top-left, level with the pill; he walks in dragging the bracelet when the menu opens */
+.menu-shrimp{position:absolute;left:max(48px,calc((100vw - 1180px) / 2));top:34px;width:132px;aspect-ratio:640/236;background:url(/media/menu-shrimp.webp) center/contain no-repeat;pointer-events:none;z-index:2;opacity:0}
+.menu.open .menu-shrimp{opacity:1;animation:mshWalk 2.4s cubic-bezier(.3,.7,.4,1) .35s both,mshStep .45s ease-in-out .35s 5}
+@keyframes mshWalk{from{translate:-200px 0}to{translate:0 0}}
+@keyframes mshStep{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-2px) rotate(-1.5deg)}50%{transform:translateY(0) rotate(0)}75%{transform:translateY(-2px) rotate(1deg)}}
+@media(max-width:767px){.menu-in{padding-top:132px}.menu-shrimp{left:16px;top:92px;width:96px}}
+@media(prefers-reduced-motion:reduce){.menu.open .menu-shrimp{animation:none}}

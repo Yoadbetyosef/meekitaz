@@ -44,6 +44,8 @@ export default function Nav() {
       </button>
       <SearchPalette open={searching} onClose={() => setSearching(false)} />
       <div id="menu" className={`menu${open ? " open" : ""}`} aria-hidden={!open}>
+        {/* (2026-11-09, approved M3) the little shrimp drags his diamond bracelet in from the edge each time the menu opens */}
+        <i className="menu-shrimp" aria-hidden="true" />
         <div className="menu-in">
           <div className="mgrid">
             {menuTiles.map((t, i) => (
