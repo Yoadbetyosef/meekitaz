@@ -3701,3 +3701,10 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 @keyframes cdFlap{to{background-position:109.0909% 0}}
 @keyframes cdHover{50%{translate:0 -6px}}
 @media(prefers-reduced-motion:reduce){.cd-swallow{animation:none}}
+/* the empty-bag swallow, steadier on phones (2026-11-09): the strip of twelve frames slides inside a fixed window with transforms
+   (iOS Safari handled the percentage background stepping badly — she slid off); the window itself only floats a little */
+.cd-swallow{position:relative;overflow:hidden;background:none!important;animation:cdHover 3s ease-in-out infinite!important;transform:translateZ(0)}
+.cd-swallow::before{content:"";position:absolute;left:0;top:0;bottom:0;width:1200%;background:url(/media/rts/swallow-flap.webp) 0 0/100% 100% no-repeat;animation:cdFlap2 1s steps(12) infinite;will-change:transform}
+@keyframes cdFlap2{to{transform:translateX(-100%)}}
+@media(max-width:767px){.cd-swallow{width:130px}}
+@media(prefers-reduced-motion:reduce){.cd-swallow,.cd-swallow::before{animation:none!important}}
