@@ -11,6 +11,7 @@ export default function FunSection() {
   const sec = useRef<HTMLElement>(null), v = useRef<HTMLVideoElement>(null), p = useRef<HTMLParagraphElement>(null);
   const [sig, setSig] = useState(false);
   useEffect(() => {
+    if (window.matchMedia("(max-width:767px)").matches) return; // (2026-11-09) phones open on HomeOpenPhone instead — no dancer to load
     const s = sec.current, vid = v.current, para = p.current; if (!s || !vid || !para) return;
     const words = [...para.querySelectorAll("span")];
     let started = false, goneAt = 0, raf = 0;

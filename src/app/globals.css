@@ -3750,3 +3750,24 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .mkfoot .hush-cta{margin:0}
 .mkfoot .mkf-under{position:relative;padding-top:12px;background:rgba(254,245,217,.95)}
 }
+
+/* ===== The home page's first screen on phones (approved 2026-11-09): the film in the corner, the hand from the right ===== */
+.hop{display:none}
+@media(max-width:767px){
+.home-page .fun{display:none}
+.hop{display:block;position:sticky;top:0;height:100svh;min-height:600px;overflow:hidden;background:var(--home-bg,#E5E3EF)}
+.hop-film{position:absolute;left:0;bottom:calc(env(safe-area-inset-bottom,0px) + 74px);width:51vw;aspect-ratio:3/4;overflow:hidden;transform:translateX(-105%);transition:transform 1s cubic-bezier(.7,0,.2,1)}
+.hop-film video{display:block;width:100%;height:100%;object-fit:cover}
+.hop-line{position:absolute;left:0;right:0;top:15%;margin:0;text-align:center;font:400 19px/1.18 var(--display);color:#0D4FE7;transform:translateX(-110%);transition:transform .9s cubic-bezier(.2,.8,.2,1) .3s}
+.hop-line span{color:rgba(13,79,231,.14);transition:color .2s}.hop-line span.on{color:#0D4FE7}
+.hop .hop-sig{position:absolute;left:50%;top:calc(15% + 52px);width:120px;margin-left:-60px}
+.hop-cta{position:absolute;left:50%;top:calc(15% + 100px);transform:translateX(-50%) translateY(14px);opacity:0;display:inline-flex;align-items:center;height:46px;padding:0 24px;border-radius:999px;background:var(--ink);color:#fff;font:400 10.5px var(--body);letter-spacing:.2em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:opacity .5s 1.7s,transform .6s 1.7s;z-index:6}
+.hop-hand{position:absolute;right:-110px;top:calc(15% + 136px);width:290px;aspect-ratio:760/657;background:url(/media/home/hand-fries.webp) center/contain no-repeat;transform:translateX(130%);transition:transform 1.1s cubic-bezier(.2,.8,.2,1) .7s;z-index:4;pointer-events:none}
+.hop-pl{position:absolute;width:9px;height:9px;opacity:0;transition:opacity .5s 1.9s;z-index:7}
+.hop-pl::before,.hop-pl::after{content:"";position:absolute;background:var(--c,#0D4FE7)}.hop-pl::before{left:0;right:0;top:50%;height:1.3px;transform:translateY(-50%)}.hop-pl::after{top:0;bottom:0;left:50%;width:1.3px;transform:translateX(-50%)}
+.hop-pl.a{left:22px;top:calc(15% - 4px)}.hop-pl.b{right:20px;top:calc(15% - 4px)}.hop-pl.c{right:20px;bottom:calc(env(safe-area-inset-bottom,0px) + 90px)}.hop-pl.d{left:12px;top:12px;--c:#fff}
+.hop.on .hop-film,.hop.on .hop-line,.hop.on .hop-hand{transform:none}
+.hop.on .hop-cta{opacity:1;transform:translateX(-50%)}
+.hop.on .hop-pl{opacity:1}
+}
+@media(max-width:767px) and (prefers-reduced-motion:reduce){.hop-film,.hop-line,.hop-hand,.hop-cta{transition:none}}
