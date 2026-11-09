@@ -4,7 +4,6 @@ import Film from "@/components/Film";
 import FloatingFilm from "@/components/FloatingFilm";
 import Categories from "@/components/Categories";
 import CategoriesDrawn from "@/components/CategoriesDrawn";
-import HouseCodes from "@/components/HouseCodes";
 import NewFancy from "@/components/NewFancy";
 import OneOfOne from "@/components/OneOfOne";
 import RtsBike from "@/components/RtsBike";
@@ -31,7 +30,6 @@ export default function Home() {
       <NewFancy />
       <OneOfOne />
       <RtsBike />{/* (2026-11-09) Ready to ship: the arch window */}
-      <HouseCodes />
       <PressRow />
       <Reviews />
       <PrivateClients />
