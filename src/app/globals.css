@@ -3831,3 +3831,5 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .rtsb-h{font-size:38px}.rtsb-it{font-size:16px;margin-bottom:16px}.rtsb-btn{height:42px;font-size:9px;padding:0 16px;letter-spacing:.16em}
 .rtsb-arch{width:50%;aspect-ratio:auto;justify-self:auto}
 }
+
+@media(max-width:767px){.rtsb-bird{width:84px}}

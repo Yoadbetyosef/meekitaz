@@ -12,7 +12,7 @@ export default function RtsBike() {
   const v = useRef<HTMLVideoElement>(null), sec = useRef<HTMLElement>(null), bird = useRef<HTMLDivElement>(null), eye = useRef<HTMLParagraphElement>(null), arch = useRef<HTMLAnchorElement>(null);
   useEffect(() => {
     const s = sec.current, b = bird.current, k = eye.current, a = arch.current; if (!s || !b || !k || !a) return;
-    const N = 12, reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const N = 12, reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches, phone = window.matchMedia("(max-width:767px)").matches;
     const off = (el: HTMLElement) => { let y = 0, n: HTMLElement | null = el; while (n && n !== s) { y += n.offsetTop; n = n.offsetParent as HTMLElement | null; } return y; };
     let P: [number, number][] = [];
     const build = () => {
@@ -21,17 +21,25 @@ export default function RtsBike() {
       const beside = false; // (2026-11-09, R1) the film is now a full-height column on the right — she simply rises and flies out over it
       const yA = beside ? Math.min(y0 - 40, off(a) - bh - 24) : y0 - 40;
       P = [[-bw * 1.2, y0], [W * .3, y0 - 14], [W * .6, yA], [W + bw * .4, yA - 40]];
+      if (phone) {
+        // phones (approved 2026-11-09, "M1"): measured from where "In stock" really sits; she stays over the lavender half and leaves
+        // through the top — never across the bright film, where her white body vanishes
+        const yk = k.getBoundingClientRect().top - s.getBoundingClientRect().top - bh - 14;
+        P = [[-bw * 1.2, yk], [W * .22, yk - 6], [W * .4, yk - 60], [W * .36, -bh * 1.3]];
+      }
     };
     const bez = (t: number) => { const u = 1 - t; return [0, 1].map(i => u * u * u * P[0][i] + 3 * u * u * t * P[1][i] + 3 * u * t * t * P[2][i] + t * t * t * P[3][i]); };
     const place = (t: number) => { const [x, y] = bez(t), [x2, y2] = bez(Math.min(1, t + .01)); const ang = Math.atan2(y2 - y, x2 - x) * 90 / Math.PI; b.style.transform = `translate3d(${x}px,${y}px,0) rotate(${ang.toFixed(2)}deg)`; };
-    const progress = () => { const r = s.getBoundingClientRect(), H = window.innerHeight; return Math.min(1, Math.max(0, (H - r.top) / (H + r.height))); };
+    const progress = () => { const r = s.getBoundingClientRect(), H = window.innerHeight;
+      // phones: she crosses within about half a screen of scrolling, from when the section is a third in
+      return phone ? Math.min(1, Math.max(0, ((H - r.top) - H * .35) / (H * .6))) : Math.min(1, Math.max(0, (H - r.top) / (H + r.height))); };
     let cur = 0, target = 0, raf = 0, ft = 0, last = performance.now(), on = false;
     const setFrame = (f: number) => { b.style.backgroundPosition = `${(Math.floor(((f % N) + N) % N) / (N - 1)) * 100}% 0`; };
     build();
     if (reduced) { place(.36); setFrame(0); return; }
     cur = target = progress(); place(cur);
     const tick = (now: number) => {
-      cur += (target - cur) * .12; if (Math.abs(target - cur) < .0005) cur = target; place(cur);
+      cur += (target - cur) * (phone ? .08 : .12); // a softer follow on phones so iOS scrolling never makes her jump if (Math.abs(target - cur) < .0005) cur = target; place(cur);
       ft += Math.min(.05, (now - last) / 1000) * 12; last = now; setFrame(ft); // a steady wingbeat, 12 frames a second
       raf = on ? requestAnimationFrame(tick) : 0;
     };
