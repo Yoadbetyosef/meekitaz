@@ -39,7 +39,8 @@ export default function RtsBike() {
     if (reduced) { place(.36); setFrame(0); return; }
     cur = target = progress(); place(cur);
     const tick = (now: number) => {
-      cur += (target - cur) * (phone ? .08 : .12); // a softer follow on phones so iOS scrolling never makes her jump if (Math.abs(target - cur) < .0005) cur = target; place(cur);
+      // a softer follow on phones so iOS scrolling never makes her jump
+      cur += (target - cur) * (phone ? .08 : .12); if (Math.abs(target - cur) < .0005) cur = target; place(cur);
       ft += Math.min(.05, (now - last) / 1000) * 12; last = now; setFrame(ft); // a steady wingbeat, 12 frames a second
       raf = on ? requestAnimationFrame(tick) : 0;
     };
