@@ -3592,3 +3592,27 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .home-page .fun{position:sticky;top:0}
 .over-fun{position:relative;z-index:7;background:var(--home-bg,#E5E3EF);border-radius:28px 28px 0 0;box-shadow:0 -28px 60px -30px rgba(28,26,27,.28)}
 @media(max-width:767px){.over-fun{border-radius:22px 22px 0 0}}
+
+/* ===== Shop by category on computers (approved 2026-11-08, C1): the reel flush left and square, the drawings scattered ===== */
+.catd{display:none}
+@media(min-width:768px){
+.home-page #shop{display:none}
+.catd{display:block;position:relative;height:100vh;min-height:680px;max-height:980px;background:var(--home-bg,#E5E3EF);overflow:hidden}
+.catd-reel{position:absolute;left:0;top:0;bottom:0;width:30%;overflow:hidden;background:#000;border-radius:0}
+.catd-reel video{width:100%;height:100%;object-fit:cover;display:block}
+.catd-reel span{position:absolute;right:18px;top:50%;transform:translateY(-50%) rotate(90deg);transform-origin:right center;color:#fff;font:400 10px var(--body);letter-spacing:.32em;text-transform:uppercase;white-space:nowrap}
+.catd-reel .fl-plus.p1{left:16px;top:16px}.catd-reel .fl-plus.p3{right:16px;bottom:16px}
+.catd-h{position:absolute;left:calc(30% + 70px);top:9%;margin:0;font:400 clamp(32px,3.1vw,44px)/1 var(--display);z-index:2}
+.catd-field{position:absolute;left:30%;right:0;top:0;bottom:0}
+.catd-c{position:absolute;display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--ink);text-decoration:none;transform:translate(-50%,-50%) rotate(var(--r));transition:transform .45s cubic-bezier(.2,1.4,.3,1)}
+.catd-ic{display:block;background:center/contain no-repeat;animation:catdFl var(--t) ease-in-out var(--dl) infinite alternate;transition:transform .5s cubic-bezier(.2,1.4,.3,1)}
+@keyframes catdFl{to{translate:0 -6px}}
+.catd-c b{position:relative;font:400 13px var(--body);letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;padding-bottom:5px;display:inline-flex;align-items:center;transition:color .25s}
+.catd-c b::before{content:"";position:absolute;left:50%;right:50%;bottom:0;height:1.4px;background:#0D4FE7;transition:left .3s,right .3s}
+.catd-c b::after{content:"\2192";display:inline-block;width:0;overflow:hidden;opacity:0;transition:width .3s,opacity .3s,margin .3s}
+.catd-c:hover{transform:translate(-50%,-50%) rotate(0deg) scale(1.04)}
+.catd-c:hover .catd-ic{transform:translateY(-8px) rotate(-6deg)}
+.catd-c:hover b{color:#0D4FE7}.catd-c:hover b::before{left:0;right:0}.catd-c:hover b::after{width:16px;opacity:1;margin-left:8px}
+.catd-x{position:absolute;width:9px;height:9px}.catd-x::before,.catd-x::after{content:"";position:absolute;background:#0D4FE7}.catd-x::before{left:0;right:0;top:50%;height:1.2px;transform:translateY(-50%)}.catd-x::after{top:0;bottom:0;left:50%;width:1.2px;transform:translateX(-50%)}
+.catd-x.x2{right:28px;top:28px}.catd-x.x4{right:28px;bottom:28px}
+}

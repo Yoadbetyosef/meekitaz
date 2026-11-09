@@ -4,6 +4,7 @@ import Film from "@/components/Film";
 import FloatingFilm from "@/components/FloatingFilm";
 import FeedStrip from "@/components/FeedStrip";
 import Categories from "@/components/Categories";
+import CategoriesDrawn from "@/components/CategoriesDrawn";
 import HouseCodes from "@/components/HouseCodes";
 import NewFancy from "@/components/NewFancy";
 import OneOfOne from "@/components/OneOfOne";
@@ -25,7 +26,8 @@ export default function Home() {
       {/* (2026-11-08) the dancer's screen stays put; everything below rises over it */}
       <div className="over-fun">
       <Film />{/* phones */}
-      <Categories />
+      <CategoriesDrawn />{/* computers */}
+      <Categories />{/* phones */}
       <FloatingFilm />
       <FeedStrip />
       <NewFancy />
