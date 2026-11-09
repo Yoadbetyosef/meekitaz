@@ -3694,3 +3694,10 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .rtsb-in{padding-top:170px}
 .rtsb-bird{position:absolute;left:0;top:0;width:clamp(96px,11vw,180px);aspect-ratio:300/275;pointer-events:none;z-index:4;will-change:transform;background:url(/media/rts/swallow-flap.webp) 0 0/1200% 100% no-repeat}
 @media(max-width:767px){.rtsb-in{padding-top:120px}.rtsb-bird{width:100px}}
+
+/* the empty bag: the swallow with the pink box, flapping in place (2026-11-09) — the same twelve real frames as Ready to ship */
+.cd-swallow{display:block;width:150px;aspect-ratio:300/275;margin:0 auto 18px;background:url(/media/rts/swallow-flap.webp) 0 0/1200% 100% no-repeat;
+  animation:cdFlap 1s steps(12) infinite,cdHover 3s ease-in-out infinite}
+@keyframes cdFlap{to{background-position:109.0909% 0}}
+@keyframes cdHover{50%{translate:0 -6px}}
+@media(prefers-reduced-motion:reduce){.cd-swallow{animation:none}}

@@ -72,7 +72,7 @@ export default function CartDrawer() {
         </div>
         <div className="cd-body">
           {empty ? (
-            <div className="cd-empty"><i className="mkm" aria-hidden="true" /><p>Nothing here yet.</p><small>Serious diamonds, worn lightly.</small><Link href="/" onClick={() => setOpen(false)}>Shop the collection</Link></div>
+            <div className="cd-empty"><i className="cd-swallow" aria-hidden="true" />{/* (2026-11-09) the swallow from Ready to ship, flapping in place */}<p>Nothing here yet.</p><small>Serious diamonds, worn lightly.</small><Link href="/" onClick={() => setOpen(false)}>Shop the collection</Link></div>
           ) : (<>
             {rings.map(r => (
               <div className="cd-ring cd-one" key={r.id} style={{ opacity: busy ? .6 : 1 }}>
