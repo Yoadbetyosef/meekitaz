@@ -3804,3 +3804,11 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .hop.on .hop-pl{opacity:1}
 .over-fun{border-top-left-radius:0}
 }
+/* computers, round 2 (2026-11-09): the words a size smaller; the hand anchored to the bottom so it's always whole, scaled to the screen's height */
+@media(min-width:768px){
+.hop-line{top:27%;font-size:clamp(19px,1.55vw,23px)}
+.hop .mk-sig.hop-sig{top:calc(27% + 66px);width:170px;margin-left:-85px}
+.hop-cta{top:calc(27% + 134px);height:48px;font-size:11px}
+.hop-hand{top:auto;bottom:5vh;width:min(256px,32vh)}
+.hop-pl.a,.hop-pl.b{top:calc(27% - 6px)}
+}
