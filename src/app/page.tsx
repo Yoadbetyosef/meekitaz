@@ -2,7 +2,6 @@ import Intro, { INTRO_GATE } from "@/components/Intro";
 import FunSection from "@/components/FunSection";
 import Film from "@/components/Film";
 import FloatingFilm from "@/components/FloatingFilm";
-import FeedStrip from "@/components/FeedStrip";
 import Categories from "@/components/Categories";
 import CategoriesDrawn from "@/components/CategoriesDrawn";
 import HouseCodes from "@/components/HouseCodes";
@@ -29,7 +28,7 @@ export default function Home() {
       <CategoriesDrawn />{/* computers */}
       <Categories />{/* phones */}
       <FloatingFilm />
-      <FeedStrip />
+      {/* (2026-11-08) the feed reel lives in Shop by category now — not twice on the home page */}
       <NewFancy />
       <OneOfOne />
       <ReelStrip />
