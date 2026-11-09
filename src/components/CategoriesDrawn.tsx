@@ -18,7 +18,7 @@ const CATS: [string, string, string, number, number, number, number, number][] =
 ];
 
 // phones (approved 2026-11-08, "S1 · the zigzag", icons a touch bigger): [x% of the right half, y% of the screen, height px, rotate]
-const PHONE: [number, number, number, number][] = [[30, 26, 66, -6], [70, 35.5, 64, 6], [30, 45, 62, -5], [70, 54.5, 66, 5], [30, 64, 46, -6], [70, 73.5, 64, 6], [30, 83, 64, -5], [70, 92, 62, 5]];
+const PHONE: [number, number, number, number][] = [[29, 25, 92, -5], [71, 33.5, 88, 5], [29, 42, 88, -4], [71, 50.5, 92, 4], [29, 59, 62, -5], [71, 67.5, 88, 5], [29, 76, 88, -4], [71, 84.5, 86, 4]];
 
 export default function CategoriesDrawn() {
   const v = useRef<HTMLVideoElement>(null);
