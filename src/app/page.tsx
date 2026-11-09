@@ -1,5 +1,4 @@
 import Intro, { INTRO_GATE } from "@/components/Intro";
-import FunSection from "@/components/FunSection";
 import HomeOpenPhone from "@/components/HomeOpenPhone";
 import Film from "@/components/Film";
 import FloatingFilm from "@/components/FloatingFilm";
@@ -22,8 +21,7 @@ export default function Home() {
       <script dangerouslySetInnerHTML={{ __html: INTRO_GATE }} />
       <Intro />
       {/* (2026-11-08) the home opens on the dancer: the blue lifts and she is already dancing — the crouch/lift hero is retired */}
-      <FunSection />{/* computers */}
-      <HomeOpenPhone />{/* phones */}
+      <HomeOpenPhone />{/* (2026-11-09) the first screen everywhere: the film from the left, the hand from the right */}
       {/* (2026-11-08) the dancer's screen stays put; everything below rises over it */}
       <div className="over-fun">
       <Film />{/* phones */}

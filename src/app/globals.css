@@ -3781,3 +3781,26 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .hop-film{bottom:0;width:50vw;aspect-ratio:9/16}
 .hop-pl.c{bottom:22px}
 }
+
+/* ===== The first screen on computers (approved 2026-11-09, "C2 · full height"): the tall film fills the left column, exactly the width
+   (30%) of the reel in Find your thing, so when that section rises over it the two films meet in the same column, one replacing the other;
+   the words lowered to a third of the height and centred in the space to the right; the hand from beyond the right edge ===== */
+@media(min-width:768px){
+.hop{display:block;position:sticky;top:0;height:100vh;min-height:640px;overflow:hidden;background:var(--home-bg,#E5E3EF)}
+.hop-film{position:absolute;left:0;top:0;bottom:0;width:30%;overflow:hidden;transform:translateX(-105%);transition:transform 1s cubic-bezier(.7,0,.2,1)}
+.hop-film video{display:block;width:100%;height:100%;object-fit:cover}
+.hop-line{position:absolute;left:30%;right:0;top:31%;margin:0;text-align:center;font:400 28px/1.15 var(--display);color:#0D4FE7;transform:translateX(-110%);transition:transform .9s cubic-bezier(.2,.8,.2,1) .3s}
+.hop-line span{color:rgba(13,79,231,.14);transition:color .2s}.hop-line span.on{color:#0D4FE7}
+.hop .mk-sig.hop-sig{position:absolute;left:65%;top:calc(31% + 84px);width:200px;margin-left:-100px}
+.hop .mk-sig.hop-sig path.g{display:none}.hop .mk-sig.hop-sig path.s{stroke:#0D4FE7;stroke-width:2.6}
+.hop .mk-sig.hop-sig.on path.s{animation-duration:calc(var(--t) * .5);animation-delay:calc(var(--b) * .5)}
+.hop-cta{position:absolute;left:65%;top:calc(31% + 166px);transform:translateX(-50%) translateY(14px);opacity:0;display:inline-flex;align-items:center;height:52px;padding:0 30px;border-radius:999px;background:var(--ink);color:#fff;font:400 12px var(--body);letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:opacity .5s 1.7s,transform .6s 1.7s;z-index:6}
+.hop-hand{position:absolute;right:-60px;top:calc(31% + 236px);width:256px;aspect-ratio:760/657;background:url(/media/home/hand-fries.webp) center/contain no-repeat;transform:translateX(130%);transition:transform 1.1s cubic-bezier(.2,.8,.2,1) .7s;z-index:4;pointer-events:none}
+.hop-pl{position:absolute;width:9px;height:9px;opacity:0;transition:opacity .5s 1.9s;z-index:7}
+.hop-pl::before,.hop-pl::after{content:"";position:absolute;background:var(--c,#0D4FE7)}.hop-pl::before{left:0;right:0;top:50%;height:1.3px;transform:translateY(-50%)}.hop-pl::after{top:0;bottom:0;left:50%;width:1.3px;transform:translateX(-50%)}
+.hop-pl.a{left:calc(30% + 40px);top:calc(31% - 6px)}.hop-pl.b{right:28px;top:calc(31% - 6px)}.hop-pl.c{right:28px;bottom:28px}.hop-pl.d{left:14px;top:14px;--c:#fff}
+.hop.on .hop-film,.hop.on .hop-line,.hop.on .hop-hand{transform:none}
+.hop.on .hop-cta{opacity:1;transform:translateX(-50%)}
+.hop.on .hop-pl{opacity:1}
+.over-fun{border-top-left-radius:0}
+}

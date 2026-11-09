@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Signature from "@/components/Signature";
 
-/* The home page's first screen on phones (approved 2026-11-09): straight after the blue — no dancer. The brand film, small and square,
+/* The home page's first screen — phones and (approved 2026-11-09, "C2 · full height") computers: straight after the blue — no dancer. The brand film, small and square,
    slides in from the left and sits flush in the bottom-left corner just above Safari's bar; the line slides in from the side and writes
    itself letter by letter; the signature; the button in the middle; the hand comes in from beyond the right edge with the fries — the
    hand and the button never touch the film. Sizes of the hand and the words as before. */
@@ -14,7 +14,6 @@ export default function HomeOpenPhone() {
   const [sig, setSig] = useState(false);
   useEffect(() => {
     const s = sec.current, vid = v.current, para = p.current; if (!s || !vid || !para) return;
-    if (!window.matchMedia("(max-width:767px)").matches) return;
     let raf = 0, t0 = 0;
     const chars = [...para.querySelectorAll<HTMLElement>("span")];
     const tick = (now: number) => {
@@ -23,7 +22,7 @@ export default function HomeOpenPhone() {
       if (el > 2.1) setSig(true);
       if (el < 3.2) raf = requestAnimationFrame(tick);
     };
-    const go = () => { s.classList.add("on"); vid.src = "/media/home/open-film-m.mp4?v=2"; vid.muted = true; vid.play().catch(() => {}); raf = requestAnimationFrame(tick); };
+    const go = () => { s.classList.add("on"); vid.src = window.matchMedia("(max-width:767px)").matches ? "/media/home/open-film-m.mp4?v=2" : "/media/home/open-film-d.mp4"; vid.muted = true; vid.play().catch(() => {}); raf = requestAnimationFrame(tick); };
     const html = document.documentElement;
     if (html.classList.contains("mk-intro-on")) { window.addEventListener("mk-intro-lift", go, { once: true }); window.addEventListener("mk-intro-done", go, { once: true }); }
     else go();
