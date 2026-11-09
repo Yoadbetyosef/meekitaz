@@ -3644,3 +3644,17 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .catd-h{top:14.5%;font-size:22px}
 .catd-c{gap:6px}
 }
+
+/* ===== Shop by category on phones (approved 2026-11-08, "P2 · one per row"): "Find your thing." on the line where the reel starts; one
+   big drawing per row down the right half, tilted in turn; the reel stays put (sticky) on the left while the drawings scroll past ===== */
+@media(max-width:767px){
+.catd{display:grid;grid-template-columns:50% 50%;grid-template-rows:auto 1fr;height:auto;min-height:0;max-height:none;overflow:visible;position:relative}
+.catd-reel{position:sticky;top:0;grid-column:1;grid-row:1 / span 2;height:100svh;width:auto;align-self:start}
+.catd-h{position:static;grid-column:2;grid-row:1;padding:18px 0 14px;margin:0;text-align:center;font:400 22px/1 var(--display)}
+.catd-field{position:static;grid-column:2;grid-row:2;display:flex;flex-direction:column;align-items:center;gap:34px;padding:6px 0 48px}
+.catd-c{position:static;transform:rotate(-4deg)!important}
+.catd-c:nth-child(even){transform:rotate(4deg)!important}
+.catd-ic{height:132px!important;width:auto!important;max-width:176px!important;aspect-ratio:var(--a)!important}
+.catd-c:nth-child(5) .catd-ic{height:90px!important}
+.catd-c b{font:400 8.5px/1.35 var(--body);letter-spacing:.14em;max-width:120px}
+}
