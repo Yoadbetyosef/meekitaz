@@ -3722,3 +3722,23 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 @keyframes mshStep{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-2px) rotate(-1.5deg)}50%{transform:translateY(0) rotate(0)}75%{transform:translateY(-2px) rotate(1deg)}}
 @media(max-width:767px){.menu-in{padding-top:132px}.menu-shrimp{left:16px;top:92px;width:96px}}
 @media(prefers-reduced-motion:reduce){.menu.open .menu-shrimp{animation:none}}
+
+/* ===== The footer in Golden Couture (approved 2026-11-09, G1): the same reveal under the page; the banner's own butter; "Shhh." in one
+   line above the banner, the banner whole across the middle, the links below — nothing overlaps, nothing is cut ===== */
+.mkfoot{--hush-bg:#FEF5D9;background:#FEF5D9}
+.mkfoot-in{display:flex;flex-direction:column;justify-content:flex-start;padding-top:clamp(96px,13vh,132px)}
+.mkfoot .hush{position:relative;left:auto;top:auto;bottom:auto;max-width:none;display:flex;align-items:flex-end;flex-wrap:wrap;gap:8px 28px;padding:0 clamp(16px,4vw,56px);z-index:3}
+.mkfoot .hush h2{font-size:clamp(54px,6vw,92px)}
+.mkfoot .hush p{margin:0 0 10px}
+.mkfoot .hush-cta{margin-bottom:8px}
+.foot-art{flex:1 1 auto;min-height:0;display:block;padding:clamp(6px,2vh,22px) 0}
+.foot-art img{display:block;width:100%;height:100%;object-fit:contain;object-position:50% 50%}
+.mkfoot .mkf-under{grid-template-columns:1fr 1fr;grid-template-areas:"l r" "b r"}
+@media(max-width:767px){
+.mkfoot-in{padding-top:86px}
+.foot-art{position:absolute;inset:0;padding:0;z-index:0}
+.foot-art img{object-fit:cover;object-position:50% 40%}
+.mkfoot .hush{position:relative;display:block;padding:14px 20px 120px;background:linear-gradient(rgba(254,245,217,.97) 62%,rgba(254,245,217,0))}
+.mkfoot .hush h2{font-size:56px}.mkfoot .hush p{font-size:18px;margin:6px 0 12px}
+.mkfoot .mkf-under{position:absolute;left:0;right:0;bottom:0;padding-top:70px;background:linear-gradient(rgba(254,245,217,0),rgba(254,245,217,.97) 34%)}
+}

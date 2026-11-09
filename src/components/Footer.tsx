@@ -1,23 +1,20 @@
-import Image from "next/image";
 import Link from "next/link";
 import { categories, hushCard } from "@/lib/data";
 import { legalLinks } from "@/lib/legal";
 import FooterFx from "./FooterFx";
-import Logo from "./Logo";
 
 /** The closing: an all-pink footer revealed under the page. She rises from behind the giant wordmark. */
 export default function Footer() {
   return (
     <footer className="mkfoot" id="mkfoot">
       <div className="mkfoot-in" id="mkfoot-in">
-        <div className="foot-mark" aria-hidden="true" />
-        <div className="hush-ph"><Image src={hushCard.img} alt="A woman with a finger to her lips, wearing yellow cushion diamond studs, a tennis necklace and an oval diamond ring" fill sizes="(max-width:767px) 130vw, 40vw" quality={80} /></div>
+        {/* (2026-11-09, approved G1) the Golden Couture banner — wide on computers, tall on phones — shown whole, never cropped */}
+        <picture className="foot-art"><source media="(max-width:767px)" srcSet="/media/footer/couture-m.webp" /><img src="/media/footer/couture-d.webp" alt="Meekitaz — drawings of a pearl heel, a scooter with a pink gift, a monkey admiring a diamond, a martini, a heron with a pear earring, an oyster with a diamond, a cloche with an emerald-cut ring and cat-eye sunglasses" /></picture>
         <section className="hush" aria-label="Quiet flex">
           <h2>Shhh.</h2>
           <p>Serious diamonds, worn lightly.</p>
           <Link href={hushCard.href} className="hush-cta">{hushCard.cta}</Link>
         </section>
-        <div className="foot-giant" aria-hidden="true"><Logo className="foot-logo" /></div>
         <div className="mkf-under">
           <nav className="mkf-l" aria-label="Shop">{categories.map(c => <Link key={c.slug} href={`/${c.slug}`}>{c.nav}</Link>)}</nav>
           <p className="mkf-base">&copy; {new Date().getFullYear()} Meekitaz &middot; New York</p>
