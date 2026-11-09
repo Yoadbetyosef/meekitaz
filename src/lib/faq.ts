@@ -5,7 +5,7 @@ export type FaqSection = { id: string; title: string; items: FaqItem[] };
 export const FAQ: FaqSection[] = [
   { id: "about", title: "Why Meekitaz", items: [
     { q: "What makes Meekitaz different from other jewelers?", a: "Transparent pricing, ethical sourcing, and real craftsmanship and customization. We source our diamonds directly and craft our jewelry in New York, which lets us offer very competitive prices, backed by a Price Match Guarantee." },
-    { q: "I'm not sure where to start with choosing an engagement ring.", a: "We're here to help. Book a free one-on-one consultation (video call or showroom) with a diamond specialist, or ask Mia in chat. We'll walk you through diamonds, settings, customization and budget." },
+    { q: "I'm not sure where to start with choosing an engagement ring.", a: "We're here to help. Book a free one-on-one consultation (video call or showroom) with a diamond specialist, or ask Marcel in chat. We'll walk you through diamonds, settings, customization and budget." },
     { q: "Do you have a physical store?", a: "We have a showroom on Fifth Avenue in New York, open Monday to Friday, 10am to 6pm, by appointment. Most of our business is online, which lets us offer a wide selection at better prices." },
     { q: "Can I see the jewelry in person?", a: "Yes. Book an appointment at our Fifth Avenue showroom, or a video call with a diamond specialist." },
     { q: "Do you price match?", a: "Yes, on diamonds. If you find a comparable certified diamond for less, send us the link and we'll get back to you right away." },
@@ -34,7 +34,7 @@ export const FAQ: FaqSection[] = [
     { q: "Can I upgrade my diamond later?", a: "Yes, we offer a diamond upgrade program: trade in your diamond toward a larger or higher-quality stone. Terms apply; contact us for details. We don't offer a general buy-back." },
   ] },
   { id: "sizing", title: "Ring size & resizing", items: [
-    { q: "How do I find my ring size?", a: "Measure a ring that fits with a ruler (inside diameter) or wrap a strip of paper around your finger and measure its length, visit our showroom, or ask Mia for help. Quarter sizes are available, and your first resize in the first year is free." },
+    { q: "How do I find my ring size?", a: "Measure a ring that fits with a ruler (inside diameter) or wrap a strip of paper around your finger and measure its length, visit our showroom, or ask Marcel for help. Quarter sizes are available, and your first resize in the first year is free." },
     { q: "Do you resize rings?", a: "Yes. Your first resize within the first year is free. After that, or for additional resizes, it's $25 for gold and $50 for platinum, or included in our care packages." },
     { q: "Can an eternity band be resized?", a: "Usually not. Because the diamonds go all the way around, eternity bands and some delicate styles can't be resized traditionally and may need to be remade in your new size." },
   ] },
@@ -74,7 +74,7 @@ export const FAQ: FaqSection[] = [
   ] },
   { id: "offers", title: "Offers & contact", items: [
     { q: "What is the free studs offer?", a: "Sign up for our emails and get a pair of 0.5 ct lab-grown diamond studs in sterling silver free with a first order of $1,000 or more. Use code FREESTUDS at checkout. One pair per customer." },
-    { q: "How can I contact you?", a: "Chat with Mia anytime (a real person can join), email us, or book a showroom or video appointment." },
+    { q: "How can I contact you?", a: "Chat with Marcel anytime (a real person can join), email us, or book a showroom or video appointment." },
   ] },
 ];
 

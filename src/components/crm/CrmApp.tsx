@@ -86,7 +86,7 @@ export default function CrmApp() {
                 <div className="who"><span className={`crm-pill ${CH[c.channel]?.[1] || "ch-site"}`}>{CH[c.channel]?.[0] || c.channel}</span>
                   <h2>{who(c)}</h2><div>{[c.email, c.phone].filter(Boolean).join(" · ") || "No contact details yet"}</div></div>
                 <div className="acts">
-                  {c.status === "human" ? <button onClick={() => post({ id: c.id, action: "update", patch: { status: "ai" } })}>Hand back to Mia</button> : <button onClick={() => post({ id: c.id, action: "update", patch: { status: "human" } })}>Take over from Mia</button>}
+                  {c.status === "human" ? <button onClick={() => post({ id: c.id, action: "update", patch: { status: "ai" } })}>Hand back to Marcel</button> : <button onClick={() => post({ id: c.id, action: "update", patch: { status: "human" } })}>Take over from Mia</button>}
                   {c.kind === "care" ? <button onClick={() => post({ id: c.id, action: "update", patch: { kind: "sales" } })}>→ Closers</button> : <button className="dark" onClick={() => post({ id: c.id, action: "update", patch: { kind: "care" } })}>→ Customer Care</button>}
                 </div>
               </div>
@@ -98,7 +98,7 @@ export default function CrmApp() {
               <div className="thread">
                 {thread!.messages.map(m => m.role === "system" ? <div key={m.id} className="msg sys">{m.content} · {ago(m.created_at)}</div> : (
                   <div key={m.id} className={`msg ${m.role}`}>
-                    {m.role === "assistant" && <em>Mia</em>}{m.role === "agent" && <em>You{(m.meta as { via?: string })?.via && (m.meta as { via?: string }).via !== "chat" ? ` · ${(m.meta as { via?: string }).via}` : ""}</em>}{m.role === "note" && <em>Internal note</em>}
+                    {m.role === "assistant" && <em>Marcel</em>}{m.role === "agent" && <em>You{(m.meta as { via?: string })?.via && (m.meta as { via?: string }).via !== "chat" ? ` · ${(m.meta as { via?: string }).via}` : ""}</em>}{m.role === "note" && <em>Internal note</em>}
                     {m.content}
                     {!!m.meta?.cards?.length && <div className="cards">{m.meta.cards.map(k => <a key={k.url} href={k.url} target="_blank" rel="noopener">{k.title} · {k.price}</a>)}</div>}
                     <small>{ago(m.created_at)}</small>
@@ -107,7 +107,7 @@ export default function CrmApp() {
               </div>
               <form className="reply" onSubmit={send}>
                 <label className={note ? "on" : ""}><input type="checkbox" checked={note} onChange={e => setNote(e.target.checked)} /> Note</label>
-                <input value={text} onChange={e => setText(e.target.value)} placeholder={note ? "Internal note (the customer doesn't see it)" : c.channel === "chat" ? "Reply in the site chat… (Mia steps aside)" : c.channel === "email" ? "Reply by email (sent from your Gmail, same thread)…" : c.channel === "insta" ? "Reply on Instagram…" : "Write a note — reply to this lead by email for now"} />
+                <input value={text} onChange={e => setText(e.target.value)} placeholder={note ? "Internal note (the customer doesn't see it)" : c.channel === "chat" ? "Reply in the site chat… (Marcel steps aside)" : c.channel === "email" ? "Reply by email (sent from your Gmail, same thread)…" : c.channel === "insta" ? "Reply on Instagram…" : "Write a note — reply to this lead by email for now"} />
                 <button>{note ? "Save" : "Send"}</button>
               </form>
             </>)}

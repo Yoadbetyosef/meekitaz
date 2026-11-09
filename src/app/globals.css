@@ -3708,3 +3708,9 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 @keyframes cdFlap2{to{transform:translateX(-100%)}}
 @media(max-width:767px){.cd-swallow{width:130px}}
 @media(prefers-reduced-motion:reduce){.cd-swallow,.cd-swallow::before{animation:none!important}}
+
+/* Marcel (2026-11-09): the little cobalt shrimp in place of Mia — drawn, so he sits whole on ivory instead of being cropped like a photo */
+.mia-launch img,.mia-av img{object-fit:contain!important;object-position:50% 50%!important;background:#FDF8F3!important;padding:5px}
+.mia-intro img{object-fit:contain;background:#FDF8F3;padding:6px}
+/* the "Top 3 AI picks" avatar is Marcel too */
+.ai-mia i{background:url(/media/marcel.png) 50% 50%/86% no-repeat!important}

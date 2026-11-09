@@ -16,7 +16,7 @@ export const maxDuration = 60;
 const MODEL = "claude-sonnet-5-5";
 const MAX_USER_MSGS = 40;
 
-const SYSTEM = `You are Mia, the friendly diamond assistant on meekitaz.com, chatting with a visitor in a small website chat bubble. You know everything about Meekitaz.
+const SYSTEM = `You are Marcel, the friendly diamond assistant on meekitaz.com (Marcel is the brand's little cobalt shrimp: a touch shy, warm, quietly funny; if asked who you are, you are Marcel), chatting with a visitor in a small website chat bubble. You know everything about Meekitaz.
 About Meekitaz: a New York fine-jewelry brand (showroom on Fifth Avenue, by appointment) selling diamond jewelry: engagement rings, wedding bands, earrings, necklaces, bracelets. Mostly lab-grown diamonds, natural diamonds available on request. Center diamonds graded by GIA or IGI. Metals: silver, 10K/14K/18K yellow, white and rose gold, platinum. Every order arrives in the signature pink Meekitaz box with a velvet ring box and the certificate in a drawer.
 Key links: engagement rings https://www.meekitaz.com/engagement-rings · diamonds https://www.meekitaz.com/diamonds · FAQ https://www.meekitaz.com/faq · warranty https://www.meekitaz.com/warranty · returns https://www.meekitaz.com/return-policy · shipping https://www.meekitaz.com/shipping-policy
 
@@ -286,14 +286,14 @@ export async function POST(req: NextRequest) {
           let ticket: number | null = null;
           if (inp.kind === "care") ticket = await openTicket(id, { orderName: (inp.order_number as string) || undefined, silent: isTest });
           const hot = inp.temperature === "hot" || inp.kind === "care";
-          if (hot && !isTest) await notify(`${inp.kind === "care" ? "Care request" : "🔥 Hot lead"} from Mia: ${esc(inp.name || inp.email || "visitor")}`,
+          if (hot && !isTest) await notify(`${inp.kind === "care" ? "Care request" : "🔥 Hot lead"} from Marcel: ${esc(inp.name || inp.email || "visitor")}`,
             `<p>${Object.entries(inp).map(([k, v]) => `<b>${esc(k)}</b>: ${esc(v)}`).join("<br>")}</p><p>Conversation: ${id}</p>`);
           out = ticket ? `Saved as Customer Care ticket #C-${ticket}. Give them this number and say the care team replies within 24 hours (they also get an email receipt).` : "Saved. Tell them warmly that the team has their details.";
         } else if (u.name === "request_human") {
           handoff = true;
           await sql!`UPDATE conversations SET status='human', unread=TRUE, updated_at=now() WHERE id=${id}`;
-          await sql!`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'system', ${"Mia asked for a person: " + String(inp.reason || "")})`;
-          if (!isTest) await notify("💬 A visitor wants a person (Mia chat)", `<p>${esc(inp.reason)}</p><p>Last message: ${esc(text)}</p><p>Conversation: ${id}</p>`);
+          await sql!`INSERT INTO messages (conversation_id, role, content) VALUES (${id}, 'system', ${"Marcel asked for a person: " + String(inp.reason || "")})`;
+          if (!isTest) await notify("💬 A visitor wants a person (Marcel chat)", `<p>${esc(inp.reason)}</p><p>Last message: ${esc(text)}</p><p>Conversation: ${id}</p>`);
           out = "A team member has been notified. Tell the visitor a real person will join here or email them shortly.";
         }
       } catch (e) { out = "Tool failed: " + (e instanceof Error ? e.message : "error"); }
@@ -315,7 +315,7 @@ export async function POST(req: NextRequest) {
     const d2 = r2 && r2.ok ? await r2.json() as { content: Block[] } : null;
     reply = (d2?.content || []).filter(x => x.type === "text").map(x => x.text).join("").trim();
   }
-  if (!reply && lastErr && !isTest) await notify("⚠️ Mia is unavailable", `<p>The AI service returned an error, so Mia asked the visitor to leave their details.</p><p>${esc(lastErr)}</p><p>Conversation: ${id}</p>`);
+  if (!reply && lastErr && !isTest) await notify("⚠️ Marcel is unavailable", `<p>The AI service returned an error, so Marcel asked the visitor to leave their details.</p><p>${esc(lastErr)}</p><p>Conversation: ${id}</p>`);
   if (!reply) reply = actions.length ? "Done, it's in your bag." : cards.length ? "Here are some options." : (isTest && lastErr ? "[test error] " + lastErr : lastErr ? "I'm having a little trouble right now. Leave your email or phone and a person from our team will get back to you shortly, or email us at sales@meekitaz.com." : "Sorry, could you say that again?");
   await sql!`INSERT INTO messages (conversation_id, role, content, meta) VALUES (${id}, 'assistant', ${reply}, ${JSON.stringify({ cards, chips, actions })}::jsonb)`;
   return NextResponse.json({ id, reply, products: cards, chips, handoff, actions });

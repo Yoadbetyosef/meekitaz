@@ -68,7 +68,7 @@ export default function OrderPage({ id, onClose, onMove }: { id: string; onClose
             </div>
             <ul className="op-tl">
               {o.events.map(e => <li key={e.id} className={e.kind}>{e.kind !== "system" && <b>{ICON[e.kind]}{e.author ? ` · ${e.author}` : ""} </b>}{e.text}<small>{when(e.created_at)}</small></li>)}
-              {o.history.filter(h => h.channel === "chat").map(h => <li key={h.id} className="message"><b>Chat with Mia </b>{h.summary || "Conversation"}<small>{when(h.updated_at)}</small></li>)}
+              {o.history.filter(h => h.channel === "chat").map(h => <li key={h.id} className="message"><b>Chat with Marcel </b>{h.summary || "Conversation"}<small>{when(h.updated_at)}</small></li>)}
               <li className="system">Order placed in Shopify{o.gateways.length ? ` · ${o.gateways.join(", ")}` : ""}<small>{when(o.createdAt)}</small></li>
             </ul>
           </section>

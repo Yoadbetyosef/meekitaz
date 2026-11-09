@@ -40,7 +40,7 @@ export default function CareView({ openOrder }: { openOrder: (id: string) => voi
       <div className="crm-tabs">{TABS.map(([k, l]) => <button key={k} className={tab === k ? "on" : ""} onClick={() => setTab(k)}>{l}<i>{items.filter(x => k === "all" ? true : k === "open" ? x.care_status !== "solved" : x.care_status === k).length}</i></button>)}</div>
       <div className="crm-split">
         <div className="crm-list">
-          {!shown.length && <p className="crm-empty">No requests here. Tickets come from Mia, and from &ldquo;→ Customer Care&rdquo; in Closers.</p>}
+          {!shown.length && <p className="crm-empty">No requests here. Tickets come from Marcel, and from &ldquo;→ Customer Care&rdquo; in Closers.</p>}
           {shown.map(x => { const s = sla(x); return (
             <div key={x.id} className={`crm-row${x.unread ? " new" : ""}${x.id === sel ? " on" : ""}`} onClick={() => pick(x)}>
               <div className="a">{x.name || x.email || "Customer"}<span>#C-{x.ticket_no}</span></div>
@@ -65,7 +65,7 @@ export default function CareView({ openOrder }: { openOrder: (id: string) => voi
             </div>
             <div className="thread">
               {msgs.map(m => m.role === "system" ? <div key={m.id} className="msg sys">{m.content} · {ago(m.created_at)}</div> : (
-                <div key={m.id} className={`msg ${m.role}`}>{m.role === "assistant" && <em>Mia</em>}{m.role === "agent" && <em>You · {m.meta?.via || "chat"}</em>}{m.role === "note" && <em>Internal note</em>}{m.content}<small>{ago(m.created_at)}</small></div>))}
+                <div key={m.id} className={`msg ${m.role}`}>{m.role === "assistant" && <em>Marcel</em>}{m.role === "agent" && <em>You · {m.meta?.via || "chat"}</em>}{m.role === "note" && <em>Internal note</em>}{m.content}<small>{ago(m.created_at)}</small></div>))}
             </div>
             <form className="reply" onSubmit={send}>
               <select value={via} onChange={e => setVia(e.target.value as typeof via)} className="cv-via">
