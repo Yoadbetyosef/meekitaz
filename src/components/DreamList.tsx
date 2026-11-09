@@ -36,6 +36,7 @@ export default function DreamList() {
       <aside className="dl" role="dialog" aria-modal="true" aria-label="My Dream list">
         <button className="sw-x" onClick={() => setOpen(false)} aria-label="Close">×</button>
         <h3>My Dream list</h3><p className="ss-s">{items.length ? `${items.length} piece${items.length === 1 ? "" : "s"} you love` : "Tap ♡ on any piece to save it here."}</p>
+        {items.length === 0 && <div className="dl-empty"><i className="mk-ic mk-bob" aria-hidden="true" style={{ ["--src" as string]: "url(/media/icons/cherries.png)", width: 85, height: 120 }} /><b>Nothing saved yet.</b><span className="mk-it">Your dream list is waiting for its first cherry.</span></div>}
         {sorted.map(x => (
           <div key={x.handle} className="dl-i">
             <Link href={wishHref(x)} onClick={() => setOpen(false)} className="im" style={{ backgroundImage: `url(${x.image})` }} aria-label={x.title}>{x.stoneImage && <i className="duo-st" style={{ backgroundImage: `url(${x.stoneImage})` }} />}</Link>

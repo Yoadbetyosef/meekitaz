@@ -107,7 +107,7 @@ export default function SearchPalette({ open, onClose }: { open: boolean; onClos
                   </button>);
               })}
               {done && failed && <p className="sq-none">Search is unavailable for a moment. Browse below, or try again.</p>}
-              {done && !failed && designs.length === 0 && <p className="sq-none">No designs match &ldquo;{text}&rdquo;. Try fewer words, a shape, or one of these.</p>}
+              {done && !failed && designs.length === 0 && <div className="sq-none mk-none"><i className="mk-ic mk-blue" aria-hidden="true" style={{ ["--src" as string]: "url(/media/icons/keyhand.png)", width: 84, height: 115 }} /><div><b>No key for that one.</b><span className="mk-it">Nothing matches &ldquo;{text}&rdquo;. Try oval, pear or tennis.</span></div></div>}
               {done && !failed && designs.length === 0 && <div className="sq-chips">{POPULAR.slice(0, 4).map(p => <button key={p} type="button" className="sq-chip" onClick={() => setQ(p)}>{p}</button>)}</div>}
               {!done && designs.length === 0 && <p className="sq-none">Searching&hellip;</p>}
               {intent.go.length > 0 && <><h5>Or browse</h5>{intent.go.map(g => (

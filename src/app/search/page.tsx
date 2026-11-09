@@ -36,6 +36,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             <div className="pgrid">{list.map(p => <DesignCard key={p.id} p={p} />)}</div>
           ) : (
             <div className="srch-empty">
+              {!unavailable && q && <div className="mk-none"><i className="mk-ic mk-blue" aria-hidden="true" style={{ ["--src" as string]: "url(/media/icons/keyhand.png)", width: 96, height: 131 }} /><div><b>No key for that one.</b></div></div>}
               <p>{unavailable ? "Search is unavailable for a moment. Please try again, or browse the collections." : q ? `Nothing matched “${q}”. Try fewer words, a shape (oval, cushion), or a category.` : "Try one of these."}</p>
               <div className="srch-chips">{POPULAR.map(p => <Link key={p} href={`/search?q=${encodeURIComponent(p)}`} className="sq-chip">{p}</Link>)}</div>
             </div>

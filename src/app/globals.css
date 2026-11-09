@@ -3559,3 +3559,31 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .sp-row.ink .sp:hover b::after,.sp-row.ink .sp.on b::after{left:0;right:0}
 .sp-row.ink.has-sel .sp{opacity:.45}.sp-row.ink.has-sel .sp.on{opacity:1}
 @media(max-width:767px){.sp-row.ink{gap:22px;flex-wrap:nowrap;overflow-x:auto}.sp-row.ink .sp{width:150px;min-width:150px;flex:0 0 150px}}
+
+/* ===== The little things (approved 2026-11-08): his drawings in the empty bag, the 404, search with no results, the empty Dream list,
+   the order-confirmed page ===== */
+.mk-ic{display:inline-block;background:#1C1A1B;-webkit-mask:var(--src) center/contain no-repeat;mask:var(--src) center/contain no-repeat;flex:none}
+.mk-ic.mk-blue{background:#0D4FE7}
+.mk-it{display:block;font:italic 500 17px/1.4 var(--sub);color:#555}
+.mk-bob{animation:mkBob 2.6s ease-in-out infinite}@keyframes mkBob{50%{transform:translateY(-6px) rotate(-2deg)}}
+.mk-sway{transform-origin:50% 0;animation:mkSway 3s ease-in-out infinite}@keyframes mkSway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+.mk-pop{animation:mkPop .8s cubic-bezier(.2,1.4,.3,1) both}@keyframes mkPop{0%{transform:scale(.4) rotate(-12deg);opacity:0}60%{transform:scale(1.08) rotate(4deg);opacity:1}100%{transform:none}}
+/* empty bag */
+.cd-empty .mk-ic{margin:0 auto 14px}.cd-empty p{font-family:var(--display)}.cd-empty .mk-it{margin:2px 0 16px}
+/* search, no results */
+.mk-none{display:flex;align-items:center;gap:18px;text-align:left;font-style:normal}
+.mk-none b{display:block;font:400 22px/1.1 var(--display);color:var(--ink);margin-bottom:4px}
+.srch-empty .mk-none{justify-content:center;margin-bottom:10px}
+/* the Dream list, empty */
+.dl-empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:36px 10px 20px}
+.dl-empty .mk-ic{margin-bottom:8px}.dl-empty b{font:400 22px var(--display)}
+/* 404 and order confirmed */
+.mk-404,.mk-oc{position:relative;min-height:100vh;display:grid;place-items:center;text-align:center;padding:140px 24px 80px;background:#FBF7DF;overflow:hidden}
+.mk-oc{background:#FDF8E6}
+.mk-404 small,.mk-oc small{display:block;font:400 10px var(--body);letter-spacing:.34em;text-transform:uppercase;color:#0D4FE7;margin-top:10px}
+.mk-404 h1,.mk-oc h1{font:400 clamp(28px,3.4vw,44px)/1.08 var(--display);margin:10px 0 6px}
+.mk-404-btn{display:inline-flex;align-items:center;height:48px;padding:0 30px;border-radius:999px;background:var(--ink);color:#fff;font:400 11px var(--body);letter-spacing:.22em;text-transform:uppercase;text-decoration:none;margin-top:20px}
+.mk-404 .mk-x,.mk-oc .mk-x{position:absolute;width:9px;height:9px}.mk-404 .mk-x::before,.mk-404 .mk-x::after{content:"";position:absolute;background:#0D4FE7}.mk-404 .mk-x::before{left:0;right:0;top:50%;height:1.2px;transform:translateY(-50%)}.mk-404 .mk-x::after{top:0;bottom:0;left:50%;width:1.2px;transform:translateX(-50%)}
+.mk-404 .x1{left:28px;top:120px}.mk-404 .x3{right:28px;bottom:28px}
+.mk-oc-c{position:absolute;opacity:.9}
+@media(max-width:767px){.mk-oc-c{transform:scale(.7)!important}.mk-none{gap:12px}.mk-none b{font-size:19px}}
