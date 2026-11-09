@@ -3843,3 +3843,5 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .fl .fl-img video{mix-blend-mode:multiply}
 .fl .fl-img{isolation:auto}
 .fl-min .mkfilm-in{z-index:auto} /* no stacking context between the film and the section's colour, so the multiply reaches it */
+
+/* (2026-11-09) the chapter lighting retired: the whole home page stays on our butter, as it opens */
