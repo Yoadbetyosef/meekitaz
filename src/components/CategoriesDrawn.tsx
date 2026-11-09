@@ -17,6 +17,9 @@ const CATS: [string, string, string, number, number, number, number, number][] =
   ["/fancy-colors", "Fancy colors", "fancy", 88, 74, 160, -4, 1.025],
 ];
 
+// phones (approved 2026-11-08, "S1 · the zigzag", icons a touch bigger): [x% of the right half, y% of the screen, height px, rotate]
+const PHONE: [number, number, number, number][] = [[30, 26, 66, -6], [70, 35.5, 64, 6], [30, 45, 62, -5], [70, 54.5, 66, 5], [30, 64, 46, -6], [70, 73.5, 64, 6], [30, 83, 64, -5], [70, 92, 62, 5]];
+
 export default function CategoriesDrawn() {
   const v = useRef<HTMLVideoElement>(null);
   useEffect(() => {
@@ -37,7 +40,7 @@ export default function CategoriesDrawn() {
       <h2 className="catd-h">Find your thing.</h2>
       <div className="catd-field">
         {CATS.map(([href, name, img, x, y, h, r, a], k) => (
-          <Link key={href} href={href} className="catd-c" style={{ left: x + "%", top: y + "%", ["--r" as string]: r + "deg" }}>
+          <Link key={href} href={href} className="catd-c" style={{ left: x + "%", top: y + "%", ["--r" as string]: r + "deg", ["--mx" as string]: PHONE[k][0] + "%", ["--my" as string]: PHONE[k][1] + "%", ["--mr" as string]: PHONE[k][3] + "deg", ["--mh" as string]: PHONE[k][2] + "px", ["--a" as string]: String(a) }}>
             <i className="catd-ic" aria-hidden="true" style={{ backgroundImage: `url(/media/cats/drawn/${img}.webp)`, height: `min(${h}px, ${(h / 860 * 100).toFixed(1)}vh)`, aspectRatio: String(a), ["--t" as string]: (4 + (k % 3)) + "s", ["--dl" as string]: -(k * .6) + "s" }} />
             <b>{name}</b>
           </Link>

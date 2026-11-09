@@ -3617,20 +3617,21 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .catd-x.x2{right:28px;top:28px}.catd-x.x4{right:28px;bottom:28px}
 }
 
-/* Shop by category on phones (approved M4, symmetric): the reel on the left half, flush and square; on the right "Find your thing." and the
-   eight drawings in an even two-by-four, same size, upright */
+/* Shop by category on phones (approved 2026-11-08, "S1 · the zigzag"): a full screen; the reel fills the left half top to bottom, square;
+   on the right "Find your thing." and the eight drawings coming down left-right-left-right, each tilted to its side */
 @media(max-width:767px){
 .home-page #shop{display:none}
-.catd{display:grid;grid-template-columns:50% 50%;position:relative;background:var(--home-bg,#E5E3EF);min-height:640px}
-.catd-reel{grid-column:1;grid-row:1 / span 2;position:relative;overflow:hidden;background:#000;border-radius:0}
+.catd{display:block;position:relative;height:100svh;min-height:640px;max-height:940px;background:var(--home-bg,#E5E3EF);overflow:hidden}
+.catd-reel{position:absolute;left:0;top:0;bottom:0;width:50%;overflow:hidden;background:#000;border-radius:0}
 .catd-reel video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .catd-reel span{position:absolute;right:10px;top:50%;transform:translateY(-50%) rotate(90deg);transform-origin:right center;color:#fff;font:400 8px var(--body);letter-spacing:.3em;text-transform:uppercase;white-space:nowrap}
 .catd-reel .fl-plus.p1{left:12px;top:12px}.catd-reel .fl-plus.p3{right:12px;bottom:12px}
-.catd-h{grid-column:2;margin:0;padding:22px 0 0;text-align:center;font:400 22px/1 var(--display)}
-.catd-field{grid-column:2;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:14px 4px;padding:18px 8px 24px;align-items:center}
-.catd-c{position:static;transform:none;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--ink);text-decoration:none}
-.catd-ic{width:70px!important;height:64px!important;aspect-ratio:auto!important;background:center/contain no-repeat;animation:none}
-.catd-c b{font:400 8.5px var(--body);letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;text-align:center}
+.catd-h{position:absolute;left:50%;right:0;top:16%;margin:0;text-align:center;font:400 21px/1 var(--display)}
+.catd-field{position:absolute;left:50%;right:0;top:0;bottom:0}
+.catd-c{position:absolute;left:var(--mx)!important;top:var(--my)!important;transform:translate(-50%,-50%) rotate(var(--mr));display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--ink);text-decoration:none}
+.catd-ic{height:var(--mh)!important;width:auto!important;aspect-ratio:var(--a)!important;background:center/contain no-repeat;animation:catdFl var(--t) ease-in-out var(--dl) infinite alternate}
+.catd-c b{font:400 8px/1.35 var(--body);letter-spacing:.14em;text-transform:uppercase;text-align:center;max-width:92px;display:block}
+.catd-c b::after{content:" \2192";color:#0D4FE7}
 .catd-c:active .catd-ic{transform:translateY(-4px) rotate(-6deg)}
 .catd-x{display:none}
 }
