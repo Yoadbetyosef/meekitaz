@@ -3292,7 +3292,7 @@ html.mk-intro-on .mk-intro{display:block}
 .rh-plus.p1{right:22px;top:22px}.rh-plus.p2{left:22px;bottom:22px}
 @media(max-width:767px){.rh-wm{font-size:min(44vw,170px)}.rh-plus.p1{right:16px;top:16px}.rh-plus.p2{left:16px;bottom:16px}}
 /* phones already play this reel up in the hero, so the tile below Floating is off there (2026-11-06) */
-@media(max-width:767px){.fl-reel-wrap{display:none}}
+/* (2026-11-08) the feed reel shows on phones again, in its place below Floating */
 
 /* the menu pill lands with two heartbeats, the bag hops in after it (P1) */
 body.ycur-beat .nav{animation:navBeat 1.6s cubic-bezier(.2,.8,.2,1) .15s both}
