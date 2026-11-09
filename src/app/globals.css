@@ -3845,3 +3845,13 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .fl-min .mkfilm-in{z-index:auto} /* no stacking context between the film and the section's colour, so the multiply reaches it */
 
 /* (2026-11-09) the chapter lighting retired: the whole home page stays on our butter, as it opens */
+
+/* ===== Our butter, everywhere (2026-11-09): every page's ground is the footer's butter — the home page, categories, product pages,
+   the bag; the "As seen in" strip sits straight on it ===== */
+:root,body{--home-bg:#FEF5D9;--blue-light:#FEF5D9}
+html,body{background:#FEF5D9}
+body:has(.home-page){--blue-light:#FEF5D9}
+.catbody{background:#FEF5D9}
+.edge-t,.edge-b{background:#FEF5D9}
+@media(max-width:767px){html{background:#FEF5D9}.edge-t,.edge-b{background:#FEF5D9}}
+.pr,.rh{background:#FEF5D9!important}

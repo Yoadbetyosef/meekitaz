@@ -9,7 +9,6 @@ import NewFancy from "@/components/NewFancy";
 import OneOfOne from "@/components/OneOfOne";
 import RtsBike from "@/components/RtsBike";
 import PressRow from "@/components/PressRow";
-import BrandStories from "@/components/BrandStories";
 import Reviews from "@/components/Reviews";
 import PrivateClients from "@/components/PrivateClients";
 
@@ -34,7 +33,6 @@ export default function Home() {
       <RtsBike />{/* (2026-11-09) Ready to ship: the arch window */}
       <HouseCodes />
       <PressRow />
-      <BrandStories />
       <Reviews />
       <PrivateClients />
       </div>
