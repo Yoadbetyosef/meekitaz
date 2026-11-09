@@ -5,7 +5,7 @@ export default function FloatingFilm() {
     <section className="mkfilm flip fl fl-min" aria-label="Floating collection">
       <img className="fl-m" src="/brand/meekitaz-m-white.png" alt="" aria-hidden="true" loading="lazy" />{/* our M, 22%, on the right edge — never under the words */}
       <div className="mkfilm-in">
-        <div className="mkfilm-vid fl-img"><video src="/media/floating-diamond.mp4" poster="/media/floating-diamond-poster.webp" muted loop playsInline autoPlay preload="metadata" aria-label="A marquise diamond threaded onto a gold chain through a drilled channel, with no prongs" /></div>
+        <div className="mkfilm-vid fl-img"><video src="/media/floating-diamond-w.mp4" poster="/media/floating-diamond-w-poster.webp" muted loop playsInline autoPlay preload="metadata" aria-label="A marquise diamond threaded onto a gold chain through a drilled channel, with no prongs" /></div>
         <div className="mkfilm-txt fl-txt">
           <span className="fl-note">
             Only at Meekitaz.
