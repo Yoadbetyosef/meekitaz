@@ -3688,3 +3688,9 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .rtsb-band{display:none}
 .rtsb-in{padding-bottom:64px}
 @media(max-width:767px){.rtsb-in{padding-bottom:44px}}
+
+/* the swallow on the scroll (approved W1) — room above the copy for her flight */
+.rtsb{overflow:clip}
+.rtsb-in{padding-top:170px}
+.rtsb-bird{position:absolute;left:0;top:0;width:clamp(96px,11vw,180px);aspect-ratio:300/275;pointer-events:none;z-index:4;will-change:transform;background:url(/media/rts/swallow-flap.webp) 0 0/1200% 100% no-repeat}
+@media(max-width:767px){.rtsb-in{padding-top:120px}.rtsb-bird{width:100px}}
