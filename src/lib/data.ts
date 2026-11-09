@@ -448,19 +448,19 @@ export const categories: CategoryPage[] = [
     ],
     "styles": [
       {
-        "img": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_014300_fee15fae-86ad-439f-ad52-0bf97ebbec7f.png",
+        "img": "/media/styles/necklaces/pendants.webp",
         "label": "Pendants"
       },
       {
-        "img": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_014305_7f4695fb-6937-416e-ae77-4ae6f5de4f18.png",
+        "img": "/media/styles/necklaces/tennis.webp",
         "label": "Tennis Necklace"
       },
       {
-        "img": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_014310_11ffe71f-61d0-4c52-b01f-076afb80c63d.png",
+        "img": "/media/styles/necklaces/lariat.webp",
         "label": "Lariat Necklace"
       },
       {
-        "img": "https://d8j0ntlcm91z4.cloudfront.net/user_3DSL63TGngiexHNYyHPnuPUiRZB/hf_20261018_014315_516fe057-b326-4b2e-9f36-76a7ed73a7da.png",
+        "img": "/media/styles/necklaces/station.webp",
         "label": "Station Necklace"
       }
     ],

@@ -63,7 +63,7 @@ export default async function CategoryPage({ params, searchParams }: { params: P
           <section className="shapes" aria-label={p.styleHead[0]}>
             <div className="wrap">
               <div className="sp-head"><small className="eyebrow">{p.styleHead[0]}</small><h2>{p.styleHead[1]}</h2></div>
-              <Suspense fallback={null}><ShapeRow styles={p.styles} className={`sp-row${n === 6 ? " n6" : n === 4 ? " n4" : n > 7 ? " scroll" : ""}`} /></Suspense>
+              <Suspense fallback={null}><ShapeRow styles={p.styles} ink={p.slug === "necklaces"} className={`sp-row${n === 6 ? " n6" : n === 4 ? " n4" : n > 7 ? " scroll" : ""}`} /></Suspense>
             </div>
           </section>
         )}

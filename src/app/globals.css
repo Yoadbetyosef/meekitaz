@@ -3544,3 +3544,18 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 
 /* the home line, written letter by letter (W2) — spaces keep their width */
 .fun-line p span.ch{white-space:pre;transition:color .25s}
+
+/* Necklaces · shop by style (approved 2026-11-08, N3): his cobalt drawings free on the page, a pendant swing on hover, a blue line under
+   the chosen one; one row everywhere — phones scroll it sideways */
+.sp-row.ink{gap:40px}
+.sp-row.ink .sp{width:calc((100% - 3*40px)/4);max-width:none}
+.sp-ink{width:100%;aspect-ratio:1;display:grid;place-items:center}
+.sp-ink img{width:88%;height:88%;object-fit:contain;transform-origin:50% 0;transition:transform .4s}
+.sp-row.ink .sp:hover .sp-ink img{animation:spSwing 1s ease-in-out}
+@keyframes spSwing{25%{transform:rotate(5deg)}55%{transform:rotate(-4deg)}80%{transform:rotate(2deg)}}
+.sp-row.ink .sp b{position:relative;padding-bottom:6px}
+.sp-row.ink .sp b::after{content:"";position:absolute;left:50%;right:50%;bottom:0;height:1.5px;background:#0D4FE7;transition:left .3s,right .3s}
+.sp-row.ink .sp:hover b,.sp-row.ink .sp.on b{color:#0D4FE7}
+.sp-row.ink .sp:hover b::after,.sp-row.ink .sp.on b::after{left:0;right:0}
+.sp-row.ink.has-sel .sp{opacity:.45}.sp-row.ink.has-sel .sp.on{opacity:1}
+@media(max-width:767px){.sp-row.ink{gap:22px;flex-wrap:nowrap;overflow-x:auto}.sp-row.ink .sp{width:150px;min-width:150px;flex:0 0 150px}}
