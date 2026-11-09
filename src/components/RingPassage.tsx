@@ -38,6 +38,10 @@ const PASSAGES: Record<string, { set: string; label: string; swing?: boolean; ro
   "/gemstones": { set: "g", label: "Gemstones", color: true, ext: "webp", toss: true, aspect: [0.662, 1.3, 0.941, 0.534, 0.594, 0.826],
     d: [[0, 50, 52, 66, 0], [1, 28, 54, 42, -5], [2, 72, 48, 56, 6], [3, 34, 50, 70, -3], [4, 52, 50, 62, 0], [5, 70, 54, 58, 5]],
     p: [[0, 50, 52, 44, 0], [1, 40, 46, 22, -5], [2, 60, 54, 30, 6], [3, 46, 50, 52, -3], [4, 52, 50, 48, 0], [5, 56, 52, 36, 5]] },
+  // ready to ship (approved 2026-11-09, S1 — the rhythm of the rings; his cobalt drawings with the pink Meekitaz boxes, in colour)
+  "/ready-to-ship": { set: "t", label: "Ready to ship", color: true, ext: "webp", aspect: [0.955, 1.381, 1.029, 1.016, 2.732, 1.117],
+    d: [[0, 50, 52, 66, 0], [1, 28, 50, 34, -6], [2, 72, 50, 62, 5], [3, 34, 50, 52, -4], [4, 52, 52, 40, 0], [5, 70, 54, 58, 5]],
+    p: [[0, 50, 52, 42, 0], [1, 40, 46, 18, -6], [2, 60, 54, 40, 5], [3, 46, 50, 32, -4], [4, 50, 52, 16, 0], [5, 56, 52, 34, 5]] },
   // diamonds (approved 2026-11-08, D1 — paparazzi: a white camera flash between drawings, three sparkle stars burst around each)
   "/diamonds": { set: "s", label: "The diamonds", flash: true, aspect: [0.636, 1.149, 1.204, 0.975, 0.656, 1.121],
     d: [[0, 50, 52, 70, 0], [1, 28, 54, 48, -5], [4, 70, 50, 72, 4], [2, 34, 50, 46, -4], [3, 52, 52, 52, 0], [5, 70, 54, 60, 3]],

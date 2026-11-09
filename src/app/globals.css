@@ -3682,3 +3682,9 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 .rtsb-arch{justify-self:center;width:min(300px,80vw);height:auto;aspect-ratio:4/5;border-radius:150px 150px 18px 18px}
 .rtsb-dr.d1{width:52px;height:68px;right:18px;top:30px}.rtsb-dr.d2{display:none}
 }
+
+/* Ready to ship on the home page: the home page's own ground, no band (2026-11-09) */
+.rtsb{background:var(--home-bg,#E5E3EF)}
+.rtsb-band{display:none}
+.rtsb-in{padding-bottom:64px}
+@media(max-width:767px){.rtsb-in{padding-bottom:44px}}
