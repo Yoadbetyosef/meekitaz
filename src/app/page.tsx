@@ -7,7 +7,7 @@ import CategoriesDrawn from "@/components/CategoriesDrawn";
 import HouseCodes from "@/components/HouseCodes";
 import NewFancy from "@/components/NewFancy";
 import OneOfOne from "@/components/OneOfOne";
-import ReelStrip from "@/components/ReelStrip";
+import RtsBike from "@/components/RtsBike";
 import PressRow from "@/components/PressRow";
 import BrandStories from "@/components/BrandStories";
 import Reviews from "@/components/Reviews";
@@ -31,7 +31,7 @@ export default function Home() {
       {/* (2026-11-08) the feed reel lives in Shop by category now — not twice on the home page */}
       <NewFancy />
       <OneOfOne />
-      <ReelStrip />
+      <RtsBike />{/* (2026-11-09) Ready to ship: the arch window */}
       <HouseCodes />
       <PressRow />
       <BrandStories />
