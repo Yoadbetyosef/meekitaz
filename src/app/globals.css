@@ -3977,3 +3977,12 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .hop-daily .dly-rev{justify-content:center!important}
 .hop-daily .dly-trust{align-items:center;text-align:center}
 }
+/* phones (2026-11-09): the badges and the guarantees tidy — "Everyone's approved" across the full row, the faces + score centred,
+   the three guarantees as one neat centred column */
+@media(max-width:767px){
+.hop-daily .dly-badges i.hl{grid-column:1 / -1}
+.hop-daily .dly-rev{flex-direction:column!important;align-items:center!important;gap:14px!important}
+.hop-daily .dly-sep{display:none!important}
+.hop-daily .dly-trust{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:6px!important;margin:0 auto}
+.hop-daily .dly-trust span{white-space:nowrap}
+}
