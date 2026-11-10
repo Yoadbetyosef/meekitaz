@@ -3,7 +3,7 @@ import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
 import GridMood from "./GridMood";
 import Link from "next/link";
-import { usePlan, usePlanRoom, PlanTile, DailyTile } from "./PlanKit";
+import { usePlan, usePlanRoom, DailyTile } from "./PlanKit";
 import { savePlan, clearPlan, planTotal, planOrder, saveFit, usdR } from "@/lib/plan";
 import RtsVideoTile from "./RtsVideoTile";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -87,7 +87,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
 
   // Your plan (Meekitaz Daily): by what's left after the bag — what fits, the tile, a little more, then the rest
   const ord = room && fitFirst ? planOrder(items, x => +x.price, room.left, room.p) : null;
-  const shown = ord ? ord.shown : items, split = ord ? ord.split : -1;
+  const shown = ord ? ord.shown : items;
   return (
     <section className="grid-wrap" id={fancy ? "settings" : "results"} aria-label="The collection">
       <div className="wrap" ref={wrap}>
@@ -132,7 +132,6 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
         <div className={`pgrid${busy ? " rf-busy" : ""}`} style={{ marginTop: 20 }}>
           {shown.map((p, i) => (
             <Fragment key={p.id}>
-              {i === split && <PlanTile />}
               {i === 3 && <DailyTile />}
               {/* the mood tile sits after the first two rows (6 on desktop, 4 on a phone: CSS picks the slot) */}
               {handle === "engagement-rings" && i === 4 && items.length > 4 && <GridMood src="/media/rings-mood.mp4" poster="/media/rings-mood-poster.jpg" reveal={{ tag: "Engagement rings", l1: "One stone.", l2: "The whole conversation.", cta: "Shop the look", href: "/products/yellow-gold-cushion-diamond-solitaire-engagement-ring" }} />}

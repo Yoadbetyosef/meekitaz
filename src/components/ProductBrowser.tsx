@@ -2,7 +2,7 @@
 import GridReelTile from "./GridReelTile";
 import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
-import { usePlanRoom, PlanTile, DailyTile } from "./PlanKit";
+import { usePlanRoom, DailyTile } from "./PlanKit";
 import { clearPlan, planOrder, usdR } from "@/lib/plan";
 import GridMood, { type Reveal } from "./GridMood";
 import Link from "next/link";
@@ -37,7 +37,7 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
   // Your plan (Meekitaz Daily, 2026-11-09): every category in plan order, by what's left after the bag
   const room = usePlanRoom();
   const ord = room && room.fit ? planOrder(items, x => +x.price, room.left, room.p) : null;
-  const shown = ord ? ord.shown : items, split = ord ? ord.split : -1;
+  const shown = ord ? ord.shown : items;
   return (
     <section className="grid-wrap" id="results" aria-label="The collection">
       <div className="wrap">
@@ -54,7 +54,6 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
         <div className="pgrid">
           {shown.map((p, i) => (
             <Fragment key={p.id}>
-              {i === split && <PlanTile />}
               {i === 3 && <DailyTile />}
               {/* earrings: the silent mood clip sits after the first two rows (CSS order places it; 6 cards before it on desktop, 4 on phones) */}
               {MOOD[handle] && i === 4 && items.length > 4 && <GridMood src={MOOD[handle].src} poster={MOOD[handle].poster} reveal={MOOD[handle].reveal} />}
