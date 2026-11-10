@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { loadPlan, savePlan, loadFit, saveFit, perDay, planTotal, usdR, type Plan } from "@/lib/plan";
 import { useCart } from "./CartProvider";
 import { loadSetting } from "@/lib/setting";
@@ -36,7 +37,18 @@ export function usePlanRoom() {
  *  a day; a tap opens the plan panel (the filter panel's own pieces). Only once a plan has been started. */
 export function PlanOrb() {
   const r = usePlanRoom(); const [open, setOpen] = useState(false);
-  if (!r) return null;
+  // (2026-11-10) on the home page it waits: the opening already shows the coin, so the circle only comes in once they scroll on or
+  // press something in the opening (+ / − / Start); everywhere else it shows straight away
+  const path = usePathname(); const [woke, setWoke] = useState(false);
+  useEffect(() => {
+    if (path !== "/") { setWoke(true); return; }
+    setWoke(false);
+    const s = () => { if (window.scrollY > window.innerHeight * .6) setWoke(true); };
+    const t = () => setWoke(true);
+    s(); window.addEventListener("scroll", s, { passive: true }); window.addEventListener("mk-plan-touch", t);
+    return () => { window.removeEventListener("scroll", s); window.removeEventListener("mk-plan-touch", t); };
+  }, [path]);
+  if (!r || !woke) return null;
   const { p, bag, left, leftDay, fit } = r, over = leftDay < 0;
   return (
     <>

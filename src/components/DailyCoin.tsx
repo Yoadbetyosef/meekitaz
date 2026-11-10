@@ -13,7 +13,7 @@ export default function DailyCoin({ items }: { items: DailyItem[] }) {
   const [day, setDay] = useState(15);
   const st = useRef<HTMLParagraphElement>(null);
   useEffect(() => { const sync = () => { const p = loadPlan(); if (p) setDay(p.day); }; sync(); window.addEventListener("mk-plan", sync); return () => window.removeEventListener("mk-plan", sync); }, []);
-  const move = (d: number) => { const n = Math.max(1, Math.min(50, d)); setDay(n); const p = loadPlan(); if (p) savePlan({ ...p, day: n }); };
+  const move = (d: number) => { window.dispatchEvent(new Event("mk-plan-touch")); const n = Math.max(1, Math.min(50, d)); setDay(n); const p = loadPlan(); if (p) savePlan({ ...p, day: n }); };
   // the statement writes itself once the blue lifts, as before
   useEffect(() => {
     const el = st.current; if (!el) return; const w = [...el.querySelectorAll<HTMLElement>("span")]; let raf = 0, t0 = 0;
@@ -23,6 +23,7 @@ export default function DailyCoin({ items }: { items: DailyItem[] }) {
     return () => { cancelAnimationFrame(raf); window.removeEventListener("mk-intro-lift", go); window.removeEventListener("mk-intro-done", go); };
   }, []);
   const start = () => {
+    window.dispatchEvent(new Event("mk-plan-touch"));
     savePlan({ day, months: loadPlan()?.months ?? 4 });
     const cats = document.querySelector<HTMLElement>(".home-page #shop, .home-page .catd");
     if (cats && cats.offsetHeight > 0) cats.scrollIntoView({ behavior: "smooth", block: "start" }); else window.dispatchEvent(new Event("mk-menu-open"));
