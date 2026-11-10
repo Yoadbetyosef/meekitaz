@@ -9,7 +9,7 @@ import { slides as allSlides } from "@/lib/data";
 
 /* TRIAL (2026-10-30): one still photo instead of the changing slides.
    To go back to the original changing slides: set ONE_PHOTO = false (or delete this block and the "slides" line below). */
-const ONE_PHOTO = true;
+const ONE_PHOTO = false; // preview branch: the original changing slides
 const ONE = { small: "", big: "Take your shot.", cta: "Shop engagement rings", href: "/engagement-rings", // 2026-11-04: after the yellow's "Quite the catch." — headline and button only
   desktop: "/media/hero/crouch-d.webp", mobile: "/media/hero/crouch-m.webp", pos: "50% 0%", posM: "50% 0%" }; // the lavender scarf portrait (approved 2026-10-31): framed by CSS (.cover.one img) from the mocks
 const slides = ONE_PHOTO ? [ONE] : allSlides;
