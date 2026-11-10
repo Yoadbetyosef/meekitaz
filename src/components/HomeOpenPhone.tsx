@@ -22,7 +22,13 @@ export default function HomeOpenPhone() {
       if (el > 2.1) setSig(true);
       if (el < 3.2) raf = requestAnimationFrame(tick);
     };
-    const go = () => { s.classList.add("on"); vid.src = window.matchMedia("(max-width:767px)").matches ? "/media/home/open-film-m.mp4?v=2" : "/media/home/open-film-d.mp4"; vid.muted = true; vid.play().catch(() => {}); raf = requestAnimationFrame(tick); };
+    // (2026-11-09) no jump: the film is chosen and loaded right away (paused, its poster = its own first frame), and the entrance runs
+    // exactly once — before, the lift and the done events each restarted it, reloading the film mid-slide
+    const phone = window.matchMedia("(max-width:767px)").matches;
+    vid.poster = phone ? "/media/home/open-film-m0.jpg" : "/media/home/open-film-d0.jpg";
+    vid.preload = "auto"; vid.muted = true; vid.src = phone ? "/media/home/open-film-m.mp4?v=2" : "/media/home/open-film-d.mp4";
+    let started = false;
+    const go = () => { if (started) return; started = true; s.classList.add("on"); vid.play().catch(() => {}); raf = requestAnimationFrame(tick); };
     const html = document.documentElement;
     if (html.classList.contains("mk-intro-on")) { window.addEventListener("mk-intro-lift", go, { once: true }); window.addEventListener("mk-intro-done", go, { once: true }); }
     else go();
@@ -31,7 +37,7 @@ export default function HomeOpenPhone() {
   const ch = (s: string, k: string) => [...s].map((c, i) => c === " " ? " " : <span key={k + i}>{c}</span>);
   return (
     <section className="hop" ref={sec} aria-label="We take diamonds seriously. Life, a little less.">
-      <div className="hop-film"><video ref={v} muted loop playsInline preload="none" poster="/media/home/open-film-m.jpg?v=2" aria-hidden="true" /><i className="hop-pl d" aria-hidden="true" /></div>
+      <div className="hop-film"><video ref={v} muted loop playsInline preload="none" aria-hidden="true" /><i className="hop-pl d" aria-hidden="true" /></div>
       <p className="hop-line" ref={p}>{ch(L1, "a")}<br />{ch(L2, "b")}</p>
       <Signature on={sig} className="hop-sig" />
       <Link href="/engagement-rings" className="hop-cta">Shop engagement rings</Link>
