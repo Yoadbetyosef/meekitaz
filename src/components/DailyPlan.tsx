@@ -22,8 +22,11 @@ export default function DailyPlan({ items }: { items: DailyItem[] }) {
     let raf = 0, t0 = 0;
     const tick = (now: number) => { if (!t0) t0 = now; const el = (now - t0) / 1000; const q = Math.max(0, Math.min(1, (el - .2) / 1.3)), n = Math.round(q * words.length); words.forEach((w, i) => w.classList.toggle("on", i < n)); if (el > 1.6) s.classList.add("fun-cta"); if (el < 2) raf = requestAnimationFrame(tick); };
     const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); raf = requestAnimationFrame(tick); } }, { threshold: .3 });
-    io.observe(s);
-    return () => { io.disconnect(); cancelAnimationFrame(raf); };
+    // (2026-11-09) on the home page it sits under the blue opening: start writing only once the blue lifts, so the words write in front of you
+    const html = document.documentElement, start = () => io.observe(s);
+    if (html.classList.contains("mk-intro-on")) { window.addEventListener("mk-intro-lift", start, { once: true }); window.addEventListener("mk-intro-done", start, { once: true }); }
+    else start();
+    return () => { io.disconnect(); cancelAnimationFrame(raf); window.removeEventListener("mk-intro-lift", start); window.removeEventListener("mk-intro-done", start); };
   }, []);
   const total = day * months * 30;
   let best = -1; ITEMS.forEach((x, i) => { if (x[1] <= total) best = i; });
