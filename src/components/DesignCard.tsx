@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
 import WishHeart, { ShareArrow } from "./WishHeart";
 import { DailyCardPrice } from "./DailyPrice";
+import { PlanDay } from "./PlanKit";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/shopify";
@@ -42,7 +43,7 @@ export default function DesignCard({ p, from }: { p: Product; from?: boolean }) 
           </span>
         )}
         <DailyCardPrice price={Number(cur.price)} />
-        <span className="price">{from && <em className="from">From</em>}{usd(cur.price, p.currency)}{cur.compareAt ? <s className="was">{usd(cur.compareAt, p.currency)}</s> : null}</span>{/* settings: the price is the setting alone, so "From" (2026-11-04) */}
+        <span className="price">{from && <em className="from">From</em>}{usd(cur.price, p.currency)}{cur.compareAt ? <s className="was">{usd(cur.compareAt, p.currency)}</s> : null}</span><PlanDay price={Number(cur.price)} />{/* settings: the price is the setting alone, so "From" (2026-11-04) */}
       </div>
     </Link>
   );

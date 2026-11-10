@@ -3,6 +3,8 @@ import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
 import GridMood from "./GridMood";
 import Link from "next/link";
+import { usePlan } from "./PlanKit";
+import { savePlan, clearPlan, planTotal, planTier, usdR } from "@/lib/plan";
 import RtsVideoTile from "./RtsVideoTile";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -12,7 +14,7 @@ import StoneSwatch from "./StoneSwatch";
 
 const usd = (n: number | string, cur = "USD") => new Intl.NumberFormat("en-US", { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(+n);
 const csv = (v: string | null) => (v ? v.split(",").filter(Boolean) : []);
-type Pop = "metal" | "shape" | "style" | "price" | "color" | "type" | null;
+type Pop = "metal" | "shape" | "style" | "price" | "color" | "type" | "plan" | null;
 const STONE_COLORS = ["Yellow", "Pink", "Blue", "Green"];
 
 export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle = "engagement-rings", fancy, swatches = {}, types = [] }: { initial: Product[]; hasNext: boolean; cursor: string | null; handle?: string; fancy?: string; swatches?: Record<string, string>; types?: string[] }) {
@@ -29,6 +31,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
   const [cursor, setCursor] = useState<string | null>(isDefault ? c0 : null);
   const [busy, setBusy] = useState(!isDefault);
   const [pop, setPop] = useState<Pop>(null);
+  const plan = usePlan(); const [fitFirst, setFitFirst] = useState(true);
   const [price, setPrice] = useState<[number, number]>([pmin, pmax]);
   const wrap = useRef<HTMLDivElement>(null);
 
@@ -82,6 +85,11 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
     </div>
   );
 
+  // Your plan (Meekitaz Daily): what fits first, then a tile, then what's just a little more; further than that waits for "Show what fits first" off
+  const fitOn = !!plan && fitFirst;
+  const pIn = fitOn ? items.filter(x => planTier(+x.price, plan!) === "in").sort((x, y) => +y.price - +x.price) : items;
+  const pNear = fitOn ? items.filter(x => planTier(+x.price, plan!) === "near").sort((x, y) => +x.price - +y.price) : [];
+  const shown = fitOn ? [...pIn, ...pNear] : items, split = fitOn && pNear.length ? pIn.length : -1;
   return (
     <section className="grid-wrap" id={fancy ? "settings" : "results"} aria-label="The collection">
       <div className="wrap" ref={wrap}>
@@ -102,7 +110,14 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
               <input type="range" min={RING_PRICE.min} max={RING_PRICE.max} step={RING_PRICE.step} value={price[1]} aria-label="Maximum price" onChange={e => commitPrice(price[0], Math.max(+e.target.value, price[0] + RING_PRICE.step))} />
               <div className="rf-trk"><i style={{ left: `${((price[0] - RING_PRICE.min) / (RING_PRICE.max - RING_PRICE.min)) * 100}%`, right: `${100 - ((price[1] - RING_PRICE.min) / (RING_PRICE.max - RING_PRICE.min)) * 100}%` }} /></div></div>
               <div className="rf-rv"><span>{usd(price[0])}</span><span>{price[1] >= RING_PRICE.max ? usd(RING_PRICE.max) + "+" : usd(price[1])}</span></div></div>))}
-          {tags.length > 0 && <button type="button" className="rf-reset" onClick={reset}>Reset all</button>}
+          {plan && chip("plan", "Your plan", `${usdR(plan.day)} a day`, <div className="rf-plan">
+            <div className="rf-plan-h"><span>A day</span><b>{usdR(plan.day)}</b></div>
+            <input type="range" min={1} max={50} value={plan.day} onChange={e => savePlan({ ...plan, day: +e.target.value })} aria-label="Dollars a day" />
+            <div className="rf-pills">{[1, 2, 3, 4].map(m => <button key={m} type="button" className={`rf-pill${m === plan.months ? " on" : ""}`} onClick={() => savePlan({ ...plan, months: m })}>{m} mo</button>)}</div>
+            <p className="rf-plan-n">Yours, up to {usdR(planTotal(plan))}.</p>
+            <label className="rf-chk"><input type="checkbox" checked={fitFirst} onChange={() => setFitFirst(v => !v)} />Show what fits first</label>
+          </div>)}
+          {(tags.length > 0 || plan) && <button type="button" className="rf-reset" onClick={() => { reset(); clearPlan(); }}>Reset all</button>}
         </div>
 
         <div className="dres">
@@ -113,12 +128,13 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
             </select>
           </label>
         </div>
-        {tags.length > 0 && <div className="rf-tags">{tags.map(t => (
+        {(tags.length > 0 || plan) && <div className="rf-tags">{plan && <button type="button" className="rf-tag" onClick={clearPlan}>Your plan · {usdR(plan.day)} a day · {plan.months} mo</button>}{tags.map(t => (
           <button key={t.k + t.v} type="button" className="rf-tag" onClick={() => t.k === "price" ? set({ min: null, max: null }) : t.k === "type" ? set({ type: null }) : set({ [t.k]: (t.k === "style" ? shapes : t.k === "metal" ? metals : styles).filter(x => x !== t.v).join(",") || null })}>{t.l}</button>))}</div>}
 
         <div className={`pgrid${busy ? " rf-busy" : ""}`} style={{ marginTop: 20 }}>
-          {items.map((p, i) => (
+          {shown.map((p, i) => (
             <Fragment key={p.id}>
+              {i === split && <div className="pgrid-slot"><div className="op-tile">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/media/rings-style-tile.webp" alt="" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} /><span className="op-cap"><small>Your plan</small><b>Just a little more &rarr;</b></span></div></div>}
               {/* the mood tile sits after the first two rows (6 on desktop, 4 on a phone: CSS picks the slot) */}
               {handle === "engagement-rings" && i === 4 && items.length > 4 && <GridMood src="/media/rings-mood.mp4" poster="/media/rings-mood-poster.jpg" reveal={{ tag: "Engagement rings", l1: "One stone.", l2: "The whole conversation.", cta: "Shop the look", href: "/products/yellow-gold-cushion-diamond-solitaire-engagement-ring" }} />}
               {/* Fancy Colors: the walking film (yellow cushion on her hand), same opening as the necklaces; the crop keeps the hand in view */}

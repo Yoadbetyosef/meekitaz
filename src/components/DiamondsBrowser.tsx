@@ -1,5 +1,8 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { usePlan } from "./PlanKit";
+import { clearPlan, planTotal, usdR } from "@/lib/plan";
+import { loadSetting } from "@/lib/setting";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import StoneCard, { type Item as CardItem } from "./StoneCard";
@@ -33,6 +36,8 @@ export default function DiamondsBrowser() {
   const [state, setState] = useState<"loading" | "updating" | "ready" | "empty" | "off" | "error">("loading");
   const [busy, setBusy] = useState(false);
   const [playing, setPlaying] = useState<string | null>(null);
+  const plan = usePlan(); const [setPrice, setSetPrice] = useState(0);
+  useEffect(() => { setSetPrice(loadSetting()?.price || 0); }, []);
 
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
@@ -116,6 +121,7 @@ export default function DiamondsBrowser() {
           {(state === "ready" || state === "updating") && (
             <>
               {items.length > 0 && <div className="ai-head"><span className="ai-mia" aria-hidden="true"><i /><i /></span><div><b>Top 3 AI picks</b><span>Marcel&rsquo;s best value in your search</span></div></div>}
+              {plan && <div className="rf-tags"><button type="button" className="rf-tag" onClick={clearPlan}>Your plan · {usdR(plan.day)} a day{setPrice ? ` · ${usdR(Math.max(0, planTotal(plan) - setPrice))} left for the stone` : ` · ${plan.months} mo`}</button></div>}
               <div className="pgrid">{items.flatMap((d, n) => {
                 const cells = [<StoneCard key={d.id} d={d} playing={playing === d.id} setPlaying={setPlaying} onOpen={remember} pick={n < 3 ? n + 1 : undefined} />];
                 if ((n + 1) % 8 === 0 && n < items.length - 1) cells.push(<StoneInterlude key={`i${n}`} k={(n + 1) / 8 - 1} />);

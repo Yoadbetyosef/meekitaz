@@ -3986,3 +3986,13 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .hop-daily .dly-trust{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:6px!important;margin:0 auto}
 .hop-daily .dly-trust span{white-space:nowrap}
 }
+
+/* Meekitaz Daily — the plan inside the site's design (approved 2026-11-09): one more line under the card price, in the price's own type;
+   the plan chip's panel uses the filter panel's own pieces */
+.pcard-txt .price.pl-day{display:block;margin-top:2px;opacity:.9}.pcard-txt .price.pl-day em{font-style:normal;opacity:.55;margin-left:6px}
+.pcard-txt .price.pl-day.over{opacity:.6}
+.rf-plan{min-width:250px}
+.rf-plan-h{display:flex;justify-content:space-between;align-items:baseline}.rf-plan-h span{font:400 10px var(--body);letter-spacing:.18em;text-transform:uppercase;opacity:.7}.rf-plan-h b{font:400 26px var(--display)}
+.rf-plan input[type=range]{width:100%;accent-color:var(--ink);margin:12px 0 10px}
+.rf-plan .rf-pills{margin-bottom:6px}
+.rf-plan-n{font:italic 500 15px var(--sub);color:#555;margin:6px 0 8px}
