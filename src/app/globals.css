@@ -4029,3 +4029,36 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .feed-nat{display:flex;justify-content:center;padding:10px 0 70px;background:var(--home-bg,#FEF5D9)}
 .feed-nat video{display:block;height:min(86vh,820px);aspect-ratio:9/16;width:auto;border-radius:22px;box-shadow:0 30px 60px -36px rgba(28,26,27,.4);object-fit:cover;background:#fff}
 @media(max-width:767px){.feed-nat{padding:4px 14px 50px}.feed-nat video{width:100%;height:auto}}
+
+/* ===== The home opening (approved 2026-11-10, "A2"): the still pink coin and the passing row of pieces ===== */
+.dco{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(100px,13vh,130px) 48px 40px}
+.dco-kick{font:400 11px var(--body);letter-spacing:.34em;text-transform:uppercase;color:#2752E6}
+.dco-st{font:400 clamp(28px,2.7vw,44px)/1.1 var(--display);color:#2752E6;margin:12px 0 0;max-width:700px}
+.dco-st span{color:rgba(39,82,230,.15);transition:color .25s}.dco-st span.on{color:#2752E6}
+.dco-st mark{background:none;color:inherit;padding:0 .08em;border-radius:6px;transition:background .6s}
+.dco-st.done mark{background:linear-gradient(transparent 55%,#F6E39A 55%,#F6E39A 92%,transparent 92%)}
+.dco-coin{position:relative;width:170px;height:170px;border-radius:50%;margin:22px 0 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#1C1A1B;background:linear-gradient(135deg,rgba(240,138,174,.95),rgba(197,113,143,.95) 50%,rgba(245,173,198,.95));box-shadow:0 34px 60px -30px rgba(197,113,143,.75),inset 0 2px 0 rgba(255,255,255,.55)}
+.dco-coin small{font:400 9px var(--body);letter-spacing:.3em;text-transform:uppercase;opacity:.75}
+.dco-coin b{font:400 56px/1 var(--display);margin:4px 0}.dco-coin i{font:italic 500 17px var(--sub)}
+.dco-pm{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;border:0;background:#1C1A1B;color:#fff;font:400 20px/1 var(--display);cursor:pointer}
+.dco-pm.m{left:-18px}.dco-pm.p{right:-18px}.dco-pm:active{transform:translateY(-50%) scale(.92)}
+.dco-row{width:100%;max-width:860px;overflow:hidden;margin:14px 0 20px;-webkit-mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.dco-tr{display:flex;gap:14px;width:max-content;animation:dcoMq 40s linear infinite}
+.dco-row:hover .dco-tr{animation-play-state:paused}
+@keyframes dcoMq{to{transform:translateX(-50%)}}
+.dco-pc{width:132px;flex:none;background:#fff;border-radius:18px;padding:10px;text-align:center;text-decoration:none;color:#1C1A1B;transition:opacity .4s}
+.dco-pc img{width:100%;height:86px;object-fit:contain;display:block}
+.dco-pc b{display:block;font:400 18px var(--display);margin-top:4px}.dco-pc b i{font:italic 500 13px var(--sub);color:#666}
+.dco-pc span{display:block;font:400 8.5px var(--body);letter-spacing:.14em;text-transform:uppercase;color:#2752E6;margin-top:2px}
+.dco-pc.no{opacity:.42}.dco-pc.no span{color:#999}
+.dco-cta{height:54px;padding:0 32px;border-radius:999px;border:0;background:#1C1A1B;color:#fff;font:400 12px var(--body);letter-spacing:.22em;text-transform:uppercase;cursor:pointer}
+.dco-marks{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:18px;font:400 9.5px var(--body);letter-spacing:.24em;text-transform:uppercase;color:#555}
+.dco-marks span::before{content:"✓ ";color:#2752E6}
+@media(max-width:767px){
+.dco{position:relative;inset:auto;padding:24px 18px calc(env(safe-area-inset-bottom,0px) + 90px)}
+.dco-st{font-size:27px}
+.dco-coin{width:140px;height:140px;margin:18px 0 8px}.dco-coin b{font-size:46px}
+.dco-pc{width:104px}.dco-pc img{height:66px}
+.dco-cta{height:48px;font-size:10.5px;padding:0 24px}
+.dco-marks{gap:10px;font-size:8.5px}
+}
