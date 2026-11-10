@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { PlanMeter } from "./PlanKit";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import StoneCard, { type Item as CardItem } from "./StoneCard";
@@ -102,6 +103,7 @@ export default function DiamondsBrowser() {
   return (
     <>
       <DiamondFilters f={f} setF={setF} />
+      <div className="wrap"><PlanMeter onFit={max => setF({ ...f, price: [f.price[0], Math.max(f.price[0] + 1, max)] as typeof f.price })} /></div>
       <section className="grid-wrap dm-gal" id="results" aria-label="The collection">
         <div className="wrap">
           <div className="dres">

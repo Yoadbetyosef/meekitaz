@@ -23,7 +23,7 @@ const take = (cat: string, ps: Product[] = []): DailyItem[] => {
   return out;
 };
 
-export default async function DailyPlanSection() {
+export async function getDailyItems(): Promise<DailyItem[]> {
   let items: DailyItem[] = [];
   if (shopifyConfigured) {
     const [rings, ...rest] = await Promise.all([
@@ -33,5 +33,6 @@ export default async function DailyPlanSection() {
     items = [...take("Engagement rings", rings?.products), ...CATS.flatMap(([c], i) => take(c, rest[i]?.products))];
   }
   items.sort((a, b) => a[1] - b[1]);
-  return <DailyPlan items={items} />;
+  return items;
 }
+export default async function DailyPlanSection() { return <DailyPlan items={await getDailyItems()} />; }

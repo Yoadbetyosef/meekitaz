@@ -3986,3 +3986,49 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .hop-daily .dly-trust{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:6px!important;margin:0 auto}
 .hop-daily .dly-trust span{white-space:nowrap}
 }
+/* ===== Meekitaz Daily — shopping by the customer's plan (approved 2026-11-09) ===== */
+.pl-tag{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;margin-top:6px}
+.pl-tag b{font:400 17px var(--display);color:var(--ink)}.pl-tag b i{font:italic 500 13px var(--sub);color:#666}
+.pl-tag em{font:400 8.5px var(--body);font-style:normal;letter-spacing:.14em;text-transform:uppercase;color:#fff;border-radius:999px;padding:3px 8px}
+.pl-in em{background:#1E8A4F}.pl-near em,.pl-far em{background:#B9771A}.pl-far{opacity:.75}
+.pl-bar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);z-index:70;display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;max-width:calc(100% - 24px);background:#1C1A1B;color:#fff;border-radius:22px;padding:8px 8px 8px 16px;box-shadow:0 18px 40px -16px rgba(0,0,0,.5)}
+.pl-sum{display:flex;align-items:baseline;gap:6px;background:none;border:0;color:#fff;cursor:pointer;font:400 9.5px var(--body);letter-spacing:.16em;text-transform:uppercase;padding:0}
+.pl-sum b{font:400 17px var(--display);letter-spacing:0;color:#F6E39A}
+.pl-edit{flex-basis:100%;display:flex;align-items:center;gap:12px;padding:4px 0}
+.pl-edit input{flex:1;accent-color:#F6E39A}
+.pl-mo{display:flex;align-items:center;gap:5px;font:400 9px var(--body);letter-spacing:.14em;text-transform:uppercase}
+.pl-mo button,.pk-mo button{width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:none;color:#fff;font:400 12px var(--display);cursor:pointer}
+.pl-mo button.on,.pk-mo button.on{background:#F6E39A;color:#1C1A1B;border-color:#F6E39A}
+.pl-go{background:#2752E6;color:#fff;border-radius:999px;padding:9px 14px;font:400 9.5px var(--body);letter-spacing:.18em;text-transform:uppercase;text-decoration:none;white-space:nowrap}
+.pl-x{width:28px;height:28px;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:16px;cursor:pointer}
+@media(max-width:767px){.pl-bar{bottom:calc(env(safe-area-inset-bottom,0px) + 74px)}.pl-sum{font-size:8.5px}.pl-sum b{font-size:15px}.pl-go{padding:8px 11px;font-size:8.5px}}
+.pl-meter{background:#fff;border-radius:20px;padding:16px 18px;margin:16px 0;box-shadow:0 14px 30px -24px rgba(0,0,0,.3)}
+.pl-ln{display:flex;justify-content:space-between;font:400 10px var(--body);letter-spacing:.16em;text-transform:uppercase;color:#666}.pl-ln b{font:400 18px var(--display);letter-spacing:0;color:var(--ink)}
+.pl-track{height:12px;border-radius:12px;background:#eee;overflow:hidden;display:flex;margin:10px 0}.pl-track i{display:block;height:100%}.pl-track .s{background:#1C1A1B}.pl-track .st{background:#1E8A4F}
+.pl-meter p{margin:0;font:italic 500 18px/1.35 var(--sub)}
+.pl-fit{margin-top:10px;border:0;background:#1E8A4F;color:#fff;border-radius:999px;padding:10px 16px;font:400 10px var(--body);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+.pk-page{background:#FEF5D9}
+.pk{max-width:1180px;margin:0 auto;padding:130px 22px 140px}
+.pk-plan{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 10px;background:#1C1A1B;color:#fff;border-radius:20px;padding:12px 18px;font:400 10px var(--body);letter-spacing:.16em;text-transform:uppercase;margin-bottom:26px}
+.pk-plan b{font:400 20px var(--display);letter-spacing:0;color:#F6E39A}.pk-plan input{flex:1;min-width:160px;accent-color:#F6E39A;align-self:center}
+.pk-mo{display:inline-flex;align-items:center;gap:5px}
+.pk-kick{font:400 11px var(--body);letter-spacing:.32em;text-transform:uppercase;color:#2752E6}
+.pk-h{font:400 clamp(34px,4vw,56px)/1 var(--display);margin:10px 0 8px}
+.pk-sub{font:italic 500 20px var(--sub);color:#555;margin:0 0 20px}
+.pk-tabs{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.pk-tabs button{border:1px solid rgba(28,26,27,.2);background:#fff;border-radius:999px;padding:9px 14px;font:400 10px var(--body);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;color:var(--ink)}
+.pk-tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pk-fit{margin-left:auto;display:inline-flex;align-items:center;gap:8px}.pk-fit i{width:32px;height:18px;border-radius:999px;background:#ccc;position:relative}.pk-fit i::after{content:"";position:absolute;left:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff;transition:left .2s}
+.pk-tabs .pk-fit.on{background:#1E8A4F;border-color:#1E8A4F;color:#fff}.pk-fit.on i{background:rgba(255,255,255,.35)}.pk-fit.on i::after{left:16px}
+.pk-row{display:flex;align-items:baseline;gap:12px;margin:26px 0 12px}.pk-row h2{margin:0;font:400 26px var(--display)}.pk-row span{font:italic 500 17px var(--sub);color:#666}
+.pk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.pk-card{position:relative;display:flex;flex-direction:column;background:#fff;border-radius:18px;padding:14px;text-decoration:none;color:var(--ink);transition:transform .2s,box-shadow .2s}
+.pk-card:hover{transform:translateY(-3px);box-shadow:0 16px 30px -22px rgba(0,0,0,.35)}
+.pk-img{display:block;aspect-ratio:1;margin-bottom:10px}.pk-img img{width:100%;height:100%;object-fit:contain;display:block}
+.pk-tag{position:absolute;top:12px;left:12px;z-index:1;font:400 8.5px var(--body);letter-spacing:.14em;text-transform:uppercase;color:#fff;border-radius:999px;padding:4px 9px}
+.pk-in{background:#1E8A4F}.pk-near{background:#B9771A}
+.pk-nm{font:italic 500 16px/1.2 var(--sub);min-height:2.4em}
+.pk-d{margin-top:4px}.pk-d b{font:400 22px var(--display)}.pk-d i{font:italic 500 15px var(--sub);color:#666}
+.pk-p{font:400 9.5px var(--body);letter-spacing:.12em;color:#888;margin-top:2px;text-transform:uppercase}
+.pk-none{font:italic 500 18px var(--sub);color:#666}
+@media(max-width:767px){.pk{padding:110px 14px 150px}.pk-grid{grid-template-columns:1fr 1fr;gap:10px}.pk-fit{margin-left:0}.pk-row h2{font-size:21px}.pk-d b{font-size:19px}}
