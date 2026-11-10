@@ -4083,3 +4083,5 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 .dco-row{margin:8px 0 12px}
 .dco-pc{width:92px;padding:7px}.dco-pc img{height:52px}.dco-pc b{font-size:15px}.dco-pc span{font-size:7.5px}
 }
+/* (2026-11-10) the opening keeps our butter: an older page also used the ".dco" name with a pink wash — not here */
+.hop-daily .dco{background:none!important;min-height:0!important}
