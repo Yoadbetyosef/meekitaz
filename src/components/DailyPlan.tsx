@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { savePlan } from "@/lib/plan";
+import { savePlan, loadPlan } from "@/lib/plan";
 
 /* Meekitaz Daily (2026-11-07): the plan section, as it was on the home page — moved to /daily. Was: The page she lifted: the dancer fills the section (a fast ⅓s appearance, tinted to the page colour), dances once
    and leaves; then Meekitaz Daily ("W2 · the ticket rail") takes the same screen — the statement fills with blue word by word, the
@@ -17,6 +17,10 @@ export default function DailyPlan({ items }: { items: DailyItem[] }) {
   const ITEMS = items.length ? items : FALLBACK;
   const sec = useRef<HTMLElement>(null), p = useRef<HTMLParagraphElement>(null);
   const [day, setDay] = useState(15), [months, setMonths] = useState(4), [pinned, setPinned] = useState(-1);
+  // (2026-11-10) the ticket and the plan circle are one: once a plan is started, the ticket opens on it, every move of the slider or the
+  // months updates the circle at once, and the circle's + / − move the ticket
+  useEffect(() => { const sync = () => { const p = loadPlan(); if (p) { setDay(d => d === p.day ? d : p.day); setMonths(m => m === p.months ? m : p.months); } }; sync(); window.addEventListener("mk-plan", sync); return () => window.removeEventListener("mk-plan", sync); }, []);
+  useEffect(() => { const p = loadPlan(); if (p && (p.day !== day || p.months !== months)) savePlan({ day, months }); }, [day, months]);
   useEffect(() => {
     const s = sec.current, para = p.current; if (!s || !para) return;
     const words = [...para.querySelectorAll("span")];
