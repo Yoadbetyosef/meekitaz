@@ -4022,3 +4022,10 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .pl-pan-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}.pl-pan-h span{font:400 10px var(--body);letter-spacing:.18em;text-transform:uppercase;opacity:.7}.pl-pan-h b{font:400 24px var(--display)}
 .pl-pan-n{font:italic 500 15px/1.4 var(--sub);color:#555;margin:8px 0}
 @media(max-width:767px){.pl-orb{width:70px;height:70px}.pl-orb b{font-size:21px}.pl-pm button{width:28px;height:28px}.pl-orb-w{left:14px;bottom:calc(84px + env(safe-area-inset-bottom,0px))}.pl-panel{left:14px;bottom:calc(166px + env(safe-area-inset-bottom,0px))}}
+
+/* ===== Shop by category with the model photos again (approved 2026-11-09), and the feed reel under it at its own shape ===== */
+.home-page #shop{display:block!important}
+.home-page .sec#shop{background:var(--home-bg,#FEF5D9)}
+.feed-nat{display:flex;justify-content:center;padding:10px 0 70px;background:var(--home-bg,#FEF5D9)}
+.feed-nat video{display:block;height:min(86vh,820px);aspect-ratio:9/16;width:auto;border-radius:22px;box-shadow:0 30px 60px -36px rgba(28,26,27,.4);object-fit:cover;background:#fff}
+@media(max-width:767px){.feed-nat{padding:4px 14px 50px}.feed-nat video{width:100%;height:auto}}

@@ -4,7 +4,7 @@ import DailyPlanSection from "@/components/DailyPlanSection";
 import Film from "@/components/Film";
 import FloatingFilm from "@/components/FloatingFilm";
 import Categories from "@/components/Categories";
-import CategoriesDrawn from "@/components/CategoriesDrawn";
+import FeedReel from "@/components/FeedReel";
 import NewFancy from "@/components/NewFancy";
 import OneOfOne from "@/components/OneOfOne";
 import RtsBike from "@/components/RtsBike";
@@ -24,8 +24,8 @@ export default function Home() {
       {/* (2026-11-08) the dancer's screen stays put; everything below rises over it */}
       <div className="over-fun">
       <Film />{/* phones */}
-      <CategoriesDrawn />{/* computers */}
-      <Categories />{/* phones */}
+      <Categories />{/* (2026-11-09) Shop by category with the model photos again, everywhere */}
+      <FeedReel />
       <FloatingFilm />
       {/* (2026-11-08) the feed reel lives in Shop by category now — not twice on the home page */}
       <NewFancy />
