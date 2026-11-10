@@ -2,7 +2,7 @@
 import GridReelTile from "./GridReelTile";
 import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
-import { usePlanRoom, PlanTile } from "./PlanKit";
+import { usePlanRoom, PlanTile, DailyTile } from "./PlanKit";
 import { clearPlan, planOrder, usdR } from "@/lib/plan";
 import GridMood, { type Reveal } from "./GridMood";
 import Link from "next/link";
@@ -55,6 +55,7 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
           {shown.map((p, i) => (
             <Fragment key={p.id}>
               {i === split && <PlanTile />}
+              {i === 3 && <DailyTile />}
               {/* earrings: the silent mood clip sits after the first two rows (CSS order places it; 6 cards before it on desktop, 4 on phones) */}
               {MOOD[handle] && i === 4 && items.length > 4 && <GridMood src={MOOD[handle].src} poster={MOOD[handle].poster} reveal={MOOD[handle].reveal} />}
               {slot && i === slotAt && <div className="pgrid-slot">{slot}</div>}
