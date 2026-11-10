@@ -3957,3 +3957,13 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .hop-daily .dly-three{justify-content:flex-start!important;width:100%}
 .hop-daily .dly-tk,.hop-daily .dly-badges,.hop-daily .dly-rev{width:100%!important;max-width:100%!important;box-sizing:border-box;justify-self:stretch!important;margin-left:0!important;margin-right:0!important}
 }
+/* (2026-11-09) the plan ticket never moves while you drag: the slider takes the finger for itself (the page doesn't scroll under it),
+   and every part that changes with the amount keeps a fixed height — the piece's name (two lines), the image stage, the total line */
+.dly-sl input[type=range]{touch-action:none!important;-webkit-user-select:none;user-select:none}
+.dly-pn{height:2.7em;min-height:2.7em;display:flex!important;align-items:center;justify-content:center;text-align:center;overflow:hidden;line-height:1.3}
+.dly-stage{flex:none}
+.dly-tot{min-height:3.2em;align-items:center!important}
+.dly-tot span{line-height:1.3}
+.dly-tot em{white-space:nowrap}
+.dly-tk{contain:layout}
+@media(min-width:768px){.hop-daily .dly{align-items:start!important}.hop-daily .dly-l{align-self:center}}
