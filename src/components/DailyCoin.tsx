@@ -31,7 +31,6 @@ export default function DailyCoin({ items }: { items: DailyItem[] }) {
   const words = (s: string) => s.split(" ").map((x, i) => <span key={i}>{x} </span>);
   return (
     <section className="dco" aria-label="Meekitaz Daily">
-      <span className="dco-kick">Meekitaz Daily</span>
       <p className="dco-st" ref={st}>{words("Pay a little every day. Wear it from the first one.")}<mark>{words("It’s yours.")}</mark></p>
       <div className="dco-coin">
         <button type="button" className="dco-pm m" onClick={() => move(day - 1)} aria-label="A dollar less a day">−</button>

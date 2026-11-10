@@ -4071,3 +4071,15 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 .dco-marks span{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 13px 0 5px;border:1.2px solid #1C1A1B;border-radius:999px;font:400 9.5px var(--body)!important;letter-spacing:.14em!important;color:#1C1A1B!important;background:transparent}
 .dco-marks span::before{content:"✓"!important;width:20px;height:20px;border-radius:50%;background:#2752E6;color:#fff!important;display:grid;place-items:center;font-size:11px;line-height:1}
 @media(max-width:767px){.dco-marks{gap:6px!important}.dco-marks span{height:28px;font-size:8.5px!important;padding:0 10px 0 4px}.dco-marks span::before{width:18px;height:18px;font-size:10px}}
+
+/* (2026-11-10) phones: everything up a little so the button is seen before any scrolling — a shorter film band, the statement and coin
+   closer, a slimmer row */
+@media(max-width:767px){
+.hop-daily .hop-film{aspect-ratio:16/9!important}
+.dco{padding-top:14px!important}
+.dco-st{font-size:25px;margin-top:0}
+.dco-coin{width:118px;height:118px;margin:12px 0 4px}.dco-coin b{font-size:40px}.dco-coin small{font-size:8px}.dco-coin i{font-size:14px}
+.dco-pm{width:30px;height:30px;font-size:17px}.dco-pm.m{left:-14px}.dco-pm.p{right:-14px}
+.dco-row{margin:8px 0 12px}
+.dco-pc{width:92px;padding:7px}.dco-pc img{height:52px}.dco-pc b{font-size:15px}.dco-pc span{font-size:7.5px}
+}
