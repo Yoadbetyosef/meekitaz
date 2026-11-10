@@ -43,6 +43,12 @@ const PASSAGES: Record<string, { set: string; label: string; swing?: boolean; ro
     d: [[0, 50, 52, 66, 0], [1, 28, 50, 34, -6], [2, 72, 50, 62, 5], [3, 34, 50, 52, -4], [4, 52, 52, 40, 0], [5, 70, 54, 58, 5]],
     p: [[0, 50, 52, 42, 0], [1, 40, 46, 18, -6], [2, 60, 54, 40, 5], [3, 46, 50, 32, -4], [4, 50, 52, 16, 0], [5, 56, 52, 34, 5]] },
   // diamonds (approved 2026-11-08, D1 — paparazzi: a white camera flash between drawings, three sparkle stars burst around each)
+  // one of one (2026-11-09): his eight black-ink curiosities in fast cuts like the rings — the crab with the pear earring opens it big and
+  // closes it bigger, tilted, the M between
+  "/one-of-one": { set: "o", label: "One of one", aspect: [1.419, 1.285, 1.352, 1.584, 1.507, 1.526, 1.164, 1.447],
+    d: [[0, 50, 54, 50, 0], [1, 26, 50, 40, -5], [2, 74, 52, 42, 5], [3, 50, 48, 36, 0], [4, 28, 54, 32, -4], [5, 72, 50, 34, 5], [6, 34, 50, 42, -3], [7, 68, 52, 34, 4], [0, 50, 54, 58, -6]],
+    p: [[0, 50, 52, 28, 0], [1, 50, 44, 26, -5], [2, 50, 56, 26, 5], [3, 50, 48, 22, 0], [4, 50, 52, 22, -4], [5, 50, 48, 22, 5], [6, 50, 52, 28, -3], [7, 50, 50, 22, 4], [0, 50, 52, 32, -6]],
+    seq: [["mo", 140], ["d0", 260], ["d1", 130], ["d2", 130], ["mf", 120], ["d3", 130], ["d4", 130], ["d5", 130], ["d6", 130], ["d7", 130], ["d8", 320], ["mf", 340]] },
   "/diamonds": { set: "s", label: "The diamonds", flash: true, aspect: [0.636, 1.149, 1.204, 0.975, 0.656, 1.121],
     d: [[0, 50, 52, 70, 0], [1, 28, 54, 48, -5], [4, 70, 50, 72, 4], [2, 34, 50, 46, -4], [3, 52, 52, 52, 0], [5, 70, 54, 60, 3]],
     p: [[0, 50, 52, 46, 0], [1, 40, 46, 26, -5], [4, 60, 52, 48, 4], [2, 46, 50, 24, -4], [3, 50, 52, 30, 0], [5, 56, 52, 28, 3]] },
@@ -54,7 +60,7 @@ export default function RingPassage({ mPath }: { mPath: string }) {
   const [run, setRun] = useState(0), [phone, setPhone] = useState(false), [frame, setFrame] = useState(""), [cnt, setCnt] = useState(0), [stage, setStage] = useState<"" | "in" | "out">("");
   const target = useRef<string | null>(null), dest = useRef(""), done = useRef(false), arrived = useRef(false);
   // preload the drawings once
-  useEffect(() => { Object.values(PASSAGES).forEach(P => [0, 1, 2, 3, 4, 5].forEach(i => { const im = new Image(); im.src = `/media/passage/${P.set}${i}.${P.ext || "png"}`; })); }, []);
+  useEffect(() => { Object.values(PASSAGES).forEach(P => P.aspect.map((_, i) => i).forEach(i => { const im = new Image(); im.src = `/media/passage/${P.set}${i}.${P.ext || "png"}`; })); }, []);
   // catch clicks on links to the rings page
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
