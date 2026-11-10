@@ -4101,3 +4101,12 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 .d-tile p{font:italic 500 16px var(--sub);margin:0 0 12px;color:#444}
 .d-go{font:400 10px var(--body);letter-spacing:.2em;text-transform:uppercase;border-bottom:1px solid}
 @media(max-width:767px){.d-mini{gap:10px;padding:10px}.d-mini p{font-size:15px}.d-how{font-size:9px}.d-tile h4{font-size:19px}.d-tile .d-coin{width:76px;height:76px}.d-tile .d-coin b{font-size:26px}}
+
+/* (2026-11-10) the product-page coin card reads in our blue (it sat in white on the white panel), its link is a real button that stays
+   on the page; the category tile is a button too */
+.d-mini{background:#FEF5D9!important;border:1px solid rgba(39,82,230,.18)}
+.d-mini p,.d-mini p b{color:#2752E6!important}
+.d-mini p{color:#1C1A1B!important}.d-mini p b{color:#2752E6!important}
+.d-how{background:none;border:0;border-bottom:1px solid currentColor;padding:0 0 1px;cursor:pointer;color:#2752E6!important;font:400 10px var(--body)!important;letter-spacing:.18em;text-transform:uppercase}
+.d-tile{width:100%;border:1px solid rgba(28,26,27,.12);cursor:pointer;font:inherit}
+.d-tile .d-go{color:#2752E6}

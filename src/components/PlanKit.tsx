@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import Link from "next/link";
 import { loadPlan, savePlan, loadFit, saveFit, perDay, planTotal, usdR, type Plan } from "@/lib/plan";
 import { useCart } from "./CartProvider";
 import { loadSetting } from "@/lib/setting";
@@ -86,7 +85,8 @@ export function PlanSummary({ price, cart = false, pp = false }: { price: number
   const btn = (txt: string, fn: () => void) => <button type="button" className="df-swap" onClick={fn}>{txt}</button>;
   if (!p) {
     const d4 = Math.ceil(price / 120);
-    if (pp) return <div className="d-mini"><span className="d-coin"><b>{usdR(d4)}</b><i>a day</i></span><p><b>Or wear it from today</b>{usdR(d4)} a day for 4 months — no interest.</p><Link href="/daily" className="d-how">See how &rarr;</Link></div>;
+    // (2026-11-10) never leaves the page: the button starts the plan right here, at this piece's own price a day
+    if (pp) return <div className="d-mini"><span className="d-coin"><b>{usdR(d4)}</b><i>a day</i></span><p><b>Or wear it from today</b>{usdR(d4)} a day for 4 months — no interest.</p><button type="button" className="d-how" onClick={() => savePlan({ day: Math.min(50, d4), months: 4 })}>Start at {usdR(d4)} a day &rarr;</button></div>;
     return <>
       {cart ? <div><span>Or wear it daily</span><span>{usdR(d4)} a day · 4 mo</span></div>
         : <div className="df-ln pl-row"><span>Or wear it daily<em>{usdR(d4)} a day for 4 months — no interest</em></span><b>{usdR(d4)} a day</b></div>}
@@ -123,5 +123,6 @@ export function PlanPromises() {
  *  coin, "From $1 a day". Only for those who haven't started a plan (with a plan the grid already speaks it). */
 export function DailyTile() {
   const p = usePlan(); if (p) return null;
-  return <div className="pgrid-slot"><Link href="/daily" className="d-tile"><span className="d-coin"><b>$1</b><i>a day</i></span><h4>From $1 a day.</h4><p>Wear it now. Pay a little every day.</p><span className="d-go">See how it works &rarr;</span></Link></div>;
+  // (2026-11-10) stays in the category: a tap starts the plan at $15 a day and the grid re-orders itself around it on the spot
+  return <div className="pgrid-slot"><button type="button" className="d-tile" onClick={() => { savePlan({ day: 15, months: 4 }); window.scrollTo({ top: Math.max(0, (document.querySelector(".pgrid") as HTMLElement | null)?.getBoundingClientRect().top ?? 0) + window.scrollY - 140, behavior: "smooth" }); }}><span className="d-coin"><b>$1</b><i>a day</i></span><h4>From $1 a day.</h4><p>Wear it now. Pay a little every day.</p><span className="d-go">Start at $15 a day &rarr;</span></button></div>;
 }
