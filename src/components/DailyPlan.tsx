@@ -4,7 +4,7 @@ import Link from "next/link";
 
 /* Meekitaz Daily (2026-11-07): the plan section, as it was on the home page — moved to /daily. Was: The page she lifted: the dancer fills the section (a fast ⅓s appearance, tinted to the page colour), dances once
    and leaves; then Meekitaz Daily ("W2 · the ticket rail") takes the same screen — the statement fills with blue word by word, the
-   three numbers, the badges (5 swaps in yellow), the reviews and the trust marks come in, and the plan ticket: the whole collection
+   three numbers, the badges, the reviews and the trust marks come in, and the plan ticket: the whole collection
    lights up with the price, the button says the day you chose. One screen, no scrolling. Every return to this section plays her again. */
 export type DailyItem = [string, number, string, string, string]; // [name, price, image url, handle, category]
 const FALLBACK: DailyItem[] = [["Tennis bracelet", 1800, "/media/daily/brac.webp", "", "Bracelets"]];
@@ -37,8 +37,8 @@ export default function DailyPlan({ items }: { items: DailyItem[] }) {
           <div className="dly-l">
             <span className="dly-kick dly-rv">Meekitaz Daily</span>
             <p className="dly-st" ref={p}>{STATEMENT.split(" ").slice(0, -2).map((w, i) => <span key={i}>{w} </span>)}<span className="dly-its"><i className="dly-its-hl" aria-hidden="true" /><span>It’s </span><span>yours.</span></span></p>
-            <div className="dly-three dly-rv d2"><div><b>$1–$50</b><span>a day</span></div><div><b>4 mo.</b><span>at most</span></div><div><b>5 swaps</b><span>a year</span></div></div>
-            <div className="dly-badges dly-rv d3"><i>No interest</i><i>No credit score</i><i>No loans</i><i>No rentals</i><i>Everyone’s approved</i><i className="hl">5 swaps a year</i></div>
+            <div className="dly-three dly-rv d2"><div><b>$1–$50</b><span>a day</span></div><div><b>4 mo.</b><span>at most</span></div></div>
+            <div className="dly-badges dly-rv d3"><i>No interest</i><i>No credit score</i><i>No loans</i><i>No rentals</i><i className="hl">Everyone’s approved</i></div>
             <div className="dly-rev dly-rv d4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <div className="dly-faces">{["maya", "david", "jess", "linda"].map(k => <img key={k} src={`/media/daily/faces/${k}.jpg`} alt="" />)}</div>

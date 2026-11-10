@@ -3890,3 +3890,19 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .dly-faces,.dly-sc{flex:none}
 .dly-faces img{flex:none}
 .dly-rev{flex-wrap:wrap;row-gap:14px}
+
+/* Daily, round 2 (2026-11-09): no swaps anywhere; the day slider is easy to grab (its own row, a thick track, a big thumb); the chosen
+   month reads at a glance (solid blue, white number); the plan ticket a size bigger beside the film */
+.dly-sl{grid-template-columns:1fr!important;gap:14px!important}
+.dly-sl input[type=range]{height:8px!important;border-radius:8px;margin:10px 0!important;cursor:pointer;touch-action:pan-y}
+.dly-sl input[type=range]::-webkit-slider-thumb{width:30px!important;height:30px!important;border-width:3px!important;box-shadow:0 6px 16px rgba(13,79,231,.3)!important}
+.dly-sl input[type=range]::-moz-range-thumb{width:28px!important;height:28px!important;border-width:3px!important}
+.dly-mo-w{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.dly-mo{gap:8px!important}
+.dly-mo button{width:46px!important;height:40px!important;font-size:15px!important;border:1.5px solid rgba(28,26,27,.2)!important;background:#fff!important;color:var(--ink)!important;transition:background .2s,color .2s,transform .2s}
+.dly-mo button.on{background:#0D4FE7!important;border-color:#0D4FE7!important;color:#fff!important;transform:scale(1.06);box-shadow:0 8px 18px -8px rgba(13,79,231,.55)}
+@media(min-width:768px){
+.hop-daily .dly-l{width:min(520px,32vw)}
+.hop-daily .dly-tk{width:min(460px,31vw)}
+.hop-daily .dly-stage{height:clamp(140px,22vh,210px)}
+}
