@@ -3906,3 +3906,13 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .hop-daily .dly-tk{width:min(460px,31vw)}
 .hop-daily .dly-stage{height:clamp(140px,22vh,210px)}
 }
+/* phones (2026-11-09): the Daily opening is never cut — the section grows with its content (no fixed screen height, nothing hidden),
+   the badges and reviews follow the statement, the plan ticket comes last with room under it for Safari's bar */
+@media(max-width:767px){
+.home-page .hop.hop-daily{position:relative!important;height:auto!important;min-height:0!important;overflow:visible!important}
+.hop-daily .hop-dly,.hop-daily .hop-dly .fun,.hop-daily .hop-dly .fun-stick,.hop-daily .hop-dly .dly{height:auto!important;min-height:0!important;overflow:visible!important}
+.hop-daily .hop-dly .dly{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 110px)!important}
+.hop-daily .dly-badges{order:3!important}
+.hop-daily .dly-rev{order:4!important}
+.hop-daily .dly-tk{order:5!important;margin-top:8px}
+}
