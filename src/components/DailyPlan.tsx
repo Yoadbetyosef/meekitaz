@@ -20,7 +20,7 @@ export default function DailyPlan({ items }: { items: DailyItem[] }) {
   // (2026-11-10) the ticket and the plan circle are one: once a plan is started, the ticket opens on it, every move of the slider or the
   // months updates the circle at once, and the circle's + / − move the ticket
   useEffect(() => { const sync = () => { const p = loadPlan(); if (p) { setDay(d => d === p.day ? d : p.day); setMonths(m => m === p.months ? m : p.months); } }; sync(); window.addEventListener("mk-plan", sync); return () => window.removeEventListener("mk-plan", sync); }, []);
-  useEffect(() => { const p = loadPlan(); if (p && (p.day !== day || p.months !== months)) savePlan({ day, months }); }, [day, months]);
+  const keep = (d: number, m: number) => { if (loadPlan()) savePlan({ day: d, months: m }); }; // only on the customer's own moves
   useEffect(() => {
     const s = sec.current, para = p.current; if (!s || !para) return;
     const words = [...para.querySelectorAll("span")];
@@ -36,7 +36,7 @@ export default function DailyPlan({ items }: { items: DailyItem[] }) {
   const total = day * months * 30;
   let best = -1; ITEMS.forEach((x, i) => { if (x[1] <= total) best = i; });
   const cur = pinned >= 0 && ITEMS[pinned][1] <= total ? pinned : best >= 0 ? best : 0;
-  const choose = (i: number) => { setPinned(i); if (ITEMS[i][1] > total) setDay(Math.min(50, Math.ceil(ITEMS[i][1] / (months * 30)))); };
+  const choose = (i: number) => { setPinned(i); if (ITEMS[i][1] > total) { const d = Math.min(50, Math.ceil(ITEMS[i][1] / (months * 30))); setDay(d); keep(d, months); } };
   return (
     <section className="fun fun-gone dly-page" ref={sec} aria-label="Meekitaz Daily">
       <div className="fun-stick">
@@ -75,8 +75,8 @@ export default function DailyPlan({ items }: { items: DailyItem[] }) {
             <span className="dly-perf" aria-hidden="true" />
             <div className="dly-ln"><span>A day</span><b>{usd(day)}</b></div>
             <div className="dly-sl">
-              <input type="range" min={1} max={50} value={day} onChange={e => { setDay(+e.target.value); setPinned(-1); }} aria-label="Dollars a day" style={{ ["--p" as string]: ((day - 1) / 49 * 100) + "%" }} />
-              <div className="dly-mo-w"><div className="dly-mo" role="group" aria-label="Months">{[1, 2, 3, 4].map(m => <button key={m} type="button" className={m === months ? "on" : ""} onClick={() => setMonths(m)} aria-label={`${m} ${m > 1 ? "months" : "month"}`}>{m}</button>)}</div><span className="dly-mo-cap">{months > 1 ? "Months" : "Month"}</span></div>
+              <input type="range" min={1} max={50} value={day} onChange={e => { setDay(+e.target.value); setPinned(-1); keep(+e.target.value, months); }} aria-label="Dollars a day" style={{ ["--p" as string]: ((day - 1) / 49 * 100) + "%" }} />
+              <div className="dly-mo-w"><div className="dly-mo" role="group" aria-label="Months">{[1, 2, 3, 4].map(m => <button key={m} type="button" className={m === months ? "on" : ""} onClick={() => { setMonths(m); keep(day, m); }} aria-label={`${m} ${m > 1 ? "months" : "month"}`}>{m}</button>)}</div><span className="dly-mo-cap">{months > 1 ? "Months" : "Month"}</span></div>
             </div>
             <div className="dly-tot"><span>Yours, up to <em>· {usd(day)} a day for {months} {months > 1 ? "months" : "month"}</em></span><b>{usd(total)}</b></div>
             <button type="button" className="dly-cta" onClick={() => {
