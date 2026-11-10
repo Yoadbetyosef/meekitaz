@@ -17,6 +17,8 @@ export default function Nav() {
   const { bagCount, setOpen: openCart } = useCart();
   const count = bagCount;
   useEffect(() => { setOpen(false); setSearching(false); }, [pathname]);
+  // (2026-11-09) anything can open the menu — e.g. Daily's "Start" when there are no categories on the page to scroll to
+  useEffect(() => { const o = () => { openCart(false); setSearching(false); setOpen(true); }; window.addEventListener("mk-menu-open", o); return () => window.removeEventListener("mk-menu-open", o); }, [openCart]);
   // ⌘K / Ctrl+K opens search from anywhere
   useEffect(() => {
     const k = (e: KeyboardEvent) => { if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setOpen(false); openCart(false); setSearching(s => !s); } };
