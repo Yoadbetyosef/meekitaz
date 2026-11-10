@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { savePlan } from "@/lib/plan";
 
 /* Meekitaz Daily (2026-11-07): the plan section, as it was on the home page — moved to /daily. Was: The page she lifted: the dancer fills the section (a fast ⅓s appearance, tinted to the page colour), dances once
    and leaves; then Meekitaz Daily ("W2 · the ticket rail") takes the same screen — the statement fills with blue word by word, the
@@ -75,7 +74,7 @@ export default function DailyPlan({ items }: { items: DailyItem[] }) {
               <div className="dly-mo-w"><div className="dly-mo" role="group" aria-label="Months">{[1, 2, 3, 4].map(m => <button key={m} type="button" className={m === months ? "on" : ""} onClick={() => setMonths(m)} aria-label={`${m} ${m > 1 ? "months" : "month"}`}>{m}</button>)}</div><span className="dly-mo-cap">{months > 1 ? "Months" : "Month"}</span></div>
             </div>
             <div className="dly-tot"><span>Yours, up to <em>· {usd(day)} a day for {months} {months > 1 ? "months" : "month"}</em></span><b>{usd(total)}</b></div>
-            <Link href="/daily/picks" className="dly-cta" onClick={() => savePlan({ day, months })}>Start at {usd(day)} a day</Link>
+            <Link href="/engagement-rings" className="dly-cta">Start at {usd(day)} a day</Link>
           </div>
         </div>
       </div>
