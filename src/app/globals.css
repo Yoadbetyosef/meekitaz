@@ -3863,3 +3863,25 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .rp-float .rp-d{transform:translate(-50%,-36%) rotate(var(--r,0deg));transition:opacity .14s,transform .75s cubic-bezier(.16,.9,.24,1)}
 .rp-float .rp-d.on{transform:translate(-50%,-50%) rotate(var(--r,0deg));animation:rpHover 1.4s ease-in-out .4s infinite alternate}
 @keyframes rpHover{to{translate:0 -8px}}
+
+/* ===== The opening is Meekitaz Daily (approved 2026-11-09, film 30% "like today"): straight after the blue — the film on the left,
+   the whole Daily section (statement, numbers, badges, reviews, the live plan ticket) in the rest of the screen ===== */
+.hop-daily .hop-dly .fun{position:relative;height:100%;min-height:0;background:none;z-index:auto}
+.hop-daily .hop-dly .fun-stick{height:100%;min-height:0;overflow:visible}
+.hop-daily .hop-dly .dly{position:absolute;inset:0;min-height:0}
+@media(min-width:768px){
+.hop-daily .hop-dly{position:absolute;left:30%;right:0;top:0;bottom:0}
+.hop-daily .dly{grid-template-columns:1fr auto;gap:40px;padding:clamp(96px,12vh,124px) 48px 40px 56px}
+.hop-daily .dly-l{width:min(560px,36vw)}
+.hop-daily .dly-st{font-size:clamp(26px,2.5vw,40px)}
+.hop-daily .dly-tk{width:min(380px,25vw)}
+}
+@media(max-width:767px){
+.hop.hop-daily{position:relative;height:auto;min-height:100svh}
+.hop-daily .hop-film{top:80px;bottom:auto;width:42vw;aspect-ratio:9/14}
+.hop-daily .hop-dly .fun,.hop-daily .hop-dly .fun-stick{height:auto}
+.hop-daily .hop-dly .dly{position:relative;inset:auto;padding-top:80px}
+.hop-daily .dly-l>.dly-kick,.hop-daily .dly-st{margin-left:calc(42vw + 14px);text-align:left}
+.hop-daily .dly-st{min-height:calc(42vw * 14 / 9 - 28px);font-size:22px}
+}
+.home-page .hop-daily .fun{display:block!important}

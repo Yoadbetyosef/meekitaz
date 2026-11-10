@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
 import Signature from "@/components/Signature";
 
@@ -9,13 +9,13 @@ import Signature from "@/components/Signature";
    hand and the button never touch the film. Sizes of the hand and the words as before. */
 const L1 = "We take diamonds seriously.", L2 = "Life, a little less.";
 
-export default function HomeOpenPhone() {
+export default function HomeOpenPhone({ children }: { children?: ReactNode }) {
   const sec = useRef<HTMLElement>(null), v = useRef<HTMLVideoElement>(null), p = useRef<HTMLParagraphElement>(null);
   const [sig, setSig] = useState(false);
   useEffect(() => {
-    const s = sec.current, vid = v.current, para = p.current; if (!s || !vid || !para) return;
+    const s = sec.current, vid = v.current, para = p.current; if (!s || !vid) return;
     let raf = 0, t0 = 0;
-    const chars = [...para.querySelectorAll<HTMLElement>("span")];
+    const chars = para ? [...para.querySelectorAll<HTMLElement>("span")] : [];
     const tick = (now: number) => {
       if (!t0) t0 = now; const el = (now - t0) / 1000 - .9;
       const n = Math.round(Math.max(0, Math.min(1, el / 2)) * chars.length); chars.forEach((c, i) => c.classList.toggle("on", i < n));
@@ -35,6 +35,13 @@ export default function HomeOpenPhone() {
     return () => { cancelAnimationFrame(raf); window.removeEventListener("mk-intro-lift", go); window.removeEventListener("mk-intro-done", go); };
   }, []);
   const ch = (s: string, k: string) => [...s].map((c, i) => c === " " ? " " : <span key={k + i}>{c}</span>);
+  if (children) return (
+    // (2026-11-09) the opening is Meekitaz Daily: the film stays on the side (30%, as before), the whole Daily section beside it
+    <section className="hop hop-daily" ref={sec} aria-label="Meekitaz Daily">
+      <div className="hop-film"><video ref={v} muted loop playsInline preload="none" aria-hidden="true" /><i className="hop-pl d" aria-hidden="true" /></div>
+      <div className="hop-dly">{children}</div>
+    </section>
+  );
   return (
     <section className="hop" ref={sec} aria-label="We take diamonds seriously. Life, a little less.">
       <div className="hop-film"><video ref={v} muted loop playsInline preload="none" aria-hidden="true" /><i className="hop-pl d" aria-hidden="true" /></div>
