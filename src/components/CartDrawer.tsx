@@ -1,5 +1,6 @@
 "use client";
-import { PlanSummary } from "./PlanKit";
+import { PlanSummary, usePlan } from "./PlanKit";
+import { loadPlan, savePlan } from "@/lib/plan";
 import SizePicker from "./SizePicker";
 import { DailyPlanPicker, DailyLine, DailyOwn, DailyArrival } from "./DailyPrice";
 import { useDaily } from "./DailyMode";
@@ -29,6 +30,8 @@ const Trust = () => (
 export default function CartDrawer() {
   const { cart, open, busy, setOpen, setQty, remove, rings, ringError, bagCount, setRingSize, removeRing, setCartRingSize, removeCartRing, checkout, addCare, setExpress } = useCart();
   const daily = useDaily();
+  const [payDaily, setPayDaily] = useState(true); // (2026-11-10, approved "B3") a few dollars a day is the default choice
+  const planNow = usePlan();
   const [planAmt, setPlanAmt] = useState<number | undefined>(undefined);
   const router = useRouter();
   const lines = cart?.lines ?? [];
@@ -158,7 +161,18 @@ export default function CartDrawer() {
               <div className="cd-arr"><span>Arrives by</span><span>{arrivalLabel()}</span></div></>}
               <div><small>Taxes calculated at checkout</small></div>
               <div className="t"><span>Total</span><span>{money(subtotal, cur)}</span></div>
-              <PlanSummary price={subtotal} cart />
+              {!daily && subtotal > 0 && (() => {
+                const mo = planNow?.months ?? 4, d = Math.ceil(subtotal / (30 * mo));
+                return <div className="cd-pay" role="radiogroup" aria-label="How to pay">
+                  <button type="button" role="radio" aria-checked={payDaily} className={`cd-pay-o${payDaily ? " on" : ""}`} onClick={() => setPayDaily(true)}>
+                    <i className="cd-rd" /><span className="cd-pay-t"><small>A few dollars a day <em>No interest</em></small><b>{money(d, cur).replace(/\.00$/, "")}</b> <i>a day · {mo} months</i></span>
+                    <span className="d-coin"><b>{money(d, cur).replace(/\.00$/, "")}</b><i>a day</i></span>
+                  </button>
+                  <button type="button" role="radio" aria-checked={!payDaily} className={`cd-pay-o${payDaily ? "" : " on"}`} onClick={() => setPayDaily(false)}>
+                    <i className="cd-rd" /><span className="cd-pay-t full"><small>Pay in full</small><b>{money(subtotal, cur)}</b> <i>today</i></span>
+                  </button>
+                </div>;
+              })()}
               <DailyPlanPicker price={subtotal} amt={planAmt} onChange={setPlanAmt} title="Your plan" />
               {daily && <div className="cd-dly"><DailyArrival express={express} /><DailyOwn compact /></div>}
             </div>
@@ -167,8 +181,10 @@ export default function CartDrawer() {
             {daily && !needSize ? <Link className="cd-co" href={`/daily/checkout?amt=${planAmt ?? (dailyOptions(subtotal).find(o => o.ok) || dailyOptions(subtotal)[4]).amt}`} onClick={() => setOpen(false)}>Start my plan · ${planAmt ?? (dailyOptions(subtotal).find(o => o.ok) || dailyOptions(subtotal)[4]).amt} a day</Link> : null}
             {daily && !needSize ? <a className="cd-co cd-full" href={rings.length ? undefined : cart?.checkoutUrl} onClick={rings.length ? () => checkout() : undefined}>or pay in full · {money(subtotal, cur)}</a>
             : needSize ? <button className="cd-co" disabled>Select your ring size to continue</button>
-              : rings.length > 0 ? <button className="cd-co" disabled={busy} onClick={checkout}>{busy ? "One moment…" : "Checkout"}</button>
-              : <a className="cd-co" href={cart!.checkoutUrl}>Checkout</a>}
+              : payDaily && subtotal > 0 ? <Link className="cd-co" href={`/daily/checkout?amt=${Math.ceil(subtotal / (30 * (planNow?.months ?? 4)))}`} onClick={() => { if (!loadPlan()) savePlan({ day: Math.ceil(subtotal / 120), months: 4 }); setOpen(false); }}>Start at {money(Math.ceil(subtotal / (30 * (planNow?.months ?? 4))), cur).replace(/\.00$/, "")} a day</Link>
+              : rings.length > 0 ? <button className="cd-co" disabled={busy} onClick={checkout}>{busy ? "One moment…" : `Pay ${money(subtotal, cur)}`}</button>
+              : <a className="cd-co" href={cart!.checkoutUrl}>Pay {money(subtotal, cur)}</a>}
+            {!daily && !needSize && subtotal > 0 && <p className="cd-pay-n">{payDaily ? `First payment today: ${money(Math.ceil(subtotal / (30 * (planNow?.months ?? 4))), cur).replace(/\.00$/, "")}. Wear it from the first one.` : "One payment, all yours."}</p>}
             {installments(subtotal) && <p className="cd-inst">{installments(subtotal)}</p>}
             <div className="cd-wallets" aria-label="Ways to pay" role="group">
               <small>Pay with</small>

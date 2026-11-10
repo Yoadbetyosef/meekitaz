@@ -4110,3 +4110,17 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 .d-how{background:none;border:0;border-bottom:1px solid currentColor;padding:0 0 1px;cursor:pointer;color:#2752E6!important;font:400 10px var(--body)!important;letter-spacing:.18em;text-transform:uppercase}
 .d-tile{width:100%;border:1px solid rgba(28,26,27,.12);cursor:pointer;font:inherit}
 .d-tile .d-go{color:#2752E6}
+
+/* ===== The bag (approved 2026-11-10, "B3"): two choice cards under the total — a few dollars a day (chosen) or in full ===== */
+.cd-pay{display:flex;flex-direction:column;gap:10px;margin:12px 0 4px}
+.cd-pay-o{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:1.5px solid #e6e1d8;border-radius:20px;padding:14px;background:#fff;cursor:pointer;font:inherit;color:var(--ink)}
+.cd-pay-o.on{border-color:#2752E6;background:#F5F8FF}
+.cd-rd{flex:none;width:20px;height:20px;border-radius:50%;border:1.5px solid #bbb;position:relative}
+.cd-pay-o.on .cd-rd{border-color:#2752E6}.cd-pay-o.on .cd-rd::after{content:"";position:absolute;inset:3px;border-radius:50%;background:#2752E6}
+.cd-pay-t{flex:1}
+.cd-pay-t small{display:block;font:400 9.5px var(--body);letter-spacing:.16em;text-transform:uppercase;color:#777}
+.cd-pay-t small em{display:inline-block;white-space:nowrap;font:400 8px var(--body);font-style:normal;letter-spacing:.14em;background:#1E8A4F;color:#fff;border-radius:999px;padding:3px 8px;margin-left:6px;vertical-align:middle}
+.cd-pay-t b{font:400 34px/1.05 var(--display)}.cd-pay-t>i{font:italic 500 15px var(--sub);color:#444}
+.cd-pay-t.full b{font-size:24px}
+.cd-pay-o .d-coin{width:58px;height:58px}.cd-pay-o .d-coin b{font-size:19px}
+.cd-pay-n{font:italic 500 15px var(--sub);color:#555;text-align:center;margin:8px 0 0}

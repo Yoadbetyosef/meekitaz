@@ -1,7 +1,9 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "./CartProvider";
 import { useDaily } from "./DailyMode";
+import { loadPlan } from "@/lib/plan";
 import { dailyPlan } from "@/lib/daily";
 import { DailyOwn, DailyArrival, DailyLess } from "./DailyPrice";
 
@@ -9,7 +11,10 @@ import { DailyOwn, DailyArrival, DailyLess } from "./DailyPrice";
 const usd = (n: number) => "$" + (Math.round(n * 100) / 100).toLocaleString("en-US", { maximumFractionDigits: 2 });
 const day = (d: Date) => d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 export default function DailyCheckout() {
-  const on = useDaily(); const { cart, rings } = useCart();
+  const on0 = useDaily(); const { cart, rings } = useCart();
+  // (2026-11-10) open to anyone who chose "a few dollars a day" in the bag (they have a plan), not only the preview
+  const [hasPlan, setHasPlan] = useState(false); useEffect(() => { setHasPlan(!!loadPlan()); }, []);
+  const on = on0 || hasPlan;
   if (!on) return <main className="dh"><div className="wrap" style={{ paddingTop: 160 }}><h1>Not available</h1><Link href="/" className="pill">Back to the shop</Link></div></main>;
   const lines = cart?.lines || [];
   const items = [
@@ -18,7 +23,7 @@ export default function DailyCheckout() {
   ];
   const total = items.reduce((a, b) => a + b.p, 0);
   if (!items.length) return <main className="dco"><div className="wrap"><h1>Your bag is empty</h1><Link href="/engagement-rings" className="pill dk">Find your ring</Link></div></main>;
-  const d = dailyPlan(total); const start = new Date();
+  const pl = hasPlan ? loadPlan() : null; const d = dailyPlan(total, pl ? pl.months * 30 : undefined); const start = new Date(); // the bag's own numbers when they came from a plan
   const sched = Array.from({ length: 7 }, (_, i) => { const x = new Date(start); x.setDate(x.getDate() + i); return x; });
   const end = new Date(start); end.setDate(end.getDate() + d.days - 1);
   return (
