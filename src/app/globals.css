@@ -3916,3 +3916,35 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .hop-daily .dly-rev{order:4!important}
 .hop-daily .dly-tk{order:5!important;margin-top:8px}
 }
+
+/* ===== Daily on phones (approved 2026-11-09, "A · film on top"): the new wide film as a full-width band under the pill, then everything
+   full width and bigger — the statement, the numbers, the plan ticket (big product, huge amount, thick slider, big month buttons),
+   then the badges in two big columns, the faces and the guarantees ===== */
+@media(max-width:767px){
+.hop-daily .hop-film{position:relative!important;top:auto!important;left:auto!important;bottom:auto!important;width:100%!important;aspect-ratio:16/9!important;margin-top:76px;transform:none}
+.hop-daily .hop-film video{object-fit:cover}
+.hop-daily .hop-dly .dly{padding:22px 18px calc(env(safe-area-inset-bottom,0px) + 110px)!important;gap:18px!important;text-align:left}
+.hop-daily .dly-l>.dly-kick,.hop-daily .dly-st{margin-left:0!important;text-align:left!important;min-height:0!important}
+.hop-daily .dly-kick{font-size:11px!important;letter-spacing:.34em}
+.hop-daily .dly-st{font-size:34px!important;line-height:1.08!important}
+.hop-daily .dly-three{display:flex!important;order:2;gap:28px;border-top:1px solid rgba(28,26,27,.14);padding-top:14px;margin:0}
+.hop-daily .dly-three b{font-size:30px!important}.hop-daily .dly-three span{font-size:17px!important}
+.hop-daily .dly-tk{order:3!important;padding:22px 20px!important;border-radius:28px!important;margin-top:4px}
+.hop-daily .dly-stage{height:170px!important}
+.hop-daily .dly-pn{font-size:19px!important}
+.hop-daily .dly-ln b{font-size:44px!important}
+.hop-daily .dly-sl input[type=range]{height:10px!important;margin:16px 0!important}
+.hop-daily .dly-sl input[type=range]::-webkit-slider-thumb{width:36px!important;height:36px!important}
+.hop-daily .dly-mo{display:grid!important;grid-template-columns:repeat(4,1fr);width:100%}
+.hop-daily .dly-mo-w{flex-direction:column-reverse;align-items:stretch}
+.hop-daily .dly-mo button{width:auto!important;height:52px!important;border-radius:16px!important;font-size:18px!important}
+.hop-daily .dly-tot b{font-size:38px!important}
+.hop-daily .dly-cta{height:58px!important;font-size:12.5px!important}
+.hop-daily .dly-badges{order:4!important;gap:8px!important}
+.hop-daily .dly-badges i{height:42px!important;font-size:10px!important;letter-spacing:.14em!important}
+.hop-daily .dly-badges i::before{flex-basis:22px!important;height:22px!important;background-size:12px!important}
+.hop-daily .dly-rev{order:5!important;justify-content:flex-start!important}
+.hop-daily .dly-faces img{width:46px!important;height:46px!important}
+.hop-daily .dly-sc b{font-size:28px!important}.hop-daily .dly-sc b em{font-size:18px!important}.hop-daily .dly-sc span{font-size:9px!important}
+.hop-daily .dly-trust span{font-size:19px!important}
+}

@@ -25,8 +25,9 @@ export default function HomeOpenPhone({ children }: { children?: ReactNode }) {
     // (2026-11-09) no jump: the film is chosen and loaded right away (paused, its poster = its own first frame), and the entrance runs
     // exactly once — before, the lift and the done events each restarted it, reloading the film mid-slide
     const phone = window.matchMedia("(max-width:767px)").matches;
-    vid.poster = phone ? "/media/home/open-film-m0.jpg" : "/media/home/open-film-d0.jpg";
-    vid.preload = "auto"; vid.muted = true; vid.src = phone ? "/media/home/open-film-m.mp4?v=2" : "/media/home/open-film-d.mp4";
+    const band = phone && !!s.closest(".hop-daily") || (phone && s.classList.contains("hop-daily")); // (2026-11-09) phones with Daily: the wide film as a band on top
+    vid.poster = band ? "/media/home/open-film-band0.jpg" : phone ? "/media/home/open-film-m0.jpg" : "/media/home/open-film-d0.jpg";
+    vid.preload = "auto"; vid.muted = true; vid.src = band ? "/media/home/open-film-band.mp4" : phone ? "/media/home/open-film-m.mp4?v=2" : "/media/home/open-film-d.mp4";
     let started = false;
     const go = () => { if (started) return; started = true; s.classList.add("on"); vid.play().catch(() => {}); raf = requestAnimationFrame(tick); };
     const html = document.documentElement;
