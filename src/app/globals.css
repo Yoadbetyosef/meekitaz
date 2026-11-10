@@ -3885,3 +3885,4 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .hop-daily .dly-st{min-height:calc(42vw * 14 / 9 - 28px);font-size:22px}
 }
 .home-page .hop-daily .fun{display:block!important}
+.home-page .hop-daily .fun{position:relative!important;top:auto!important;margin-top:0}
