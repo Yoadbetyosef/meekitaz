@@ -4062,3 +4062,7 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .dco-cta{height:48px;font-size:10.5px;padding:0 24px}
 .dco-marks{gap:10px;font-size:8.5px}
 }
+/* (2026-11-10) during the blue opening only the blue: the plan circle (and its panel) wait, like the pill, the bag and Marcel, and come
+   in as the home page rises */
+html.mk-intro-on .pl-orb-w,html.mk-intro-on .pl-panel{opacity:0;pointer-events:none;visibility:hidden}
+html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition:opacity .5s .25s}
