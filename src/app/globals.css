@@ -3966,4 +3966,3 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .dly-tot span{line-height:1.3}
 .dly-tot em{white-space:nowrap}
 .dly-tk{contain:layout}
-@media(min-width:768px){.hop-daily .dly{align-items:start!important}.hop-daily .dly-l{align-self:center}}
