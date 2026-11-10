@@ -24,11 +24,12 @@ export function PlanDay({ price, ring = false }: { price: number; ring?: boolean
 /** Under the total in Your ring and in the bag (approved 2026-11-09), made of the summary's own rows and the page's swap buttons:
  *  the ring per day on the customer's plan, "In your plan" or "$N a day over your plan", and the two ways up — raise the daily amount
  *  in one tap, or add a month. With no plan yet: "Or wear it daily" and "Make it my plan". */
-export function PlanSummary({ price, cart = false }: { price: number; cart?: boolean }) {
+export function PlanSummary({ price, cart = false, pp = false }: { price: number; cart?: boolean; pp?: boolean }) {
   const p = usePlan(); if (!price) return null;
   const btn = (txt: string, fn: () => void) => <button type="button" className="df-swap" onClick={fn}>{txt}</button>;
   if (!p) {
     const d4 = Math.ceil(price / 120);
+    if (pp) return <><div className="pp-price pl-pp"><b>{usdR(d4)} a day</b><i>for 4 months · no interest</i></div><div className="pl-acts">{btn("Make it my plan", () => savePlan({ day: Math.min(50, d4), months: 4 }))}</div></>;
     return <>
       {cart ? <div><span>Or wear it daily</span><span>{usdR(d4)} a day · 4 mo</span></div>
         : <div className="df-ln pl-row"><span>Or wear it daily<em>{usdR(d4)} a day for 4 months — no interest</em></span><b>{usdR(d4)} a day</b></div>}
@@ -36,6 +37,11 @@ export function PlanSummary({ price, cart = false }: { price: number; cart?: boo
     </>;
   }
   const need = perDay(price, p), over = need - p.day, more = p.months < 4 ? perDay(price, { ...p, months: p.months + 1 }) : null;
+  const acts = over > 0 && <div className="pl-acts">
+    {need <= 50 && btn(`Make my plan ${usdR(need)} a day`, () => savePlan({ ...p, day: need }))}
+    {more !== null && btn(`Add a month · ${usdR(more)} a day`, () => savePlan({ ...p, months: p.months + 1 }))}
+  </div>;
+  if (pp) return <><div className="pp-price pl-pp"><b>{usdR(need)} a day</b><i>{over <= 0 ? `✓ In your plan · ${usdR(p.day)} a day, ${p.months} mo` : `${usdR(over)} a day over your plan`}</i></div>{acts}</>;
   return <>
     {cart ? <div><span>Your plan · {usdR(p.day)} a day · {p.months} mo</span><span>{usdR(need)} a day</span></div>
       : <div className="df-ln pl-row"><span>Your plan<em>{usdR(p.day)} a day · {p.months} mo · up to {usdR(p.day * 30 * p.months)}</em></span><b>{usdR(need)} a day</b></div>}

@@ -4004,3 +4004,6 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .pl-acts{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 14px}
 .pl-acts .df-swap{margin-top:6px}
 .cd-sum .pl-st{font-size:16px;margin:6px 0 0}
+
+.dly-cta{border:0;cursor:pointer;font-family:inherit}
+.pp-price.pl-pp{margin-top:6px}.pp-price.pl-pp b{font-size:.78em}.pp-price.pl-pp i{font-style:italic}

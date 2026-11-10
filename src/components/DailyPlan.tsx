@@ -75,13 +75,13 @@ export default function DailyPlan({ items }: { items: DailyItem[] }) {
               <div className="dly-mo-w"><div className="dly-mo" role="group" aria-label="Months">{[1, 2, 3, 4].map(m => <button key={m} type="button" className={m === months ? "on" : ""} onClick={() => setMonths(m)} aria-label={`${m} ${m > 1 ? "months" : "month"}`}>{m}</button>)}</div><span className="dly-mo-cap">{months > 1 ? "Months" : "Month"}</span></div>
             </div>
             <div className="dly-tot"><span>Yours, up to <em>· {usd(day)} a day for {months} {months > 1 ? "months" : "month"}</em></span><b>{usd(total)}</b></div>
-            <Link href="/engagement-rings" className="dly-cta" onClick={e => {
+            <button type="button" className="dly-cta" onClick={() => {
               // (2026-11-09) Start keeps the plan and lets them choose what they want: on the home page it glides down to the categories,
               // anywhere else it opens the menu's category tiles — never straight into engagement rings
-              savePlan({ day, months }); e.preventDefault();
+              savePlan({ day, months });
               const cats = document.querySelector<HTMLElement>(".home-page .catd, .home-page #shop");
               if (cats && cats.offsetHeight > 0) cats.scrollIntoView({ behavior: "smooth", block: "start" }); else window.dispatchEvent(new Event("mk-menu-open"));
-            }}>Start at {usd(day)} a day</Link>
+            }}>Start at {usd(day)} a day</button>
           </div>
         </div>
       </div>

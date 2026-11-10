@@ -15,6 +15,7 @@ import type { RingVariant } from "@/lib/shopify";
 import { saveSetting, diamondsUrl, loadStone, clearStone, sameShape, baseShape } from "@/lib/setting";
 import WishHeart, { ShareArrow } from "./WishHeart";
 import { DailyBlock, DailyLine } from "./DailyPrice";
+import { PlanSummary } from "./PlanKit";
 import { useDaily } from "./DailyMode";
 import { dailyPlan } from "@/lib/daily";
 import { fancyColorOf } from "@/lib/fancy";
@@ -148,7 +149,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
   const metalWord = nm(metalNow || "").replace(/\s*gold$/i, "");
   const purity = hasOpts ? (osel["Gold Purity"] || "") : kLabel;
   const summary = [[purity, metalWord].filter(Boolean).join(" "), ...(ring && cv ? [cv.shape, ...(ring.color ? [`${ring.color} diamond`] : [])] : []) /* an engagement ring is the setting only: the diamond is chosen in step 2, so a colour is named only on the fancy-colour designs */, ...(hasOpts ? rows.filter(r => r.name !== "Gold Purity").map(r => String(osel[r.name] || "").replace(/ Carat$/i, " ct")) : []), ...real.map(o => sel[o.name] || "")].filter(Boolean);
-  const priceNode = <><DailyBlock price={price} /><div className="pp-price"><b>{usd(price)}</b>{compareAt > 0 && <><s>{usd(compareAt)}</s><i>{ring ? "Setting only" : `Save ${usd(compareAt - price)}`}</i></>}</div></>;
+  const priceNode = <><DailyBlock price={price} /><div className="pp-price"><b>{usd(price)}</b>{compareAt > 0 && <><s>{usd(compareAt)}</s><i>{ring ? "Setting only" : `Save ${usd(compareAt - price)}`}</i></>}</div><PlanSummary price={price} pp /></>;
   // the metal (and its colour) sit apart from the other choices: on a phone they are the slim bar at the top
   const metalNode = (
     <>
