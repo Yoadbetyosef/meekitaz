@@ -3858,8 +3858,3 @@ body:has(.home-page){--blue-light:#FEF5D9}
 
 .hop-film{will-change:transform;backface-visibility:hidden}
 .hop-film video{background:#FEF5D9}
-/* (2026-11-09) the page simply scrolls on: no sticky opening and no sheet rising over it — the opening's film runs straight into the
-   reel of Find your thing below it, one unbroken column on the left */
-.home-page .hop{position:relative!important;top:auto}
-.home-page .over-fun{border-radius:0!important;box-shadow:none!important}
-@media(max-width:767px){.home-page .over-fun{border-radius:0!important}}
