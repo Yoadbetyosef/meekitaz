@@ -3996,3 +3996,11 @@ body:has(.home-page){--blue-light:#FEF5D9}
 .rf-plan input[type=range]{width:100%;accent-color:var(--ink);margin:12px 0 10px}
 .rf-plan .rf-pills{margin-bottom:6px}
 .rf-plan-n{font:italic 500 15px var(--sub);color:#555;margin:6px 0 8px}
+
+/* the plan under the total in Your ring and the bag (approved 2026-11-09): the summary's own rows + the page's swap buttons */
+.pl-row b{white-space:nowrap}
+.pl-st{font:italic 500 17px/1.35 var(--sub);margin:10px 0 2px}
+.pl-st.ok::before{content:"✓ ";font-style:normal;color:#0D4FE7}
+.pl-acts{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 14px}
+.pl-acts .df-swap{margin-top:6px}
+.cd-sum .pl-st{font-size:16px;margin:6px 0 0}

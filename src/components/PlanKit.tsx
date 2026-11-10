@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { loadPlan, perDay, usdR, type Plan } from "@/lib/plan";
+import { loadPlan, savePlan, perDay, usdR, type Plan } from "@/lib/plan";
 import { loadSetting } from "@/lib/setting";
 
 /* Meekitaz Daily — the customer's plan inside the site's own design (approved 2026-11-09): no new bars or badges, only the site's
@@ -19,4 +19,33 @@ export function PlanDay({ price, ring = false }: { price: number; ring?: boolean
   if (!p || !price) return null;
   const all = price + (ring ? setP : 0), d = perDay(all, p), over = d > p.day;
   return <span className={`price pl-day${over ? " over" : ""}`}>{ring && setP ? "the ring " : ""}{usdR(d)} a day{over ? <em>+{usdR(d - p.day)}</em> : null}</span>;
+}
+
+/** Under the total in Your ring and in the bag (approved 2026-11-09), made of the summary's own rows and the page's swap buttons:
+ *  the ring per day on the customer's plan, "In your plan" or "$N a day over your plan", and the two ways up — raise the daily amount
+ *  in one tap, or add a month. With no plan yet: "Or wear it daily" and "Make it my plan". */
+export function PlanSummary({ price, cart = false }: { price: number; cart?: boolean }) {
+  const p = usePlan(); if (!price) return null;
+  const btn = (txt: string, fn: () => void) => <button type="button" className="df-swap" onClick={fn}>{txt}</button>;
+  if (!p) {
+    const d4 = Math.ceil(price / 120);
+    return <>
+      {cart ? <div><span>Or wear it daily</span><span>{usdR(d4)} a day · 4 mo</span></div>
+        : <div className="df-ln pl-row"><span>Or wear it daily<em>{usdR(d4)} a day for 4 months — no interest</em></span><b>{usdR(d4)} a day</b></div>}
+      <div className="pl-acts">{btn("Make it my plan", () => savePlan({ day: Math.min(50, d4), months: 4 }))}</div>
+    </>;
+  }
+  const need = perDay(price, p), over = need - p.day, more = p.months < 4 ? perDay(price, { ...p, months: p.months + 1 }) : null;
+  return <>
+    {cart ? <div><span>Your plan · {usdR(p.day)} a day · {p.months} mo</span><span>{usdR(need)} a day</span></div>
+      : <div className="df-ln pl-row"><span>Your plan<em>{usdR(p.day)} a day · {p.months} mo · up to {usdR(p.day * 30 * p.months)}</em></span><b>{usdR(need)} a day</b></div>}
+    {over <= 0 ? <p className="pl-st ok">In your plan{over < 0 ? ` — ${usdR(-over)} a day to spare` : ""}.</p>
+      : <>
+        <p className="pl-st">{usdR(over)} a day over your plan.</p>
+        <div className="pl-acts">
+          {need <= 50 && btn(`Make my plan ${usdR(need)} a day`, () => savePlan({ ...p, day: need }))}
+          {more !== null && btn(`Add a month · ${usdR(more)} a day`, () => savePlan({ ...p, months: p.months + 1 }))}
+        </div>
+      </>}
+  </>;
 }

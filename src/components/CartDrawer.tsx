@@ -1,4 +1,5 @@
 "use client";
+import { PlanSummary } from "./PlanKit";
 import SizePicker from "./SizePicker";
 import { DailyPlanPicker, DailyLine, DailyOwn, DailyArrival } from "./DailyPrice";
 import { useDaily } from "./DailyMode";
@@ -157,6 +158,7 @@ export default function CartDrawer() {
               <div className="cd-arr"><span>Arrives by</span><span>{arrivalLabel()}</span></div></>}
               <div><small>Taxes calculated at checkout</small></div>
               <div className="t"><span>Total</span><span>{money(subtotal, cur)}</span></div>
+              <PlanSummary price={subtotal} cart />
               <DailyPlanPicker price={subtotal} amt={planAmt} onChange={setPlanAmt} title="Your plan" />
               {daily && <div className="cd-dly"><DailyArrival express={express} /><DailyOwn compact /></div>}
             </div>
