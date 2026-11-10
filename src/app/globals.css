@@ -3886,3 +3886,7 @@ body:has(.home-page){--blue-light:#FEF5D9}
 }
 .home-page .hop-daily .fun{display:block!important}
 .home-page .hop-daily .fun{position:relative!important;top:auto!important;margin-top:0}
+/* (2026-11-09) the faces never get squeezed under "5.0": the faces and the score keep their own width; the row wraps instead */
+.dly-faces,.dly-sc{flex:none}
+.dly-faces img{flex:none}
+.dly-rev{flex-wrap:wrap;row-gap:14px}
