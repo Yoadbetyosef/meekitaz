@@ -3,8 +3,8 @@ import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
 import GridMood from "./GridMood";
 import Link from "next/link";
-import { usePlan } from "./PlanKit";
-import { savePlan, clearPlan, planTotal, planTier, usdR } from "@/lib/plan";
+import { usePlan, usePlanRoom, PlanTile } from "./PlanKit";
+import { savePlan, clearPlan, planTotal, planOrder, saveFit, usdR } from "@/lib/plan";
 import RtsVideoTile from "./RtsVideoTile";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -31,7 +31,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
   const [cursor, setCursor] = useState<string | null>(isDefault ? c0 : null);
   const [busy, setBusy] = useState(!isDefault);
   const [pop, setPop] = useState<Pop>(null);
-  const plan = usePlan(); const [fitFirst, setFitFirst] = useState(true);
+  const plan = usePlan(); const room = usePlanRoom(); const fitFirst = room?.fit ?? true;
   const [price, setPrice] = useState<[number, number]>([pmin, pmax]);
   const wrap = useRef<HTMLDivElement>(null);
 
@@ -85,11 +85,9 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
     </div>
   );
 
-  // Your plan (Meekitaz Daily): what fits first, then a tile, then what's just a little more; further than that waits for "Show what fits first" off
-  const fitOn = !!plan && fitFirst;
-  const pIn = fitOn ? items.filter(x => planTier(+x.price, plan!) === "in").sort((x, y) => +y.price - +x.price) : items;
-  const pNear = fitOn ? items.filter(x => planTier(+x.price, plan!) === "near").sort((x, y) => +x.price - +y.price) : [];
-  const shown = fitOn ? [...pIn, ...pNear] : items, split = fitOn && pNear.length ? pIn.length : -1;
+  // Your plan (Meekitaz Daily): by what's left after the bag — what fits, the tile, a little more, then the rest
+  const ord = room && fitFirst ? planOrder(items, x => +x.price, room.left, room.p) : null;
+  const shown = ord ? ord.shown : items, split = ord ? ord.split : -1;
   return (
     <section className="grid-wrap" id={fancy ? "settings" : "results"} aria-label="The collection">
       <div className="wrap" ref={wrap}>
@@ -115,7 +113,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
             <input type="range" min={1} max={50} value={plan.day} onChange={e => savePlan({ ...plan, day: +e.target.value })} aria-label="Dollars a day" />
             <div className="rf-pills">{[1, 2, 3, 4].map(m => <button key={m} type="button" className={`rf-pill${m === plan.months ? " on" : ""}`} onClick={() => savePlan({ ...plan, months: m })}>{m} mo</button>)}</div>
             <p className="rf-plan-n">Yours, up to {usdR(planTotal(plan))}.</p>
-            <label className="rf-chk"><input type="checkbox" checked={fitFirst} onChange={() => setFitFirst(v => !v)} />Show what fits first</label>
+            <label className="rf-chk"><input type="checkbox" checked={fitFirst} onChange={() => saveFit(!fitFirst)} />Show what fits first</label>
           </div>)}
           {(tags.length > 0 || plan) && <button type="button" className="rf-reset" onClick={() => { reset(); clearPlan(); }}>Reset all</button>}
         </div>
@@ -128,13 +126,13 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
             </select>
           </label>
         </div>
-        {(tags.length > 0 || plan) && <div className="rf-tags">{plan && <button type="button" className="rf-tag" onClick={clearPlan}>Your plan · {usdR(plan.day)} a day · {plan.months} mo</button>}{tags.map(t => (
+        {(tags.length > 0 || plan) && <div className="rf-tags">{plan && <button type="button" className="rf-tag" onClick={clearPlan}>Your plan · {usdR(plan.day)} a day · {plan.months} mo{room && room.bag > 0 ? ` · ${usdR(Math.max(0, room.left))} left` : ""}</button>}{tags.map(t => (
           <button key={t.k + t.v} type="button" className="rf-tag" onClick={() => t.k === "price" ? set({ min: null, max: null }) : t.k === "type" ? set({ type: null }) : set({ [t.k]: (t.k === "style" ? shapes : t.k === "metal" ? metals : styles).filter(x => x !== t.v).join(",") || null })}>{t.l}</button>))}</div>}
 
         <div className={`pgrid${busy ? " rf-busy" : ""}`} style={{ marginTop: 20 }}>
           {shown.map((p, i) => (
             <Fragment key={p.id}>
-              {i === split && <div className="pgrid-slot"><div className="op-tile">{/* eslint-disable-next-line @next/next/no-img-element */}<img src="/media/rings-style-tile.webp" alt="" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} /><span className="op-cap"><small>Your plan</small><b>Just a little more &rarr;</b></span></div></div>}
+              {i === split && <PlanTile />}
               {/* the mood tile sits after the first two rows (6 on desktop, 4 on a phone: CSS picks the slot) */}
               {handle === "engagement-rings" && i === 4 && items.length > 4 && <GridMood src="/media/rings-mood.mp4" poster="/media/rings-mood-poster.jpg" reveal={{ tag: "Engagement rings", l1: "One stone.", l2: "The whole conversation.", cta: "Shop the look", href: "/products/yellow-gold-cushion-diamond-solitaire-engagement-ring" }} />}
               {/* Fancy Colors: the walking film (yellow cushion on her hand), same opening as the necklaces; the crop keeps the hand in view */}

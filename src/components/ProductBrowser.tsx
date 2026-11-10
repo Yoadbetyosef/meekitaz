@@ -2,6 +2,8 @@
 import GridReelTile from "./GridReelTile";
 import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
+import { usePlanRoom, PlanTile } from "./PlanKit";
+import { clearPlan, planOrder, usdR } from "@/lib/plan";
 import GridMood, { type Reveal } from "./GridMood";
 import Link from "next/link";
 import { Fragment, useState } from "react";
@@ -32,6 +34,10 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
       if (!(reset && r.failed && !r.items.length)) { setItems(r.items); setCursor(r.cursor); setHasNext(r.hasNext); }
     } finally { setBusy(false); }
   }
+  // Your plan (Meekitaz Daily, 2026-11-09): every category in plan order, by what's left after the bag
+  const room = usePlanRoom();
+  const ord = room && room.fit ? planOrder(items, x => +x.price, room.left, room.p) : null;
+  const shown = ord ? ord.shown : items, split = ord ? ord.split : -1;
   return (
     <section className="grid-wrap" id="results" aria-label="The collection">
       <div className="wrap">
@@ -44,9 +50,11 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
             </select>
           </label>
         </div>
+        {room && <div className="rf-tags"><button type="button" className="rf-tag" onClick={clearPlan}>Your plan · {usdR(room.p.day)} a day · {room.p.months} mo{room.bag > 0 ? ` · ${usdR(Math.max(0, room.left))} left` : ""}</button></div>}
         <div className="pgrid">
-          {items.map((p, i) => (
+          {shown.map((p, i) => (
             <Fragment key={p.id}>
+              {i === split && <PlanTile />}
               {/* earrings: the silent mood clip sits after the first two rows (CSS order places it; 6 cards before it on desktop, 4 on phones) */}
               {MOOD[handle] && i === 4 && items.length > 4 && <GridMood src={MOOD[handle].src} poster={MOOD[handle].poster} reveal={MOOD[handle].reveal} />}
               {slot && i === slotAt && <div className="pgrid-slot">{slot}</div>}

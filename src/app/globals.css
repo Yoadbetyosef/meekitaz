@@ -4007,3 +4007,18 @@ body:has(.home-page){--blue-light:#FEF5D9}
 
 .dly-cta{border:0;cursor:pointer;font-family:inherit}
 .pp-price.pl-pp{margin-top:6px}.pp-price.pl-pp b{font-size:.78em}.pp-price.pl-pp i{font-style:italic}
+
+/* ===== The plan circle (approved 2026-11-09): bottom-left, the site's floating-circle language — pink glass, an ink number ===== */
+.pl-orb-w{position:fixed;left:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:59;display:flex;align-items:center;gap:6px}
+.pl-orb{width:84px;height:84px;border-radius:50%;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#1C1A1B;background:linear-gradient(135deg,rgba(240,138,174,.92),rgba(197,113,143,.92) 50%,rgba(245,173,198,.92));box-shadow:0 18px 40px -16px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.5);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);transition:transform .25s,background .3s,color .3s}
+.pl-orb:hover{transform:scale(1.04)}
+.pl-orb b{font:400 26px/1 var(--display)}.pl-orb small{font:400 8.5px var(--body);letter-spacing:.16em;text-transform:uppercase;margin-top:3px}
+.pl-orb.over{background:#1C1A1B;color:#F6B9CF}
+.pl-pm{display:flex;flex-direction:column;gap:6px}
+.pl-pm button{width:32px;height:32px;border-radius:50%;border:0;background:#1C1A1B;color:#fff;font:400 18px/1 var(--display);cursor:pointer;box-shadow:0 8px 18px -10px rgba(0,0,0,.5)}
+.pl-pm button:active{transform:scale(.92)}
+.pl-panel{position:fixed;left:20px;bottom:calc(118px + env(safe-area-inset-bottom,0px));z-index:59;width:280px}
+.pl-panel .rf-pop{position:static;display:block;opacity:1;visibility:visible;transform:none;pointer-events:auto}
+.pl-pan-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}.pl-pan-h span{font:400 10px var(--body);letter-spacing:.18em;text-transform:uppercase;opacity:.7}.pl-pan-h b{font:400 24px var(--display)}
+.pl-pan-n{font:italic 500 15px/1.4 var(--sub);color:#555;margin:8px 0}
+@media(max-width:767px){.pl-orb{width:70px;height:70px}.pl-orb b{font-size:21px}.pl-pm button{width:28px;height:28px}.pl-orb-w{left:14px;bottom:calc(84px + env(safe-area-inset-bottom,0px))}.pl-panel{left:14px;bottom:calc(166px + env(safe-area-inset-bottom,0px))}}
