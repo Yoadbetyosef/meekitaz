@@ -3858,3 +3858,8 @@ body:has(.home-page){--blue-light:#FEF5D9}
 
 .hop-film{will-change:transform;backface-visibility:hidden}
 .hop-film video{background:#FEF5D9}
+
+/* the Floating passage: each piece drifts up into place, weightless, and keeps hovering while it's on */
+.rp-float .rp-d{transform:translate(-50%,-36%) rotate(var(--r,0deg));transition:opacity .14s,transform .75s cubic-bezier(.16,.9,.24,1)}
+.rp-float .rp-d.on{transform:translate(-50%,-50%) rotate(var(--r,0deg));animation:rpHover 1.4s ease-in-out .4s infinite alternate}
+@keyframes rpHover{to{translate:0 -8px}}

@@ -9,7 +9,7 @@ const M_W = 866, M_H = 627;
 type Lay = [number, number, number, number, number][]; // [drawing, x%, y%, height%, rotate]
 /* one passage per category, same rhythm, same airy yellow, black ink, no words:
    the rings (approved 2026-11-08, Z1) and the necklaces (approved 2026-11-08, N3 — each drawing swings in like a pendant) */
-const PASSAGES: Record<string, { set: string; label: string; swing?: boolean; roll?: boolean; stamp?: boolean; dangle?: boolean; color?: boolean; ext?: string; toss?: boolean; flash?: boolean; seq?: [string, number][]; aspect: number[]; d: Lay; p: Lay }> = {
+const PASSAGES: Record<string, { set: string; label: string; float?: boolean; swing?: boolean; roll?: boolean; stamp?: boolean; dangle?: boolean; color?: boolean; ext?: string; toss?: boolean; flash?: boolean; seq?: [string, number][]; aspect: number[]; d: Lay; p: Lay }> = {
   "/engagement-rings": { set: "r", label: "The rings", aspect: [.75, .75, .75, .75, .75, .75],
     d: [[0, 50, 52, 74, 0], [1, 24, 56, 42, -6], [2, 74, 48, 58, 4], [3, 50, 50, 34, 0], [4, 30, 48, 62, -3], [5, 72, 54, 44, 6]],
     p: [[0, 50, 52, 64, 0], [1, 32, 40, 34, -6], [2, 62, 58, 46, 4], [3, 50, 50, 30, 0], [4, 40, 50, 52, -3], [5, 60, 52, 40, 6]] },
@@ -49,6 +49,11 @@ const PASSAGES: Record<string, { set: string; label: string; swing?: boolean; ro
     d: [[0, 50, 54, 50, 0], [1, 26, 50, 40, -5], [2, 74, 52, 42, 5], [3, 50, 48, 36, 0], [4, 28, 54, 32, -4], [5, 72, 50, 34, 5], [6, 34, 50, 42, -3], [7, 68, 52, 34, 4], [0, 50, 54, 58, -6]],
     p: [[0, 50, 52, 28, 0], [1, 50, 44, 26, -5], [2, 50, 56, 26, 5], [3, 50, 48, 22, 0], [4, 50, 52, 22, -4], [5, 50, 48, 22, 5], [6, 50, 52, 28, -3], [7, 50, 50, 22, 4], [0, 50, 52, 32, -6]],
     seq: [["mo", 140], ["d0", 260], ["d1", 130], ["d2", 130], ["mf", 120], ["d3", 130], ["d4", 130], ["d5", 130], ["d6", 130], ["d7", 130], ["d8", 320], ["mf", 340]] },
+  // floating (2026-11-09): his eight floating fantasies in black ink — every piece drifts up into place as if weightless, the M between
+  "/floating": { set: "l", label: "Floating", float: true, aspect: [0.705, 1.616, 0.532, 1.539, 1.812, 0.736, 0.91, 0.798],
+    d: [[0, 50, 50, 56, 0], [1, 28, 48, 34, -4], [2, 72, 52, 60, 3], [3, 50, 48, 36, 0], [4, 30, 52, 30, -3], [5, 70, 50, 52, 4], [6, 36, 52, 46, -2], [7, 66, 50, 50, 3]],
+    p: [[0, 50, 50, 36, 0], [1, 50, 48, 18, -4], [2, 50, 52, 40, 3], [3, 50, 48, 18, 0], [4, 50, 52, 16, -3], [5, 50, 50, 34, 4], [6, 50, 50, 30, -2], [7, 50, 50, 34, 3]],
+    seq: [["mo", 140], ["d0", 220], ["d1", 150], ["d2", 150], ["mf", 130], ["d3", 150], ["d4", 150], ["d5", 150], ["d6", 150], ["d7", 180], ["mf", 360]] },
   "/diamonds": { set: "s", label: "The diamonds", flash: true, aspect: [0.636, 1.149, 1.204, 0.975, 0.656, 1.121],
     d: [[0, 50, 52, 70, 0], [1, 28, 54, 48, -5], [4, 70, 50, 72, 4], [2, 34, 50, 46, -4], [3, 52, 52, 52, 0], [5, 70, 54, 60, 3]],
     p: [[0, 50, 52, 46, 0], [1, 40, 46, 26, -5], [4, 60, 52, 48, 4], [2, 46, 50, 24, -4], [3, 50, 52, 30, 0], [5, 56, 52, 28, 3]] },
@@ -101,7 +106,7 @@ export default function RingPassage({ mPath }: { mPath: string }) {
   const P = PASSAGES[dest.current] || PASSAGES["/engagement-rings"], LAY = phone ? P.p : P.d, cur = frame.split(":")[0];
   const msvg = <svg viewBox={`0 0 ${M_W} ${M_H}`} fillRule="evenodd"><path d={mPath} /></svg>;
   return (
-    <div className={`rp rp-${stage}${P.swing ? " rp-swing" : ""}${P.roll ? " rp-roll" : ""}${P.stamp ? " rp-stamp" : ""}${P.dangle ? " rp-dangle" : ""}${P.toss ? " rp-toss" : ""}${P.flash ? " rp-flashy" : ""}`} aria-hidden="true">
+    <div className={`rp rp-${stage}${P.swing ? " rp-swing" : ""}${P.roll ? " rp-roll" : ""}${P.stamp ? " rp-stamp" : ""}${P.dangle ? " rp-dangle" : ""}${P.toss ? " rp-toss" : ""}${P.flash ? " rp-flashy" : ""}${P.float ? " rp-float" : ""}`} aria-hidden="true">
       <i className="rp-grid" /><i className="rp-x x1" /><i className="rp-x x2" /><i className="rp-x x3" /><i className="rp-x x4" />
       <span className="rp-lab l1">Meekitaz</span><span className="rp-lab l2">{P.label}</span><span className="rp-lab l3">Lab-grown &middot; IGI certified</span>
       <span className="rp-cnt">{String(cnt).padStart(3, "0")}</span>
