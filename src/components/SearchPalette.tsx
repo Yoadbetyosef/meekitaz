@@ -1,4 +1,5 @@
 "use client";
+import { PriceA } from "./PlanKit";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import StoneImg from "./StoneImg";
@@ -103,7 +104,7 @@ export default function SearchPalette({ open, onClose }: { open: boolean; onClos
                   <button key={d.handle} type="button" className={`sq-row${A(href)}`} onMouseEnter={() => setActive(idx(href))} onClick={() => go(href)}>
                     <span className="sq-im">{d.image && <Image src={src} alt="" width={72} height={72} quality={70} unoptimized={isCleaned(src)} />}</span>
                     <span className="sq-tx"><b>{many ? stripMetal(d.title) : d.title}</b><small>{many ? `${d.metals.length} metals` : d.metals[0] || ""}</small></span>
-                    <span className="sq-pr">{usd(d.price, d.currency)}</span>
+                    <span className="sq-pr"><PriceA price={Number(d.price)} size="XS" fmt={n => usd(n, d.currency)} /></span>
                   </button>);
               })}
               {done && failed && <p className="sq-none">Search is unavailable for a moment. Browse below, or try again.</p>}

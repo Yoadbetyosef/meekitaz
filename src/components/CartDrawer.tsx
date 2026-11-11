@@ -1,5 +1,5 @@
 "use client";
-import { PlanSummary, usePlan } from "./PlanKit";
+import { PlanSummary, usePlan, PriceA } from "./PlanKit";
 import { loadPlan, savePlan } from "@/lib/plan";
 import SizePicker from "./SizePicker";
 import { DailyPlanPicker, DailyLine, DailyOwn, DailyArrival } from "./DailyPrice";
@@ -131,7 +131,7 @@ export default function CartDrawer() {
                   </div>}
                   <button className="cd-rm" onClick={() => remove(l.id)} disabled={busy}>Remove</button>
                 </div>
-                <div className="cd-pr">{money(l.price * l.quantity, cur)}{l.compareAt > 0 && <s>{money(l.compareAt * l.quantity, cur)}</s>}</div>
+                <div className="cd-pr"><PriceA price={l.price * l.quantity} compareAt={l.compareAt > 0 ? l.compareAt * l.quantity : null} size="XS" status={false} fmt={n => money(n, cur)} /></div>
                 {isRingLine(l) && <div className="cd-li-size">{sizeBox(l.id, attr(l, "Ring size") || "", v => setCartRingSize([l.id], v))}</div>}
               </div>
             ))}

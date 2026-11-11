@@ -86,10 +86,10 @@ export function PlanSummary({ price, cart = false, pp = false }: { price: number
   if (!p) {
     const d4 = Math.ceil(price / 120);
     // (2026-11-10) never leaves the page: the button starts the plan right here, at this piece's own price a day
-    if (pp) return <div className="d-mini"><span className="d-coin"><b>{usdR(d4)}</b><i>a day</i></span><p><b>Or wear it from today</b>{usdR(d4)} a day for 4 months — no interest.</p><button type="button" className="d-how" onClick={() => savePlan({ day: Math.min(50, d4), months: 4 })}>Start at {usdR(d4)} a day &rarr;</button></div>;
+    if (pp) return <div className="pl-acts">{btn(`Start at ${usdR(d4)} a day →`, () => savePlan({ day: Math.min(50, d4), months: 4 }))}</div>;
+    if (!cart) return <div className="pl-acts">{btn(`Start at ${usdR(d4)} a day →`, () => savePlan({ day: Math.min(50, d4), months: 4 }))}</div>;
     return <>
-      {cart ? <div><span>Or wear it daily</span><span>{usdR(d4)} a day · 4 mo</span></div>
-        : <div className="df-ln pl-row"><span>Or wear it daily<em>{usdR(d4)} a day for 4 months — no interest</em></span><b>{usdR(d4)} a day</b></div>}
+      <div><span>Or wear it daily</span><span>{usdR(d4)} a day · 4 mo</span></div>
       <div className="pl-acts">{btn("Make it my plan", () => savePlan({ day: Math.min(50, d4), months: 4 }))}</div>
     </>;
   }
@@ -98,7 +98,8 @@ export function PlanSummary({ price, cart = false, pp = false }: { price: number
     {need <= 50 && btn(`Make my plan ${usdR(need)} a day`, () => savePlan({ ...p, day: need }))}
     {more !== null && btn(`Add a month · ${usdR(more)} a day`, () => savePlan({ ...p, months: p.months + 1 }))}
   </div>;
-  if (pp) return <><div className="pp-price pl-pp"><b>{usdR(need)} a day</b><i>{over <= 0 ? `✓ In your plan · ${usdR(p.day)} a day, ${p.months} mo` : `${usdR(over)} a day over your plan`}</i></div>{acts}</>;
+  if (pp) return <>{acts}</>;
+  if (!cart) return <>{acts}</>;
   return <>
     {cart ? <div><span>Your plan · {usdR(p.day)} a day · {p.months} mo</span><span>{usdR(need)} a day</span></div>
       : <div className="df-ln pl-row"><span>Your plan<em>{usdR(p.day)} a day · {p.months} mo · up to {usdR(p.day * 30 * p.months)}</em></span><b>{usdR(need)} a day</b></div>}
@@ -147,6 +148,26 @@ export function PlanCardPrice({ price, compareAt, from, fmt }: { price: number; 
       <span className="plc-day"><b>{usdR(d)}</b><i>a day</i></span>
       <span className="plc-full">{from && <>From </>}{fmt(price)}{compareAt && compareAt > price ? <s>{fmt(compareAt)}</s> : null}{off > 0 && <em>{off}% off</em>}</span>
       {over ? <span className="plc-more">{usdR(d - room)} more a day</span> : <span className="plc-fit">In your plan</span>}
+    </span>
+  );
+}
+
+/** The price system (approved 2026-11-11, "A · day first"), the same everywhere on the site:
+ *  1 · the price a day — always the biggest number;  2 · one quiet line — From $X · the struck price · % off;
+ *  3 · where you stand — ● In your plan, or "$N more a day" (only once a plan is started). Only the size changes with the place:
+ *  L product page · M ring builder / totals · S cards · XS lists. With `ring`, a stone shows the whole ring a day (the saved setting + it). */
+export function PriceA({ price, compareAt, from = false, size = "S", ring = false, status = true, note, fmt }: { price: number; compareAt?: number | null; from?: boolean; size?: "L" | "M" | "S" | "XS"; ring?: boolean; status?: boolean; note?: string; fmt?: (n: number) => string }) {
+  const r = usePlanRoom(); const [setP, setSetP] = useState(0);
+  useEffect(() => { if (ring) setSetP(loadSetting()?.price || 0); }, [ring]);
+  if (!price) return null;
+  const f = fmt || usdR, months = r?.p.months ?? 4, all = price + (ring ? setP : 0), d = Math.ceil(all / (30 * months));
+  const room = r ? Math.max(0, r.leftDay) : 0, over = !!r && d > room;
+  const off = compareAt && compareAt > price ? Math.round((1 - price / compareAt) * 100) : 0;
+  return (
+    <span className={`plc plc-${size}`}>
+      <span className="plc-day"><b>{usdR(d)}</b><i>a day{ring && setP ? " · the ring" : ""}</i></span>
+      <span className="plc-full">{from && <>From </>}{f(price)}{off > 0 && <><s>{f(compareAt!)}</s><em>{off}% off</em></>}{note && <span className="plc-note">{note}</span>}</span>
+      {status && r && (over ? <span className="plc-more">{usdR(d - room)} more a day</span> : <span className="plc-fit">In your plan</span>)}
     </span>
   );
 }

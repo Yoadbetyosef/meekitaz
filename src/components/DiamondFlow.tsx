@@ -10,7 +10,7 @@ import { loadSetting, chooseStone, settingFrom, sameShape, baseShape, type Setti
 import SwapDrawer from "./SwapDrawer";
 import WishHeart, { ShareArrow } from "./WishHeart";
 import { DailyLine, DailyTotal } from "./DailyPrice";
-import { PlanSummary } from "./PlanKit";
+import { PlanSummary, PriceA } from "./PlanKit";
 import { saveSetting } from "@/lib/setting";
 import { isGoldMetal, karatStep } from "@/lib/karat";
 import { fancyColorOfStone, fancySettingsUrl } from "@/lib/fancy";
@@ -160,7 +160,7 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
             <h3>Your ring</h3>
             <div className="df-ln"><span>{title(d)}<em>{sub(d)}</em></span><b>{usd(d.price)}</b></div>
             <div className="df-ln"><span>{shown ? shown.title : "No setting yet"}<em>{shown ? `Setting${sMetal ? ", " + sMetal : ""}` : "Pick one to see the total"}</em></span><b>{shown ? usd(shown.price) : "—"}</b></div>
-            <div className="df-tot"><span>Total</span><b>{usd(total)}</b></div>
+            <div className="df-tot"><span>The ring</span><PriceA price={total} size="M" /></div>
             <PlanSummary price={total} />
             <DailyTotal price={total} label={shown ? "Your ring" : "Your diamond"} />
             <button type="button" className="df-cta" onClick={go}>{ctaText}</button>

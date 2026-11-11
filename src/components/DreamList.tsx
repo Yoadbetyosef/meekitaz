@@ -1,4 +1,5 @@
 "use client";
+import { PriceA } from "./PlanKit";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { wishList, removeWish, shareList, sharedId, wishName, wishHref, type WishItem } from "@/lib/wish";
@@ -40,7 +41,7 @@ export default function DreamList() {
         {sorted.map(x => (
           <div key={x.handle} className="dl-i">
             <Link href={wishHref(x)} onClick={() => setOpen(false)} className="im" style={{ backgroundImage: `url(${x.image})` }} aria-label={x.title}>{x.stoneImage && <i className="duo-st" style={{ backgroundImage: `url(${x.stoneImage})` }} />}</Link>
-            <div className="tx"><Link href={wishHref(x)} onClick={() => setOpen(false)}><b>{x.title}</b></Link><small>{usd(x.price)}</small>{x.kind === "design" && <span className="tag-design">Your design</span>}</div>
+            <div className="tx"><Link href={wishHref(x)} onClick={() => setOpen(false)}><b>{x.title}</b></Link><small><PriceA price={Number(x.price)} size="XS" /></small>{x.kind === "design" && <span className="tag-design">Your design</span>}</div>
             {votes[x.handle] ? <span className={`dl-v${top?.handle === x.handle ? " top" : ""}`}>♥ {votes[x.handle]}</span> : null}
             <button className="dl-x" onClick={() => removeWish(x.handle)} aria-label={`Remove ${x.title}`}>×</button>
           </div>
