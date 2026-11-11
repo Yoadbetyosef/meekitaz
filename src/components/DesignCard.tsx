@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import WishHeart, { ShareArrow } from "./WishHeart";
 import { DailyCardPrice } from "./DailyPrice";
-import { PlanDay } from "./PlanKit";
+import { PlanCardPrice, usePlan } from "./PlanKit";
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/shopify";
@@ -16,6 +16,7 @@ const Gem = () => <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" str
 export default function DesignCard({ p, from }: { p: Product; from?: boolean }) {
   const metals = shownMetals(p);
   const [metal, setMetal] = useState(p.metal || metals[0]?.metal || "");
+  const plan = usePlan();
   const cur = metals.find(v => v.metal === metal) || { metal: p.metal || "", handle: p.handle, title: p.title, image: p.image, modelImage: p.modelImage, price: p.price, compareAt: p.compareAt };
   // the on-model photo: this metal's, or the design's (the model shot is made once per design, in yellow gold)
   const model = cur.modelImage || p.modelImage || metals.find(v => v.modelImage)?.modelImage;
@@ -43,7 +44,7 @@ export default function DesignCard({ p, from }: { p: Product; from?: boolean }) 
           </span>
         )}
         <DailyCardPrice price={Number(cur.price)} />
-        <span className="price">{from && <em className="from">From</em>}{usd(cur.price, p.currency)}{cur.compareAt ? <s className="was">{usd(cur.compareAt, p.currency)}</s> : null}</span><PlanDay price={Number(cur.price)} />{/* settings: the price is the setting alone, so "From" (2026-11-04) */}
+        {plan ? <PlanCardPrice price={Number(cur.price)} compareAt={cur.compareAt ? Number(cur.compareAt) : null} from={!!from} fmt={n => usd(n, p.currency)} /> : <span className="price">{from && <em className="from">From</em>}{usd(cur.price, p.currency)}{cur.compareAt ? <s className="was">{usd(cur.compareAt, p.currency)}</s> : null}</span>}{/* settings: the price is the setting alone, so "From" (2026-11-04) */}
       </div>
     </Link>
   );

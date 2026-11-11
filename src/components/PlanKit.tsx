@@ -133,3 +133,20 @@ export function PlanCtxProduct({ price }: { price: number }) {
   useEffect(() => { if (r && price) window.dispatchEvent(new CustomEvent("mk-plan-ctx", { detail: { kind: "prod", perDay: d, fits } })); }, [d, fits, !!r, price]); // eslint-disable-line react-hooks/exhaustive-deps
   return null;
 }
+
+/** The card's price on a plan (approved 2026-11-11, "C1"): the price a day leads, big; under it the regular line — From $1,239, the
+ *  struck compare-at and the % off; then "In your plan" (green dot) or "$5 more a day". Without a plan it shows nothing and the card's
+ *  own price line stays as it was. */
+export function PlanCardPrice({ price, compareAt, from, fmt }: { price: number; compareAt?: number | null; from?: boolean; fmt: (n: number) => string }) {
+  const r = usePlanRoom();
+  if (!r || !price) return null;
+  const d = perDay(price, r.p), room = Math.max(0, r.leftDay), over = d > room;
+  const off = compareAt && compareAt > price ? Math.round((1 - price / compareAt) * 100) : 0;
+  return (
+    <span className="plc">
+      <span className="plc-day"><b>{usdR(d)}</b><i>a day</i></span>
+      <span className="plc-full">{from && <>From </>}{fmt(price)}{compareAt && compareAt > price ? <s>{fmt(compareAt)}</s> : null}{off > 0 && <em>{off}% off</em>}</span>
+      {over ? <span className="plc-more">{usdR(d - room)} more a day</span> : <span className="plc-fit">In your plan</span>}
+    </span>
+  );
+}

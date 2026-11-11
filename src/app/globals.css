@@ -4444,3 +4444,13 @@ body.pp-fold .pp-chip{display:inline-flex!important;animation:ppIn .3s cubic-bez
 }
 /* (2026-11-11) phones: the small line a touch bigger and darker */
 @media(max-width:767px){.pst-ann .pst-sub{font-size:17.5px!important;color:#333!important}}
+
+/* ===== The card's price on a plan (approved 2026-11-11, "C1") ===== */
+.plc{display:flex;flex-direction:column;align-items:flex-start;margin-top:6px}
+.plc-day{display:flex;align-items:baseline;gap:7px}.plc-day b{font:400 28px/1 var(--display);color:var(--ink)}.plc-day i{font:italic 500 17px var(--sub);color:#555}
+.plc-full{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px;margin-top:6px;font:400 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:#7a706a}
+.plc-full s{opacity:.75}.plc-full em{font-style:normal;color:#B03A2E}
+.plc-fit{display:inline-flex;align-items:center;gap:8px;margin-top:8px;font:400 10px var(--body);letter-spacing:.16em;text-transform:uppercase;color:#1E8A4F}
+.plc-fit::before{content:"";width:7px;height:7px;border-radius:50%;background:#1E8A4F}
+.plc-more{margin-top:6px;font:italic 500 16px var(--sub);color:#B9771A}
+@media(max-width:767px){.plc-day b{font-size:22px}.plc-day i{font-size:14px}.plc-full{font-size:9px;gap:5px}.plc-fit{font-size:8.5px}.plc-more{font-size:13.5px}}
