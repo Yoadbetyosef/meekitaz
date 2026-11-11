@@ -4466,3 +4466,11 @@ body.pp-fold .pp-chip{display:inline-flex!important;animation:ppIn .3s cubic-bez
 .df-tot .plc{align-items:flex-end;text-align:right}
 .cd-pr .plc{align-items:flex-end}
 .sq-pr .plc,.tx small .plc{align-items:flex-start}
+
+/* ===== The plan, said simply (approved 2026-11-11, "U2") ===== */
+.plb{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;background:#fff;border-radius:18px;padding:14px 18px;margin:14px 0 4px;box-shadow:0 14px 30px -26px rgba(0,0,0,.3)}
+.plb-t{font:500 19px/1.35 var(--sub);color:#333}.plb-t b{font:400 21px var(--display);color:var(--ink)}
+.plb-tg{display:inline-flex;background:#F4EFE8;border-radius:999px;padding:4px;gap:2px}
+.plb-tg button{border:0;background:none;padding:9px 16px;border-radius:999px;font:400 10px var(--body);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;color:var(--ink);white-space:nowrap}
+.plb-tg button.on{background:var(--ink);color:#fff}
+@media(max-width:767px){.plb{flex-direction:column;align-items:flex-start;padding:12px 14px}.plb-t{font-size:16.5px}.plb-t b{font-size:18px}.plb-tg button{padding:8px 12px;font-size:9px}}

@@ -2,7 +2,7 @@
 import GridReelTile from "./GridReelTile";
 import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
-import { usePlanRoom, DailyTile } from "./PlanKit";
+import { usePlanRoom, DailyTile, PlanBanner } from "./PlanKit";
 import { clearPlan, planOrder, usdR } from "@/lib/plan";
 import GridMood, { type Reveal } from "./GridMood";
 import Link from "next/link";
@@ -36,8 +36,8 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
   }
   // Your plan (Meekitaz Daily, 2026-11-09): every category in plan order, by what's left after the bag
   const room = usePlanRoom();
-  const ord = room && room.fit ? planOrder(items, x => +x.price, room.left, room.p) : null;
-  const shown = ord ? ord.shown : items;
+  const ord = room ? planOrder(items, x => +x.price, room.left, room.p) : null;
+  const shown = ord ? (room && room.fit ? ord.shown.filter(x => +x.price <= Math.max(0, room.left)) : ord.shown) : items;
   const fitN = room ? items.filter(x => +x.price <= Math.max(0, room.left)).length : 0;
   useEffect(() => { if (room) window.dispatchEvent(new CustomEvent("mk-plan-ctx", { detail: { kind: "cat", fit: fitN } })); }, [fitN, !!room]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
@@ -52,7 +52,8 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
             </select>
           </label>
         </div>
-        {room && <div className="rf-tags"><button type="button" className="rf-tag" onClick={clearPlan}>Your plan · {usdR(room.p.day)} a day · {room.p.months} mo{room.bag > 0 ? ` · ${usdR(Math.max(0, room.left))} left` : ""}</button></div>}
+        
+        {room && <PlanBanner fit={fitN} noun="pieces" />}
         <div className="pgrid">
           {shown.map((p, i) => (
             <Fragment key={p.id}>

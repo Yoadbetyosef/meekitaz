@@ -24,10 +24,8 @@ export default function PillPlan({ onWish, onSearch }: { onWish: () => void; onS
   useEffect(() => { if (!open) return; const k = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [open]);
   if (!r) return null;
   const { p, bag, left, leftDay, fit } = r, total = planTotal(p), used = Math.min(100, total ? bag / total * 100 : 0);
-  const say = ctx?.kind === "cat" ? <><b>{ctx.fit}</b><small className="l">fit your plan</small><small className="s">fit</small>{ctx.fit > 0 && <i className="ok">✓</i>}</>
-    : ctx?.kind === "prod" ? <><small className="l">This one</small><b>{usdR(ctx.perDay)}</b><small>a day</small>{ctx.fits ? <i className="ok">✓</i> : <i className="up">+{usdR(ctx.perDay - Math.max(0, leftDay))}</i>}</>
-    : bag > 0 ? <><b>{usdR(Math.max(0, leftDay))}</b><small>{leftDay >= 0 ? <>a day <span className="l">left</span></> : <>a day <span className="l">over</span></>}</small></>
-    : <><b>{usdR(p.day)}</b><small>a day</small></>;
+  // (approved 2026-11-11, "U2") the pill says one thing only: your amount a day
+  const say = <><b>{usdR(p.day)}</b><small>a day</small></>;
   return (
     <>
       <button type="button" className="pp-chip" aria-expanded={open} aria-controls="pp-sheet" onClick={() => setOpen(o => !o)}>{say}<span className="pp-dot" aria-hidden="true">{open ? "▴" : "▾"}</span></button>

@@ -3,7 +3,7 @@ import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
 import GridMood from "./GridMood";
 import Link from "next/link";
-import { usePlan, usePlanRoom, DailyTile } from "./PlanKit";
+import { usePlan, usePlanRoom, DailyTile, PlanBanner } from "./PlanKit";
 import { savePlan, clearPlan, planTotal, planOrder, saveFit, usdR } from "@/lib/plan";
 import RtsVideoTile from "./RtsVideoTile";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -86,8 +86,8 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
   );
 
   // Your plan (Meekitaz Daily): by what's left after the bag — what fits, the tile, a little more, then the rest
-  const ord = room && fitFirst ? planOrder(items, x => +x.price, room.left, room.p) : null;
-  const shown = ord ? ord.shown : items;
+  const ord = room ? planOrder(items, x => +x.price, room.left, room.p) : null;
+  const shown = ord ? (room && room.fit ? ord.shown.filter(x => +x.price <= Math.max(0, room.left)) : ord.shown) : items;
   const fitN = room ? items.filter(x => +x.price <= Math.max(0, room.left)).length : 0;
   useEffect(() => { if (room) window.dispatchEvent(new CustomEvent("mk-plan-ctx", { detail: { kind: "cat", fit: fitN } })); }, [fitN, !!room]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
@@ -110,14 +110,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
               <input type="range" min={RING_PRICE.min} max={RING_PRICE.max} step={RING_PRICE.step} value={price[1]} aria-label="Maximum price" onChange={e => commitPrice(price[0], Math.max(+e.target.value, price[0] + RING_PRICE.step))} />
               <div className="rf-trk"><i style={{ left: `${((price[0] - RING_PRICE.min) / (RING_PRICE.max - RING_PRICE.min)) * 100}%`, right: `${100 - ((price[1] - RING_PRICE.min) / (RING_PRICE.max - RING_PRICE.min)) * 100}%` }} /></div></div>
               <div className="rf-rv"><span>{usd(price[0])}</span><span>{price[1] >= RING_PRICE.max ? usd(RING_PRICE.max) + "+" : usd(price[1])}</span></div></div>))}
-          {plan && chip("plan", "Your plan", `${usdR(plan.day)} a day`, <div className="rf-plan">
-            <div className="rf-plan-h"><span>A day</span><b>{usdR(plan.day)}</b></div>
-            <input type="range" min={1} max={50} value={plan.day} onChange={e => savePlan({ ...plan, day: +e.target.value })} aria-label="Dollars a day" />
-            <div className="rf-pills">{[1, 2, 3, 4].map(m => <button key={m} type="button" className={`rf-pill${m === plan.months ? " on" : ""}`} onClick={() => savePlan({ ...plan, months: m })}>{m} mo</button>)}</div>
-            <p className="rf-plan-n">Yours, up to {usdR(planTotal(plan))}.</p>
-            <label className="rf-chk"><input type="checkbox" checked={fitFirst} onChange={() => saveFit(!fitFirst)} />Show what fits first</label>
-          </div>)}
-          {(tags.length > 0 || plan) && <button type="button" className="rf-reset" onClick={() => { reset(); clearPlan(); }}>Reset all</button>}
+          {tags.length > 0 && <button type="button" className="rf-reset" onClick={reset}>Reset all</button>}
         </div>
 
         <div className="dres">
@@ -128,8 +121,10 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
             </select>
           </label>
         </div>
-        {(tags.length > 0 || plan) && <div className="rf-tags">{plan && <button type="button" className="rf-tag" onClick={clearPlan}>Your plan · {usdR(plan.day)} a day · {plan.months} mo{room && room.bag > 0 ? ` · ${usdR(Math.max(0, room.left))} left` : ""}</button>}{tags.map(t => (
+        {tags.length > 0 && <div className="rf-tags">{tags.map(t => (
           <button key={t.k + t.v} type="button" className="rf-tag" onClick={() => t.k === "price" ? set({ min: null, max: null }) : t.k === "type" ? set({ type: null }) : set({ [t.k]: (t.k === "style" ? shapes : t.k === "metal" ? metals : styles).filter(x => x !== t.v).join(",") || null })}>{t.l}</button>))}</div>}
+
+        {room && <PlanBanner fit={fitN} noun="rings" />}
 
         <div className={`pgrid${busy ? " rf-busy" : ""}`} style={{ marginTop: 20 }}>
           {shown.map((p, i) => (
