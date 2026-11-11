@@ -19,12 +19,16 @@ const STONE_COLORS = ["Yellow", "Pink", "Blue", "Green"];
 
 export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle = "engagement-rings", fancy, swatches = {}, types = [] }: { initial: Product[]; hasNext: boolean; cursor: string | null; handle?: string; fancy?: string; swatches?: Record<string, string>; types?: string[] }) {
   const router = useRouter(), path = usePathname(), sp = useSearchParams();
-  const shapes = csv(sp.get("style")), metals = csv(sp.get("metal")), styles = csv(sp.get("look"));
+  // (2026-11-11) the engagement rings open on a round stone in yellow gold; the customer can change or clear either (a cleared filter is
+  // kept in the address as an empty value, so "any shape" stays any shape)
+  const DEF: Record<string, string> = handle === "engagement-rings" && !fancy ? { style: "Round", metal: "Yellow gold" } : {};
+  const pick = (k: string) => (sp.has(k) ? csv(sp.get(k)) : csv(DEF[k] || null));
+  const shapes = pick("style"), metals = pick("metal"), styles = csv(sp.get("look"));
   const sort = sp.get("sort") || "best";
   const type = fancy ? sp.get("type") || "" : "";
   const pmin = Number(sp.get("min")) || RING_PRICE.min, pmax = Number(sp.get("max")) || RING_PRICE.max;
   const key = sp.toString();
-  const isDefault = !shapes.length && !metals.length && !styles.length && !type && !sp.get("min") && !sp.get("max") && sort === "best";
+  const isDefault = !sp.has("style") && !sp.has("metal") && !styles.length && !type && !sp.get("min") && !sp.get("max") && sort === "best";
 
   const [items, setItems] = useState<Product[]>(isDefault ? initial : []); // a link with filters in it starts empty and loads its own results
   const [hasNext, setHasNext] = useState(isDefault ? h0 : false);
@@ -60,7 +64,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
 
   const set = (patch: Record<string, string | null>) => {
     const q = new URLSearchParams(window.location.search);
-    for (const [k, v] of Object.entries(patch)) { if (v) q.set(k, v); else q.delete(k); }
+    for (const [k, v] of Object.entries(patch)) { if (v) q.set(k, v); else if (DEF[k]) q.set(k, ""); else q.delete(k); }
     router.replace(q.toString() ? `${path}?${q}` : path, { scroll: false });
   };
   const toggle = (param: string, cur: string[], v: string) => { const n = cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v]; set({ [param]: n.join(",") || null }); };

@@ -15,7 +15,8 @@ async function fancyTypes(): Promise<string[]> {
 }
 
 export default async function RingsSection({ fancy }: { fancy?: string } = {}) {
-  const r = shopifyConfigured ? await getProductsByQuery(ringQuery({ shapes: [], metals: [], styles: [], fancy }), { first: 24 }) : null;
+  // (2026-11-11) engagement rings open on a round stone in yellow gold (the browser shows the same two filters as chosen)
+  const r = shopifyConfigured ? await getProductsByQuery(ringQuery({ shapes: fancy ? [] : ["Round"], metals: fancy ? [] : ["Yellow gold"], styles: [], fancy }), { first: 24 }) : null;
   const types = fancy && shopifyConfigured ? await fancyTypes() : [];
   const swatches = fancy && vdbConfigured ? await fancySwatches() : {};
   return <RingsBrowser initial={r?.products ?? []} hasNext={r?.hasNext ?? false} cursor={r?.cursor ?? null} handle={fancy ? "fancy-colors" : "engagement-rings"} fancy={fancy} swatches={swatches} types={types} />;
