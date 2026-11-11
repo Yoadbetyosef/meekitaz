@@ -16,6 +16,8 @@ showed live in the chat outputs (meekitaz-*.html).
 | `design/rts-arch` (b5f0182) | Ready to ship: the bicycle film in the arch window (V2) | — |
 | `design/footer-pink-shhh` (cb01f23) | Footer: the pink "Shhh." with the woman and the giant white wordmark | — |
 | `design/home-lavender-brand-stories` (138d9a1) | Lavender grounds, with Brand stories (the three EVERY DAY cards) | — |
+| `design/intro-blue-w1` (f0252dd) | The blue intro (W1): our M / Meekitaz flicker with his six ink drawings, faint grid, 000→100 counter, ending on the big watermark | — |
+| `design/opening-phone-coin` (f0252dd) | Phones: the wide film band on top, the statement, the still pink coin, the passing row of pieces, Q1 promises | — |
 
 ## How to add one
 When a design is replaced, tag the last commit before the change: `git tag design/<name> <commit>^ && git push origin --tags`,
