@@ -52,8 +52,8 @@ export default function PhoneStory() {
   const start = () => {
     // (2026-11-11, K3) the button doesn't pick an amount for them: it glides to the shop and opens "Choose your plan"
     const cats = document.querySelector<HTMLElement>(".home-page #shop"); if (cats) cats.scrollIntoView({ behavior: "smooth", block: "start" });
-    try { localStorage.removeItem("mk_plan_intro"); } catch { /* ignore */ }
-    window.setTimeout(() => window.dispatchEvent(new Event("mk-plan-choose")), 700);
+    try { localStorage.setItem("mk_plan_intro", "1"); } catch { /* ignore */ }
+    window.setTimeout(() => window.dispatchEvent(new Event("mk-plan-choose")), 800);
   };
   const hw = HEAD.split(" ");
   return (

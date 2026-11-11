@@ -23,21 +23,37 @@ export default function PillPlan(_: { onWish: () => void; onSearch: () => void }
   const [fold, setFold] = useState(false);
   useEffect(() => { const f = () => setFold(window.scrollY > 40); f(); window.addEventListener("scroll", f, { passive: true }); return () => window.removeEventListener("scroll", f); }, [path]);
   useEffect(() => { document.body.classList.toggle("pp-fold", fold || open); }, [fold, open]);
-  // the first arrival from the home page: open "Choose your plan" by itself, once
+  // the home page's button always opens it (with or without a plan); scrolling on into the shop opens it by itself once, for someone
+  // who hasn't chosen a plan yet
+  useEffect(() => {
+    const open1 = () => setOpen(true);
+    window.addEventListener("mk-plan-choose", open1);
+    return () => window.removeEventListener("mk-plan-choose", open1);
+  }, []);
   useEffect(() => {
     if (path !== "/" || r) return;
-    const go = () => { try { if (localStorage.getItem(SEEN)) return; localStorage.setItem(SEEN, "1"); } catch { /* ignore */ } setOpen(true); };
-    const onScroll = () => { if (window.scrollY > window.innerHeight * .9) { window.removeEventListener("scroll", onScroll); go(); } };
-    window.addEventListener("scroll", onScroll, { passive: true }); window.addEventListener("mk-plan-choose", go);
-    return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("mk-plan-choose", go); };
+    let seen = false; try { seen = !!localStorage.getItem(SEEN); } catch { /* ignore */ }
+    if (seen) return;
+    const onScroll = () => {
+      const shop = document.querySelector<HTMLElement>(".home-page #shop");
+      const past = shop ? shop.getBoundingClientRect().top < window.innerHeight * .6 : window.scrollY > window.innerHeight * .9;
+      if (!past) return;
+      window.removeEventListener("scroll", onScroll);
+      try { localStorage.setItem(SEEN, "1"); } catch { /* ignore */ }
+      setOpen(true);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, [path, !!r]); // eslint-disable-line react-hooks/exhaustive-deps
   // close: Esc, or a tap anywhere outside the card
   useEffect(() => {
     if (!open) return;
     const k = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
-    const out = (e: PointerEvent) => { if (wrap.current && !wrap.current.contains(e.target as Node)) setOpen(false); };
-    window.addEventListener("keydown", k); document.addEventListener("pointerdown", out, true);
-    return () => { window.removeEventListener("keydown", k); document.removeEventListener("pointerdown", out, true); };
+    let sx = 0, sy = 0, outside = false;
+    const down = (e: PointerEvent) => { outside = !!wrap.current && !wrap.current.contains(e.target as Node); sx = e.clientX; sy = e.clientY; };
+    const up = (e: PointerEvent) => { if (outside && Math.hypot(e.clientX - sx, e.clientY - sy) < 10) setOpen(false); outside = false; };
+    window.addEventListener("keydown", k); document.addEventListener("pointerdown", down, true); document.addEventListener("pointerup", up, true);
+    return () => { window.removeEventListener("keydown", k); document.removeEventListener("pointerdown", down, true); document.removeEventListener("pointerup", up, true); };
   }, [open]);
   const choose = (d: number) => { savePlan({ day: d, months: 4 }); setOpen(false); };
   const chip = r ? <><b>{usdR(r.p.day)}</b><small>a day</small></> : <span className="pp-cta">Choose your plan</span>;

@@ -4489,3 +4489,8 @@ body.pp-fold .pp-chip{display:inline-flex!important;animation:ppIn .3s cubic-bez
 .pp-pre button.on{border-color:#1C1A1B;background:#1C1A1B;color:#fff}.pp-pre button.on i,.pp-pre button.on small{color:#ddd}
 .pp-go{display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:8px;height:48px;border:0;border-radius:999px;background:#1C1A1B;color:#fff;padding:0 7px 0 20px;font:400 10px var(--body);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
 .pp-go span{width:34px;height:34px;border-radius:50%;background:#fff;color:#1C1A1B;display:grid;place-items:center;font-size:15px}
+
+/* (2026-11-11) the × never sits on the amount: the card keeps a lane for it */
+.nav .pp-sheet{padding-top:20px}
+.pp-sheet .pp-row:first-of-type,.pp-sheet .pp-h{padding-right:40px}
+.pp-x{top:12px;right:12px}
