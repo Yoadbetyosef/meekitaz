@@ -4127,7 +4127,7 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 
 /* ===== Phones' opening (approved 2026-11-10, "V3"): cream, a pink window, the drawings burst out over its top, the window fills the
    screen and a huge white Meekitaz watermark spills past the edges. Computers keep the blue. ===== */
-.mk-intro3{display:none;position:fixed;inset:0;z-index:100000;background:#F7E9D9;overflow:hidden}
+.mk-intro3{display:none;position:fixed;inset:0;z-index:100000;background:var(--home-bg,#F8E9D9);overflow:hidden}
 @media(max-width:767px){html.mk-intro-on:not(.mk-blue) .mk-intro{display:none!important}html.mk-intro-on:not(.mk-blue) .mk-intro3{display:block}}
 .mk-intro3.out{animation:mkiLift .55s cubic-bezier(.8,0,.2,1) forwards}
 .mki3-fr{position:absolute;left:12%;right:12%;top:30%;height:47%;border-radius:30px;background:linear-gradient(135deg,#F08AAE,#C5718F 50%,#F5ADC6);box-shadow:0 30px 50px -30px rgba(197,113,143,.8);transition:all .42s cubic-bezier(.7,0,.2,1)}
@@ -4144,7 +4144,7 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 .pst{display:none}
 @media(max-width:767px){
 .hop-daily .hop-film,.hop-daily .dco{display:none!important}
-.pst{display:block;position:relative;height:100svh;min-height:600px;overflow:hidden;background:#F7E9D9;color:#1C1A1B}
+.pst{display:block;position:relative;height:100svh;min-height:600px;overflow:hidden;background:var(--home-bg,#F8E9D9);color:#1C1A1B}
 .pst-sl{position:absolute;inset:0;opacity:0;transition:opacity .5s}.pst-sl.on{opacity:1}
 .pst-sl>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .pst-ln{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
@@ -4159,7 +4159,7 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 .pst-bars{position:absolute;left:16px;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);display:flex;gap:6px;z-index:4}
 .pst-bars i{flex:1;height:2px;border-radius:2px;background:rgba(28,26,27,.18);overflow:hidden}
 .pst-bars b{display:block;height:100%;width:0;background:#1C1A1B}.pst-bars b.run{width:100%;transition:width var(--d) linear}.pst-bars b.full{width:100%}
-.pst-ann{position:absolute;inset:0;z-index:5;background:#F7E9D9;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 34px;opacity:0;pointer-events:none;transition:opacity .6s}
+.pst-ann{position:absolute;inset:0;z-index:5;background:var(--home-bg,#F8E9D9);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 34px;opacity:0;pointer-events:none;transition:opacity .6s}
 .pst-ann.on{opacity:1;pointer-events:auto}
 .pst-ann small{font:400 10px var(--body);letter-spacing:.34em;text-transform:uppercase;color:#2752E6;margin-bottom:18px}
 .pst-ann p{font:400 30px/1.18 var(--display);margin:0}.pst-ann p span{opacity:.08;transition:opacity .25s}.pst-ann p span.w{opacity:1}
@@ -4174,7 +4174,7 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 @media(min-width:768px){
 .hop-daily .hop-film,.hop-daily .dco{display:none!important}
 .hop-daily .hop-dly{left:0!important}
-.pst{display:block;position:absolute;inset:0;overflow:hidden;background:#F8E9D9;color:#1C1A1B}
+.pst{display:block;position:absolute;inset:0;overflow:hidden;background:var(--home-bg,#F8E9D9);color:#1C1A1B}
 .pst-sl{position:absolute;inset:0;opacity:0;transition:opacity .5s}.pst-sl.on{opacity:1}
 .pst-sl>img{position:absolute;left:0;top:0;height:100%;object-fit:cover;object-position:center top;-webkit-mask:linear-gradient(90deg,#000 78%,transparent);mask:linear-gradient(90deg,#000 78%,transparent)}
 .pst-ln{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
@@ -4186,7 +4186,7 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 .pst-sl.on .pst-tag{opacity:1;transform:none}
 .pst-tag small{display:block;font:400 10px var(--body);letter-spacing:.28em;text-transform:uppercase;margin-bottom:6px}
 .pst-tag b{font:400 76px/1 var(--display)}.pst-tag i{font:italic 500 24px var(--sub);margin-left:8px}
-.pst-ann{position:absolute;inset:0;z-index:5;background:#F8E9D9;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 120px;opacity:0;pointer-events:none;transition:opacity .6s}
+.pst-ann{position:absolute;inset:0;z-index:5;background:var(--home-bg,#F8E9D9);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 120px;opacity:0;pointer-events:none;transition:opacity .6s}
 .pst-ann.on{opacity:1;pointer-events:auto}
 .pst-ann small{font:400 11px var(--body);letter-spacing:.34em;text-transform:uppercase;color:#2752E6;margin-bottom:22px}
 .pst-ann p{font:400 clamp(44px,4.4vw,68px)/1.08 var(--display);margin:0;max-width:1000px}.pst-ann p span{opacity:.08;transition:opacity .25s}.pst-ann p span.w{opacity:1}
@@ -4199,4 +4199,14 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 html.mk-intro-on:not(.mk-blue) .mk-intro{display:none!important}html.mk-intro-on:not(.mk-blue) .mk-intro3{display:block}
 html.mk-blue .mk-intro3{display:none!important}html.mk-intro-on.mk-blue .mk-intro{display:block!important}
 @media(min-width:768px){.mki3-fr{left:34%;right:34%;top:26%;height:52%}.mki3-c{height:60vh}.mki3-c.wm{width:130vw}}
-.mk-intro3{background:#F8E9D9}
+.mk-intro3{background:var(--home-bg,#F8E9D9)}
+
+/* the menu pill and the bag on computers — Yoad's Bar studio settings (2026-11-10): width 420, moved 300 to the right, height 13, 23 from
+   the top, corners 60, logo 48; bag 76, 24 from the top, −22 sideways; colour #A95B5B at brightness 50 (= #D4ADAD), glass 49%, no blur.
+   The studio itself (?palette=bar) still overrides these while it's open. */
+@media(min-width:768px){
+body:not(.bs-on){--nav-bg:#D4ADAD;--nav-a:49%}
+body:not(.bs-on) .nav{top:23px!important;border-radius:60px!important;padding-top:13px!important;padding-bottom:13px!important;width:420px!important;max-width:calc(100% - 40px)!important;transform:translateX(calc(-50% - 37px + 300px))!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+body:not(.bs-on) .brand-logo{height:48px!important}
+body:not(.bs-on) .cart{top:24px!important;width:76px!important;height:76px!important;left:calc(50% + 210px + 12px + 300px - 22px)!important;right:auto!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+}
