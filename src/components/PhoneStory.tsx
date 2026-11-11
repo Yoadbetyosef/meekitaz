@@ -24,7 +24,7 @@ export default function PhoneStory() {
   const [sigOn, setSigOn] = useState(false);
   const [subN, setSubN] = useState(0); // (2026-11-11) the small line types too — quickly, ~1.1s
   useEffect(() => { if (words <= HEAD.length) { setSubN(0); return; } let n = 0; const id = window.setInterval(() => { n += 1; setSubN(n); if (n >= SUB.length) clearInterval(id); }, 13); return () => clearInterval(id); }, [words]);
-  useEffect(() => { if (words > HEAD.length) { const t = window.setTimeout(() => setSigOn(true), 4800); return () => clearTimeout(t); } }, [words]);
+  useEffect(() => { if (words > HEAD.length) { const t = window.setTimeout(() => setSigOn(true), 1500); return () => clearTimeout(t); } }, [words]);
   useEffect(() => {
     const el = box.current; if (!el) return;
     const ro = new ResizeObserver(() => setSize({ w: el.clientWidth, h: el.clientHeight })); ro.observe(el);
@@ -37,8 +37,8 @@ export default function PhoneStory() {
       SL.forEach((_, i) => ts.push(window.setTimeout(() => setAt(i), i * BEAT)));
       ts.push(window.setTimeout(() => setAt(3), SL.length * BEAT));
       const n = HEAD.length;
-      for (let k = 1; k <= n; k++) ts.push(window.setTimeout(() => setWords(k), SL.length * BEAT + 500 + k * 45));
-      ts.push(window.setTimeout(() => setWords(n + 1), SL.length * BEAT + 500 + n * 45 + 250));
+      for (let k = 1; k <= n; k++) ts.push(window.setTimeout(() => setWords(k), SL.length * BEAT + 450 + k * 32));
+      ts.push(window.setTimeout(() => setWords(n + 1), SL.length * BEAT + 450 + n * 32 + 120));
     };
     if (document.documentElement.classList.contains("mk-intro-on")) { window.addEventListener("mk-intro-lift", go, { once: true }); }
     else go();

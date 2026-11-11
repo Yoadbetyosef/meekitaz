@@ -4494,3 +4494,13 @@ body.pp-fold .pp-chip{display:inline-flex!important;animation:ppIn .3s cubic-bez
 .nav .pp-sheet{padding-top:20px}
 .pp-sheet .pp-row:first-of-type,.pp-sheet .pp-h{padding-right:40px}
 .pp-x{top:12px;right:12px}
+
+/* (2026-11-11) quicker: the button and everything else rise while the small line is still writing; only the signature takes its time */
+.done .pst-prom{transition:opacity .35s .35s!important}
+.done .pst-prom span:nth-child(1) s:nth-child(1)::after{transition-delay:.55s!important}.done .pst-prom span:nth-child(1) s:nth-child(2)::after{transition-delay:.68s!important}
+.done .pst-prom span:nth-child(2) s::after{transition-delay:.85s!important}.done .pst-prom span:nth-child(3) s::after{transition-delay:1.02s!important}
+.done .pst-prom u::after{transition-delay:1.22s!important}
+.done .pst-cta{transition-delay:.5s!important}
+.done .pst-trust{transition-delay:.8s!important}
+.done .pst-hf{transition-delay:1.2s!important}.done .pst-hfl{transition-delay:1.6s!important}
+.mk-sig.pst-sig.on path{animation-duration:calc(var(--t) * 1.6)!important}
