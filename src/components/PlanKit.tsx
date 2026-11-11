@@ -25,7 +25,7 @@ export function PlanDay({ price, ring = false }: { price: number; ring?: boolean
 
 /** The plan with the bag counted: what's in the bag, what's left of the plan (total and per day). */
 export function usePlanRoom() {
-  const p = usePlan(); const { cart, rings } = useCart(); const [fit, setFit] = useState(true);
+  const p = usePlan(); const { cart, rings } = useCart(); const [fit, setFit] = useState(false);
   useEffect(() => { const r = () => setFit(loadFit()); r(); window.addEventListener("mk-plan", r); return () => window.removeEventListener("mk-plan", r); }, []);
   if (!p) return null;
   const bag = Number(cart?.subtotal ?? 0) + rings.reduce((t, x) => t + x.setting.price + x.stone.price, 0);

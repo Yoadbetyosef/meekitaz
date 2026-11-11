@@ -31,7 +31,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
   const [cursor, setCursor] = useState<string | null>(isDefault ? c0 : null);
   const [busy, setBusy] = useState(!isDefault);
   const [pop, setPop] = useState<Pop>(null);
-  const plan = usePlan(); const room = usePlanRoom(); const fitFirst = room?.fit ?? true;
+  const plan = usePlan(); const room = usePlanRoom(); const fitFirst = room?.fit ?? false;
   const [price, setPrice] = useState<[number, number]>([pmin, pmax]);
   const wrap = useRef<HTMLDivElement>(null);
 

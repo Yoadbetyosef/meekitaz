@@ -11,8 +11,8 @@ export const perDay = (price: number, p: Plan) => Math.ceil(price / (30 * p.mont
 /** in: fits the plan · near: up to 30% over ("just a little more") · far: further than that */
 export const planTier = (price: number, p: Plan): "in" | "near" | "far" => { const t = planTotal(p); return price <= t ? "in" : price <= t * 1.3 ? "near" : "far"; };
 export const usdR = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
-/** "Show what fits first" — one switch for the whole site (on unless they turn it off). */
-export const loadFit = () => { try { return localStorage.getItem("mk_plan_fit") !== "0"; } catch { return true; } };
+/** "Show only what fits" — one switch for the whole site, off by default; the customer turns it on. */
+export const loadFit = () => { try { return localStorage.getItem("mk_plan_fit") === "1"; } catch { return false; } }; // (2026-11-11) off unless they turn it on
 export const saveFit = (on: boolean) => { try { localStorage.setItem("mk_plan_fit", on ? "1" : "0"); window.dispatchEvent(new Event("mk-plan")); } catch { /* ignore */ } };
 /** The grid in plan order, by what's left after the bag: what fits, then (after the tile) what's a little more, then the rest. */
 export function planOrder<T>(items: T[], price: (x: T) => number, left: number, p: Plan) {
