@@ -31,31 +31,27 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
   const [cursor, setCursor] = useState<string | null>(isDefault ? c0 : null);
   const [busy, setBusy] = useState(!isDefault);
   const [pop, setPop] = useState<Pop>(null);
-  const plan = usePlan(); const planRoom = usePlanRoom(); const room = planRoom; const fitFirst = room?.fit ?? true;
+  const plan = usePlan(); const room = usePlanRoom(); const fitFirst = room?.fit ?? true;
   const [price, setPrice] = useState<[number, number]>([pmin, pmax]);
   const wrap = useRef<HTMLDivElement>(null);
 
-  // (2026-11-11) "Only these": the server returns only what fits what's left of the plan, across every page
-  const planMax = planRoom && planRoom.fit ? Math.max(1, Math.floor(planRoom.left)) : 0;
   const api = useCallback((after: string | null) => {
     const q = new URLSearchParams({ handle, sort }); if (fancy) q.set("fancy", fancy); if (type) q.set("type", type);
     if (shapes.length) q.set("shape", shapes.join(",")); if (metals.length) q.set("metal", metals.join(",")); if (styles.length) q.set("look", styles.join(","));
-    if (sp.get("min")) q.set("min", String(pmin));
-    const hi = Math.min(sp.get("max") ? pmax : Infinity, planMax || Infinity); if (hi < Infinity) q.set("max", String(hi));
-    if (after) q.set("after", after);
+    if (sp.get("min")) q.set("min", String(pmin)); if (sp.get("max")) q.set("max", String(pmax)); if (after) q.set("after", after);
     return fetch(`/api/products?${q}`).then(r => r.json());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, planMax]);
+  }, [key]);
 
   const first = useRef(true);
   useEffect(() => {
-    if (first.current) { first.current = false; if (isDefault && !planMax) return; }
-    if (isDefault && !planMax) { setItems(initial); setHasNext(h0); setCursor(c0); return; }
+    if (first.current) { first.current = false; if (isDefault) return; }
+    if (isDefault) { setItems(initial); setHasNext(h0); setCursor(c0); return; }
     let live = true; setBusy(true);
     fillPage([], { cursor: null, hasNext: true }, api).then(r => { if (live && !(r.failed && !r.items.length)) { setItems(r.items); setHasNext(r.hasNext); setCursor(r.cursor); } }).finally(() => live && setBusy(false));
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, planMax]);
+  }, [key]);
   useEffect(() => { setPrice([pmin, pmax]); }, [pmin, pmax]);
   useEffect(() => {
     const close = (e: MouseEvent) => { if (!wrap.current?.contains(e.target as Node)) setPop(null); };
