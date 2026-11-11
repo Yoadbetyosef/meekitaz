@@ -6,8 +6,8 @@ import { useEffect, useMemo, useState } from "react";
    Everything stays in this browser (localStorage); visitors see the site's own bar until the values are copied into the code. */
 type V = Record<string, number | string | boolean>;
 const ON = "mk-barstudio";
-const DEF_D: V = { pw: 462, ph: 11, top: 48, x: 29, rad: 60, logo: 48, cs: 72, ctop: 50, cx: 8, color: "#E1145C", alpha: 72, blur: 1, light: 50, fg: "#FFFFFF", split: false, ccolor: "#F42A3B", calpha: 42 };
-const DEF_M: V = { pl: 13, pr: 83, ph: 12, top: 24, rad: 60, logo: 34, cs: 58, ctop: 24, cright: 15, color: "#E1145C", alpha: 72, blur: 1, light: 50, fg: "#FFFFFF", split: false, ccolor: "#F42A3B", calpha: 42 };
+const DEF_D: V = { pw: 420, ph: 13, top: 23, x: 300, rad: 60, logo: 48, cs: 76, ctop: 24, cx: -22, color: "#A95B5B", alpha: 49, blur: 0, light: 50, fg: "#FFFFFF", split: false, ccolor: "#F42A3B", calpha: 42 };
+const DEF_M: V = { pl: 13, pr: 83, ph: 12, top: 24, rad: 60, logo: 34, cs: 58, ctop: 24, cright: 15, color: "#A95B5B", alpha: 49, blur: 0, light: 50, fg: "#FFFFFF", split: false, ccolor: "#F42A3B", calpha: 42 };
 
 const shade = (hex: string, amt: number) => { // amt −50…50: darker … lighter
   const n = parseInt(hex.slice(1), 16); let r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;

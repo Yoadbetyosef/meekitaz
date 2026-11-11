@@ -4214,6 +4214,6 @@ body:not(.bs-on) .cart{top:24px!important;width:76px!important;height:76px!impor
    set to the side (a compact pill beside the bag on the right) as on computers. The studio (?palette=bar) still overrides while open. */
 @media(max-width:767px){
 body:not(.bs-on){--nav-bg:#D4ADAD;--nav-a:49%}
-body:not(.bs-on) .nav{left:auto!important;right:84px!important;width:min(250px,calc(100% - 110px))!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+body:not(.bs-on) .nav{-webkit-backdrop-filter:none!important;backdrop-filter:none!important} /* (2026-11-10) back to its full place; Yoad sets place and size himself in the studio */
 body:not(.bs-on) .cart{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
 }
