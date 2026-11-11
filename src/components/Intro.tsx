@@ -8,6 +8,7 @@ const M = {"w": 866, "h": 627, "d": ["M61 132 L63 163 L69 183 L82 209 L98 231 L1
 const WM = "/brand/meekitaz-logo-white.png";
 const msvg = (outline: boolean) => `<svg viewBox="0 0 ${M.w} ${M.h}" fill-rule="evenodd"><path d="${M.d.join(" ")}" style="${outline ? "fill:none;stroke:#fff;stroke-width:3;vector-effect:non-scaling-stroke" : "fill:#fff"}"/></svg>`;
 const wm = `<img src="${WM}" alt="" />`;
+const PHONE = ["/media/intro/d0.png", "/media/passage/b2.png", "/media/passage/e1.png", "/media/passage/n0.png", "/media/passage/b4.png", "/media/passage/k3.png"];
 const ill = (i: number) => `<img src="/media/intro/d${i}.png" alt="" />`;
 /* W1 (approved 2026-11-08): our M / Meekitaz flicker with his six ink drawings woven in at the same pace, ending on the big Meekitaz watermark */
 const SEQ: [string, number, number | "full" | "ill"][] = [[msvg(true), 220, .3], [msvg(false), 180, .5], [ill(0), 180, "ill"], [wm, 180, .8], [ill(1), 160, "ill"], [msvg(false), 180, 1.0], [ill(2), 180, "ill"], [wm, 180, 1.4], [ill(3), 160, "ill"], [msvg(false), 160, 1.6], [ill(4), 160, "ill"], [wm, 180, 2.2], [ill(5), 180, "ill"], [wm, 560, "full"]];
@@ -19,6 +20,26 @@ export default function Intro() {
   const [done, setDone] = useState(false);
   useEffect(() => {
     if (!document.documentElement.classList.contains("mk-intro-on")) { setDone(true); return; }
+    // (2026-11-10, approved "V3"): phones get their own opening — cream, a pink window, his drawings bursting out over its top edge,
+    // then the window fills the screen and a huge white Meekitaz watermark spills past the edges. ~1.7s. Computers keep the blue (W1).
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      const it3 = document.getElementById("mk-intro3"), c3 = document.getElementById("mk-intro3-c"), f3 = document.getElementById("mk-intro3-fr");
+      if (!it3 || !c3 || !f3) return;
+      document.documentElement.style.overflow = "hidden";
+      PHONE.forEach(src => { const im = new Image(); im.src = src; }); { const im = new Image(); im.src = WM; }
+      const BEAT = 185, starts = PHONE.map((_, i) => 100 + i * BEAT), wmAt = 100 + PHONE.length * BEAT, total = wmAt + 560;
+      let t0 = 0, step = -1, raf = 0, lifted = false, finished = false, wm = false;
+      const tick = (now: number) => {
+        if (!t0) t0 = now; const e = now - t0;
+        while (step + 1 < PHONE.length && e >= starts[step + 1]) { step++; c3.innerHTML = `<img src="${PHONE[step]}" alt="" />`; c3.classList.remove("pop"); void c3.offsetWidth; c3.classList.add("pop"); }
+        if (e >= wmAt && !wm) { wm = true; f3.classList.add("fill"); c3.innerHTML = `<img src="${WM}" alt="" />`; c3.classList.remove("pop"); c3.classList.add("wm"); }
+        if (e >= total && !lifted) { lifted = true; it3.classList.add("out"); document.documentElement.classList.add("mk-intro-lift"); window.dispatchEvent(new Event("mk-intro-lift")); }
+        if (e >= total + 600 && !finished) { finished = true; document.documentElement.style.overflow = ""; document.documentElement.classList.remove("mk-intro-on", "mk-intro-lift"); window.dispatchEvent(new Event("mk-intro-done")); setDone(true); }
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+      return () => { cancelAnimationFrame(raf); document.documentElement.style.overflow = ""; };
+    }
     const it = document.getElementById("mk-intro"), fr = document.getElementById("mk-intro-fr"), cnt = document.getElementById("mk-intro-cnt");
     if (!it || !fr) return;
     document.documentElement.style.overflow = "hidden";
@@ -45,11 +66,14 @@ export default function Intro() {
   }, []);
   if (done) return null;
   return (
+    <>
+    <div className="mk-intro3" id="mk-intro3" aria-hidden="true"><i className="mki3-fr" id="mk-intro3-fr" /><div className="mki3-c" id="mk-intro3-c" /></div>
     <div className="mk-intro" id="mk-intro" aria-hidden="true">
       <i className="mki-grid" /><i className="mki-x x1" /><i className="mki-x x2" /><i className="mki-x x3" /><i className="mki-x x4" />
       <span className="mki-lab l1">Meekitaz</span><span className="mki-lab l2">Est. New York</span><span className="mki-lab l3">Lab-grown &middot; IGI certified</span>
       <div className="mki-fr" id="mk-intro-fr" dangerouslySetInnerHTML={{ __html: msvg(true) }} style={{ opacity: 1, transform: "translate(-50%,-50%) scale(.3)" }} />
       <span className="mki-cnt" id="mk-intro-cnt">000</span>
     </div>
+    </>
   );
 }
