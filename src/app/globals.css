@@ -4415,3 +4415,6 @@ body.pp-fold .pp-chip{display:inline-flex!important;animation:ppIn .3s cubic-bez
 @keyframes ppIn{from{opacity:0;transform:scale(.9)}}
 .pp-chip small.s,.pp-chip .s{display:none}
 @media(max-width:767px){.pp-chip small.l,.pp-chip span.l{display:none}.pp-chip small.s{display:inline}body.pp-fold .nav-r{gap:2px}}
+/* (2026-11-11) the M with presence: nearly the pill's full height, filling its corner */
+.brand-m{height:62px!important;margin:-8px 0 -8px -6px}
+@media(max-width:767px){.brand-m{height:44px!important;margin:-6px 0 -6px -4px}}
