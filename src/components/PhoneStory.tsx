@@ -22,6 +22,8 @@ export default function PhoneStory() {
   const [size, setSize] = useState({ w: 390, h: 844 });
   const [at, setAt] = useState(-1); // -1 waiting · 0..2 the photos · 3 the announcement
   const [words, setWords] = useState(0);
+  const [sigOn, setSigOn] = useState(false);
+  useEffect(() => { if (words > HEAD.length) { const t = window.setTimeout(() => setSigOn(true), 3700); return () => clearTimeout(t); } }, [words]);
   useEffect(() => {
     const el = box.current; if (!el) return;
     const ro = new ResizeObserver(() => setSize({ w: el.clientWidth, h: el.clientHeight })); ro.observe(el);
@@ -77,7 +79,7 @@ export default function PhoneStory() {
         <div className="pst-cta"><button type="button" className="pst-go" onClick={start}>Find yours at your price <span aria-hidden="true">&rarr;</span></button><small>From $1 a day · up to 4 months</small></div>
         <div className="pst-trust">
           <div className="pst-rev"><span className="pst-faces">{FACES.map(k => <img key={k} src={`/media/daily/faces/${k}.jpg`} alt="" />)}</span><div><b>5.0</b> <i aria-label="five stars">★★★★★</i><small>Loved by our clients</small></div></div>
-          <div className="pst-signed"><Signature on={words > HEAD.length} className="pst-sig" /><small>We promise.</small></div>
+          <div className="pst-signed"><Signature on={sigOn} className="pst-sig" /><small>We promise.</small></div>
         </div>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="pst-hf" src="/media/home/hand-fries-ink.webp" alt="" aria-hidden="true" />

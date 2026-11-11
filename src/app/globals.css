@@ -4294,3 +4294,32 @@ body:not(.bs-on) .cart{-webkit-backdrop-filter:none!important;backdrop-filter:no
 .pst-ann .pst-signed small{font:italic 500 15px var(--sub)!important;letter-spacing:0!important;text-transform:none!important;color:#666!important;margin:-8px 0 0!important}
 @media(min-width:768px){.pst-ann .pst-signed small{font-size:17px!important}}
 .pst-ann .pst-hf{display:block;z-index:1}
+/* (2026-11-11) the announcement, calmer and readable: smaller on computers, one thing after another in reading order, and on phones
+   the hand sits higher, clear of the chat button and Safari's bar */
+@media(min-width:768px){
+.pst-ann{padding:0 160px 60px!important}
+.pst-ann .pst-h{font-size:clamp(34px,3vw,46px)!important;max-width:900px}
+.pst-ann .pst-sub{font-size:19px!important;margin-top:12px!important}
+.pst-prom{font-size:21px!important;gap:8px 28px!important;margin:18px 0 18px!important}
+.pst-ann .pst-go{height:52px!important;font-size:11px!important;padding:0 8px 0 26px!important}.pst-go span{width:36px!important;height:36px!important}
+.pst-cta small{font-size:15px!important}
+.pst-trust{margin-top:18px!important;gap:34px!important}
+.pst-faces img{width:34px!important;height:34px!important}
+.pst-rev b{font-size:22px!important}
+.mk-sig.pst-sig{width:160px!important}
+.pst-hf{width:360px!important}.pst-hfl{right:390px!important;bottom:50px!important;font-size:17px!important}
+}
+/* the reading order: the sentence → the line under it → the promises, crossed out one by one → the button → the stars and the promise → the hand */
+.done .pst-sub{transition-delay:.15s!important}
+.pst-prom{transition-delay:0s!important}.done .pst-prom{transition:opacity .4s .8s!important}
+.done .pst-prom span:nth-child(1) s:nth-child(1)::after{transition-delay:1.3s!important}.done .pst-prom span:nth-child(1) s:nth-child(2)::after{transition-delay:1.55s!important}
+.done .pst-prom span:nth-child(2) s::after{transition-delay:1.9s!important}.done .pst-prom span:nth-child(3) s::after{transition-delay:2.25s!important}
+.done .pst-prom u::after{transition-delay:2.65s!important}
+.done .pst-cta{transition-delay:3.05s!important}
+.done .pst-trust{transition-delay:3.5s!important}
+.done .pst-hf{transition-delay:3.9s!important}.done .pst-hfl{transition-delay:4.4s!important}
+@media(max-width:767px){
+.pst-hf{width:190px!important;right:-48px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 96px)!important;z-index:1}
+.pst-hfl{left:22px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 110px)!important}
+.pst-ann{padding-bottom:230px!important}
+}
