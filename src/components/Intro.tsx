@@ -9,7 +9,6 @@ const WM = "/brand/meekitaz-logo-white.png";
 const msvg = (outline: boolean) => `<svg viewBox="0 0 ${M.w} ${M.h}" fill-rule="evenodd"><path d="${M.d.join(" ")}" style="${outline ? "fill:none;stroke:#fff;stroke-width:3;vector-effect:non-scaling-stroke" : "fill:#fff"}"/></svg>`;
 const wm = `<img src="${WM}" alt="" />`;
 const PHONE = ["/media/intro/d0.png", "/media/passage/b2.png", "/media/passage/e1.png", "/media/passage/n0.png", "/media/passage/b4.png", "/media/passage/k3.png"];
-const REEL = ["/media/intro/d2.png", "/media/passage/n1.png", "/media/passage/b2.png", "/media/intro/d3.png", "/media/passage/e0.png", "/media/passage/k1.png", "/media/passage/e1.png", "/media/passage/n0.png"];
 const ill = (i: number) => `<img src="/media/intro/d${i}.png" alt="" />`;
 /* W1 (approved 2026-11-08): our M / Meekitaz flicker with his six ink drawings woven in at the same pace, ending on the big Meekitaz watermark */
 const SEQ: [string, number, number | "full" | "ill"][] = [[msvg(true), 220, .3], [msvg(false), 180, .5], [ill(0), 180, "ill"], [wm, 180, .8], [ill(1), 160, "ill"], [msvg(false), 180, 1.0], [ill(2), 180, "ill"], [wm, 180, 1.4], [ill(3), 160, "ill"], [msvg(false), 160, 1.6], [ill(4), 160, "ill"], [wm, 180, 2.2], [ill(5), 180, "ill"], [wm, 560, "full"]];
@@ -24,25 +23,6 @@ export default function Intro() {
     // (2026-11-10, approved "V3"): phones get their own opening — cream, a pink window, his drawings bursting out over its top edge,
     // then the window fills the screen and a huge white Meekitaz watermark spills past the edges. ~1.7s. Computers keep the blue (W1).
     // (2026-11-10) everywhere now, with the story; the old blue (W1) still plays with ?intro=blue so it can be seen again
-    if (new URLSearchParams(location.search).get("intro") !== "blue" && window.matchMedia("(max-width: 767px)").matches) {
-      // phones (approved 2026-11-10, "X1 · slot machine"): the tall see-through Meekitaz, the drawings spinning on a reel, fast
-      const it4 = document.getElementById("mk-intro3"); if (!it4) return;
-      document.documentElement.style.overflow = "hidden";
-      it4.innerHTML = `<div class="mki4-wm" id="mki4-wm"><img src="${WM}" alt="" /></div><div class="mki4-reel" id="mki4-reel"><div class="mki4-strip" id="mki4-strip">${REEL.map(src => `<div><img src="${src}" alt="" /></div>`).join("")}</div></div>`;
-      const strip = document.getElementById("mki4-strip"), reel = document.getElementById("mki4-reel"), wmEl = document.getElementById("mki4-wm");
-      const BEAT = 150, endAt = 80 + REEL.length * BEAT + 120, total = endAt + 520;
-      let t0 = 0, step = -1, raf = 0, lifted = false, finished = false, ended = false;
-      const tick = (now: number) => {
-        if (!t0) t0 = now; const e = now - t0;
-        while (step + 1 < REEL.length && e >= 80 + (step + 1) * BEAT) { step++; if (strip && reel) strip.style.transform = `translateY(${-step * reel.clientHeight}px)`; }
-        if (e >= endAt && !ended) { ended = true; reel?.classList.add("gone"); wmEl?.classList.add("end"); }
-        if (e >= total && !lifted) { lifted = true; it4.classList.add("out"); document.documentElement.classList.add("mk-intro-lift"); window.dispatchEvent(new Event("mk-intro-lift")); }
-        if (e >= total + 600 && !finished) { finished = true; document.documentElement.style.overflow = ""; document.documentElement.classList.remove("mk-intro-on", "mk-intro-lift"); window.dispatchEvent(new Event("mk-intro-done")); setDone(true); }
-        raf = requestAnimationFrame(tick);
-      };
-      raf = requestAnimationFrame(tick);
-      return () => { cancelAnimationFrame(raf); document.documentElement.style.overflow = ""; };
-    }
     if (new URLSearchParams(location.search).get("intro") !== "blue") {
       const it3 = document.getElementById("mk-intro3"), c3 = document.getElementById("mk-intro3-c"), f3 = document.getElementById("mk-intro3-fr");
       if (!it3 || !c3 || !f3) return;
