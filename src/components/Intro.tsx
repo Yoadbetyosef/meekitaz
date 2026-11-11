@@ -14,7 +14,7 @@ const ill = (i: number) => `<img src="/media/intro/d${i}.png" alt="" />`;
 const SEQ: [string, number, number | "full" | "ill"][] = [[msvg(true), 220, .3], [msvg(false), 180, .5], [ill(0), 180, "ill"], [wm, 180, .8], [ill(1), 160, "ill"], [msvg(false), 180, 1.0], [ill(2), 180, "ill"], [wm, 180, 1.4], [ill(3), 160, "ill"], [msvg(false), 160, 1.6], [ill(4), 160, "ill"], [wm, 180, 2.2], [ill(5), 180, "ill"], [wm, 560, "full"]];
 
 /* decided before React runs (inline script in the page), so the first frame is on screen at once even while the page is still loading */
-export const INTRO_GATE = `(function(){try{if(sessionStorage.getItem("mk-intro"))return;var r=document.referrer;if(r&&new URL(r).origin===location.origin)return;sessionStorage.setItem("mk-intro","1");sessionStorage.setItem("mk-entry","1");document.documentElement.classList.add("mk-intro-on");}catch(e){}})();`;
+export const INTRO_GATE = `(function(){try{if(location.search.indexOf("intro=blue")>-1)document.documentElement.classList.add("mk-blue");if(sessionStorage.getItem("mk-intro"))return;var r=document.referrer;if(r&&new URL(r).origin===location.origin)return;sessionStorage.setItem("mk-intro","1");sessionStorage.setItem("mk-entry","1");document.documentElement.classList.add("mk-intro-on");}catch(e){}})();`;
 
 export default function Intro() {
   const [done, setDone] = useState(false);
@@ -22,7 +22,8 @@ export default function Intro() {
     if (!document.documentElement.classList.contains("mk-intro-on")) { setDone(true); return; }
     // (2026-11-10, approved "V3"): phones get their own opening — cream, a pink window, his drawings bursting out over its top edge,
     // then the window fills the screen and a huge white Meekitaz watermark spills past the edges. ~1.7s. Computers keep the blue (W1).
-    if (true) { // (2026-11-10) computers too, with the L2 story (the blue is archived as design/intro-blue-w1)
+    // (2026-11-10) everywhere now, with the story; the old blue (W1) still plays with ?intro=blue so it can be seen again
+    if (new URLSearchParams(location.search).get("intro") !== "blue") {
       const it3 = document.getElementById("mk-intro3"), c3 = document.getElementById("mk-intro3-c"), f3 = document.getElementById("mk-intro3-fr");
       if (!it3 || !c3 || !f3) return;
       document.documentElement.style.overflow = "hidden";

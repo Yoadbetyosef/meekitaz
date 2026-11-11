@@ -4128,7 +4128,7 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 /* ===== Phones' opening (approved 2026-11-10, "V3"): cream, a pink window, the drawings burst out over its top, the window fills the
    screen and a huge white Meekitaz watermark spills past the edges. Computers keep the blue. ===== */
 .mk-intro3{display:none;position:fixed;inset:0;z-index:100000;background:#F7E9D9;overflow:hidden}
-@media(max-width:767px){html.mk-intro-on .mk-intro{display:none!important}html.mk-intro-on .mk-intro3{display:block}}
+@media(max-width:767px){html.mk-intro-on:not(.mk-blue) .mk-intro{display:none!important}html.mk-intro-on:not(.mk-blue) .mk-intro3{display:block}}
 .mk-intro3.out{animation:mkiLift .55s cubic-bezier(.8,0,.2,1) forwards}
 .mki3-fr{position:absolute;left:12%;right:12%;top:30%;height:47%;border-radius:30px;background:linear-gradient(135deg,#F08AAE,#C5718F 50%,#F5ADC6);box-shadow:0 30px 50px -30px rgba(197,113,143,.8);transition:all .42s cubic-bezier(.7,0,.2,1)}
 .mki3-fr.fill{left:0;right:0;top:0;height:100%;border-radius:0}
@@ -4196,6 +4196,7 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 .pst-bars{display:none!important}
 
 /* (2026-11-10) the V3 opening on computers too (the blue W1 is in the archive) */
-html.mk-intro-on .mk-intro{display:none!important}html.mk-intro-on .mk-intro3{display:block}
+html.mk-intro-on:not(.mk-blue) .mk-intro{display:none!important}html.mk-intro-on:not(.mk-blue) .mk-intro3{display:block}
+html.mk-blue .mk-intro3{display:none!important}html.mk-intro-on.mk-blue .mk-intro{display:block!important}
 @media(min-width:768px){.mki3-fr{left:34%;right:34%;top:26%;height:52%}.mki3-c{height:60vh}.mki3-c.wm{width:130vw}}
 .mk-intro3{background:#F8E9D9}
