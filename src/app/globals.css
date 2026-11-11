@@ -4437,3 +4437,8 @@ body.pp-fold .pp-chip{display:inline-flex!important;animation:ppIn .3s cubic-bez
 .pst-ann .pst-hf{position:absolute!important;margin:0!important;align-self:auto;right:-52px!important;left:auto!important;bottom:calc(env(safe-area-inset-bottom,0px) + 8px)!important;width:min(150px,20svh)!important}
 .pst-ann .pst-hfl{position:absolute!important;margin:0!important;left:22px!important;right:auto!important;bottom:calc(env(safe-area-inset-bottom,0px) + 22px)!important;font-size:14.5px!important;max-width:160px!important}
 }
+/* (2026-11-11) phones: the hand with the fries a little higher, above the chat button; its line rises with it */
+@media(max-width:767px){
+.pst-ann .pst-hf{bottom:calc(env(safe-area-inset-bottom,0px) + 74px)!important}
+.pst-ann .pst-hfl{bottom:calc(env(safe-area-inset-bottom,0px) + 84px)!important;white-space:nowrap;max-width:none!important}
+}
