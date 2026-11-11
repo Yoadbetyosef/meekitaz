@@ -6,7 +6,7 @@ import { usePlanRoom, DailyTile } from "./PlanKit";
 import { clearPlan, planOrder, usdR } from "@/lib/plan";
 import GridMood, { type Reveal } from "./GridMood";
 import Link from "next/link";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import type { Product } from "@/lib/shopify";
 
 // Mood clips per category (silent, looping). Hosted on the Higgsfield CDN; move to /public/media to self-host.
@@ -38,6 +38,8 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
   const room = usePlanRoom();
   const ord = room && room.fit ? planOrder(items, x => +x.price, room.left, room.p) : null;
   const shown = ord ? ord.shown : items;
+  const fitN = room ? items.filter(x => +x.price <= Math.max(0, room.left)).length : 0;
+  useEffect(() => { if (room) window.dispatchEvent(new CustomEvent("mk-plan-ctx", { detail: { kind: "cat", fit: fitN } })); }, [fitN, !!room]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <section className="grid-wrap" id="results" aria-label="The collection">
       <div className="wrap">

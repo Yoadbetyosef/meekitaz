@@ -1,4 +1,5 @@
 "use client";
+import PillPlan from "./PillPlan";
 import Logo from "./Logo";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -30,6 +31,7 @@ export default function Nav() {
       <nav className="nav" aria-label="Main">
         <Link href="/" className="brand" aria-label="Meekitaz, home"><Logo className="brand-logo" /></Link>
         <div className="nav-r">
+          <PillPlan onWish={() => { setOpen(false); openCart(false); window.dispatchEvent(new Event("mk-dream-open")); }} onSearch={() => { setOpen(false); openCart(false); setSearching(true); }} />
           <button className="nav-wish" aria-label={`My Dream list${wishN ? `, ${wishN} saved` : ""}`} onClick={() => { setOpen(false); openCart(false); window.dispatchEvent(new Event("mk-dream-open")); }}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.4 8 3.6 4.6 7 4.6c2 0 3.4 1.1 5 3 1.6-1.9 3-3 5-3 3.4 0 5.6 3.4 4.3 6.7-1.8 4.6-9.3 9.2-9.3 9.2z" /></svg>
             {wishN > 0 && <b>{wishN}</b>}

@@ -88,6 +88,8 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
   // Your plan (Meekitaz Daily): by what's left after the bag — what fits, the tile, a little more, then the rest
   const ord = room && fitFirst ? planOrder(items, x => +x.price, room.left, room.p) : null;
   const shown = ord ? ord.shown : items;
+  const fitN = room ? items.filter(x => +x.price <= Math.max(0, room.left)).length : 0;
+  useEffect(() => { if (room) window.dispatchEvent(new CustomEvent("mk-plan-ctx", { detail: { kind: "cat", fit: fitN } })); }, [fitN, !!room]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <section className="grid-wrap" id={fancy ? "settings" : "results"} aria-label="The collection">
       <div className="wrap" ref={wrap}>

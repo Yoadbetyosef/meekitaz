@@ -126,3 +126,10 @@ export function DailyTile() {
   // (2026-11-10) stays in the category: a tap starts the plan at $15 a day and the grid re-orders itself around it on the spot
   return <div className="pgrid-slot"><button type="button" className="d-tile" onClick={() => { savePlan({ day: 15, months: 4 }); window.scrollTo({ top: Math.max(0, (document.querySelector(".pgrid") as HTMLElement | null)?.getBoundingClientRect().top ?? 0) + window.scrollY - 140, behavior: "smooth" }); }}><span className="d-coin"><b>$1</b><i>a day</i></span><h4>From $1 a day.</h4><p>Wear it now. Pay a little every day.</p><span className="d-go">Start at $15 a day &rarr;</span></button></div>;
 }
+
+/** On a product page: tell the smart pill this piece's price a day and whether it fits what's left. */
+export function PlanCtxProduct({ price }: { price: number }) {
+  const r = usePlanRoom(); const d = r ? perDay(price, r.p) : 0, fits = r ? price <= Math.max(0, r.left) : false;
+  useEffect(() => { if (r && price) window.dispatchEvent(new CustomEvent("mk-plan-ctx", { detail: { kind: "prod", perDay: d, fits } })); }, [d, fits, !!r, price]); // eslint-disable-line react-hooks/exhaustive-deps
+  return null;
+}
