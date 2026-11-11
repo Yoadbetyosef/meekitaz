@@ -4378,3 +4378,8 @@ body:not(.bs-on) .cart{-webkit-backdrop-filter:none!important;backdrop-filter:no
 .pst-ann .pst-hf{position:relative!important;right:auto!important;bottom:auto!important;align-self:flex-end;width:215px!important;margin:14px -62px 0 0;flex:none}
 .pst-ann .pst-hfl{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;align-self:flex-start;text-align:left!important;margin-top:-74px;font-size:15.5px!important;max-width:170px!important}
 }
+/* keep the Q1 layout whole on shorter phones: the top space and the hand give way first, never the text */
+@media(max-width:767px){
+.pst-ann{padding-top:clamp(140px,calc(100svh - 590px),200px)!important}
+.pst-ann .pst-hf{width:min(215px,27svh)!important}
+}
