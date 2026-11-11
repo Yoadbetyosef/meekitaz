@@ -4523,3 +4523,22 @@ body.pp-fold .pp-chip{display:inline-flex!important;animation:ppIn .3s cubic-bez
 @media(max-width:767px){.pe{padding:24px 16px}.pe h3{font-size:24px}.pe p{font-size:16px}.pe-near{grid-template-columns:1fr 1fr;gap:10px}.pe-near .pe-card:nth-child(3){display:none}}
 /* (2026-11-11) no shadow where the shop slides over the opening */
 .over-fun{box-shadow:none!important}
+
+/* ===================================================================================================================================
+   THE COLOUR LANGUAGE — system "A · One cream" (approved 2026-11-11). One ground everywhere (the cream of the photos), white surfaces
+   for cards and panels, ink for text, one accent (our cobalt) for small labels and links, the blush only on the pill and the bag,
+   green = in your plan, red = the % off. No shadows between sections — space separates them. Archived before: design/colours-before-system-a
+   =================================================================================================================================== */
+:root{--ground:#F8E9D9;--surface:#FFFFFF;--line:rgba(28,26,27,.12);--blue-light:#F8E9D9;--home-bg:#F8E9D9}
+body,body:has(.home-page){--blue-light:#F8E9D9;background:#F8E9D9}
+/* every section's own ground becomes the one ground */
+.sec,.mkfilm,.mkfilm.fl,.pr,.mk-page,.fq,.wr,.flp-hero,.flp-how,.fl-reel-wrap,.over-fun,.home-page .ooo-wrap,.home-page .ooo-circ-wrap,.home-page .rh-wrap,.dly-curtain{background:#F8E9D9!important}
+/* no shadows between sections */
+.mkfilm,.dly-curtain,.over-fun,.mk-page{box-shadow:none!important}
+/* panels that were pink or tinted become white surfaces with a hairline */
+.df-sum,.be-l,.ooo-tabs{background:#FFFFFF!important;box-shadow:none!important;border:1px solid rgba(28,26,27,.12)}
+@media(max-width:767px){.be-l{border:0}}
+.df-cap{background:#FFFFFF!important;color:#1C1A1B;box-shadow:0 0 0 1px rgba(28,26,27,.12)}
+.pc-body.pc-gotit{background:#FFFFFF!important}
+/* the edges that faded into a tinted ground fade into the cream */
+.edge-t,.edge-b{background:none!important}

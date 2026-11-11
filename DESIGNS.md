@@ -23,6 +23,7 @@ showed live in the chat outputs (meekitaz-*.html).
 | `design/grey-red-x1` (a0c9bca) | Pearl-grey ground #E2E1E3, the red-satin story photos, and the X1 slot-machine opening on phones (tall see-through Meekitaz) | — |
 | `design/intro-v3-pink-window` (aad7b25) | The opening V3: cream, a pink window, the drawings bursting over its top, a huge white Meekitaz watermark (phones and computers) | — |
 | `design/plan-orb-floating` (ba3a2dd) | The plan as a floating white circle at the bottom-left with + and − and a panel | — |
+| `design/colours-before-system-a` (a379544) | All the section colours before the one colour language: sky/mist/lavender grounds, pink builder panels, shadows between sections | — |
 
 ## How to add one
 When a design is replaced, tag the last commit before the change: `git tag design/<name> <commit>^ && git push origin --tags`,
