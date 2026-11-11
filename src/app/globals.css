@@ -3835,7 +3835,7 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 @media(max-width:767px){.rtsb-bird{width:84px}}
 
 /* ===== The light by chapter (approved 2026-11-09, L1 from butter): the page starts on butter; ChapterLight blends --home-bg ===== */
-.home-page{--home-bg:#F8E9D9}
+/* (2026-11-10) the home page no longer pins its own --home-bg, so the palette's Background (set on <body>) reaches everything */
 .home-page .mkfilm.fl,.home-page .sec{background:var(--home-bg)!important}
 .home-page .sec,.home-page .catd,.home-page .rtsb,.home-page .hop,.home-page .over-fun,.home-page .mkfilm.fl{transition:none}
 /* the floating chain: its film's studio lavender lifted to pure white, then multiplied into whatever colour the page is — no box, it
