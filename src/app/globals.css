@@ -4454,3 +4454,6 @@ body.pp-fold .pp-chip{display:inline-flex!important;animation:ppIn .3s cubic-bez
 .plc-fit::before{content:"";width:7px;height:7px;border-radius:50%;background:#1E8A4F}
 .plc-more{margin-top:6px;font:italic 500 16px var(--sub);color:#B9771A}
 @media(max-width:767px){.plc-day b{font-size:22px}.plc-day i{font-size:14px}.plc-full{font-size:9px;gap:5px}.plc-fit{font-size:8.5px}.plc-more{font-size:13.5px}}
+/* (2026-11-11) the price a day a step bigger on the cards */
+.plc-day b{font-size:34px!important}.plc-day i{font-size:18px!important}
+@media(max-width:767px){.plc-day b{font-size:26px!important}.plc-day i{font-size:15px!important}}
