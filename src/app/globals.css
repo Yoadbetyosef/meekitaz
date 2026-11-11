@@ -4346,3 +4346,16 @@ body:not(.bs-on) .cart{-webkit-backdrop-filter:none!important;backdrop-filter:no
 .done .pst-cta{transition-delay:4.15s!important}
 .done .pst-trust{transition-delay:4.6s!important}
 .done .pst-hf{transition-delay:5s!important}.done .pst-hfl{transition-delay:5.5s!important}
+/* (2026-11-11) phones, as approved in the preview "P4": the same template, a couple of lines higher than before; the stars and the
+   signature on one row at the left, at the height of the fries; the hand with the fries on the right, close but not touching; the fries
+   line below on the left, clear of the chat button */
+@media(max-width:767px){
+.pst-ann{justify-content:flex-end!important;padding:90px 22px calc(env(safe-area-inset-bottom,0px) + 112px)!important}
+.pst-trust{align-self:flex-start!important;justify-content:flex-start!important;flex-direction:row!important;align-items:center!important;margin-left:-8px!important;gap:10px!important;width:auto!important;padding:0!important}
+.pst-faces img{width:24px!important;height:24px!important}.pst-faces img+img{margin-left:-8px!important}
+.pst-rev{flex-direction:row!important;gap:7px!important}.pst-rev b{font-size:19px!important}.pst-rev i{font-size:12px!important}.pst-rev small{font-size:6.5px!important;letter-spacing:.16em!important}
+.mk-sig.pst-sig{width:86px!important}
+.pst-ann .pst-signed small{font-size:13px!important;margin-top:-6px!important}
+.pst-hf{width:140px!important;right:-74px!important;bottom:calc(env(safe-area-inset-bottom,0px) + 100px)!important}
+.pst-hfl{left:24px!important;right:auto!important;text-align:left!important;bottom:calc(env(safe-area-inset-bottom,0px) + 62px)!important;max-width:200px!important;font-size:14.5px!important}
+}
