@@ -23,7 +23,9 @@ export default function PhoneStory() {
   const [at, setAt] = useState(-1); // -1 waiting · 0..2 the photos · 3 the announcement
   const [words, setWords] = useState(0);
   const [sigOn, setSigOn] = useState(false);
-  useEffect(() => { if (words > HEAD.length) { const t = window.setTimeout(() => setSigOn(true), 3700); return () => clearTimeout(t); } }, [words]);
+  const [subN, setSubN] = useState(0); // (2026-11-11) the small line types too — quickly, ~1.1s
+  useEffect(() => { if (words <= HEAD.length) { setSubN(0); return; } let n = 0; const id = window.setInterval(() => { n += 1; setSubN(n); if (n >= SUB.length) clearInterval(id); }, 13); return () => clearInterval(id); }, [words]);
+  useEffect(() => { if (words > HEAD.length) { const t = window.setTimeout(() => setSigOn(true), 4800); return () => clearTimeout(t); } }, [words]);
   useEffect(() => {
     const el = box.current; if (!el) return;
     const ro = new ResizeObserver(() => setSize({ w: el.clientWidth, h: el.clientHeight })); ro.observe(el);
@@ -74,7 +76,7 @@ export default function PhoneStory() {
       <div className={`pst-ann${at === 3 ? " on" : ""}${words > HEAD.length ? " done" : ""}`}>
         <i className="pst-pl l" aria-hidden="true" /><i className="pst-pl r" aria-hidden="true" />
         <p className="pst-h" aria-label={HEAD}>{(() => { let c = 0; return HEAD.split(" ").map((w, i) => { const word = <span key={i} className="pst-wd" aria-hidden="true">{[...w].map((ch, j) => { const k = c++; return <span key={j} className={k < words ? "w" : ""}>{ch}</span>; })}</span>; c++; return [word, " "]; }); })()}</p>
-        <em className="pst-sub">{SUB}</em>
+        <em className="pst-sub" aria-label={SUB}>{(() => { let c = 0; return SUB.split(" ").map((w, i) => { const word = <span key={i} className="pst-wd" aria-hidden="true">{[...w].map((ch, j) => { const k = c++; return <span key={j} className={k < subN ? "w" : ""}>{ch}</span>; })}</span>; c++; return [word, " "]; }); })()}</em>
         <div className="pst-prom"><span><s>Loans</s> &amp; <s>interest</s></span><span><s>Credit checks</s></span><span><s>Rentals</s> — it’s yours</span><span><u>Everyone’s approved</u></span></div>
         <div className="pst-cta"><button type="button" className="pst-go" onClick={start}>Find yours at your price <span aria-hidden="true">&rarr;</span></button><small>From $1 a day · up to 4 months</small></div>
         <div className="pst-trust">

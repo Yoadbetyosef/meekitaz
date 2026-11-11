@@ -4332,3 +4332,15 @@ body:not(.bs-on) .cart{-webkit-backdrop-filter:none!important;backdrop-filter:no
 .pst-hf{bottom:calc(env(safe-area-inset-bottom,0px) + 86px)!important}
 .pst-hfl{left:auto!important;right:18px!important;text-align:right!important;bottom:calc(env(safe-area-inset-bottom,0px) + 262px)!important;max-width:130px}
 }
+
+/* (2026-11-11) the small line types itself too (≈1.1s), then everything after it moves 1.1s later */
+.pst-ann .pst-sub .pst-wd{display:inline-block;white-space:nowrap}
+.pst-ann .pst-sub .pst-wd span{opacity:0}.pst-ann .pst-sub .pst-wd span.w{opacity:1}
+.done .pst-sub{transition-delay:0s!important}
+.done .pst-prom{transition:opacity .4s 1.9s!important}
+.done .pst-prom span:nth-child(1) s:nth-child(1)::after{transition-delay:2.4s!important}.done .pst-prom span:nth-child(1) s:nth-child(2)::after{transition-delay:2.65s!important}
+.done .pst-prom span:nth-child(2) s::after{transition-delay:3s!important}.done .pst-prom span:nth-child(3) s::after{transition-delay:3.35s!important}
+.done .pst-prom u::after{transition-delay:3.75s!important}
+.done .pst-cta{transition-delay:4.15s!important}
+.done .pst-trust{transition-delay:4.6s!important}
+.done .pst-hf{transition-delay:5s!important}.done .pst-hfl{transition-delay:5.5s!important}
