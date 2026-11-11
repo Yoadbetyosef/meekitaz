@@ -22,7 +22,7 @@ export default function Intro() {
     if (!document.documentElement.classList.contains("mk-intro-on")) { setDone(true); return; }
     // (2026-11-10, approved "V3"): phones get their own opening — cream, a pink window, his drawings bursting out over its top edge,
     // then the window fills the screen and a huge white Meekitaz watermark spills past the edges. ~1.7s. Computers keep the blue (W1).
-    if (window.matchMedia("(max-width: 767px)").matches) {
+    if (true) { // (2026-11-10) computers too, with the L2 story (the blue is archived as design/intro-blue-w1)
       const it3 = document.getElementById("mk-intro3"), c3 = document.getElementById("mk-intro3-c"), f3 = document.getElementById("mk-intro3-fr");
       if (!it3 || !c3 || !f3) return;
       document.documentElement.style.overflow = "hidden";

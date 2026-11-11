@@ -19,6 +19,7 @@ showed live in the chat outputs (meekitaz-*.html).
 | `design/intro-blue-w1` (f0252dd) | The blue intro (W1): our M / Meekitaz flicker with his six ink drawings, faint grid, 000→100 counter, ending on the big watermark | — |
 | `design/opening-phone-coin` (f0252dd) | Phones: the wide film band on top, the statement, the still pink coin, the passing row of pieces, Q1 promises | — |
 | `design/ground-butter-fef5d9` (af4edb5) | The whole site on the butter ground #FEF5D9 | — |
+| `design/opening-desktop-coin` (92eaa0a) | Computers: the film at 30% on the left, the statement, the still pink coin, the passing row of pieces, Q1 promises | — |
 
 ## How to add one
 When a design is replaced, tag the last commit before the change: `git tag design/<name> <commit>^ && git push origin --tags`,

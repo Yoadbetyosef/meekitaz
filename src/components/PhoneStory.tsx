@@ -26,7 +26,6 @@ export default function PhoneStory() {
     return () => ro.disconnect();
   }, []);
   useEffect(() => {
-    if (!window.matchMedia("(max-width: 767px)").matches) return;
     SL.forEach(s => { const im = new Image(); im.src = s.src; });
     const ts: number[] = [];
     const go = () => {
@@ -39,7 +38,11 @@ export default function PhoneStory() {
     else go();
     return () => { ts.forEach(clearTimeout); window.removeEventListener("mk-intro-lift", go); };
   }, []);
-  const { w, h } = size, k = Math.max(w / IW, h / IH), ox = (w - IW * k) / 2, oy = (h - IH * k) / 2;
+  const { w, h } = size, desk = w >= 768;
+  // phones: the photo fills the screen · computers ("L2"): a full-height column on the left at the photos' own ratio, the price beside it
+  const colW = desk ? Math.round(h * IW / IH) : w;
+  const k = desk ? h / IH : Math.max(w / IW, h / IH), ox = desk ? 0 : (w - IW * k) / 2, oy = desk ? 0 : (h - IH * k) / 2;
+  const DT = [.305, .549, .293];
   const start = () => {
     savePlan({ day: loadPlan()?.day ?? 15, months: loadPlan()?.months ?? 4 }); window.dispatchEvent(new Event("mk-plan-touch"));
     const cats = document.querySelector<HTMLElement>(".home-page #shop"); if (cats) cats.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -48,18 +51,19 @@ export default function PhoneStory() {
   return (
     <div className="pst" ref={box} aria-label="Meekitaz">
       {SL.map((s, i) => {
-        const px = ox + s.fx * IW * k, py = oy + s.fy * IH * k, sx = s.tx * w, sy = s.ty * h + 40;
+        const px = ox + s.fx * IW * k, py = oy + s.fy * IH * k;
+        const tx = desk ? colW + 100 : s.tx * w, ty = desk ? DT[i] * h : s.ty * h;
+        const sx = desk ? tx - 10 : tx, sy = ty + (desk ? 72 : 40);
         const dx = sx - px, dy = sy - py, L = Math.hypot(dx, dy) || 1, ex = px + dx / L * s.gap, ey = py + dy / L * s.gap;
         return (
           <div key={i} className={`pst-sl${at === i ? " on" : ""}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={s.src} alt={`${s.name} — ${s.price} dollars a day`} />
+            <img src={s.src} alt={`${s.name} — ${s.price} dollars a day`} style={desk ? { width: colW, right: "auto" } : undefined} />
             <svg className="pst-ln" viewBox={`0 0 ${w} ${h}`} aria-hidden="true"><path d={`M${sx},${sy} Q${(sx + ex) / 2 + 30},${(sy + ey) / 2} ${ex},${ey}`} /><circle cx={ex} cy={ey} r="4" /></svg>
-            <div className="pst-tag" style={{ left: sx, top: s.ty * h }}><small>{s.name}</small><b>${s.price}</b><i>a day</i></div>
+            <div className="pst-tag" style={{ left: tx, top: ty }}><small>{s.name}</small><b>${s.price}</b><i>a day</i></div>
           </div>
         );
       })}
-      <div className="pst-bars" aria-hidden="true">{[0, 1, 2, 3].map(i => <i key={i}><b className={at > i ? "full" : at === i ? "run" : ""} style={{ ["--d" as string]: `${i === 3 ? 3200 : BEAT}ms` }} /></i>)}</div>
       <div className={`pst-ann${at === 3 ? " on" : ""}`}>
         <small>Meekitaz</small>
         <p>{hw.map((x, i) => <span key={i} className={i < words ? "w" : ""}>{x} </span>)}</p>
