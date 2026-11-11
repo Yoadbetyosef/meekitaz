@@ -7,9 +7,9 @@ import { loadPlan, savePlan } from "@/lib/plan";
    page in the photos' cream where the announcement writes itself, and the button. Computers keep their opening. */
 const IW = 941, IH = 1672; // the photos' own size — the pieces' places are fractions of it
 const SL = [
-  { src: "/media/home/story-1.jpg", name: "The Marquise", price: 15, fx: .542, fy: .4725, tx: .64, ty: .166, gap: 42 },
-  { src: "/media/home/story-2.jpg", name: "The Tennis", price: 24, fx: .442, fy: .725, tx: .58, ty: .557, gap: 30 },
-  { src: "/media/home/story-3.jpg", name: "The Studs", price: 8, fx: .459, fy: .237, tx: .605, ty: .344, gap: 26 },
+  { src: "/media/home/story-red-1.jpg", name: "The Marquise", price: 15, fx: .542, fy: .4725, tx: .64, ty: .166, gap: 42 },
+  { src: "/media/home/story-red-2.jpg", name: "The Tennis", price: 24, fx: .47, fy: .735, tx: .58, ty: .557, gap: 30 },
+  { src: "/media/home/story-red-3.jpg", name: "The Studs", price: 8, fx: .459, fy: .237, tx: .605, ty: .344, gap: 26 },
 ];
 const HEAD = "We just changed how diamonds are bought.";
 const SUB = "A real diamond, worn from day one, for a few dollars a day. No one else does this.";
