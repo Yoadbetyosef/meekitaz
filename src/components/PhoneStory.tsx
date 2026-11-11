@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { loadPlan, savePlan } from "@/lib/plan";
 import Signature from "./Signature";
 
 /* Phones' home opening (approved 2026-11-10, "M2 + B"): three photos, a second and a half each, like stories — a thin ink line draws
@@ -51,8 +50,10 @@ export default function PhoneStory() {
   const k = desk ? h / IH : Math.max(w / IW, h / IH), ox = desk ? 0 : (w - IW * k) / 2, oy = desk ? 0 : (h - IH * k) / 2;
   const DT = [.305, .549, .293];
   const start = () => {
-    savePlan({ day: loadPlan()?.day ?? 15, months: loadPlan()?.months ?? 4 }); window.dispatchEvent(new Event("mk-plan-touch"));
+    // (2026-11-11, K3) the button doesn't pick an amount for them: it glides to the shop and opens "Choose your plan"
     const cats = document.querySelector<HTMLElement>(".home-page #shop"); if (cats) cats.scrollIntoView({ behavior: "smooth", block: "start" });
+    try { localStorage.removeItem("mk_plan_intro"); } catch { /* ignore */ }
+    window.setTimeout(() => window.dispatchEvent(new Event("mk-plan-choose")), 700);
   };
   const hw = HEAD.split(" ");
   return (

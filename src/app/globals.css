@@ -4475,3 +4475,17 @@ body.pp-fold .pp-chip{display:inline-flex!important;animation:ppIn .3s cubic-bez
 .plb-tg button.on{background:var(--ink);color:#fff}
 @media(max-width:767px){.plb{flex-direction:column;align-items:flex-start;padding:12px 14px}.plb-t{font-size:16.5px}.plb-t b{font-size:18px}.plb-tg button{padding:8px 12px;font-size:9px}}
 .plb-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#1E8A4F;vertical-align:2px;margin:0 2px}
+/* ===== "Choose your plan" (approved 2026-11-11, K3) ===== */
+.pp-wrap{display:contents}
+.pp-cta{font:400 10px var(--body);letter-spacing:.16em;text-transform:uppercase}
+@media(max-width:767px){.pp-cta{font-size:9px;letter-spacing:.12em}}
+.pp-x{position:absolute;top:10px;right:12px;width:28px;height:28px;border-radius:50%;border:0;background:rgba(28,26,27,.06);color:#1C1A1B;font-size:17px;line-height:1;cursor:pointer}
+.pp-h{margin:0;font:400 24px var(--display);color:#1C1A1B}
+.pp-q{margin:2px 30px 12px 0;font:italic 500 16px/1.35 var(--sub);color:#555}
+.pp-pre{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pp-pre button{border:1.5px solid #e5dccf;background:#fff;border-radius:16px;padding:12px 6px;cursor:pointer;text-align:center;color:#1C1A1B}
+.pp-pre button b{display:block;font:400 24px var(--display)}.pp-pre button i{font:italic 500 13px var(--sub);color:#666}
+.pp-pre button small{display:block;font:400 8.5px var(--body);letter-spacing:.12em;text-transform:uppercase;color:#888;margin-top:4px}
+.pp-pre button.on{border-color:#1C1A1B;background:#1C1A1B;color:#fff}.pp-pre button.on i,.pp-pre button.on small{color:#ddd}
+.pp-go{display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:8px;height:48px;border:0;border-radius:999px;background:#1C1A1B;color:#fff;padding:0 7px 0 20px;font:400 10px var(--body);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+.pp-go span{width:34px;height:34px;border-radius:50%;background:#fff;color:#1C1A1B;display:grid;place-items:center;font-size:15px}
