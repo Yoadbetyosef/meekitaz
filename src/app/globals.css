@@ -4290,3 +4290,7 @@ body:not(.bs-on) .cart{-webkit-backdrop-filter:none!important;backdrop-filter:no
 @media(min-width:768px){.pst-ann .pst-h{font-size:clamp(44px,4.2vw,60px)}}
 .pst-ann .pst-h .pst-wd{opacity:1!important}
 .pst-ann .pst-h .pst-wd span{opacity:0;transition:none}.pst-ann .pst-h .pst-wd span.w{opacity:1}
+/* (2026-11-11) "We promise." in the italic, not the label caps */
+.pst-ann .pst-signed small{font:italic 500 15px var(--sub)!important;letter-spacing:0!important;text-transform:none!important;color:#666!important;margin:-8px 0 0!important}
+@media(min-width:768px){.pst-ann .pst-signed small{font-size:17px!important}}
+.pst-ann .pst-hf{display:block;z-index:1}

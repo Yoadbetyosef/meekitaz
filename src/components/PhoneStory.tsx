@@ -71,7 +71,7 @@ export default function PhoneStory() {
           by one and what we do underlined; one button; five stars with faces; the Meekitaz signature, "We promise."; the hand with the fries */}
       <div className={`pst-ann${at === 3 ? " on" : ""}${words > HEAD.length ? " done" : ""}`}>
         <i className="pst-pl l" aria-hidden="true" /><i className="pst-pl r" aria-hidden="true" />
-        <p className="pst-h" aria-label={HEAD}>{(() => { let c = 0; return HEAD.split(" ").map((w, i) => <span key={i} className="pst-wd" aria-hidden="true">{[...w].map((ch, j) => { const k = c++; return <span key={j} className={k < words ? "w" : ""}>{ch}</span>; })}{" "}{(c++, null)}</span>); })()}</p>
+        <p className="pst-h" aria-label={HEAD}>{(() => { let c = 0; return HEAD.split(" ").map((w, i) => { const word = <span key={i} className="pst-wd" aria-hidden="true">{[...w].map((ch, j) => { const k = c++; return <span key={j} className={k < words ? "w" : ""}>{ch}</span>; })}</span>; c++; return [word, " "]; }); })()}</p>
         <em className="pst-sub">{SUB}</em>
         <div className="pst-prom"><span><s>Loans</s> &amp; <s>interest</s></span><span><s>Credit checks</s></span><span><s>Rentals</s> — it’s yours</span><span><u>Everyone’s approved</u></span></div>
         <div className="pst-cta"><button type="button" className="pst-go" onClick={start}>Find yours at your price <span aria-hidden="true">&rarr;</span></button><small>From $1 a day · up to 4 months</small></div>
