@@ -4474,3 +4474,4 @@ body.pp-fold .pp-chip{display:inline-flex!important;animation:ppIn .3s cubic-bez
 .plb-tg button{border:0;background:none;padding:9px 16px;border-radius:999px;font:400 10px var(--body);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;color:var(--ink);white-space:nowrap}
 .plb-tg button.on{background:var(--ink);color:#fff}
 @media(max-width:767px){.plb{flex-direction:column;align-items:flex-start;padding:12px 14px}.plb-t{font-size:16.5px}.plb-t b{font-size:18px}.plb-tg button{padding:8px 12px;font-size:9px}}
+.plb-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#1E8A4F;vertical-align:2px;margin:0 2px}

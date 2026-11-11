@@ -172,14 +172,16 @@ export function PriceA({ price, compareAt, from = false, size = "S", ring = fals
   );
 }
 
-/** The plan, said simply (approved 2026-11-11, "U2"): one sentence above the grid — "18 rings are yours for $28 a day or less." —
- *  and one switch: Only these / Show all. Replaces the "Your plan" filter chip and the "fit your plan" count. */
-export function PlanBanner({ fit, noun }: { fit: number; noun: string }) {
+/** The plan, said simply (approved 2026-11-11, "U2", no count): one sentence above the grid and one switch — Only these / Show all.
+ *  No number: the grid loads in pages, so any count would be a guess. */
+export function PlanBanner({ noun }: { fit?: number; noun: string }) {
   const r = usePlanRoom(); if (!r) return null;
   const roomDay = Math.max(0, r.leftDay), bag = r.bag > 0;
   return (
     <div className="plb">
-      <span className="plb-t"><b>{fit} {fit === 1 ? noun.replace(/s$/, "") : noun}</b> {fit === 1 ? "is" : "are"} yours for <b>{usdR(roomDay)} a day</b> or less{bag ? " — after what’s in your bag" : ""}.</span>
+      <span className="plb-t">{r.fit
+        ? <>Every {noun.replace(/s$/, "")} here is yours for <b>{usdR(roomDay)} a day</b> or less{bag ? " — after what’s in your bag" : ""}.</>
+        : <>Showing all {noun}. <span className="plb-dot" aria-hidden="true" /> marks what’s within <b>{usdR(roomDay)} a day</b>.</>}</span>
       <span className="plb-tg" role="group" aria-label="Show"><button type="button" className={r.fit ? "on" : ""} aria-pressed={r.fit} onClick={() => saveFit(true)}>Only these</button><button type="button" className={r.fit ? "" : "on"} aria-pressed={!r.fit} onClick={() => saveFit(false)}>Show all</button></span>
     </div>
   );
