@@ -9,7 +9,7 @@ export default function Footer() {
     <footer className="mkfoot" id="mkfoot">
       <div className="mkfoot-in" id="mkfoot-in">
         {/* (2026-11-09, approved G1) the Golden Couture banner — wide on computers, tall on phones — shown whole, never cropped */}
-        <picture className="foot-art"><source media="(max-width:767px)" srcSet="/media/footer/couture-m.webp" /><img src="/media/footer/couture-d.webp" alt="Meekitaz — drawings of a pearl heel, a scooter with a pink gift, a monkey admiring a diamond, a martini, a heron with a pear earring, an oyster with a diamond, a cloche with an emerald-cut ring and cat-eye sunglasses" /></picture>
+        <picture className="foot-art"><source media="(max-width:767px)" srcSet="/media/footer/couture-m-cream.webp" /><img src="/media/footer/couture-d-cream.webp" alt="Meekitaz — drawings of a pearl heel, a scooter with a pink gift, a monkey admiring a diamond, a martini, a heron with a pear earring, an oyster with a diamond, a cloche with an emerald-cut ring and cat-eye sunglasses" /></picture>
         <section className="hush" aria-label="Quiet flex">
           <h2>Shhh.</h2>
           <p>Serious diamonds, worn lightly.</p>
