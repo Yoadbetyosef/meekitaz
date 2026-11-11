@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { loadPlan, savePlan } from "@/lib/plan";
+import Signature from "./Signature";
 
 /* Phones' home opening (approved 2026-11-10, "M2 + B"): three photos, a second and a half each, like stories — a thin ink line draws
    from the price toward the piece and stops short of it, then the price a day in big ink ("The Marquise · $15 a day"). Then a clean
@@ -13,6 +14,7 @@ const SL = [
 ];
 const HEAD = "We just changed how diamonds are bought.";
 const SUB = "A real diamond, worn from day one, for a few dollars a day. No one else does this.";
+const FACES = ["maya", "david", "jess", "linda"];
 const BEAT = 1500;
 
 export default function PhoneStory() {
@@ -31,8 +33,9 @@ export default function PhoneStory() {
     const go = () => {
       SL.forEach((_, i) => ts.push(window.setTimeout(() => setAt(i), i * BEAT)));
       ts.push(window.setTimeout(() => setAt(3), SL.length * BEAT));
-      const n = HEAD.split(" ").length;
-      for (let k = 1; k <= n + 2; k++) ts.push(window.setTimeout(() => setWords(k), SL.length * BEAT + 400 + k * 170));
+      const n = HEAD.length;
+      for (let k = 1; k <= n; k++) ts.push(window.setTimeout(() => setWords(k), SL.length * BEAT + 500 + k * 45));
+      ts.push(window.setTimeout(() => setWords(n + 1), SL.length * BEAT + 500 + n * 45 + 250));
     };
     if (document.documentElement.classList.contains("mk-intro-on")) { window.addEventListener("mk-intro-lift", go, { once: true }); }
     else go();
@@ -64,11 +67,21 @@ export default function PhoneStory() {
           </div>
         );
       })}
-      <div className={`pst-ann${at === 3 ? " on" : ""}`}>
-        <small>Meekitaz</small>
-        <p>{hw.map((x, i) => <span key={i} className={i < words ? "w" : ""}>{x} </span>)}</p>
-        <em className={words > hw.length ? "w" : ""}>{SUB}</em>
-        <button type="button" className={`pst-go${words > hw.length + 1 ? " w" : ""}`} onClick={start}>Start from $1 a day &rarr;</button>
+      {/* the announcement (approved 2026-11-10, "T1"): typed letter by letter; the small line; what we don't do struck through in ink one
+          by one and what we do underlined; one button; five stars with faces; the Meekitaz signature, "We promise."; the hand with the fries */}
+      <div className={`pst-ann${at === 3 ? " on" : ""}${words > HEAD.length ? " done" : ""}`}>
+        <i className="pst-pl l" aria-hidden="true" /><i className="pst-pl r" aria-hidden="true" />
+        <p className="pst-h" aria-label={HEAD}>{(() => { let c = 0; return HEAD.split(" ").map((w, i) => <span key={i} className="pst-wd" aria-hidden="true">{[...w].map((ch, j) => { const k = c++; return <span key={j} className={k < words ? "w" : ""}>{ch}</span>; })}{" "}{(c++, null)}</span>); })()}</p>
+        <em className="pst-sub">{SUB}</em>
+        <div className="pst-prom"><span><s>Loans</s> &amp; <s>interest</s></span><span><s>Credit checks</s></span><span><s>Rentals</s> — it’s yours</span><span><u>Everyone’s approved</u></span></div>
+        <div className="pst-cta"><button type="button" className="pst-go" onClick={start}>Find yours at your price <span aria-hidden="true">&rarr;</span></button><small>From $1 a day · up to 4 months</small></div>
+        <div className="pst-trust">
+          <div className="pst-rev"><span className="pst-faces">{FACES.map(k => <img key={k} src={`/media/daily/faces/${k}.jpg`} alt="" />)}</span><div><b>5.0</b> <i aria-label="five stars">★★★★★</i><small>Loved by our clients</small></div></div>
+          <div className="pst-signed"><Signature on={words > HEAD.length} className="pst-sig" /><small>We promise.</small></div>
+        </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="pst-hf" src="/media/home/hand-fries-ink.webp" alt="" aria-hidden="true" />
+        <span className="pst-hfl">Less than your fries. Shinier, too.</span>
       </div>
     </div>
   );
