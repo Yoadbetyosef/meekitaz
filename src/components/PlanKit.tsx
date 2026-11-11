@@ -226,3 +226,15 @@ export function PlanEmpty({ handle, noun }: { handle: string; noun: string }) {
     </div>
   );
 }
+
+/** What a category's pieces are called, from its page handle (2026-11-11): "Rings start at…", "Earrings start at…". */
+export function nounFor(handle: string, style = ""): string {
+  const h = (style || handle).toLowerCase();
+  if (/earring|stud|hoop|hugg/.test(h)) return "earrings";
+  if (/necklace|pendant|chain/.test(h)) return "necklaces";
+  if (/bracelet|tennis|bangle/.test(h)) return "bracelets";
+  if (/band|wedding|eternity/.test(h)) return "bands";
+  if (/ring/.test(h)) return "rings";
+  if (/gem/.test(h)) return "gemstones";
+  return "pieces";
+}
