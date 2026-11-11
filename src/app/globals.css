@@ -4442,3 +4442,5 @@ body.pp-fold .pp-chip{display:inline-flex!important;animation:ppIn .3s cubic-bez
 .pst-ann .pst-hf{bottom:calc(env(safe-area-inset-bottom,0px) + 74px)!important}
 .pst-ann .pst-hfl{bottom:calc(env(safe-area-inset-bottom,0px) + 84px)!important;white-space:nowrap;max-width:none!important}
 }
+/* (2026-11-11) phones: the small line a touch bigger and darker */
+@media(max-width:767px){.pst-ann .pst-sub{font-size:17.5px!important;color:#333!important}}
