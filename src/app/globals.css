@@ -4388,7 +4388,7 @@ body:not(.bs-on) .cart{-webkit-backdrop-filter:none!important;backdrop-filter:no
 .pp-chip b{font:400 16px var(--display)}.pp-chip small{font:italic 500 13px var(--sub);color:#666}
 .pp-chip .ok{font-style:normal;color:#1E8A4F;font-size:13px}.pp-chip .up{font-style:normal;font:400 11px var(--body);color:#B9771A;letter-spacing:.06em}
 .pp-dot{width:26px;height:26px;border-radius:50%;background:#1C1A1B;color:#fff;display:grid;place-items:center;font-size:10px;margin-left:2px}
-body.pp-has .nav-wish,body.pp-has .nav-search{display:none!important}
+/* (B2) the heart and search stay on the bar */
 @media(max-width:767px){.pp-chip{height:34px;padding:0 4px 0 10px;gap:5px}.pp-chip b{font-size:14.5px}.pp-chip small{font-size:12px}.pp-dot{width:24px;height:24px}}
 /* the pill opens downward into the card */
 .nav .pp-sheet{position:absolute;left:0;right:0;top:100%;margin-top:-1px;background:linear-gradient(180deg,color-mix(in srgb,var(--nav-bg,#D4ADAD) 75%,#fff),#fff 90px);border-radius:0 0 28px 28px;padding:18px 20px 18px;box-shadow:0 34px 60px -30px rgba(0,0,0,.4);opacity:0;transform:translateY(-8px) scaleY(.96);transform-origin:top;pointer-events:none;transition:opacity .22s,transform .3s cubic-bezier(.2,.8,.2,1);color:#1C1A1B;text-align:left}
@@ -4404,3 +4404,14 @@ body.pp-open .nav{border-bottom-left-radius:0!important;border-bottom-right-radi
 .pp-sw i{width:38px;height:22px;border-radius:999px;background:#ccc;position:relative;transition:background .2s}.pp-sw i::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}
 .pp-sw input:checked+i{background:#1E8A4F}.pp-sw input:checked+i::after{left:19px}
 .pp-also{display:flex;gap:8px;margin-top:14px}.pp-also button{flex:1;height:36px;border-radius:999px;border:1px solid #e3d9cd;background:#f7f1ea;font:400 10px var(--body);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;color:#1C1A1B}
+
+/* ===== The smart bar (approved 2026-11-11, "B2"): the full name at the top; once you scroll, it folds into the M and the plan chip comes in ===== */
+.brand-m{display:none;height:40px;width:auto}
+@media(max-width:767px){.brand-m{height:30px}}
+.pp-chip{display:none!important}
+body.pp-fold .brand-logo{display:none!important}
+body.pp-fold .brand-m{display:block;animation:ppIn .3s cubic-bezier(.2,.8,.2,1)}
+body.pp-fold .pp-chip{display:inline-flex!important;animation:ppIn .3s cubic-bezier(.2,.8,.2,1)}
+@keyframes ppIn{from{opacity:0;transform:scale(.9)}}
+.pp-chip small.s,.pp-chip .s{display:none}
+@media(max-width:767px){.pp-chip small.l,.pp-chip span.l{display:none}.pp-chip small.s{display:inline}body.pp-fold .nav-r{gap:2px}}

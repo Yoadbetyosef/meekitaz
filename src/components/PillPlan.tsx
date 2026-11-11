@@ -17,12 +17,16 @@ export default function PillPlan({ onWish, onSearch }: { onWish: () => void; onS
   useEffect(() => { setCtx(null); setOpen(false); }, [path]);
   useEffect(() => { const f = (e: Event) => setCtx((e as CustomEvent<Ctx>).detail); window.addEventListener("mk-plan-ctx", f); return () => window.removeEventListener("mk-plan-ctx", f); }, []);
   useEffect(() => { document.body.classList.toggle("pp-has", !!r); document.body.classList.toggle("pp-open", !!r && open); }, [r, open]);
+  // (approved 2026-11-11, "B2") at the top of a page the full Meekitaz; once you scroll, the name folds into the M and the chip comes in
+  const [fold, setFold] = useState(false);
+  useEffect(() => { const f = () => setFold(window.scrollY > 40); f(); window.addEventListener("scroll", f, { passive: true }); return () => window.removeEventListener("scroll", f); }, [path]);
+  useEffect(() => { document.body.classList.toggle("pp-fold", !!r && (fold || open)); }, [r, fold, open]);
   useEffect(() => { if (!open) return; const k = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [open]);
   if (!r) return null;
   const { p, bag, left, leftDay, fit } = r, total = planTotal(p), used = Math.min(100, total ? bag / total * 100 : 0);
-  const say = ctx?.kind === "cat" ? <><b>{ctx.fit}</b><small>fit your plan</small>{ctx.fit > 0 && <i className="ok">✓</i>}</>
-    : ctx?.kind === "prod" ? <><small>This one</small><b>{usdR(ctx.perDay)}</b><small>a day</small>{ctx.fits ? <i className="ok">✓</i> : <i className="up">+{usdR(ctx.perDay - Math.max(0, leftDay))}</i>}</>
-    : bag > 0 ? <><b>{usdR(Math.max(0, leftDay))}</b><small>{leftDay >= 0 ? "a day left" : "a day over"}</small></>
+  const say = ctx?.kind === "cat" ? <><b>{ctx.fit}</b><small className="l">fit your plan</small><small className="s">fit</small>{ctx.fit > 0 && <i className="ok">✓</i>}</>
+    : ctx?.kind === "prod" ? <><small className="l">This one</small><b>{usdR(ctx.perDay)}</b><small>a day</small>{ctx.fits ? <i className="ok">✓</i> : <i className="up">+{usdR(ctx.perDay - Math.max(0, leftDay))}</i>}</>
+    : bag > 0 ? <><b>{usdR(Math.max(0, leftDay))}</b><small>{leftDay >= 0 ? <>a day <span className="l">left</span></> : <>a day <span className="l">over</span></>}</small></>
     : <><b>{usdR(p.day)}</b><small>a day</small></>;
   return (
     <>
@@ -34,7 +38,6 @@ export default function PillPlan({ onWish, onSearch }: { onWish: () => void; onS
         <div className="pp-meter" aria-hidden="true"><i className="u" style={{ width: used + "%" }} /><i className="l" style={{ width: (100 - used) + "%" }} /></div>
         <div className="pp-leg"><span>{bag > 0 ? `In your bag: ${usdR(bag)}` : `Yours, up to ${usdR(total)}`}</span><span>{bag > 0 ? (left >= 0 ? `${usdR(Math.max(0, leftDay))} a day left` : `${usdR(-leftDay)} a day over`) : `${p.months} months`}</span></div>
         <label className="pp-sw"><span>Show what fits first</span><input type="checkbox" checked={fit} onChange={() => saveFit(!fit)} /><i aria-hidden="true" /></label>
-        <div className="pp-also"><button type="button" onClick={() => { setOpen(false); onWish(); }}>♡ Saved</button><button type="button" onClick={() => { setOpen(false); onSearch(); }}>⌕ Search</button></div>
       </div>
     </>
   );
