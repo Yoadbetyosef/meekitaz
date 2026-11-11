@@ -2,7 +2,7 @@
 import GridReelTile from "./GridReelTile";
 import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
-import { usePlanRoom, DailyTile, PlanBanner } from "./PlanKit";
+import { usePlanRoom, DailyTile, PlanBanner, PlanEmpty } from "./PlanKit";
 import { clearPlan, planOrder, usdR } from "@/lib/plan";
 import GridMood, { type Reveal } from "./GridMood";
 import Link from "next/link";
@@ -54,6 +54,7 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
         </div>
         
         {room && <PlanBanner fit={fitN} noun="pieces" />}
+        {room && room.fit && shown.length === 0 && !busy && items.length > 0 && <PlanEmpty handle={handle} noun="pieces" />}
         <div className="pgrid">
           {shown.map((p, i) => (
             <Fragment key={p.id}>

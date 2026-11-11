@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { loadPlan, savePlan, loadFit, saveFit, perDay, planTotal, usdR, type Plan } from "@/lib/plan";
 import { useCart } from "./CartProvider";
 import { loadSetting } from "@/lib/setting";
@@ -183,6 +184,45 @@ export function PlanBanner({ noun }: { fit?: number; noun: string }) {
         ? <>Every {noun.replace(/s$/, "")} here is yours for <b>{usdR(roomDay)} a day</b> or less{bag ? " — after what’s in your bag" : ""}.</>
         : <>Showing all {noun}. <span className="plb-dot" aria-hidden="true" /> marks what’s within <b>{usdR(roomDay)} a day</b>.</>}</span>
       <span className="plb-tg" role="group" aria-label="Show"><button type="button" className={r.fit ? "on" : ""} aria-pressed={r.fit} onClick={() => saveFit(true)}>Only these</button><button type="button" className={r.fit ? "" : "on"} aria-pressed={!r.fit} onClick={() => saveFit(false)}>Show all</button></span>
+    </div>
+  );
+}
+
+
+/** When nothing loaded fits the plan (approved 2026-11-11, "E1"): never an empty page. "Rings start at $11 a day." — the category's
+ *  cheapest pieces (asked from the store, lowest price first), each with how much more a day it is, one button that raises the plan
+ *  to the first of them, and "Show all". */
+export function PlanEmpty({ handle, noun }: { handle: string; noun: string }) {
+  const r = usePlanRoom();
+  const [near, setNear] = useState<{ handle: string; title: string; price: number; img?: string }[] | null>(null);
+  useEffect(() => {
+    let live = true;
+    fetch(`/api/products?handle=${encodeURIComponent(handle)}&sort=price_asc`).then(x => x.json()).then((j: { products?: { handle: string; title: string; price: string; image?: { url: string } }[] }) => {
+      if (live) setNear((j.products || []).filter(x => +x.price > 0).slice(0, 3).map(x => ({ handle: x.handle, title: x.title, price: +x.price, img: x.image?.url })));
+    }).catch(() => live && setNear([]));
+    return () => { live = false; };
+  }, [handle]);
+  if (!r) return null;
+  const roomDay = Math.max(0, r.leftDay), first = near && near[0] ? perDay(near[0].price, r.p) : 0;
+  const need = first ? Math.min(50, first + (r.p.day - roomDay)) : 0; // what the plan must be so the cheapest fits after the bag
+  return (
+    <div className="pe">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img className="pe-ic" src="/media/passage/k1.png" alt="" aria-hidden="true" />
+      <h3>{first ? <>{noun.charAt(0).toUpperCase() + noun.slice(1)} start at {usdR(first)} a day.</> : <>Nothing here at {usdR(roomDay)} a day yet.</>}</h3>
+      <p>{first ? <>Nothing here at {usdR(roomDay)} a day yet — these are the closest.</> : <>Show all {noun}, or try a little more a day.</>}</p>
+      {near && near.length > 0 && <div className="pe-near">{near.map(x => { const d = perDay(x.price, r.p); return (
+        <Link key={x.handle} href={`/products/${x.handle}`} className="pe-card">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          {x.img && <img src={x.img + (x.img.includes("?") ? "&" : "?") + "width=400"} alt={x.title} loading="lazy" />}
+          <span className="pe-nm">{x.title}</span>
+          <span className="pe-day"><b>{usdR(d)}</b><i>a day</i></span>
+          <span className="pe-more">+{usdR(Math.max(0, d - roomDay))} a day</span>
+        </Link>); })}</div>}
+      <div className="pe-acts">
+        {need > 0 && <button type="button" className="pe-btn" onClick={() => savePlan({ ...r.p, day: need })}>Make it {usdR(need)} a day <span aria-hidden="true">&rarr;</span></button>}
+        <button type="button" className="pe-lnk" onClick={() => saveFit(false)}>Show all {noun}</button>
+      </div>
     </div>
   );
 }

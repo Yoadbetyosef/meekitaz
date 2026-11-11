@@ -3,7 +3,7 @@ import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
 import GridMood from "./GridMood";
 import Link from "next/link";
-import { usePlan, usePlanRoom, DailyTile, PlanBanner } from "./PlanKit";
+import { usePlan, usePlanRoom, DailyTile, PlanBanner, PlanEmpty } from "./PlanKit";
 import { savePlan, clearPlan, planTotal, planOrder, saveFit, usdR } from "@/lib/plan";
 import RtsVideoTile from "./RtsVideoTile";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -125,6 +125,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
           <button key={t.k + t.v} type="button" className="rf-tag" onClick={() => t.k === "price" ? set({ min: null, max: null }) : t.k === "type" ? set({ type: null }) : set({ [t.k]: (t.k === "style" ? shapes : t.k === "metal" ? metals : styles).filter(x => x !== t.v).join(",") || null })}>{t.l}</button>))}</div>}
 
         {room && <PlanBanner fit={fitN} noun="rings" />}
+        {room && room.fit && shown.length === 0 && !busy && items.length > 0 && <PlanEmpty handle={handle} noun="rings" />}
 
         <div className={`pgrid${busy ? " rf-busy" : ""}`} style={{ marginTop: 20 }}>
           {shown.map((p, i) => (
