@@ -4220,3 +4220,22 @@ body:not(.bs-on) .cart{-webkit-backdrop-filter:none!important;backdrop-filter:no
 /* (2026-11-10) the plan circle at the bottom-left in white (it was pink glass) */
 .pl-orb{background:#fff!important;color:#1C1A1B!important;box-shadow:0 18px 40px -16px rgba(0,0,0,.3),inset 0 0 0 1px rgba(28,26,27,.06)!important}
 .pl-orb.over{background:#1C1A1B!important;color:#fff!important}
+
+/* ===== The opening (approved 2026-11-10, "S1 · a day with her", clean white) ===== */
+.mk-intro3{background:var(--home-bg,#F8E9D9)!important}
+.mks-wm{position:absolute;left:50%;top:50%;width:150vw;transform:translate(-50%,-50%);opacity:.42;pointer-events:none;animation:mksDrift 2.1s linear both}
+.mks-wm img{width:100%;display:block}
+@keyframes mksDrift{from{margin-top:30px}to{margin-top:-30px}}
+@media(max-width:767px){.mks-wm{width:330vh;transform:translate(-50%,-50%) rotate(-90deg)}}
+.mks-ic{position:absolute;left:50%;top:50%;height:min(52vh,430px);transform:translate(-50%,-50%);z-index:2}
+@media(max-width:767px){.mks-ic{height:36vh}}
+.mks-ic img{height:100%;width:auto;display:block;filter:brightness(0) invert(1) drop-shadow(0 6px 18px rgba(60,40,20,.18)) drop-shadow(0 1px 2px rgba(60,40,20,.12))}
+.mks-ic.on{animation:mksIn .26s cubic-bezier(.2,.9,.3,1) both}
+@keyframes mksIn{0%{opacity:0;transform:translate(-40%,-50%) scale(.92)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.mks-cap{position:absolute;left:0;right:0;bottom:90px;text-align:center;font:400 13px var(--body);letter-spacing:.42em;color:#A88A6A;z-index:2}
+@media(max-width:767px){.mks-cap{bottom:120px}}
+.mks-fin{position:absolute;left:50%;top:50%;width:120vw;transform:translate(-50%,-50%) scale(.6);opacity:0;z-index:3}
+@media(max-width:767px){.mks-fin{width:150vw}}
+.mks-fin img{width:100%;display:block;filter:drop-shadow(0 12px 40px rgba(150,110,70,.25))}
+.mks-fin.on{animation:mksFin .5s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes mksFin{to{opacity:1;transform:translate(-50%,-50%) scale(1)}}

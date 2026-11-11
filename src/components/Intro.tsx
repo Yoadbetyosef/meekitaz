@@ -9,6 +9,7 @@ const WM = "/brand/meekitaz-logo-white.png";
 const msvg = (outline: boolean) => `<svg viewBox="0 0 ${M.w} ${M.h}" fill-rule="evenodd"><path d="${M.d.join(" ")}" style="${outline ? "fill:none;stroke:#fff;stroke-width:3;vector-effect:non-scaling-stroke" : "fill:#fff"}"/></svg>`;
 const wm = `<img src="${WM}" alt="" />`;
 const PHONE = ["/media/intro/d0.png", "/media/passage/b2.png", "/media/passage/e1.png", "/media/passage/n0.png", "/media/passage/b4.png", "/media/passage/k3.png"];
+const DAY: [string, string][] = [["/media/passage/o6.png", "8 AM"], ["/media/intro/d2.png", "1 PM"], ["/media/passage/b4.png", "7 PM"], ["/media/passage/b2.png", "11 PM"], ["/media/passage/e0.png", ""]];
 const ill = (i: number) => `<img src="/media/intro/d${i}.png" alt="" />`;
 /* W1 (approved 2026-11-08): our M / Meekitaz flicker with his six ink drawings woven in at the same pace, ending on the big Meekitaz watermark */
 const SEQ: [string, number, number | "full" | "ill"][] = [[msvg(true), 220, .3], [msvg(false), 180, .5], [ill(0), 180, "ill"], [wm, 180, .8], [ill(1), 160, "ill"], [msvg(false), 180, 1.0], [ill(2), 180, "ill"], [wm, 180, 1.4], [ill(3), 160, "ill"], [msvg(false), 160, 1.6], [ill(4), 160, "ill"], [wm, 180, 2.2], [ill(5), 180, "ill"], [wm, 560, "full"]];
@@ -24,16 +25,20 @@ export default function Intro() {
     // then the window fills the screen and a huge white Meekitaz watermark spills past the edges. ~1.7s. Computers keep the blue (W1).
     // (2026-11-10) everywhere now, with the story; the old blue (W1) still plays with ?intro=blue so it can be seen again
     if (new URLSearchParams(location.search).get("intro") !== "blue") {
-      const it3 = document.getElementById("mk-intro3"), c3 = document.getElementById("mk-intro3-c"), f3 = document.getElementById("mk-intro3-fr");
-      if (!it3 || !c3 || !f3) return;
+      // (approved 2026-11-10, "S1 · a day with her", clean white): on our cream, a huge see-through white Meekitaz (along the height on
+      // phones), and a day told in two seconds — morning coffee, sunglasses at 1 PM, a cocktail at 7, heels at 11, the cherries — pure white
+      // drawings with only a soft shadow; then the big white Meekitaz lands and the screen lifts. The V3 pink window is archived.
+      const it3 = document.getElementById("mk-intro3"); if (!it3) return;
       document.documentElement.style.overflow = "hidden";
-      PHONE.forEach(src => { const im = new Image(); im.src = src; }); { const im = new Image(); im.src = WM; }
-      const BEAT = 185, starts = PHONE.map((_, i) => 100 + i * BEAT), wmAt = 100 + PHONE.length * BEAT, total = wmAt + 560;
-      let t0 = 0, step = -1, raf = 0, lifted = false, finished = false, wm = false;
+      it3.innerHTML = `<div class="mks-wm"><img src="${WM}" alt="" /></div><div class="mks-ic" id="mks-ic"></div><div class="mks-cap" id="mks-cap"></div><div class="mks-fin" id="mks-fin"><img src="${WM}" alt="" /></div>`;
+      DAY.forEach(([src]) => { const im = new Image(); im.src = src; });
+      const ic = document.getElementById("mks-ic"), cap = document.getElementById("mks-cap"), fin = document.getElementById("mks-fin");
+      const BEAT = 280, finAt = 60 + DAY.length * BEAT, total = 2150;
+      let t0 = 0, step = -1, raf = 0, lifted = false, finished = false, landed = false;
       const tick = (now: number) => {
         if (!t0) t0 = now; const e = now - t0;
-        while (step + 1 < PHONE.length && e >= starts[step + 1]) { step++; c3.innerHTML = `<img src="${PHONE[step]}" alt="" />`; c3.classList.remove("pop"); void c3.offsetWidth; c3.classList.add("pop"); }
-        if (e >= wmAt && !wm) { wm = true; f3.classList.add("fill"); c3.innerHTML = `<img src="${WM}" alt="" />`; c3.classList.remove("pop"); c3.classList.add("wm"); }
+        while (step + 1 < DAY.length && e >= 60 + (step + 1) * BEAT) { step++; if (ic) { ic.innerHTML = `<img src="${DAY[step][0]}" alt="" />`; ic.classList.remove("on"); void ic.offsetWidth; ic.classList.add("on"); } if (cap) cap.textContent = DAY[step][1]; }
+        if (e >= finAt && !landed) { landed = true; if (ic) ic.innerHTML = ""; if (cap) cap.textContent = ""; fin?.classList.add("on"); }
         if (e >= total && !lifted) { lifted = true; it3.classList.add("out"); document.documentElement.classList.add("mk-intro-lift"); window.dispatchEvent(new Event("mk-intro-lift")); }
         if (e >= total + 600 && !finished) { finished = true; document.documentElement.style.overflow = ""; document.documentElement.classList.remove("mk-intro-on", "mk-intro-lift"); window.dispatchEvent(new Event("mk-intro-done")); setDone(true); }
         raf = requestAnimationFrame(tick);

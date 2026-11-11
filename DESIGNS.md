@@ -21,6 +21,7 @@ showed live in the chat outputs (meekitaz-*.html).
 | `design/ground-butter-fef5d9` (af4edb5) | The whole site on the butter ground #FEF5D9 | — |
 | `design/opening-desktop-coin` (92eaa0a) | Computers: the film at 30% on the left, the statement, the still pink coin, the passing row of pieces, Q1 promises | — |
 | `design/grey-red-x1` (a0c9bca) | Pearl-grey ground #E2E1E3, the red-satin story photos, and the X1 slot-machine opening on phones (tall see-through Meekitaz) | — |
+| `design/intro-v3-pink-window` (aad7b25) | The opening V3: cream, a pink window, the drawings bursting over its top, a huge white Meekitaz watermark (phones and computers) | — |
 
 ## How to add one
 When a design is replaced, tag the last commit before the change: `git tag design/<name> <commit>^ && git push origin --tags`,
