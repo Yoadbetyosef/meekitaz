@@ -3725,7 +3725,7 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 
 /* ===== The footer in Golden Couture (approved 2026-11-09, G1): the same reveal under the page; the banner's own butter; "Shhh." in one
    line above the banner, the banner whole across the middle, the links below — nothing overlaps, nothing is cut ===== */
-.mkfoot{--hush-bg:#FEF5D9;background:#FEF5D9}
+.mkfoot{--hush-bg:#F8E9D9;background:#F8E9D9}
 .mkfoot-in{display:flex;flex-direction:column;justify-content:flex-start;padding-top:clamp(96px,13vh,132px)}
 .mkfoot .hush{position:relative;left:auto;top:auto;bottom:auto;max-width:none;display:flex;align-items:flex-end;flex-wrap:wrap;gap:8px 28px;padding:0 clamp(16px,4vw,56px);z-index:3}
 .mkfoot .hush h2{font-size:clamp(54px,6vw,92px)}
@@ -3835,7 +3835,7 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 @media(max-width:767px){.rtsb-bird{width:84px}}
 
 /* ===== The light by chapter (approved 2026-11-09, L1 from butter): the page starts on butter; ChapterLight blends --home-bg ===== */
-.home-page{--home-bg:#FEF5D9}
+.home-page{--home-bg:#F8E9D9}
 .home-page .mkfilm.fl,.home-page .sec{background:var(--home-bg)!important}
 .home-page .sec,.home-page .catd,.home-page .rtsb,.home-page .hop,.home-page .over-fun,.home-page .mkfilm.fl{transition:none}
 /* the floating chain: its film's studio lavender lifted to pure white, then multiplied into whatever colour the page is — no box, it
@@ -3848,16 +3848,16 @@ html.mk-intro-on.mk-intro-lift .nav,html.mk-intro-on.mk-intro-lift .cart,html.mk
 
 /* ===== Our butter, everywhere (2026-11-09): every page's ground is the footer's butter — the home page, categories, product pages,
    the bag; the "As seen in" strip sits straight on it ===== */
-:root,body{--home-bg:#FEF5D9;--blue-light:#FEF5D9}
-html,body{background:#FEF5D9}
-body:has(.home-page){--blue-light:#FEF5D9}
-.catbody{background:#FEF5D9}
-.edge-t,.edge-b{background:#FEF5D9}
-@media(max-width:767px){html{background:#FEF5D9}.edge-t,.edge-b{background:#FEF5D9}}
-.pr,.rh{background:#FEF5D9!important}
+:root,body{--home-bg:#F8E9D9;--blue-light:#F8E9D9}
+html,body{background:#F8E9D9}
+body:has(.home-page){--blue-light:#F8E9D9}
+.catbody{background:#F8E9D9}
+.edge-t,.edge-b{background:#F8E9D9}
+@media(max-width:767px){html{background:#F8E9D9}.edge-t,.edge-b{background:#F8E9D9}}
+.pr,.rh{background:#F8E9D9!important}
 
 .hop-film{will-change:transform;backface-visibility:hidden}
-.hop-film video{background:#FEF5D9}
+.hop-film video{background:#F8E9D9}
 
 /* the Floating passage: each piece drifts up into place, weightless, and keeps hovering while it's on */
 .rp-float .rp-d{transform:translate(-50%,-36%) rotate(var(--r,0deg));transition:opacity .14s,transform .75s cubic-bezier(.16,.9,.24,1)}
@@ -4025,8 +4025,8 @@ body:has(.home-page){--blue-light:#FEF5D9}
 
 /* ===== Shop by category with the model photos again (approved 2026-11-09), and the feed reel under it at its own shape ===== */
 .home-page #shop{display:block!important}
-.home-page .sec#shop{background:var(--home-bg,#FEF5D9)}
-.feed-nat{display:flex;justify-content:center;padding:10px 0 70px;background:var(--home-bg,#FEF5D9)}
+.home-page .sec#shop{background:var(--home-bg,#F8E9D9)}
+.feed-nat{display:flex;justify-content:center;padding:10px 0 70px;background:var(--home-bg,#F8E9D9)}
 .feed-nat video{display:block;height:min(86vh,820px);aspect-ratio:9/16;width:auto;border-radius:22px;box-shadow:0 30px 60px -36px rgba(28,26,27,.4);object-fit:cover;background:#fff}
 @media(max-width:767px){.feed-nat{padding:4px 14px 50px}.feed-nat video{width:100%;height:auto}}
 
@@ -4089,13 +4089,13 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 /* ===== Daily for anyone who lands anywhere (approved 2026-11-10, I1 + I2) ===== */
 .d-coin{flex:none;width:68px;height:68px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#1C1A1B;background:linear-gradient(135deg,rgba(240,138,174,.95),rgba(197,113,143,.95) 50%,rgba(245,173,198,.95));box-shadow:0 14px 26px -16px rgba(197,113,143,.75)}
 .d-coin b{font:400 22px/1 var(--display)}.d-coin i{font:italic 500 11px var(--sub)}
-.d-mini{display:flex;align-items:center;gap:14px;margin:12px 0 16px;padding:12px 14px;border-radius:18px;background:#FEF5D9}
+.d-mini{display:flex;align-items:center;gap:14px;margin:12px 0 16px;padding:12px 14px;border-radius:18px;background:#F8E9D9}
 .d-mini p{margin:0;font:italic 500 17px/1.35 var(--sub)}.d-mini p b{display:block;font:400 10.5px var(--body);font-style:normal;letter-spacing:.16em;text-transform:uppercase;color:#2752E6;margin-bottom:2px}
 .d-how{margin-left:auto;font:400 10px var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--ink);border-bottom:1px solid;white-space:nowrap;text-decoration:none}
 .d-pills{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0 4px}
 .d-pills span{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px 0 4px;border:1.1px solid #1C1A1B;border-radius:999px;font:400 8.5px var(--body);letter-spacing:.12em;text-transform:uppercase}
 .d-pills span::before{content:"✓";width:17px;height:17px;border-radius:50%;background:#2752E6;color:#fff;display:grid;place-items:center;font-size:10px}
-.d-tile{position:relative;height:100%;min-height:100%;border-radius:18px;overflow:hidden;background:#FEF5D9;border:1px solid rgba(28,26,27,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;text-decoration:none;color:var(--ink)}
+.d-tile{position:relative;height:100%;min-height:100%;border-radius:18px;overflow:hidden;background:#F8E9D9;border:1px solid rgba(28,26,27,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;text-decoration:none;color:var(--ink)}
 .d-tile .d-coin{width:96px;height:96px}.d-tile .d-coin b{font-size:32px}
 .d-tile h4{font:400 24px/1.1 var(--display);color:#2752E6;margin:14px 0 6px}
 .d-tile p{font:italic 500 16px var(--sub);margin:0 0 12px;color:#444}
@@ -4104,7 +4104,7 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 
 /* (2026-11-10) the product-page coin card reads in our blue (it sat in white on the white panel), its link is a real button that stays
    on the page; the category tile is a button too */
-.d-mini{background:#FEF5D9!important;border:1px solid rgba(39,82,230,.18)}
+.d-mini{background:#F8E9D9!important;border:1px solid rgba(39,82,230,.18)}
 .d-mini p,.d-mini p b{color:#2752E6!important}
 .d-mini p{color:#1C1A1B!important}.d-mini p b{color:#2752E6!important}
 .d-how{background:none;border:0;border-bottom:1px solid currentColor;padding:0 0 1px;cursor:pointer;color:#2752E6!important;font:400 10px var(--body)!important;letter-spacing:.18em;text-transform:uppercase}
@@ -4166,3 +4166,6 @@ html.mk-intro-on.mk-intro-lift .pl-orb-w{visibility:visible;opacity:1;transition
 .pst-ann em{display:block;margin-top:22px;font:italic 500 19px var(--sub);color:#555;opacity:0;transition:opacity .6s}.pst-ann em.w{opacity:1}
 .pst-go{margin-top:26px;height:48px;padding:0 24px;border-radius:999px;border:0;background:#1C1A1B;color:#fff;font:400 10.5px var(--body);letter-spacing:.2em;text-transform:uppercase;opacity:0;transition:opacity .5s;cursor:pointer}.pst-go.w{opacity:1}
 }
+
+/* (2026-11-10) the site's ground is now the cream of the new photos (#F8E9D9), so the photos and the page are one colour — the butter
+   (#FEF5D9) is kept in the archive as design/ground-butter-fef5d9 */
