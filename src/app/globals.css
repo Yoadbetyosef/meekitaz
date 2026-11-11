@@ -4554,3 +4554,10 @@ body,body:has(.home-page){--blue-light:#F8E9D9;background:#F8E9D9}
 /* (2026-11-11) the colour language reaches every page ground I'd missed: category pages, product pages and their details below,
    diamond pages, the ring builder, the 404 and one-of-one pages, the reel page and the Daily pages — all on the one cream */
 .catbody,.pp,.pp.ih-on,.pp-below,.dd,.df,.mk-404,.mk-oc,.rp,.rtsb,.dh-hero,.dmr{background:#F8E9D9!important}
+/* (2026-11-11) footer F1 instead of F3: no cobalt strip — the links sit on the cream like before (the fades in our cream, not butter) */
+.mkfoot .mkf-under{background:transparent!important;color:var(--ink)!important;padding-top:0!important;padding-bottom:clamp(10px,1.8vh,20px)!important}
+.mkfoot .mkf-under a,.mkfoot .mkf-under *{color:var(--ink)}
+@media(max-width:767px){
+.mkfoot .hush{background:linear-gradient(rgba(248,233,217,0),rgba(248,233,217,.95) 70%)!important}
+.mkfoot .mkf-under{position:relative!important;padding-top:12px!important;background:rgba(248,233,217,.95)!important}
+}
