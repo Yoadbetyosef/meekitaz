@@ -4239,3 +4239,4 @@ body:not(.bs-on) .cart{-webkit-backdrop-filter:none!important;backdrop-filter:no
 .mks-fin img{width:100%;display:block;filter:drop-shadow(0 12px 40px rgba(150,110,70,.25))}
 .mks-fin.on{animation:mksFin .5s cubic-bezier(.2,.8,.2,1) forwards}
 @keyframes mksFin{to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.mk-intro3 .mki3-fr{display:none!important} /* S1 has no window; keeps the first painted frame clean before the script runs */
