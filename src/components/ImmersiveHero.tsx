@@ -260,7 +260,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
         <button type="button" className="ih-x" aria-label="Close the choices" onClick={() => setOpen(false)}><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
         <button type="button" className="ih-hdl" aria-label={open ? "Fold the choices" : "Open the choices"} aria-expanded={open} onClick={() => setOpen(o => !o)}><i /></button>
         {open && focus.startsWith("row:") && <style>{`.ih.open.f-row .ih-rows>*:not([data-row="${focus.slice(4).replace(/"/g, "")}"]){display:none!important}`}</style>}
-        {open && focus && <div className="ih-fh"><span>{focus === "metal" ? "Metal & colour" : focus === "shape" ? "The centre stone" : focus === "ai" ? "Top AI picks" : focus.slice(4)}</span><button type="button" onClick={() => setOpen(false)}>Done</button></div>}
+        {open && focus && <div className="ih-fh"><span>{focus === "metal" ? "Metal & colour" : focus === "shape" ? "The centre stone" : focus === "ai" ? "AI diamonds" : focus.slice(4)}</span><button type="button" onClick={() => setOpen(false)}>Done</button></div>}
         <div className="ih-pk">
           {steps}
           <h2 className="ih-st" onClick={() => setOpen(o => !o)}>{bigTitle}</h2>
@@ -275,7 +275,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
               {isShape && <img className="pc1-st" src={stonePicture(t)} alt="" aria-hidden="true" />}
               {c.kind === "row" && <i className="pc1-ai pc1-op" aria-hidden="true">◇</i>}
               {t}<em aria-hidden="true">▾</em></button>;
-          })}{steps && <button type="button" className="pc1" onClick={() => openAt("ai")}><i className="pc1-ai" aria-hidden="true">✦</i>AI picks<em aria-hidden="true">▾</em></button>}</div>}
+          })}{steps && <button type="button" className="pc1 pc1-aic" onClick={() => openAt("ai")}><i className="pc1-ai" aria-hidden="true">✦</i>AI diamonds<em aria-hidden="true">▾</em></button>}</div>}
         </div>
         <div className="ih-scr">
           {(metal || steps) && <div className="ih-top">{steps}{metal}</div>}
