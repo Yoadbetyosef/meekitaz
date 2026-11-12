@@ -4831,3 +4831,13 @@ main:has(.dx-first) .rsteps:not(.dx-steps){display:none}
 .df-sum:has(.h1-ch){padding:4px 14px!important;background:#fff!important}
 .df-sum:has(.h1-ch)>*:not(.h1-ch){display:none!important}
 }
+/* (2026-11-12, urgent) Build your ring on phones: nothing in the page can stretch the column wider than the screen any more, and
+   every diamond sits at the same size in the square — supplier photos are cropped differently (some fill the frame), so the photo
+   is always fitted inside a fixed frame with the same air around it. */
+.df-g>*{min-width:0;max-width:100%}
+.h1,.h1-sq{width:100%;max-width:100%;min-width:0}
+.h1-sq{contain:layout paint}
+.h1-st .df-win{inset:0!important;width:100%!important;height:100%!important}
+.h1-st .df-win img:not(.df-bgimg){position:absolute!important;inset:12%!important;width:76%!important;height:76%!important;object-fit:contain!important;transform:none!important}
+.h1-st .df-win .df-vid{position:absolute;inset:0;width:100%!important;height:100%!important}
+.dx-hero .df-win img:not(.df-bgimg){position:absolute!important;inset:12%!important;width:76%!important;height:76%!important;object-fit:contain!important}
