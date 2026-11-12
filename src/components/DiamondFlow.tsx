@@ -142,8 +142,7 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
       <section className="df-bd">
         <div className="df-h"><span className="eyebrow">{d.fancy ? "Fancy color" : "Step 2 of 3"} · Your diamond</span><h1>Build your ring</h1><p className="df-s">{title(d)} · {sub(d)}</p></div>
         <div className="df-g">
-          {shown && <RingW1 shown={shown} shapeName={shape} stoneTitle={title(d)} stoneSub={sub(d)} stonePrice={d.price} onSwap={m => setSwap(m)} />}
-          {shown && <DiamondStrip d={d} onOpen={() => setAbout(true)} />}
+          {shown && <RingW1 shown={shown} shapeName={shape} stoneTitle={title(d)} stoneSub={sub(d)} stonePrice={d.price} onSwap={m => setSwap(m)} extra={<DiamondStrip d={d} onOpen={() => setAbout(true)} />} />}
           {!shown && !set && <DiamondFirst d={d} shape={shape} picture={<StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />} />}
           <div className={`df-pair${shown || !set ? " w1-hide" : ""}`}>
             <div>

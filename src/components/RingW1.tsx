@@ -11,8 +11,8 @@ import { usdR } from "@/lib/plan";
    their swap drawers. Nothing makes the customer go round again. */
 const SW: Record<string, string> = { "White gold": "linear-gradient(135deg,#F4F5F7,#BFC4CC)", "Yellow gold": "linear-gradient(135deg,#F3D27A,#C9982E)", "Rose gold": "linear-gradient(135deg,#F2C6B4,#C98C74)", Platinum: "linear-gradient(135deg,#F4F5F7,#AEB4BD)", Silver: "linear-gradient(135deg,#F4F5F7,#C9CDD3)" };
 
-export default function RingW1({ shown, shapeName, stoneTitle, stoneSub, stonePrice, stoneImg, onSwap }: {
-  shown: Setting; shapeName: string; stoneTitle: string; stoneSub: string; stonePrice: number; stoneImg?: string; onSwap: (m: "stone" | "setting") => void;
+export default function RingW1({ shown, shapeName, stoneTitle, stoneSub, stonePrice, stoneImg, onSwap, extra }: {
+  shown: Setting; shapeName: string; stoneTitle: string; stoneSub: string; stonePrice: number; stoneImg?: string; onSwap: (m: "stone" | "setting") => void; extra?: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false), [busy, setBusy] = useState(false), [msg, setMsg] = useState("");
   const months = 4, day = (n: number) => Math.ceil(n / (30 * months));
@@ -66,6 +66,7 @@ export default function RingW1({ shown, shapeName, stoneTitle, stoneSub, stonePr
           {isGoldMetal(shown.metal) && <div className="w1-cols">{GOLD_COLORS.map(c => <button key={c} type="button" aria-label={c} aria-pressed={c === shown.metal} className={c === shown.metal ? "on" : ""} style={{ background: SW[c] }} onClick={() => pickColour(c)} />)}<span>{shown.metal}</span></div>}
         </div>
       </div>
+      {extra && <div className="w1-extra">{extra}</div>}
       <div className={`w1-toast${msg ? " on" : ""}`} role="status">{msg}</div>
     </div>
   );
