@@ -4781,3 +4781,7 @@ body,body:has(.home-page){--blue-light:#F8E9D9;background:#F8E9D9}
 
 /* (2026-11-12) the sheet's two buttons: always two plain pills side by side (a global ".pr" had blown "Keep this diamond" into a circle) */
 .dx-acts{padding-bottom:70px}.dx-acts button{height:52px;width:auto;margin:0;position:static}
+/* (2026-11-12) "Show more", everywhere: the browser used to hold the button in view while the new pieces were added above it, so the
+   page jumped down and the new pieces seemed to vanish upward. The button is never the scroll anchor now — the page stays where it was
+   and the new pieces appear right under the ones you were looking at. */
+.dmore,.dmore *{overflow-anchor:none}
