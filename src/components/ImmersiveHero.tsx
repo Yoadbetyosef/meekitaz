@@ -64,9 +64,9 @@ function trimOf(el: HTMLImageElement): Trim | null {
   } catch { return null; }
 }
 
-export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, stoneSlide = true, filmSlide = true, film, clip, boxPic, steps, summary, price, metal, rows, cta, appt, onVisible, actions }: {
+export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, stoneSlide = true, filmSlide = true, film, clip, boxPic, steps, summary, chips, price, metal, rows, cta, appt, onVisible, actions }: {
   actions?: React.ReactNode;
-  title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; stoneShape?: string; stoneSlide?: boolean; filmSlide?: boolean; film?: { src: string; poster: string; srcD?: string; posterD?: string }; clip?: { src: string; poster: string }; boxPic?: { src: string; alt: string }; summary?: string[];
+  title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; stoneShape?: string; stoneSlide?: boolean; filmSlide?: boolean; film?: { src: string; poster: string; srcD?: string; posterD?: string }; clip?: { src: string; poster: string }; boxPic?: { src: string; alt: string }; summary?: string[]; chips?: { label: string; kind: "metal" | "shape" | "row"; row?: string }[];
   steps?: ReactNode; price: ReactNode; metal?: ReactNode; rows?: ReactNode; cta: ReactNode; appt?: ReactNode; onVisible?: (on: boolean) => void;
 }) {
   const [wideFilm, setWideFilm] = useState(false);
@@ -82,7 +82,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   const N = slides.length;
   const [i, setI] = useState(0);
   const [open, setOpen] = useState(false);
-  const [focus, setFocus] = useState<"" | "metal" | "shape" | "ai">(""); // (2026-11-12) a chip opens just its own choice
+  const [focus, setFocus] = useState<string>(""); // (2026-11-12) a chip opens just its own choice
   useEffect(() => { if (!open) setFocus(""); }, [open]); // phone: the sheet at the bottom, folded (title, what is chosen, price, button) or open (every choice)
   const [modes, setModes] = useState<Record<string, "photo" | "piece">>({});
   const [tones, setTones] = useState<Record<string, "dark" | "light">>({});
@@ -201,9 +201,9 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   // the cleaner needs the photo's place among the Shopify photos, and the worn photo (which opens the page) is not one of them
   const slotOff = model && slides[0]?.url === model ? 1 : 0;
   const src = (u: string, w: number, k: number) => photoSrc(u, w, title, Math.max(0, k - slotOff));
-  const openAt = (f: "metal" | "shape" | "ai") => { setFocus(f); setOpen(true); };
+  const openAt = (f: string) => { setFocus(f); setOpen(true); };
   return (
-    <section className={`ih${open ? " open" : ""}${open && focus ? ` focus f-${focus}` : ""}`} ref={box} data-mode={mode} data-tone={tone} data-clip={s.kind === "clip" ? clipBg : undefined} data-box={s.kind === "box" ? "1" : undefined} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
+    <section className={`ih${open ? " open" : ""}${open && focus ? ` focus f-${focus.startsWith("row:") ? "row" : focus}` : ""}`} ref={box} data-mode={mode} data-tone={tone} data-clip={s.kind === "clip" ? clipBg : undefined} data-box={s.kind === "box" ? "1" : undefined} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
       <div className="ih-slides">
         {slides.map((sl, k) => {
           const m = modeOf(sl), on = k === cur;
@@ -259,18 +259,21 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
       <div className="ih-ctl">
         <button type="button" className="ih-x" aria-label="Close the choices" onClick={() => setOpen(false)}><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
         <button type="button" className="ih-hdl" aria-label={open ? "Fold the choices" : "Open the choices"} aria-expanded={open} onClick={() => setOpen(o => !o)}><i /></button>
-        {open && focus && <div className="ih-fh"><span>{focus === "metal" ? "Metal & colour" : focus === "shape" ? "The centre stone" : "Top AI picks"}</span><button type="button" onClick={() => setOpen(false)}>Done</button></div>}
+        {open && focus.startsWith("row:") && <style>{`.ih.open.f-row .ih-rows>*:not([data-row="${focus.slice(4).replace(/"/g, "")}"]){display:none!important}`}</style>}
+        {open && focus && <div className="ih-fh"><span>{focus === "metal" ? "Metal & colour" : focus === "shape" ? "The centre stone" : focus === "ai" ? "Top AI picks" : focus.slice(4)}</span><button type="button" onClick={() => setOpen(false)}>Done</button></div>}
         <div className="ih-pk">
           {steps}
           <h2 className="ih-st" onClick={() => setOpen(o => !o)}>{bigTitle}</h2>
-          {summary && summary.length > 0 && <div className="ih-pills ih-pills-c1">{summary.map((t, k) => {
-            // (approved 2026-11-12, "C1") each chip is the control: a little preview of what's chosen + ▾; tapping opens the choices there
-            const metalSw = k === 0 ? (/rose/i.test(t) ? "r" : /yellow/i.test(t) ? "y" : "w") : "";
-            const isShape = k > 0 && /^(Round|Oval|Cushion|Elongated Cushion|Emerald|Pear|Princess|Radiant|Marquise|Asscher|Heart)$/i.test(t);
-            return <button type="button" key={k} className="pc1" onClick={() => openAt(k === 0 ? "metal" : "shape")}>
+          {(chips && chips.length ? chips : (summary || []).map((t, k) => ({ label: t, kind: k === 0 ? "metal" as const : "shape" as const }))).length > 0 && <div className="ih-pills ih-pills-c1">{(chips && chips.length ? chips : (summary || []).map((t, k) => ({ label: t, kind: k === 0 ? "metal" as const : "shape" as const, row: undefined as string | undefined }))).map((c, k) => {
+            // (approved 2026-11-12, "C1", every product) each chip is the control: a little preview + ▾; it opens only its own choice
+            const t = c.label;
+            const metalSw = c.kind === "metal" ? (/rose/i.test(t) ? "r" : /yellow/i.test(t) ? "y" : "w") : "";
+            const isShape = c.kind === "shape";
+            return <button type="button" key={k} className="pc1" onClick={() => openAt(c.kind === "row" ? `row:${c.row}` : c.kind)}>
               {metalSw && <i className={`pc1-sw ${metalSw}`} aria-hidden="true" />}
               {/* eslint-disable-next-line @next/next/no-img-element */}
               {isShape && <img className="pc1-st" src={stonePicture(t)} alt="" aria-hidden="true" />}
+              {c.kind === "row" && <i className="pc1-ai pc1-op" aria-hidden="true">◇</i>}
               {t}<em aria-hidden="true">▾</em></button>;
           })}{steps && <button type="button" className="pc1" onClick={() => openAt("ai")}><i className="pc1-ai" aria-hidden="true">✦</i>AI picks<em aria-hidden="true">▾</em></button>}</div>}
         </div>
