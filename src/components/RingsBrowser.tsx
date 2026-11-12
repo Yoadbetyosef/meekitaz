@@ -4,7 +4,7 @@ import DesignCard from "./DesignCard";
 import GridMood from "./GridMood";
 import Link from "next/link";
 import { usePlan, usePlanRoom, DailyTile, PlanBanner, PlanEmpty } from "./PlanKit";
-import { savePlan, clearPlan, planTotal, planOrder, saveFit, usdR } from "@/lib/plan";
+import { savePlan, clearPlan, planTotal, planOrderPaged, saveFit, usdR } from "@/lib/plan";
 import RtsVideoTile from "./RtsVideoTile";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -31,6 +31,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
   const isDefault = !sp.has("style") && !sp.has("metal") && !styles.length && !type && !sp.get("min") && !sp.get("max") && sort === "best";
 
   const [items, setItems] = useState<Product[]>(isDefault ? initial : []); // a link with filters in it starts empty and loads its own results
+  const [cuts, setCuts] = useState<number[]>([0]); // where each "Show more" page starts (plan order stays page by page)
   const [hasNext, setHasNext] = useState(isDefault ? h0 : false);
   const [cursor, setCursor] = useState<string | null>(isDefault ? c0 : null);
   const [busy, setBusy] = useState(!isDefault);
@@ -50,6 +51,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
   const first = useRef(true);
   useEffect(() => {
     if (first.current) { first.current = false; if (isDefault) return; }
+    setCuts([0]);
     if (isDefault) { setItems(initial); setHasNext(h0); setCursor(c0); return; }
     let live = true; setBusy(true);
     fillPage([], { cursor: null, hasNext: true }, api).then(r => { if (live && !(r.failed && !r.items.length)) { setItems(r.items); setHasNext(r.hasNext); setCursor(r.cursor); } }).finally(() => live && setBusy(false));
@@ -74,7 +76,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
 
   async function more() {
     if (!cursor || busy) return; setBusy(true);
-    try { const r = await fillPage(items, { cursor, hasNext }, api); setItems(r.items); setHasNext(r.hasNext); setCursor(r.cursor); } finally { setBusy(false); }
+    try { const r = await fillPage(items, { cursor, hasNext }, api, 24, 8, room && room.fit ? (x => +x.price <= Math.max(0, room.left)) : undefined); setCuts(c => [...c, items.length]); setItems(r.items); setHasNext(r.hasNext); setCursor(r.cursor); } finally { setBusy(false); }
   }
   const priceOn = pmin > RING_PRICE.min || pmax < RING_PRICE.max;
   const tags = useMemo(() => [
@@ -90,7 +92,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
   );
 
   // Your plan (Meekitaz Daily): by what's left after the bag — what fits, the tile, a little more, then the rest
-  const ord = room ? planOrder(items, x => +x.price, room.left, room.p) : null;
+  const ord = room ? planOrderPaged(items, x => +x.price, room.left, room.p, cuts) : null;
   const shown = ord ? (room && room.fit ? ord.shown.filter(x => +x.price <= Math.max(0, room.left)) : ord.shown) : items;
   const fitN = room ? items.filter(x => +x.price <= Math.max(0, room.left)).length : 0;
   useEffect(() => { if (room) window.dispatchEvent(new CustomEvent("mk-plan-ctx", { detail: { kind: "cat", fit: fitN } })); }, [fitN, !!room]); // eslint-disable-line react-hooks/exhaustive-deps

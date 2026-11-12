@@ -15,6 +15,14 @@ export const usdR = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 export const loadFit = () => { try { return localStorage.getItem("mk_plan_fit") === "1"; } catch { return false; } }; // (2026-11-11) off unless they turn it on
 export const saveFit = (on: boolean) => { try { localStorage.setItem("mk_plan_fit", on ? "1" : "0"); window.dispatchEvent(new Event("mk-plan")); } catch { /* ignore */ } };
 /** The grid in plan order, by what's left after the bag: what fits, then (after the tile) what's a little more, then the rest. */
+/** (2026-11-12) The plan order, page by page: "Show more" adds its pieces UNDER the ones already on screen, each new page in plan
+ *  order within itself — never reshuffling the pieces the customer has already seen (they used to jump above the fold). */
+export function planOrderPaged<T>(items: T[], price: (x: T) => number, left: number, p: Plan, cuts: number[]) {
+  const edges = [...cuts.filter(c => c > 0 && c < items.length), items.length];
+  let from = 0; const shown: T[] = [];
+  for (const to of edges) { shown.push(...planOrder(items.slice(from, to), price, left, p).shown); from = to; }
+  return { shown, split: -1 };
+}
 export function planOrder<T>(items: T[], price: (x: T) => number, left: number, p: Plan) {
   const room = Math.max(0, left), near = room + 30 * p.months * 3; // "a little more": up to ~$3 a day over what's left
   const a = items.filter(x => price(x) <= room).sort((x, y) => price(y) - price(x));

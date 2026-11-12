@@ -3,7 +3,7 @@ import GridReelTile from "./GridReelTile";
 import { fillPage } from "@/lib/designs";
 import DesignCard from "./DesignCard";
 import { usePlanRoom, DailyTile, PlanBanner, PlanEmpty, nounFor } from "./PlanKit";
-import { clearPlan, planOrder, usdR } from "@/lib/plan";
+import { clearPlan, planOrderPaged, usdR } from "@/lib/plan";
 import GridMood, { type Reveal } from "./GridMood";
 import Link from "next/link";
 import { Fragment, useState, useEffect } from "react";
@@ -21,6 +21,7 @@ const MOOD: Record<string, { src: string; poster: string; reveal?: Reveal }> = {
 
 export default function ProductBrowser({ handle, style = "", type = "", initial, hasNext: h0, cursor: c0, sort0 = "best", slot, slotAt = 4 }: { handle: string; style?: string; type?: string; initial: Product[]; hasNext: boolean; cursor: string | null; sort0?: string; slot?: React.ReactNode; slotAt?: number }) {
   const [items, setItems] = useState<Product[]>(initial);
+  const [cuts, setCuts] = useState<number[]>([0]); // where each "Show more" page starts (plan order stays page by page)
   const [hasNext, setHasNext] = useState(h0);
   const [cursor, setCursor] = useState<string | null>(c0);
   const [sort, setSort] = useState(sort0); // must match the order the first page was fetched in, or the cursor points nowhere
@@ -30,13 +31,13 @@ export default function ProductBrowser({ handle, style = "", type = "", initial,
     setBusy(true);
     try {
       const page = (after: string | null) => { const q = new URLSearchParams({ handle, sort: s }); if (style) q.set("style", style); if (type) q.set("type", type); if (after) q.set("after", after); return fetch(`/api/products?${q}`).then(r => (r.ok ? r.json() : null)); };
-      const r = await fillPage(reset ? [] : items, reset ? { cursor: null, hasNext: true } : { cursor, hasNext }, page);
-      if (!(reset && r.failed && !r.items.length)) { setItems(r.items); setCursor(r.cursor); setHasNext(r.hasNext); }
+      const r = await fillPage(reset ? [] : items, reset ? { cursor: null, hasNext: true } : { cursor, hasNext }, page, 24, 8, room && room.fit ? (x => +x.price <= Math.max(0, room.left)) : undefined);
+      if (!(reset && r.failed && !r.items.length)) { setCuts(c => (reset ? [0] : [...c, items.length])); setItems(r.items); setCursor(r.cursor); setHasNext(r.hasNext); }
     } finally { setBusy(false); }
   }
   // Your plan (Meekitaz Daily, 2026-11-09): every category in plan order, by what's left after the bag
   const room = usePlanRoom();
-  const ord = room ? planOrder(items, x => +x.price, room.left, room.p) : null;
+  const ord = room ? planOrderPaged(items, x => +x.price, room.left, room.p, cuts) : null;
   const shown = ord ? (room && room.fit ? ord.shown.filter(x => +x.price <= Math.max(0, room.left)) : ord.shown) : items;
   const fitN = room ? items.filter(x => +x.price <= Math.max(0, room.left)).length : 0;
   useEffect(() => { if (room) window.dispatchEvent(new CustomEvent("mk-plan-ctx", { detail: { kind: "cat", fit: fitN } })); }, [fitN, !!room]); // eslint-disable-line react-hooks/exhaustive-deps
