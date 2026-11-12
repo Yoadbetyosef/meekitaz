@@ -4792,3 +4792,42 @@ body,body:has(.home-page){--blue-light:#F8E9D9;background:#F8E9D9}
 main:has(.dx-first) .rsteps:not(.dx-steps){display:none}
 .df-bd:has(.dx-first) .df-h{display:none}
 .dx-hero .df-win img{transform:none!important}
+/* ===== Build your ring — "H1, clean" (approved 2026-11-12) ===== */
+.h1-sq{position:relative;border-radius:30px;background:#fff;aspect-ratio:1.04;overflow:hidden}
+.h1-st{position:absolute;inset:0}.h1-st .df-win{background:#fff}.h1-st .df-win img{transform:none!important}
+.h1-ring img{object-fit:contain;padding:10% 12%}
+.h1-pip{position:absolute;z-index:4;right:12px;top:12px;width:84px;height:84px;border-radius:18px;background:#fff;border:3px solid #fff;box-shadow:0 12px 26px -12px rgba(0,0,0,.45);cursor:pointer;padding:0;overflow:visible;transition:transform .2s}
+.h1-pip:hover{transform:scale(1.05)}
+.h1-pip img{position:absolute!important;inset:6%!important;width:88%!important;height:88%!important;object-fit:contain;border-radius:12px}
+.h1-pip span{position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);white-space:nowrap;background:#1C1A1B;color:#fff;border-radius:999px;padding:4px 9px;font:400 7.5px var(--body);letter-spacing:.12em;text-transform:uppercase;z-index:2}
+.h1-cap{padding:12px 4px 0}
+.h1-k{display:block;font:400 8.5px var(--body);letter-spacing:.24em;text-transform:uppercase;color:#0D4FE7}
+.h1-cap b{display:block;font:400 24px var(--display);margin-top:2px}
+.h1-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-top:6px;font:400 10px var(--body);letter-spacing:.1em;text-transform:uppercase;color:#555}
+.h1-line .ok{color:#1E8A4F}.h1-line a{color:#0D4FE7;border-bottom:1px solid currentColor;text-decoration:none}
+.h1-eq{display:flex;align-items:center;gap:8px;margin-top:12px;padding:10px 12px;border:1px dashed #d9cbbb;border-radius:16px}
+.h1-eq i{position:relative;width:34px;height:34px;border-radius:10px;background:#fff;flex:none;overflow:hidden}.h1-eq i img{object-fit:contain;width:100%;height:100%}
+.h1-eq b{font:400 15px var(--display);color:#aaa}
+.h1-eq span{font:italic 500 15px/1.25 var(--sub);color:#333}
+.h1-ch{margin:4px 0 6px}
+.h1-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #f0e6da}
+.h1-ic{position:relative;width:40px;height:40px;border-radius:12px;background:#faf7f3;flex:none;overflow:hidden;display:grid;place-items:center}.h1-ic img{object-fit:contain;width:100%;height:100%}
+.h1-sw i{width:24px;height:24px;border-radius:50%}
+.h1-tx{flex:1;min-width:0;display:flex;flex-direction:column}.h1-tx small{font:400 7.5px var(--body);letter-spacing:.2em;text-transform:uppercase;color:#888}
+.h1-tx b{font:400 14.5px var(--display);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.h1-c{font:400 8.5px var(--body);letter-spacing:.14em;text-transform:uppercase;border:1px solid #e3d9cd;border-radius:999px;padding:7px 11px;background:#fff;cursor:pointer;color:inherit}
+.h1-c.on{background:#1C1A1B;color:#fff;border-color:#1C1A1B}
+.h1-gold{padding:10px 0 12px;border-bottom:1px solid #f0e6da}
+.df-sum:has(.h1-ch) .df-ln{display:none}
+.df-pair.w1-hide{display:none}
+@media(min-width:768px){
+.df-g:has(.h1){grid-template-columns:minmax(0,1.45fr) minmax(0,1fr)}
+.h1-sq{aspect-ratio:auto;height:540px}
+.h1-pip{width:112px;height:112px;right:16px;top:16px}
+.h1-cap b{font-size:30px}
+.h1-eq{display:none}
+}
+@media(max-width:767px){
+.df-sum:has(.h1-ch){padding:4px 14px!important;background:#fff!important}
+.df-sum:has(.h1-ch)>*:not(.h1-ch){display:none!important}
+}

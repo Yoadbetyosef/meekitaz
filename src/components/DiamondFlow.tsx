@@ -9,8 +9,8 @@ import { toast } from "./Toast";
 import { loadSetting, chooseStone, settingFrom, sameShape, baseShape, type Setting, type Stone } from "@/lib/setting";
 import SwapDrawer from "./SwapDrawer";
 import { loadRings } from "@/lib/rings";
-import RingW1 from "./RingW1";
-import { DiamondStrip, DiamondSheet, DiamondFirst } from "./DiamondExtras";
+import { H1Stage, H1Choices } from "./RingH1";
+import { DiamondSheet, DiamondFirst } from "./DiamondExtras";
 import WishHeart, { ShareArrow } from "./WishHeart";
 import { DailyLine, DailyTotal } from "./DailyPrice";
 import { PlanSummary, PriceA } from "./PlanKit";
@@ -163,7 +163,7 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
       <section className="df-bd">
         <div className="df-h"><span className="eyebrow">{d.fancy ? "Fancy color" : "Step 2 of 3"} · Your diamond</span><h1>Build your ring</h1><p className="df-s">{title(d)} · {sub(d)}</p></div>
         <div className="df-g">
-          {shown && <RingW1 shown={shown} shapeName={shape} stoneTitle={title(d)} stoneSub={sub(d)} stonePrice={d.price} onSwap={editSwap} onChange={reopen} extra={<DiamondStrip d={d} onOpen={() => setAbout(true)} />} />}
+          {shown && <H1Stage d={d} shown={shown} shape={shape} picture={<StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />} />}
           {!shown && !set && <DiamondFirst d={d} shape={shape} picture={<StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />} />}
           <div className={`df-pair${shown || !set ? " w1-hide" : ""}`}>
             <div>
@@ -185,6 +185,7 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
             {shown && (() => { const design = { kind: "design" as const, handle: `design-${shown.handle}-${d.vendor}-${String(d.stock).toLowerCase().replace(/[^a-z0-9]+/g, "-")}`.slice(0, 190), title: `${shown.title.replace(/^(Yellow gold|White gold|Rose gold|Platinum)\s+/i, "")} + ${title(d)}`, image: shown.image, stoneImage: d.image, price: total, url: `/diamonds/${d.vendor}-${encodeURIComponent(d.stock)}?setting=${encodeURIComponent(shown.handle)}${shown.karat ? `&k=${shown.karat}` : ""}` };
               return <div className="df-acts"><WishHeart item={design} /><ShareArrow item={design} /></div>; })()}
             <h3>Your ring</h3>
+            {shown && <H1Choices d={d} shown={shown} shape={shape} onSwap={editSwap} onChange={reopen} />}
             <div className="df-ln"><span>{title(d)}<em>{sub(d)}</em></span><b>{usd(d.price)}</b></div>
             <div className="df-ln"><span>{shown ? shown.title : "No setting yet"}<em>{shown ? `Setting${sMetal ? ", " + sMetal : ""}` : "Pick one to see the total"}</em></span><b>{shown ? usd(shown.price) : "—"}</b></div>
             <div className="df-tot"><span>The ring</span><PriceA price={total} size="M" /></div>
