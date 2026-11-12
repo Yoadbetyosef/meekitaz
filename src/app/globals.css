@@ -4561,3 +4561,11 @@ body,body:has(.home-page){--blue-light:#F8E9D9;background:#F8E9D9}
 .mkfoot .hush{background:linear-gradient(rgba(248,233,217,0),rgba(248,233,217,.95) 70%)!important}
 .mkfoot .mkf-under{position:relative!important;padding-top:12px!important;background:rgba(248,233,217,.95)!important}
 }
+/* (2026-11-11) product pages: the price follows the page — white type on a dark photo, ink on a light product shot (every product page) */
+.ih .plc-day b{color:var(--fg,#1C1A1B)!important}
+.ih .plc-day i,.ih .plc-full{color:var(--fg,#1C1A1B)!important;opacity:.78}
+.ih .plc-full s{opacity:.7}
+.ih[data-mode=photo] .plc-full em{color:#FF9C8C}
+.ih[data-mode=photo] .plc-fit{color:#7BE0A4}.ih[data-mode=photo] .plc-fit::before{background:#7BE0A4}
+.ih[data-mode=photo] .plc-more{color:#F5C77A}
+.ih .pl-acts .pl-b{color:var(--fg,#1C1A1B);border-color:currentColor}
