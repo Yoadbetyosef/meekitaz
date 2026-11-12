@@ -199,6 +199,10 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
   // the cleaner needs the photo's place among the Shopify photos, and the worn photo (which opens the page) is not one of them
   const slotOff = model && slides[0]?.url === model ? 1 : 0;
   const src = (u: string, w: number, k: number) => photoSrc(u, w, title, Math.max(0, k - slotOff));
+  const openAt = (sel: string) => {
+    setOpen(true);
+    window.setTimeout(() => { const box = document.querySelector<HTMLElement>(".ih-scr"); const el = box?.querySelector<HTMLElement>(sel); if (box && el) box.scrollTo({ top: el.offsetTop - 8, behavior: "smooth" }); }, 380);
+  };
   return (
     <section className={`ih${open ? " open" : ""}`} ref={box} data-mode={mode} data-tone={tone} data-clip={s.kind === "clip" ? clipBg : undefined} data-box={s.kind === "box" ? "1" : undefined} onPointerDown={down} onPointerUp={up} aria-roledescription="carousel" aria-label={`${title}, photos`}>
       <div className="ih-slides">
@@ -259,7 +263,16 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
         <div className="ih-pk">
           {steps}
           <h2 className="ih-st" onClick={() => setOpen(o => !o)}>{bigTitle}</h2>
-          {summary && summary.length > 0 && <div className="ih-pills" onClick={() => setOpen(o => !o)}>{summary.map((t, k) => <span key={k}>{t}</span>)}<span className="m">{open ? "Done ▾" : "Change ▴"}</span></div>}
+          {summary && summary.length > 0 && <div className="ih-pills ih-pills-c1">{summary.map((t, k) => {
+            // (approved 2026-11-12, "C1") each chip is the control: a little preview of what's chosen + ▾; tapping opens the choices there
+            const metalSw = k === 0 ? (/rose/i.test(t) ? "r" : /yellow/i.test(t) ? "y" : "w") : "";
+            const isShape = k > 0 && /^(Round|Oval|Cushion|Elongated Cushion|Emerald|Pear|Princess|Radiant|Marquise|Asscher|Heart)$/i.test(t);
+            return <button type="button" key={k} className="pc1" onClick={() => openAt(k === 0 ? ".ih-top" : ".ih-top")}>
+              {metalSw && <i className={`pc1-sw ${metalSw}`} aria-hidden="true" />}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              {isShape && <img className="pc1-st" src={stonePicture(t)} alt="" aria-hidden="true" />}
+              {t}<em aria-hidden="true">▾</em></button>;
+          })}{steps && <button type="button" className="pc1" onClick={() => openAt(".tp")}><i className="pc1-ai" aria-hidden="true">✦</i>AI picks<em aria-hidden="true">▾</em></button>}</div>}
         </div>
         <div className="ih-scr">
           {(metal || steps) && <div className="ih-top">{steps}{metal}</div>}

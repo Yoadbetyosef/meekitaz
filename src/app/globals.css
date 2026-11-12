@@ -4577,3 +4577,19 @@ body,body:has(.home-page){--blue-light:#F8E9D9;background:#F8E9D9}
 @media(max-width:767px){.plc-more{font-size:8.5px!important}}
 /* (2026-11-12) phones: no "01 / 08" counter in the corner of the product page */
 @media(max-width:767px){.ih .ih-cnt{display:none!important}}
+/* ===== Phones: the product sheet's choices (approved 2026-11-12, "C1") — the chip is the control: a preview of what's chosen + ▾,
+   and an AI picks chip; "Change" retired. The button stays on one line. Same box, same size. ===== */
+.ih .ih-pills-c1{overflow-x:auto;scrollbar-width:none;cursor:default}.ih .ih-pills-c1::-webkit-scrollbar{display:none}
+.ih .ih-pills-c1 .pc1{flex:none;display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 10px 0 4px;border-radius:999px;border:1px solid rgba(28,26,27,.16);background:rgba(255,255,255,.66);color:inherit;font:600 10.5px var(--body);letter-spacing:.05em;cursor:pointer;white-space:nowrap}
+.ih[data-tone=dark] .ih-pills-c1 .pc1{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.45);color:#fff}
+.pc1 em{font-style:normal;font-size:9px;opacity:.85}
+.pc1-sw{width:24px;height:24px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}
+.pc1-sw.y{background:linear-gradient(135deg,#F3D27A,#C9982E)}.pc1-sw.w{background:linear-gradient(135deg,#F4F5F7,#BFC4CC)}.pc1-sw.r{background:linear-gradient(135deg,#F2C6B4,#C98C74)}
+.pc1-st{width:24px;height:24px;border-radius:50%;background:#fff;object-fit:contain;flex:none}
+.pc1-ai{width:24px;height:24px;border-radius:50%;background:#F6E39A;color:#1C1A1B;display:grid;place-items:center;font-size:11px;font-style:normal;flex:none}
+.ih:not(.open) .ih-pills-c1 .pc1{animation:pc1Peek 1.4s ease-in-out 2 .8s}
+@keyframes pc1Peek{50%{box-shadow:0 0 0 5px rgba(255,255,255,.2)}}
+@media(max-width:767px){
+.ih-cta .pp-add{white-space:nowrap!important;letter-spacing:.12em!important;font-size:10px!important;padding:15px 14px!important}
+.ih-cta{max-width:210px!important}
+}
