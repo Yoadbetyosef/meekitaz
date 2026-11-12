@@ -4593,3 +4593,17 @@ body,body:has(.home-page){--blue-light:#F8E9D9;background:#F8E9D9}
 .ih-cta .pp-add{white-space:nowrap!important;letter-spacing:.12em!important;font-size:10px!important;padding:15px 14px!important}
 .ih-cta{max-width:210px!important}
 }
+/* (2026-11-12) C1, as previewed: a chip opens only its own choice as a small sheet over the photo — metal & colour, the stone, or the
+   AI picks — with "Done"; the full panel still opens from the handle */
+@media(max-width:767px){
+.ih.open.focus .ih-ctl{max-height:min(72%,560px)}
+.ih.open.focus .ih-pk,.ih.open.focus .ih-x,.ih.open.focus .ih-foot,.ih.open.focus .ih-appt{display:none!important}
+.ih-fh{display:flex;justify-content:space-between;align-items:center;margin:2px 0 10px;font:400 10px var(--body);letter-spacing:.22em;text-transform:uppercase}
+.ih-fh button{border:0;border-radius:999px;padding:8px 14px;background:var(--ink);color:#fff;font:400 10px var(--body);letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+.ih[data-tone=dark] .ih-fh button{background:#fff;color:var(--ink)}
+.ih.open.f-metal .ih-rows{display:none!important}
+.ih.open.f-shape .ih-top,.ih.open.f-ai .ih-top{display:none!important}
+.ih.open.f-shape .ih-rows>*:not(.rp-shapes):not(.pp-lbl:has(+ .rp-shapes)){display:none!important}
+.ih.open.f-ai .ih-rows>*:not(.tp){display:none!important}
+.ih.open.focus .ih-top .rsteps{display:none!important}
+}
