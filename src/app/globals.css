@@ -4841,3 +4841,13 @@ main:has(.dx-first) .rsteps:not(.dx-steps){display:none}
 .h1-st .df-win img:not(.df-bgimg){position:absolute!important;inset:12%!important;width:76%!important;height:76%!important;object-fit:contain!important;transform:none!important}
 .h1-st .df-win .df-vid{position:absolute;inset:0;width:100%!important;height:100%!important}
 .dx-hero .df-win img:not(.df-bgimg){position:absolute!important;inset:12%!important;width:76%!important;height:76%!important;object-fit:contain!important}
+/* (2026-11-12) the whole square takes the colour of the diamond's own photo (the page already measures it: --bgc), so the photo's
+   rectangle disappears — one grey (or whatever the backdrop is) from edge to edge; the photo feathers into it */
+.h1-st .df-win,.dx-hero .df-win{background:var(--bgc,#dfe2e6)!important}
+.h1-sq.is-dia,.dx-hero{background:transparent}
+.h1-st .df-win img:not(.df-bgimg),.dx-hero .df-win img:not(.df-bgimg){
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 9%,#000 91%,transparent),linear-gradient(to bottom,transparent,#000 9%,#000 91%,transparent)!important;-webkit-mask-composite:source-in!important;
+  mask-image:linear-gradient(to right,transparent,#000 9%,#000 91%,transparent),linear-gradient(to bottom,transparent,#000 9%,#000 91%,transparent)!important;mask-composite:intersect!important}
+/* the "About this diamond" sheet never peeks at the bottom of a phone while closed */
+.dx-sheet:not(.on){visibility:hidden;transition:transform .45s cubic-bezier(.2,.8,.2,1),visibility 0s .45s}
+.dx-sheet.on{visibility:visible}
