@@ -4575,3 +4575,5 @@ body,body:has(.home-page){--blue-light:#F8E9D9;background:#F8E9D9}
 .plc-L .plc-more{font-size:11px!important}
 .plc-XS .plc-more{font-size:8px!important;margin-top:3px!important}
 @media(max-width:767px){.plc-more{font-size:8.5px!important}}
+/* (2026-11-12) phones: no "01 / 08" counter in the corner of the product page */
+@media(max-width:767px){.ih .ih-cnt{display:none!important}}
