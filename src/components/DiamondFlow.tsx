@@ -8,12 +8,13 @@ import { useCart } from "./CartProvider";
 import { toast } from "./Toast";
 import { loadSetting, chooseStone, settingFrom, sameShape, baseShape, type Setting, type Stone } from "@/lib/setting";
 import SwapDrawer from "./SwapDrawer";
+import { loadRings } from "@/lib/rings";
 import RingW1 from "./RingW1";
 import { DiamondStrip, DiamondSheet, DiamondFirst } from "./DiamondExtras";
 import WishHeart, { ShareArrow } from "./WishHeart";
 import { DailyLine, DailyTotal } from "./DailyPrice";
 import { PlanSummary, PriceA } from "./PlanKit";
-import { saveSetting } from "@/lib/setting";
+import { saveSetting, saveStone } from "@/lib/setting";
 import { isGoldMetal, karatStep } from "@/lib/karat";
 import { fancyColorOfStone, fancySettingsUrl } from "@/lib/fancy";
 import { showroomImage } from "@/lib/data";
@@ -53,12 +54,24 @@ function StoneWindow({ d, bg, alt, children }: { d: FlowStone; bg: string; alt: 
 }
 
 export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowStone; bg: string; similar: Similar[]; similarSlot?: React.ReactNode }) {
-  const router = useRouter(); const { addRing, setOpen: openBag } = useCart();
+  const router = useRouter(); const { addRing, setOpen: openBag, removeRing } = useCart();
   const [set, setSet] = useState<Setting | null>(null);       // what the customer chose in step 1
   const [shownLive, setShown] = useState<Setting | null>(null);   // that same design in this diamond's shape
   // (2026-11-12) after "Add to bag" the chosen setting is cleared for the next ring; keep showing the ring just added, marked as in the bag
   const [added, setAdded] = useState<Setting | null>(null);
   const shown = shownLive || added;
+  // (2026-11-12) editing a ring that is already in the bag: any change re-opens it; the button then says "Update ring in bag" and
+  // replaces the bagged ring instead of adding a second one. The ring being edited is remembered across diamonds (localStorage).
+  const [editing, setEditing] = useState("");
+  useEffect(() => { try { const id = localStorage.getItem("mk_ring_edit") || ""; if (id && loadRings().some(r => r.id === id)) setEditing(id); else localStorage.removeItem("mk_ring_edit"); } catch { /* ignore */ } }, []);
+  const reopen = () => {
+    if (!added) return;
+    const r = loadRings().find(x => x.setting.variantId === added.variantId && x.stone.stock === d.stock && x.stone.vendor === d.vendor);
+    if (r) { try { localStorage.setItem("mk_ring_edit", r.id); } catch { /* ignore */ } setEditing(r.id); }
+    saveSetting(added); saveStone({ vendor: d.vendor, stock: d.stock, shape: d.shape, carat: d.carat, color: d.color, clarity: d.clarity, cut: d.cut, lab: d.lab, image: d.image, price: d.price, fancy: d.fancy });
+    setAdded(null);
+  };
+  const editSwap = (m: "stone" | "setting") => { reopen(); setSwap(m); };
   const [missing, setMissing] = useState(false);
   const [ch, setCh] = useState(0);
   const track = useRef<HTMLDivElement>(null), drag = useRef<{ x: number; y: number; t: number; lock: boolean } | null>(null), swallow = useRef(false), chRef = useRef(0), close = useRef<HTMLElement>(null), reel = useRef<HTMLVideoElement>(null);
@@ -128,9 +141,14 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
   }, []);
 
   const stone: Stone = { vendor: d.vendor, stock: d.stock, shape: d.shape, carat: d.carat, color: d.color, clarity: d.clarity, cut: d.cut, lab: d.lab, image: d.image, price: d.price, fancy: d.fancy };
-  const go = () => { if (added) { openBag(true); return; } if (shownLive) setAdded(shownLive); chooseStone(stone, { push: u => router.push(u), addRing, notify: toast }); };
+  const go = () => {
+    if (added) { openBag(true); return; }
+    if (editing) { removeRing(editing); try { localStorage.removeItem("mk_ring_edit"); } catch { /* ignore */ } setEditing(""); }
+    if (shownLive) setAdded(shownLive);
+    chooseStone(stone, { push: u => router.push(u), addRing, notify: toast });
+  };
   const total = d.price + (shown ? shown.price : 0);
-  const ctaText = added ? "In your bag ✓ · View bag" : shown ? "Add to bag" : "Choose this diamond";
+  const ctaText = added ? "In your bag ✓ · View bag" : editing && shown ? "Update ring in bag" : shown ? "Add to bag" : "Choose this diamond";
   const sTitle = shown ? shown.title.replace(/^(Yellow|White|Rose) gold /i, "").replace(new RegExp(`^${shape} Diamond `, "i"), "") : "";
   const sMetal = shown ? [shown.karat, shown.metal].filter(Boolean).join(" ") : "";
   const n = nums(d), mmw = n.length > 1 ? Math.min(78, Math.round(n[0] * 7.5)) : 40;
@@ -139,13 +157,13 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
   return (
     <>
       {note && <div className="hint-note" role="note"><button aria-label="Close" onClick={() => setNote(null)}>×</button><small>A note for you</small><p>“{note.text}”</p>{note.size && <span>Her ring size: {note.size}</span>}</div>}
-      <DiamondSheet d={d} open={about} onClose={() => setAbout(false)} onSwap={() => setSwap("stone")} picture={<StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />} />
+      <DiamondSheet d={d} open={about} onClose={() => setAbout(false)} onSwap={() => editSwap("stone")} picture={<StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />} />
       <SwapDrawer mode={swap} shape={d.shape} setting={shown || null} stone={stone} onClose={() => setSwap(null)} />
       {/* 1 · build your ring */}
       <section className="df-bd">
         <div className="df-h"><span className="eyebrow">{d.fancy ? "Fancy color" : "Step 2 of 3"} · Your diamond</span><h1>Build your ring</h1><p className="df-s">{title(d)} · {sub(d)}</p></div>
         <div className="df-g">
-          {shown && <RingW1 shown={shown} shapeName={shape} stoneTitle={title(d)} stoneSub={sub(d)} stonePrice={d.price} onSwap={m => setSwap(m)} extra={<DiamondStrip d={d} onOpen={() => setAbout(true)} />} />}
+          {shown && <RingW1 shown={shown} shapeName={shape} stoneTitle={title(d)} stoneSub={sub(d)} stonePrice={d.price} onSwap={editSwap} onChange={reopen} extra={<DiamondStrip d={d} onOpen={() => setAbout(true)} />} />}
           {!shown && !set && <DiamondFirst d={d} shape={shape} picture={<StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />} />}
           <div className={`df-pair${shown || !set ? " w1-hide" : ""}`}>
             <div>
@@ -256,7 +274,7 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
       </section>
 
       {/* phone: the total and the button stay in reach */}
-      <div className="df-sbar"><b className="sb-day"><span>{`$${Math.ceil(total / 120).toLocaleString("en-US")}`}<i>a day</i></span><small>{usd(total)} total · 4 months · no interest</small></b><button type="button" className="df-cta" onClick={go}>{added ? "In your bag ✓" : shown ? "Add to bag" : "Choose diamond"}</button></div>
+      <div className="df-sbar"><b className="sb-day"><span>{`$${Math.ceil(total / 120).toLocaleString("en-US")}`}<i>a day</i></span><small>{usd(total)} total · 4 months · no interest</small></b><button type="button" className="df-cta" onClick={go}>{added ? "In your bag ✓" : editing && shown ? "Update ring in bag" : shown ? "Add to bag" : "Choose diamond"}</button></div>
     </>
   );
 }

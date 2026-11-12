@@ -4788,3 +4788,7 @@ body,body:has(.home-page){--blue-light:#F8E9D9;background:#F8E9D9}
 /* (2026-11-12) the AI chip, as Yoad asked: plain cobalt with white type, "AI diamonds" — readable on any photo, and it says what it is */
 .ih .ih-pills-c1 .pc1.pc1-aic,.ih[data-tone=dark] .ih-pills-c1 .pc1.pc1-aic{background:#0D4FE7!important;border-color:#0D4FE7!important;color:#fff!important}
 .pc1-aic .pc1-ai{background:#fff!important;color:#0D4FE7!important}
+/* (2026-11-12) diamond first: one set of steps only (the page's own "1 Setting 2 Diamond" header hides), and the stone is shown whole */
+main:has(.dx-first) .rsteps:not(.dx-steps){display:none}
+.df-bd:has(.dx-first) .df-h{display:none}
+.dx-hero .df-win img{transform:none!important}

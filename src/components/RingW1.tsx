@@ -11,8 +11,8 @@ import { usdR } from "@/lib/plan";
    their swap drawers. Nothing makes the customer go round again. */
 const SW: Record<string, string> = { "White gold": "linear-gradient(135deg,#F4F5F7,#BFC4CC)", "Yellow gold": "linear-gradient(135deg,#F3D27A,#C9982E)", "Rose gold": "linear-gradient(135deg,#F2C6B4,#C98C74)", Platinum: "linear-gradient(135deg,#F4F5F7,#AEB4BD)", Silver: "linear-gradient(135deg,#F4F5F7,#C9CDD3)" };
 
-export default function RingW1({ shown, shapeName, stoneTitle, stoneSub, stonePrice, stoneImg, onSwap, extra }: {
-  shown: Setting; shapeName: string; stoneTitle: string; stoneSub: string; stonePrice: number; stoneImg?: string; onSwap: (m: "stone" | "setting") => void; extra?: React.ReactNode;
+export default function RingW1({ shown, shapeName, stoneTitle, stoneSub, stonePrice, stoneImg, onSwap, extra, onChange }: {
+  shown: Setting; shapeName: string; stoneTitle: string; stoneSub: string; stonePrice: number; stoneImg?: string; onSwap: (m: "stone" | "setting") => void; extra?: React.ReactNode; onChange?: () => void;
 }) {
   const [open, setOpen] = useState(false), [busy, setBusy] = useState(false), [msg, setMsg] = useState("");
   const months = 4, day = (n: number) => Math.ceil(n / (30 * months));
@@ -20,9 +20,9 @@ export default function RingW1({ shown, shapeName, stoneTitle, stoneSub, stonePr
   const k = shown.karat || (karats.length ? "10K" : "");
   const base = shown.price - (k ? karatStep(shown.ns, k) : 0);
   const say = (t: string) => { setMsg(t); window.setTimeout(() => setMsg(""), 1800); };
-  const pickKarat = (nk: string) => { const price = base + karatStep(shown.ns, nk); saveSetting({ ...shown, karat: nk, price }); say(`Updated · ${nk} ${shown.metal.toLowerCase()} · ${usdR(day(price + stonePrice))} a day`); };
+  const pickKarat = (nk: string) => { onChange?.(); const price = base + karatStep(shown.ns, nk); saveSetting({ ...shown, karat: nk, price }); say(`Updated · ${nk} ${shown.metal.toLowerCase()} · ${usdR(day(price + stonePrice))} a day`); };
   const pickColour = async (metal: string) => {
-    if (metal === shown.metal || busy) return; setBusy(true);
+    if (metal === shown.metal || busy) return; onChange?.(); setBusy(true);
     try {
       const j = await (await fetch(`/api/setting?${new URLSearchParams({ ns: shown.ns, shape: baseShape(shapeName), metal, color: shown.color || "" })}`)).json();
       if (j.item) { const ns = settingFrom({ ...shown, karat: k || undefined }, j.item); saveSetting(ns); say(`Updated · ${[k, metal.toLowerCase()].filter(Boolean).join(" ")} · ${usdR(day(ns.price + stonePrice))} a day`); }
