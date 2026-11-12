@@ -168,7 +168,7 @@ export function PriceA({ price, compareAt, from = false, size = "S", ring = fals
     <span className={`plc plc-${size}`}>
       <span className="plc-day"><b>{usdR(d)}</b><i>a day{ring && setP ? " · the ring" : ""}</i></span>
       <span className="plc-full">{from && <>From </>}{f(price)}{off > 0 && <><s>{f(compareAt!)}</s><em>{off}% off</em></>}{note && <span className="plc-note">{note}</span>}</span>
-      {status && r && (over ? <span className="plc-more">{usdR(d - room)} more a day</span> : <span className="plc-fit">In your plan</span>)}
+      {status && r && (over ? <span className="plc-more">{usdR(d - room)} over your plan</span> : <span className="plc-fit">In your plan</span>)}
     </span>
   );
 }
