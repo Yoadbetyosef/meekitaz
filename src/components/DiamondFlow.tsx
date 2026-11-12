@@ -9,6 +9,7 @@ import { toast } from "./Toast";
 import { loadSetting, chooseStone, settingFrom, sameShape, baseShape, type Setting, type Stone } from "@/lib/setting";
 import SwapDrawer from "./SwapDrawer";
 import RingW1 from "./RingW1";
+import { DiamondStrip, DiamondSheet, DiamondFirst } from "./DiamondExtras";
 import WishHeart, { ShareArrow } from "./WishHeart";
 import { DailyLine, DailyTotal } from "./DailyPrice";
 import { PlanSummary, PriceA } from "./PlanKit";
@@ -64,6 +65,7 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
   const pickUrl = fc ? fancySettingsUrl(fc, shape) : `/engagement-rings?style=${encodeURIComponent(shape)}&build=1`;
 
   const [swap, setSwap] = useState<"setting" | "stone" | null>(null);
+  const [about, setAbout] = useState(false); // (A1) the sheet with everything about the diamond
   const [note, setNote] = useState<{ text: string; size: string } | null>(null);
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
@@ -134,13 +136,16 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
   return (
     <>
       {note && <div className="hint-note" role="note"><button aria-label="Close" onClick={() => setNote(null)}>×</button><small>A note for you</small><p>“{note.text}”</p>{note.size && <span>Her ring size: {note.size}</span>}</div>}
+      <DiamondSheet d={d} open={about} onClose={() => setAbout(false)} onSwap={() => setSwap("stone")} picture={<StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />} />
       <SwapDrawer mode={swap} shape={d.shape} setting={shown || null} stone={stone} onClose={() => setSwap(null)} />
       {/* 1 · build your ring */}
       <section className="df-bd">
         <div className="df-h"><span className="eyebrow">{d.fancy ? "Fancy color" : "Step 2 of 3"} · Your diamond</span><h1>Build your ring</h1><p className="df-s">{title(d)} · {sub(d)}</p></div>
         <div className="df-g">
           {shown && <RingW1 shown={shown} shapeName={shape} stoneTitle={title(d)} stoneSub={sub(d)} stonePrice={d.price} onSwap={m => setSwap(m)} />}
-          <div className={`df-pair${shown ? " w1-hide" : ""}`}>
+          {shown && <DiamondStrip d={d} onOpen={() => setAbout(true)} />}
+          {!shown && !set && <DiamondFirst d={d} shape={shape} picture={<StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />} />}
+          <div className={`df-pair${shown || !set ? " w1-hide" : ""}`}>
             <div>
               <div className="df-card"><span className="df-cap">Your diamond</span><StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} /></div>
               <div className="df-capt"><b>{title(d)}</b>{usd(d.price)} · {d.lab} certified<DailyLine price={d.price} className="cap" />{shown && <button type="button" className="df-swap" onClick={() => setSwap("stone")}>⇄ Swap diamond</button>}</div>
