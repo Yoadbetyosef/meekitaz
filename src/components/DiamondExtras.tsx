@@ -37,13 +37,13 @@ export function DiamondSheet({ d, open, onClose, onSwap, picture }: { d: FlowSto
         <div className="dx-facts">{facts(d).map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
         <div className="dx-cert"><span className="dx-paper" /><div><b>{d.lab} {d.cert}</b><small>Independently graded</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener">View certificate →</a>}</div>
         <div className="dx-meas">
-          {d.measurements && <div><span>Measurements</span><b>{d.measurements} mm</b></div>}
+          {d.measurements && <div><span>Measurements</span><b>{/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`}</b></div>}
           {(d.polish || d.symmetry) && <div><span>Polish · Symmetry</span><b>{[d.polish, d.symmetry].filter(Boolean).join(" · ")}</b></div>}
           <div><span>Fluorescence</span><b>{d.fluor || "None"}</b></div>
           {d.ratio && <div><span>Ratio</span><b>{d.ratio}</b></div>}
           <div><span>Price</span><b>{usdR(d.price)} · {usdR(day(d.price))} a day</b></div>
         </div>
-        <div className="dx-acts"><button type="button" onClick={() => { onClose(); onSwap(); }}>Swap diamond</button><button type="button" className="pr" onClick={onClose}>Keep this diamond</button></div>
+        <div className="dx-acts"><button type="button" onClick={() => { onClose(); onSwap(); }}>Swap diamond</button><button type="button" className="dx-keep" onClick={onClose}>Keep this diamond</button></div>
       </aside>
     </>
   );
@@ -80,7 +80,7 @@ export function DiamondFirst({ d, picture, shape }: { d: FlowStone; picture: Rea
           <p className="dx-sub">{[d.fancy || (d.color && `${d.color} color`), d.clarity && `${d.clarity} clarity`, d.cut && `${d.cut} cut`].filter(Boolean).join(" · ")}</p>
           <div className="dx-price"><b>{usdR(day(d.price))}</b><i>a day</i><small>{usdR(d.price)} · the diamond</small></div>
           <div className="dx-facts">{facts(d).map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
-          <div className="dx-cert"><span className="dx-paper" /><div><b>{d.lab} {d.cert}</b><small>{d.measurements ? `${d.measurements} mm` : "Independently graded"}</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener">Certificate →</a>}</div>
+          <div className="dx-cert"><span className="dx-paper" /><div><b>{d.lab} {d.cert}</b><small>{d.measurements ? (/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`) : "Independently graded"}</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener">Certificate →</a>}</div>
           <div className="dx-fits">
             <div className="dx-fh"><b>Settings that fit this diamond</b><a href={`/engagement-rings?style=${encodeURIComponent(shape)}&build=1`}>See all ›</a></div>
             <div className="dx-car">

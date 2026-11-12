@@ -206,6 +206,8 @@ export async function searchDiamonds(q: DiamondQuery) {
 }
 
 export async function getDiamond(vendor: number, stock: string) {
+  // (2026-11-12) from one diamond to the next, fast: our saved copy first (instant), the supplier only when the stone is not in it
+  try { const hit = (await getWhite()).find(d => d.vendor === vendor && d.stock === stock); if (hit) return hit; } catch { /* fall through to the supplier */ }
   const b = await vdb(`type=Lab_grown_Diamond&markup_mode=true&stock_num=${enc(stock)}`);
   const hit = b.diamonds.find(d => Number(d.vendor_id) === vendor);
   return hit ? norm(hit) : null;
