@@ -4612,3 +4612,40 @@ body,body:has(.home-page){--blue-light:#F8E9D9;background:#F8E9D9}
 .ih.open.f-row .ih-top{display:none!important}
 .pc1-op{background:#fff!important;color:#1C1A1B!important;font-size:12px!important;box-shadow:inset 0 0 0 1px rgba(28,26,27,.15)}
 }
+/* ===== Build your ring — "W1" (approved 2026-11-12): the ring big, three tiles (diamond · setting · gold), the gold changes in place ===== */
+.df-pair.w1-hide{display:none}
+.w1{position:relative;margin-bottom:18px}
+.w1-hero{position:relative;border-radius:30px;background:#fff;aspect-ratio:1.08;overflow:hidden}
+.w1-im{object-fit:contain;padding:10% 12% 22%}
+.w1-tag{position:absolute;z-index:2;left:14px;top:14px;background:var(--home-bg,#F8E9D9);border-radius:999px;padding:6px 11px;font:400 8.5px var(--body);letter-spacing:.2em;text-transform:uppercase}
+.w1-tt{position:absolute;z-index:2;left:16px;right:16px;bottom:14px}
+.w1-tt small{display:block;font:400 8.5px var(--body);letter-spacing:.22em;text-transform:uppercase;color:#0D4FE7}
+.w1-tt b{display:block;font:400 24px/1.1 var(--display);margin-top:3px}
+.w1-parts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.w1-p{position:relative;display:flex;flex-direction:column;align-items:flex-start;text-align:left;background:#fff;border:0;border-radius:20px;padding:8px 8px 10px;box-shadow:0 14px 30px -20px rgba(0,0,0,.35);cursor:pointer;color:inherit;transition:transform .15s}
+.w1-p:active{transform:scale(.97)}.w1-p.on{box-shadow:0 0 0 2px #1C1A1B,0 14px 30px -20px rgba(0,0,0,.35)}
+.w1-th{position:relative;display:grid;place-items:center;width:100%;aspect-ratio:1.3;border-radius:14px;background:#faf7f3;overflow:hidden}
+.w1-th img{width:72%;height:72%;object-fit:contain}.w1-th>span img,.w1-th img[data-nimg]{object-fit:contain;padding:12%}
+.w1-sw i{width:42px;height:42px;border-radius:50%;box-shadow:inset 0 0 0 3px rgba(255,255,255,.6),0 6px 14px -6px rgba(0,0,0,.4)}
+.w1-k{font:400 7.5px var(--body);letter-spacing:.2em;text-transform:uppercase;color:#0D4FE7;margin-top:7px}
+.w1-t{font:400 13px/1.15 var(--display);margin-top:2px}
+.w1-d{font:italic 500 12px var(--sub);color:#666;margin-top:2px}
+.w1-ed{position:absolute;z-index:2;right:8px;top:8px;height:22px;padding:0 8px;border-radius:999px;background:#fff;box-shadow:0 3px 10px -4px rgba(0,0,0,.35);display:flex;align-items:center;font:400 7.5px var(--body);letter-spacing:.14em;text-transform:uppercase}
+.w1-dr{overflow:hidden;max-height:0;transition:max-height .45s cubic-bezier(.2,.8,.2,1)}.w1-dr.on{max-height:300px}
+.w1-drin{margin-top:10px;background:#fff;border-radius:22px;padding:14px}
+.w1-h{display:flex;justify-content:space-between;align-items:center;font:400 9.5px var(--body);letter-spacing:.22em;text-transform:uppercase}
+.w1-h button{border:1px solid #ddd;background:#fff;border-radius:999px;padding:6px 11px;font:400 9px var(--body);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;color:inherit}
+.w1-seg{display:flex;gap:4px;margin-top:10px;background:#F4EFE8;border-radius:999px;padding:4px}
+.w1-seg button{flex:1;border:0;background:none;border-radius:999px;padding:9px 0;font:400 10px var(--body);letter-spacing:.06em;cursor:pointer;color:inherit}
+.w1-seg button small{display:block;font:italic 500 11px var(--sub);letter-spacing:0;opacity:.7;text-transform:none}
+.w1-seg button.on{background:#1C1A1B;color:#fff}
+.w1-cols{display:flex;gap:14px;align-items:center;margin-top:12px}
+.w1-cols button{width:32px;height:32px;border-radius:50%;border:0;cursor:pointer;box-shadow:inset 0 0 0 2px rgba(255,255,255,.6)}.w1-cols button.on{box-shadow:0 0 0 2px #fff,0 0 0 4px #1C1A1B}
+.w1-cols span{font:italic 500 15px var(--sub);color:#555}
+.w1-toast{position:fixed;left:50%;bottom:96px;z-index:80;transform:translate(-50%,10px);background:#1C1A1B;color:#fff;border-radius:999px;padding:9px 15px;font:400 9.5px var(--body);letter-spacing:.14em;text-transform:uppercase;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap}
+.w1-toast.on{opacity:1;transform:translate(-50%,0)}
+/* the sticky bar: the price a day leads, the total quiet */
+.df-sbar .sb-day{display:flex;flex-direction:column;line-height:1}
+.df-sbar .sb-day span{font:400 30px var(--display)}.df-sbar .sb-day span i{font:italic 500 14px var(--sub);color:#555;margin-left:4px}
+.df-sbar .sb-day small{font:400 8.5px var(--body);letter-spacing:.12em;text-transform:uppercase;color:#7a706a;margin-top:4px}
+@media(min-width:768px){.w1-parts{gap:12px}.w1-t{font-size:16px}.w1-hero{aspect-ratio:1.4}}
