@@ -75,11 +75,11 @@ export default function DiamondsBrowser() {
       try {
         setState(s => (s === "ready" ? "updating" : "loading")); // keep the current stones on screen while the new filter loads
         let r: Response | null = null, j: { configured?: boolean; items: Item[]; total: number } | null = null;
-        for (let attempt = 0; attempt < 3; attempt++) { // the supplier hiccups now and then: try up to three times before saying so
-          r = await fetch(`/api/diamonds?${qs(1)}`, { signal: ac.signal });
-          j = await r.json().catch(() => null);
-          if (r.ok && j) break;
-          await new Promise(res => setTimeout(res, 600 * (attempt + 1)));
+        for (let attempt = 0; attempt < 5; attempt++) { // the supplier hiccups now and then: try up to five times (≈ 10 s) before saying so
+          r = await fetch(`/api/diamonds?${qs(1)}`, { signal: ac.signal }).catch(e => { if ((e as Error)?.name === "AbortError") throw e; return null; });
+          j = r ? await r.json().catch(() => null) : null;
+          if (r && r.ok && j) break;
+          await new Promise(res => setTimeout(res, 800 * (attempt + 1)));
         }
         if (!r || !j || !r.ok) throw new Error("x");
         if (j.configured === false) { setState("off"); return; }
@@ -116,7 +116,7 @@ export default function DiamondsBrowser() {
           {state === "loading" && <p className="dmsg">Finding stones…</p>}
           {state === "updating" && <p className="dmsg dmsg-soft">Updating…</p>}
           {state === "off" && <p className="dmsg">Our diamond inventory is connecting. Please check back shortly.</p>}
-          {state === "error" && <p className="dmsg">We couldn&apos;t load diamonds just now. Please refresh in a moment.</p>}
+          {state === "error" && <p className="dmsg">The diamonds are taking longer than usual. <button type="button" className="dretry" onClick={() => setF(x => ({ ...x }))}>Try again</button></p>}
           {state === "empty" && <><p className="dmsg">No diamonds match these filters. Try widening carat, price, color or clarity.</p>{f.carat[0] > 0.5 && <div className="dmore"><button type="button" onClick={() => setF({ ...f, carat: [0.5, f.carat[1]] })}>Show all sizes</button></div>}</>}
           {(state === "ready" || state === "updating") && (
             <>

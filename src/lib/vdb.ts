@@ -104,9 +104,16 @@ function norm(d: Record<string, unknown>): Diamond | null {
 }
 
 /** Live search at the supplier (the fallback). */
+async function searchDiamondsLiveRaw(q: DiamondQuery) {
+  let last: unknown;
+  for (let a = 0; a < 2; a++) {
+    try { const b = await vdb(build(q)); return { total: b.total_diamonds_found || 0, items: b.diamonds.map(norm).filter((x): x is Diamond => !!x) }; }
+    catch (e) { last = e; await new Promise(r => setTimeout(r, 700)); }
+  }
+  throw last;
+}
 export async function searchDiamondsLive(q: DiamondQuery) {
-  const b = await vdb(build(q));
-  return { total: b.total_diamonds_found || 0, items: b.diamonds.map(norm).filter((x): x is Diamond => !!x) };
+  return unstable_cache(() => searchDiamondsLiveRaw(q), ["vdb-live-v1", JSON.stringify(q)], { revalidate: 900 })();
 }
 
 // ---------- White diamonds: our own copy of the inventory ----------
@@ -115,26 +122,29 @@ export async function searchDiamondsLive(q: DiamondQuery) {
 // cheapest 150 of each shape × carat band (the ones a shopper sees first anyway). The diamonds page then filters our copy in
 // milliseconds; the supplier is only asked live when there is no copy yet.
 const WHITE_BANDS: [number, number][] = [[0.5, 0.7], [0.7, 1], [1, 1.5], [1.5, 2], [2, 2.5], [2.5, 3], [3, 4], [4, 30]];
-const WHITE_SHARDS: [string, number, number][] = [];
+const WHITE_SHARDS: [string, number, number, boolean?][] = [];
 for (const sh of SHAPES) for (const [lo, hi] of WHITE_BANDS) WHITE_SHARDS.push([sh, lo, hi]);
+// (2026-11-12) big stones: the cheapest 150 of 3 ct+ are mostly G–I / VS2, so "D–F, VS1 and better" found nothing in our copy and fell
+// to the slow live search (the "couldn't load" on 4ct+). Copy the top grades of the big bands too.
+for (const sh of SHAPES) for (const [lo, hi] of WHITE_BANDS.filter(b => b[0] >= 2)) WHITE_SHARDS.push([sh, lo, hi, true]);
 const WHITE_PAGES = 3; // 3 × 50 = the 150 cheapest per shard
-async function harvestWhiteShard(shape: string, lo: number, hi: number): Promise<Diamond[]> {
+async function harvestWhiteShard(shape: string, lo: number, hi: number, top = false): Promise<Diamond[]> {
   const out = new Map<string, Diamond>();
   for (let n = 1; n <= WHITE_PAGES; n++) {
-    const page = await vdb(build({ shapes: [shape], caratFrom: lo, caratTo: hi, colorFrom: "D", colorTo: "I", clarityFrom: "FL", clarityTo: "VS2", sort: "price_asc", page: n, pageSize: 50 }), 1200);
+    const page = await vdb(build({ shapes: [shape], caratFrom: lo, caratTo: hi, colorFrom: "D", colorTo: top ? "F" : "I", clarityFrom: "FL", clarityTo: top ? "VS1" : "VS2", sort: "price_asc", page: n, pageSize: 50 }), 1200);
     page.diamonds.forEach(x => { const d = norm(x); if (d) out.set(`${d.vendor}-${d.stock}`, d); });
     if (page.diamonds.length < 50) break;
   }
   return [...out.values()];
 }
-const cachedWhiteShard = (sh: string, lo: number, hi: number) => unstable_cache(() => harvestWhiteShard(sh, lo, hi), ["vdb-white-v1", sh, String(lo), String(hi)], { revalidate: 1200 })();
+const cachedWhiteShard = (sh: string, lo: number, hi: number, top = false) => unstable_cache(() => harvestWhiteShard(sh, lo, hi, top), ["vdb-white-v1", sh, String(lo), String(hi), top ? "top" : ""], { revalidate: 1200 })();
 async function harvestWhite(budgetMs = 100_000): Promise<Diamond[]> {
   const t0 = Date.now(), out = new Map<string, Diamond>();
   let i = 0;
   const worker = async () => {
     while (i < WHITE_SHARDS.length && Date.now() - t0 < budgetMs) {
-      const [sh, lo, hi] = WHITE_SHARDS[i++];
-      try { (await cachedWhiteShard(sh, lo, hi)).forEach(d => out.set(`${d.vendor}-${d.stock}`, d)); } catch { /* one shard failing must not lose the rest */ }
+      const [sh, lo, hi, top] = WHITE_SHARDS[i++];
+      try { (await cachedWhiteShard(sh, lo, hi, !!top)).forEach(d => out.set(`${d.vendor}-${d.stock}`, d)); } catch { /* one shard failing must not lose the rest */ }
     }
   };
   await Promise.all(Array.from({ length: 12 }, worker));
