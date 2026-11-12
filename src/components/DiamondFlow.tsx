@@ -53,9 +53,12 @@ function StoneWindow({ d, bg, alt, children }: { d: FlowStone; bg: string; alt: 
 }
 
 export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowStone; bg: string; similar: Similar[]; similarSlot?: React.ReactNode }) {
-  const router = useRouter(); const { addRing } = useCart();
+  const router = useRouter(); const { addRing, setOpen: openBag } = useCart();
   const [set, setSet] = useState<Setting | null>(null);       // what the customer chose in step 1
-  const [shown, setShown] = useState<Setting | null>(null);   // that same design in this diamond's shape
+  const [shownLive, setShown] = useState<Setting | null>(null);   // that same design in this diamond's shape
+  // (2026-11-12) after "Add to bag" the chosen setting is cleared for the next ring; keep showing the ring just added, marked as in the bag
+  const [added, setAdded] = useState<Setting | null>(null);
+  const shown = shownLive || added;
   const [missing, setMissing] = useState(false);
   const [ch, setCh] = useState(0);
   const track = useRef<HTMLDivElement>(null), drag = useRef<{ x: number; y: number; t: number; lock: boolean } | null>(null), swallow = useRef(false), chRef = useRef(0), close = useRef<HTMLElement>(null), reel = useRef<HTMLVideoElement>(null);
@@ -125,9 +128,9 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
   }, []);
 
   const stone: Stone = { vendor: d.vendor, stock: d.stock, shape: d.shape, carat: d.carat, color: d.color, clarity: d.clarity, cut: d.cut, lab: d.lab, image: d.image, price: d.price, fancy: d.fancy };
-  const go = () => chooseStone(stone, { push: u => router.push(u), addRing, notify: toast });
+  const go = () => { if (added) { openBag(true); return; } if (shownLive) setAdded(shownLive); chooseStone(stone, { push: u => router.push(u), addRing, notify: toast }); };
   const total = d.price + (shown ? shown.price : 0);
-  const ctaText = shown ? "Add to bag" : "Choose this diamond";
+  const ctaText = added ? "In your bag ✓ · View bag" : shown ? "Add to bag" : "Choose this diamond";
   const sTitle = shown ? shown.title.replace(/^(Yellow|White|Rose) gold /i, "").replace(new RegExp(`^${shape} Diamond `, "i"), "") : "";
   const sMetal = shown ? [shown.karat, shown.metal].filter(Boolean).join(" ") : "";
   const n = nums(d), mmw = n.length > 1 ? Math.min(78, Math.round(n[0] * 7.5)) : 40;
@@ -253,7 +256,7 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
       </section>
 
       {/* phone: the total and the button stay in reach */}
-      <div className="df-sbar"><b className="sb-day"><span>{`$${Math.ceil(total / 120).toLocaleString("en-US")}`}<i>a day</i></span><small>{usd(total)} total · 4 months · no interest</small></b><button type="button" className="df-cta" onClick={go}>{shown ? "Add to bag" : "Choose diamond"}</button></div>
+      <div className="df-sbar"><b className="sb-day"><span>{`$${Math.ceil(total / 120).toLocaleString("en-US")}`}<i>a day</i></span><small>{usd(total)} total · 4 months · no interest</small></b><button type="button" className="df-cta" onClick={go}>{added ? "In your bag ✓" : shown ? "Add to bag" : "Choose diamond"}</button></div>
     </>
   );
 }
