@@ -4743,3 +4743,34 @@ body,body:has(.home-page){--blue-light:#F8E9D9;background:#F8E9D9}
 .ih .ih-pills-c1 .pc1 i,.ih .ih-pills-c1 .pc1 img{width:26px!important;height:26px!important}
 .ih.open.focus .ih-pk{padding-top:12px}
 }
+/* ===== The review, step 3 (approved 2026-11-12, "V1") ===== */
+.rv{padding-bottom:110px}
+.rv-kick{margin:6px 0 0;font:400 9.5px var(--body);letter-spacing:.3em;text-transform:uppercase;color:#0D4FE7}
+.rv-lede{margin:2px 0 14px;font:italic 500 17px var(--sub);color:#555}
+.rv-card{background:#fff;border-radius:24px;padding:14px;margin-top:12px}
+.rv-lab{display:flex;justify-content:space-between;align-items:baseline;font:400 9.5px var(--body);letter-spacing:.22em;text-transform:uppercase}.rv-lab em{font:italic 500 14px var(--sub);letter-spacing:0;text-transform:none;color:#666}
+.rv-rail{display:flex;gap:6px;overflow-x:auto;margin-top:10px;scrollbar-width:none;padding-bottom:2px}.rv-rail::-webkit-scrollbar{display:none}
+.rv-rail button{flex:none;min-width:48px;height:48px;border-radius:14px;border:1.5px solid #eee;background:#fff;font:400 15px var(--display);cursor:pointer;color:inherit}
+.rv-rail button.on{border-color:#1C1A1B;background:#1C1A1B;color:#fff}
+.rv-help{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.rv-help a{border:1px solid #e3d9cd;border-radius:999px;padding:8px 12px;font:400 8.5px var(--body);letter-spacing:.12em;text-transform:uppercase;background:#faf7f3;text-decoration:none;color:inherit}
+.rv-size.need{box-shadow:0 0 0 2px #B9771A}.rv-need{margin:8px 0 0;font:400 8.5px var(--body);letter-spacing:.14em;text-transform:uppercase;color:#B9771A}
+.rv-r{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 0;border-bottom:1px solid #f0e6da;font:500 15px var(--sub)}
+.rv-r small{display:block;font:400 8.5px var(--body);letter-spacing:.08em;text-transform:uppercase;color:#8a7f76;margin-top:2px}
+.rv-r b{font:400 15px var(--display);text-align:right;white-space:nowrap}.rv-r b i{font:italic 500 12px var(--sub);color:#666;margin-left:3px}
+.rv-tot{display:flex;justify-content:space-between;align-items:flex-end;margin-top:6px;padding-top:12px;border-top:1px solid #e6dccf;font:400 9.5px var(--body);letter-spacing:.2em;text-transform:uppercase}
+.rv-v{text-align:right;letter-spacing:0;text-transform:none}.rv-v b{font:400 40px/1 var(--display)}.rv-v i{font:italic 500 17px var(--sub);color:#555;margin-left:4px}
+.rv-v small{display:block;font:400 9px var(--body);letter-spacing:.12em;text-transform:uppercase;color:#7a706a;margin-top:4px}
+.rv-v em{display:inline-flex;align-items:center;gap:6px;font-style:normal;font:400 9px var(--body);letter-spacing:.14em;text-transform:uppercase;color:#1E8A4F;margin-top:5px}.rv-v em::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}.rv-v em.o{color:#B9771A}
+.rv-prom{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}.rv-prom div{background:#faf7f3;border-radius:14px;padding:9px 10px;font:400 8.5px var(--body);letter-spacing:.12em;text-transform:uppercase}.rv-prom div b{display:block;font:italic 500 13px var(--sub);letter-spacing:0;text-transform:none;margin-top:2px}
+.rv-sig{display:flex;align-items:baseline;gap:8px;margin:12px 0 0;font:italic 500 15px var(--sub);color:#555}.rv-sig b{font:italic 500 26px var(--sub);color:#1C1A1B}
+.rv-bar{position:fixed;left:10px;right:10px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:40;background:#fff;border-radius:26px;padding:10px 10px 10px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 20px 50px -24px rgba(0,0,0,.45)}
+.rv-bp{flex:1;min-width:0}.rv-bp b{font:400 30px/1 var(--display)}.rv-bp i{font:italic 500 14px var(--sub);color:#555;margin-left:4px}
+.rv-bp small{display:block;font:400 8.5px var(--body);letter-spacing:.12em;text-transform:uppercase;color:#7a706a;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rv-go{flex:none;height:52px;padding:0 18px;border:0;border-radius:999px;background:#1C1A1B;color:#fff;font:400 9.5px var(--body);letter-spacing:.18em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.rv-go.off{background:#E9E2D9;color:#8a7f76}
+@media(min-width:768px){
+.rv{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,.75fr);column-gap:24px;align-items:start}
+.rv-kick,.rv-lede,.rv .w1,.rv .bd-note{grid-column:1/-1}
+.rv-size,.rv-rec{grid-column:1/-1}
+.rv-bar{left:auto;right:56px;width:560px;bottom:24px}
+}
