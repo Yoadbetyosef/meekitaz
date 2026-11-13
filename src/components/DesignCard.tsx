@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
 import WishHeart, { ShareArrow } from "./WishHeart";
 import { DailyCardPrice } from "./DailyPrice";
+import { WithStoneLine } from "./StoneBar";
 import { PriceA } from "./PlanKit";
 import Image from "next/image";
 import Link from "next/link";
@@ -43,7 +44,7 @@ export default function DesignCard({ p, from }: { p: Product; from?: boolean }) 
           </span>
         )}
         <DailyCardPrice price={Number(cur.price)} />
-        <PriceA price={Number(cur.price)} compareAt={cur.compareAt ? Number(cur.compareAt) : null} from={!!from} size="S" fmt={n => usd(n, p.currency)} />{/* settings: the price is the setting alone, so "From" (2026-11-04) */}
+        <PriceA price={Number(cur.price)} compareAt={cur.compareAt ? Number(cur.compareAt) : null} from={!!from} size="S" fmt={n => usd(n, p.currency)} /><WithStoneLine price={Number(cur.price)} />{/* settings: the price is the setting alone, so "From" (2026-11-04) */}
       </div>
     </Link>
   );

@@ -33,6 +33,7 @@ export async function chooseStone(s: Stone, deps: { push: (url: string) => void;
   let setting = loadSetting();
   if (!setting) { // no setting yet: the settings, already filtered to this stone's shape (and colour)
     const shape = s.shape === "Elongated Cushion" ? "Cushion" : s.shape, c = fancyColorOfStone(s.fancy);
+    deps.notify("✓ Your diamond is saved · now choose its ring");
     deps.push(c ? fancySettingsUrl(c, shape) : `/engagement-rings?style=${encodeURIComponent(shape)}&build=1`); return;
   }
   if (!sameShape(setting.shape, s.shape)) { // the setting follows the shape of the diamond

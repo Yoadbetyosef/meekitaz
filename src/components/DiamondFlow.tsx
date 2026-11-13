@@ -153,6 +153,8 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
   };
   const total = d.price + (shown ? shown.price : 0);
   const ctaText = added ? "In your bag ✓ · View bag" : editing && shown ? "Update ring in bag" : shown ? "Add to bag" : "Choose this diamond";
+  // (approved 2026-11-13, "A") starting from the diamond: say what comes next
+  const nextLine = !added && !editing && !shown && !set ? <small className="df-next">Next: choose its ring</small> : null;
   const sTitle = shown ? shown.title.replace(/^(Yellow|White|Rose) gold /i, "").replace(new RegExp(`^${shape} Diamond `, "i"), "") : "";
   const sMetal = shown ? [shown.karat, shown.metal].filter(Boolean).join(" ") : "";
   const n = nums(d), mmw = n.length > 1 ? Math.min(78, Math.round(n[0] * 7.5)) : 40;
@@ -196,7 +198,7 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
             <div className="df-tot"><span>The ring</span><PriceA price={total} size="M" /></div>
             <PlanSummary price={total} />
             <DailyTotal price={total} label={shown ? "Your ring" : "Your diamond"} />
-            <button type="button" className="df-cta" onClick={go}>{ctaText}</button>
+            <button type="button" className="df-cta" onClick={go}>{ctaText}{nextLine}</button>
             <Link href="/#contact" className="df-cta o">Book a private appointment</Link>
             <div className="df-trust"><span>IGI / GIA certified, every stone</span><span>30-day free returns</span><span>Lifetime warranty</span><span>Free insured shipping</span></div>
           </aside>
@@ -269,7 +271,7 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
         <div className="df-band">
           <Logo className="df-bandlogo" />
           <div><span className="eyebrow">Your ring</span><h2>Ready when you are.</h2><p>{title(d)}{shown ? ` in the ${sTitle}${sMetal ? ", " + sMetal : ""}` : ""}</p></div>
-          <div className="df-r"><div className="df-big">{usd(total)}</div><button type="button" className="df-cta" onClick={go}>{ctaText}</button><small>Free insured shipping · 30-day free returns · Lifetime warranty</small></div>
+          <div className="df-r"><div className="df-big">{usd(total)}</div><button type="button" className="df-cta" onClick={go}>{ctaText}{nextLine}</button><small>Free insured shipping · 30-day free returns · Lifetime warranty</small></div>
         </div>
         <div className="df-icons"><div><b>IGI / GIA</b>Every stone independently certified</div><div><b>30 days</b>Free returns</div><div><b>For life</b>Warranty on every piece</div><div><b>Free</b>Insured shipping</div></div>
       </section>
@@ -280,7 +282,7 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
       </section>
 
       {/* phone: the total and the button stay in reach */}
-      <div className="df-sbar"><b className="sb-day"><span>{`$${Math.ceil(total / 120).toLocaleString("en-US")}`}<i>a day</i></span><small>{usd(total)} total · 4 months · no interest</small></b><button type="button" className="df-cta" onClick={go}>{added ? "In your bag ✓" : editing && shown ? "Update ring in bag" : shown ? "Add to bag" : "Choose diamond"}</button></div>
+      <div className="df-sbar"><b className="sb-day"><span>{`$${Math.ceil(total / 120).toLocaleString("en-US")}`}<i>a day</i></span><small>{usd(total)} total · 4 months · no interest</small></b><button type="button" className="df-cta" onClick={go}>{added ? "In your bag ✓" : editing && shown ? "Update ring in bag" : shown ? "Add to bag" : "Choose this diamond"}{nextLine}</button></div>
     </>
   );
 }

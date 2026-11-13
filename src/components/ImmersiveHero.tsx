@@ -64,10 +64,10 @@ function trimOf(el: HTMLImageElement): Trim | null {
   } catch { return null; }
 }
 
-export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, stoneSlide = true, filmSlide = true, film, clip, boxPic, steps, summary, chips, price, metal, rows, cta, appt, onVisible, actions }: {
+export default function ImmersiveHero({ title, bigTitle, images, model, stone, stoneShape, stoneSlide = true, filmSlide = true, film, clip, boxPic, steps, summary, chips, price, metal, rows, cta, appt, onVisible, actions, pip }: {
   actions?: React.ReactNode;
   title: string; bigTitle: string; images: Img[]; model?: string; stone?: string; stoneShape?: string; stoneSlide?: boolean; filmSlide?: boolean; film?: { src: string; poster: string; srcD?: string; posterD?: string }; clip?: { src: string; poster: string }; boxPic?: { src: string; alt: string }; summary?: string[]; chips?: { label: string; kind: "metal" | "shape" | "row"; row?: string }[];
-  steps?: ReactNode; price: ReactNode; metal?: ReactNode; rows?: ReactNode; cta: ReactNode; appt?: ReactNode; onVisible?: (on: boolean) => void;
+  steps?: ReactNode; price: ReactNode; metal?: ReactNode; rows?: ReactNode; cta: ReactNode; appt?: ReactNode; onVisible?: (on: boolean) => void; pip?: ReactNode;
 }) {
   const [wideFilm, setWideFilm] = useState(false);
   useEffect(() => { const m = window.matchMedia("(min-width: 768px)"); const on = () => setWideFilm(m.matches); on(); m.addEventListener("change", on); return () => m.removeEventListener("change", on); }, []);
@@ -168,7 +168,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
 
   // swipe (phone), and a tap on the left or right third of the picture
   const x0 = useRef<number | null>(null);
-  const down = (e: React.PointerEvent) => { if ((e.target as HTMLElement).closest(".ih-ctl,.ih-thumbs,.ih-pager,.rsteps,.ih-scrim,.ih-dots,.ih-cnt")) { x0.current = null; return; } x0.current = e.clientX; };
+  const down = (e: React.PointerEvent) => { if ((e.target as HTMLElement).closest(".ih-ctl,.ih-thumbs,.ih-pager,.rsteps,.ih-yd,.ih-scrim,.ih-dots,.ih-cnt")) { x0.current = null; return; } x0.current = e.clientX; };
   const up = (e: React.PointerEvent) => {
     if (x0.current === null) return; const dx = e.clientX - x0.current; x0.current = null;
     if (Math.abs(dx) > 50) go(cur + (dx < 0 ? 1 : -1));
@@ -226,6 +226,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
         })}
       </div>
       <div className="ih-shade" />
+      {pip}
       {open && <div className="ih-scrim" onClick={() => setOpen(false)} />}
       <span className="ih-cnt" aria-hidden="true">{String(cur + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}</span>
       <div className="ih-dots" aria-label="Photos">{slides.map((sl, k) => (

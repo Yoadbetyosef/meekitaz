@@ -28,3 +28,5 @@ showed live in the chat outputs (meekitaz-*.html).
 ## How to add one
 When a design is replaced, tag the last commit before the change: `git tag design/<name> <commit>^ && git push origin --tags`,
 and add a line here.
+
+- design/diamond-first-before-a (2026-11-13): starting from a diamond before A — no "next" line under Choose this diamond, rings page bar "now choose a setting", ring page said "Choose this setting · next: your diamond".

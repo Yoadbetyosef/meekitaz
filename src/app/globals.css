@@ -4897,3 +4897,14 @@ main:has(.dx-first) .rsteps:not(.dx-steps){display:none}
 .cd-pay .cd-pay-o:not(.on){opacity:.45;filter:saturate(.4)}
 .cd-pay .cd-pay-o:not(.on):hover{opacity:.7}
 .cd-pay .cd-pay-o.on{opacity:1;filter:none}
+
+/* (approved 2026-11-13, "A") starting from a diamond: it stays with you to the ring */
+.df-cta .df-next{display:block;font-size:9px;letter-spacing:.14em;opacity:.72;margin-top:3px;text-transform:uppercase;font-weight:400}
+.sbar2-pin{position:sticky;top:78px;z-index:40}
+.sbar2-in em{display:block;font:italic 400 13px/1.35 var(--display);margin-top:3px;opacity:.85}
+.ws-line{display:block;font:400 11px/1.4 var(--body);letter-spacing:.04em;color:#555;margin-top:4px}.ws-line b{color:var(--ink);font-weight:600}
+.ih-yd{position:absolute;z-index:6;right:14px;top:118px;width:84px;height:84px;border-radius:18px;background:#fff;border:3px solid #fff;box-shadow:0 12px 26px -12px rgba(0,0,0,.45);padding:0;cursor:pointer}
+.ih-yd img{width:100%;height:100%;object-fit:contain;border-radius:14px;display:block}
+.ih-yd span{position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);white-space:nowrap;background:var(--ink);color:#fff;border-radius:999px;padding:4px 9px;font:600 8px var(--body);letter-spacing:.12em;text-transform:uppercase}
+.ih.open .ih-yd{display:none}
+@media(min-width:768px){.sbar2-pin{top:96px}.ih-yd{width:112px;height:112px;top:110px;right:28px}}

@@ -19,12 +19,16 @@ export default function RingSteps({ step, onDiamond }: { step: 1 | 2 | 3; onDiam
     { n: 2, label: "Diamond", href: setting ? diamondsUrl(setting.shape) : "/diamonds", done: !!stone },
     { n: 3, label: "Review", href: setting && stone ? "/build" : null, done: false },
   ];
+  // (approved 2026-11-13, "A") started from a diamond: the diamond is step 1, done; the setting is step 2
+  const stoneFirst = !!stone && step === 1;
+  if (stoneFirst && stone) items[1].href = `/diamonds/${stone.vendor}-${encodeURIComponent(stone.stock)}`;
+  const order = stoneFirst ? [items[1], items[0], items[2]] : items;
   return (
     <nav className="rsteps" aria-label="Build your ring">
-      {items.map(it => {
+      {order.map((it, k) => {
         const cls = it.n === step ? "on" : it.done ? "done" : "";
-        const text = `${it.n}. ${it.label}`;
-        if (it.n === 2 && onDiamond && step !== 2) return <button key={it.n} type="button" className={cls} onClick={onDiamond}>{text}</button>;
+        const text = `${k + 1}. ${it.label}`;
+        if (it.n === 2 && onDiamond && step !== 2 && !stoneFirst) return <button key={it.n} type="button" className={cls} onClick={onDiamond}>{text}</button>;
         return it.n === step || !it.href
           ? <span key={it.n} className={cls} aria-current={it.n === step ? "step" : undefined}>{text}</span>
           : <Link key={it.n} href={it.href} className={cls}>{text}</Link>;

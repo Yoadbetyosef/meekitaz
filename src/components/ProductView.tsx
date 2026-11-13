@@ -24,6 +24,7 @@ import { addonFor, completeSel, optionRows, type ProductOptions, type Sel } from
 import TopPicks from "./TopPicks";
 import { GOLD_COLORS, hasKarat, isGoldMetal, karatsFor, karatStep } from "@/lib/karat";
 import { toast } from "./Toast";
+import { useStone } from "./StoneBar";
 import { photoSrc, isCleaned } from "@/lib/img";
 
 const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
@@ -91,6 +92,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
     setHint({ text: t.slice(0, 160), size: z ? `${w}${f === 25 ? "¼" : f === 50 ? "½" : f === 75 ? "¾" : ""}` : "" }); }, [qp]);
   const ns = ring?.ns || p.tags.find(t => /^NS-\d+$/.test(t)) || "";
   const karatOn = hasKarat(ns) && !hasOpts; // the option tree carries its own Gold Purity prices
+  const myStone = useStone(); // (approved 2026-11-13, "A") a diamond picked first rides along on the ring page
   const [karatPick, setKarat] = useState("10K");
   useEffect(() => { try { const k = sessionStorage.getItem("mk_karat"); if (k === "14K" || k === "18K") setKarat(k); } catch { /* ignore */ } }, []);
   const pickKarat = (k: string) => { setKarat(k); try { sessionStorage.setItem("mk_karat", k); } catch { /* ignore */ } };
@@ -141,6 +143,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
     saveSetting(setting);
     if (!stone || !keepStone) { router.push(diamondsUrl(pick.shape, fc)); return; }
     // a diamond is already chosen: review the pair first (diamond + setting), not straight into the bag
+    toast("✓ Your diamond is in the ring");
     router.push(`/diamonds/${stone.vendor}-${encodeURIComponent(stone.stock)}`);
   };
 
@@ -246,7 +249,9 @@ export default function ProductView({ product: p, siblings, related, ring, optio
     </>
   );
   const ctaNode = ring && cv ? (
-    <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting<small>{daily ? `From $${dailyPlan(price).perDay} a day · next: your ${cv.shape.toLowerCase()} diamond` : `Next: pick your ${cv.shape.toLowerCase()} diamond`}</small></button>
+    myStone && sameShape(myStone.shape, cv.shape)
+      ? <button type="button" className="pp-add" onClick={chooseSetting}>Set my diamond in this ring<small>{daily ? `$${dailyPlan(price + myStone.price).perDay} a day · the ring with your ${myStone.carat.toFixed(2)} ct diamond` : `${usd(price + myStone.price)} · the ring with your ${myStone.carat.toFixed(2)} ct diamond`}</small></button>
+      : <button type="button" className="pp-add" onClick={chooseSetting}>Choose this setting<small>{daily ? `From $${dailyPlan(price).perDay} a day · next: your ${cv.shape.toLowerCase()} diamond` : `Next: pick your ${cv.shape.toLowerCase()} diamond`}</small></button>
   ) : (
     <button type="button" className="pp-add" disabled={busy || !variant.available} onClick={async () => { const r = hasOpts ? await addConfigured(variant.id, p.handle, osel) : await add(variant.id, 1, step ? karat : ""); if (r.ok && care) await addCare(care, [title, variant.title !== "Default Title" ? variant.title : "", step ? karat : ""].filter(Boolean).join(" · ")); if (!r.ok) toast(r.error === "not_configured" ? "This option is being connected for checkout. Please book an appointment and we will complete it with you." : "We could not add this to your bag. Please try again."); }}>{!variant.available ? "Sold out" : busy ? "Adding…" : (daily ? `Add to bag · $${dailyPlan(price + (care === "life425" ? 425 : 0)).perDay} a day` : `Add to bag · ${usd(price + (care === "3y" ? 250 : care === "life" ? 390 : care === "life425" ? 425 : 0))}`)}</button>
   );
@@ -264,7 +269,7 @@ export default function ProductView({ product: p, siblings, related, ring, optio
           ...(hasOpts ? rows.filter(r => r.name !== "Gold Purity" && !/metal/i.test(r.name) && osel[r.name]).map(r => ({ label: String(osel[r.name]).replace(/ Carat$/i, " ct"), kind: "row" as const, row: r.name })) : []),
           ...real.filter(o => sel[o.name] && !/metal|colou?r/i.test(o.name)).map(o => ({ label: String(sel[o.name]), kind: "row" as const, row: o.name })),
         ]}
-        price={priceNode} metal={hasMetal ? metalNode : null} rows={rowsNode} cta={ctaNode} appt={apptNode} onVisible={setHeroOn} />
+        price={priceNode} metal={hasMetal ? metalNode : null} rows={rowsNode} cta={ctaNode} appt={apptNode} onVisible={setHeroOn} pip={ring && cv && myStone && sameShape(myStone.shape, cv.shape) ? <button type="button" className="ih-yd" onClick={chooseSetting} aria-label="Set my diamond in this ring">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={myStone.image} alt="" referrerPolicy="no-referrer" /><span>Your diamond ↗</span></button> : null} />
       <div className="wrap">
         <section className="pp-below">
           <div>
