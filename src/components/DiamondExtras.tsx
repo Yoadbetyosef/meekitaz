@@ -104,13 +104,34 @@ export function DiamondFirst({ d, picture, shape, onCert }: { d: FlowStone; pict
 export function CertSheet({ d, open, onClose }: { d: FlowStone; open: boolean; onClose: () => void }) {
   useEffect(() => { if (!open) return; const k = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [open, onClose]);
   const src = d.certUrl ? `/api/cert?u=${encodeURIComponent(d.certUrl)}` : "";
+  // (2026-11-12) IGI refuses to be shown inside another site; ask first, and when it can't be framed show the report's own page here
+  // (built from the graded data) with the button to the official PDF on IGI
+  const [inline, setInline] = useState<boolean | null>(null);
+  useEffect(() => { if (!open || !src || inline !== null) return; fetch(`${src}&check=1`).then(r => r.json()).then(j => setInline(!!j.inline)).catch(() => setInline(false)); }, [open, src, inline]);
   return (
     <>
       <div className={`dx-dim${open ? " on" : ""}`} onClick={onClose} />
       <aside className={`dx-sheet cs-sheet${open ? " on" : ""}`} role="dialog" aria-label="Certificate" aria-hidden={!open}>
         <div className="cs-h"><div><small>Certificate · {d.lab}</small><b>{d.cert}</b></div><button type="button" onClick={onClose}>Close</button></div>
-        {open && src && <div className="cs-pdf"><span className="cs-tag">The real report</span><iframe src={`${src}#view=FitH&toolbar=0`} title={`${d.lab} certificate ${d.cert}`} /></div>}
-        <p className="cs-note">The official report, shown here — scroll it, zoom it.</p>
+        {open && src && inline === true && <div className="cs-pdf"><span className="cs-tag">The real report</span><iframe src={`${src}#view=FitH&toolbar=0`} title={`${d.lab} certificate ${d.cert}`} /></div>}
+        {open && inline === false && (
+          <div className="cs-pdf"><span className="cs-tag">{d.lab} report</span>
+            <div className="cs-page">
+              <div className="cs-pghd"><div className="cs-lg">{d.lab}<small>{d.lab === "IGI" ? "International Gemological Institute" : d.lab === "GIA" ? "Gemological Institute of America" : "Grading laboratory"}</small></div><div className="cs-no">Laboratory grown diamond report<span>{d.cert}</span></div></div>
+              <div className="cs-pgt">Grading results</div>
+              <div className="cs-tbl">
+                <div><span>Shape</span><b>{d.shape}</b></div>{d.measurements && <div><span>Measurements</span><b>{d.measurements.replace(/ ?mm$/i, "")} mm</b></div>}
+                <div><span>Carat weight</span><b>{d.carat.toFixed(2)} ct</b></div><div><span>Color grade</span><b>{d.fancy || d.color || "—"}</b></div>
+                <div><span>Clarity grade</span><b>{d.clarity || "—"}</b></div><div><span>Cut grade</span><b>{d.cut || "—"}</b></div>
+                <div><span>Polish</span><b>{d.polish || "—"}</b></div><div><span>Symmetry</span><b>{d.symmetry || "—"}</b></div>
+                <div><span>Fluorescence</span><b>{d.fluor || "None"}</b></div><div><span>Inscription</span><b>{d.lab} {d.cert}</b></div>
+              </div>
+            </div>
+            {d.certUrl && <a className="cs-igi" href={d.certUrl} target="_blank" rel="noopener">View the official report on {d.lab} ↗</a>}
+          </div>
+        )}
+        {open && src && inline === null && <div className="cs-pdf cs-wait">Opening the report…</div>}
+        <p className="cs-note">{inline === false ? `${d.lab} shows its official PDF only on its own site — one tap opens it.` : "The official report, shown here — scroll it, zoom it."}</p>
         <div className="cs-ver"><span>✓</span><div>Verified by {d.lab}<b>Independently graded. The number is laser-inscribed on the stone.</b></div></div>
         <div className="cs-sum"><h4>In short</h4>
           <div className="dx-facts">{facts(d).map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>

@@ -4871,3 +4871,13 @@ main:has(.dx-first) .rsteps:not(.dx-steps){display:none}
 .cs-sum{background:#fff;border-radius:20px;padding:14px;margin-top:12px}.cs-sum h4{margin:0 0 8px;font:400 9.5px var(--body);letter-spacing:.22em;text-transform:uppercase}
 .cs-sum .dx-facts{margin-top:0}.cs-sum .dx-facts div{background:#faf7f3}.cs-sum .dx-meas{padding:4px 0 0;margin:0}
 .cs-open{flex:1;display:grid;place-items:center;border-radius:999px;padding:14px 0;font:400 9.5px var(--body);letter-spacing:.16em;text-transform:uppercase;border:1px solid #ccc;background:#fff;color:inherit;text-decoration:none}
+/* the report's own page, when the lab won't be framed */
+.cs-page{background:#fff;border-radius:6px;padding:16px 16px 18px;font-family:Arial,Helvetica,sans-serif;color:#222}
+.cs-pghd{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;border-bottom:2px solid #1d3f7a;padding-bottom:8px}
+.cs-lg{font:900 22px Arial,sans-serif;color:#1d3f7a;letter-spacing:-.02em}.cs-lg small{display:block;font:600 7px Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#555}
+.cs-no{text-align:right;font:700 9px Arial,sans-serif;text-transform:uppercase}.cs-no span{display:block;font:400 9px Arial,sans-serif;color:#666;margin-top:2px}
+.cs-pgt{font:700 9.5px Arial,sans-serif;letter-spacing:.06em;text-transform:uppercase;margin:10px 0 6px;color:#1d3f7a}
+.cs-tbl{display:grid;grid-template-columns:1fr 1fr;gap:3px 14px;font-size:10px}.cs-tbl div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dotted #ccc;padding:3px 0}.cs-tbl b{font-weight:700;text-align:right}
+@media(max-width:480px){.cs-tbl{grid-template-columns:1fr}}
+.cs-igi{display:flex;align-items:center;justify-content:center;margin-top:10px;height:50px;border-radius:999px;background:#fff;color:#1C1A1B;font:400 10px var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
+.cs-wait{display:grid;place-items:center;height:200px;color:#fff;font:italic 500 16px var(--sub)}

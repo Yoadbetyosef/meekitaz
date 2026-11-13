@@ -16,14 +16,15 @@ export async function GET(req: NextRequest) {
     // suppliers' S3 copy — use that when it exists; otherwise send the browser straight to IGI (it passes the check itself).
     const H = { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36", "Accept": "application/pdf,*/*;q=0.8" };
     let target = url.toString();
+    const check = !!req.nextUrl.searchParams.get("check"); // the sheet asks first: can this report be shown inside the site?
     if (/igi\.org$/i.test(url.hostname)) {
       const rep = url.searchParams.get("r");
-      if (rep) {
-        const copy = `https://s3.amazonaws.com/illuminex-media/uploads/diamond/igi_cert/${encodeURIComponent(rep)}.pdf`;
-        const h = await fetch(copy, { method: "HEAD", next: { revalidate: 86400 } }).catch(() => null);
-        if (h && h.ok) target = copy; else return Response.redirect(url.toString(), 302);
-      } else return Response.redirect(url.toString(), 302);
+      const copy = rep ? `https://s3.amazonaws.com/illuminex-media/uploads/diamond/igi_cert/${encodeURIComponent(rep)}.pdf` : "";
+      const h = copy ? await fetch(copy, { method: "HEAD", next: { revalidate: 86400 } }).catch(() => null) : null;
+      if (h && h.ok) target = copy;
+      else return check ? Response.json({ inline: false }) : Response.redirect(url.toString(), 302); // IGI itself refuses to be framed
     }
+    if (check) return Response.json({ inline: true });
     const r = await fetch(target, { redirect: "follow", headers: H, next: { revalidate: 86400 } });
     if (!r.ok || !r.body) return Response.redirect(url.toString(), 302);
     const type = r.headers.get("content-type") || "application/pdf";
