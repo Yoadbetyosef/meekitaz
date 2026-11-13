@@ -171,7 +171,7 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
         <div className="df-h"><span className="eyebrow">{d.fancy ? "Fancy color" : "Step 2 of 3"} · Your diamond</span><h1>Build your ring</h1><p className="df-s">{title(d)} · {sub(d)}</p></div>
         <div className="df-g">
           {shown && <H1Stage d={d} shown={shown} shape={shape} onCert={() => setCert(true)} picture={<StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />} />}
-          {!shown && !set && <DiamondFirst d={d} shape={shape} onCert={() => setCert(true)} picture={<StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />} />}
+          {!shown && !set && <DiamondFirst d={d} shape={shape} onCert={() => setCert(true)} cta={<button type="button" className="df-cta" onClick={go}>{ctaText}{nextLine}</button>} picture={<StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} />} />}
           <div className={`df-pair${shown || !set ? " w1-hide" : ""}`}>
             <div>
               <div className="df-card"><span className="df-cap">Your diamond</span><StoneWindow d={d} bg={bg} alt={`${d.carat.toFixed(2)} carat ${d.shape} diamond`} /></div>

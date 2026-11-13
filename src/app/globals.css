@@ -4908,3 +4908,5 @@ main:has(.dx-first) .rsteps:not(.dx-steps){display:none}
 .ih-yd span{position:absolute;left:50%;bottom:-11px;transform:translateX(-50%);white-space:nowrap;background:var(--ink);color:#fff;border-radius:999px;padding:4px 9px;font:600 8px var(--body);letter-spacing:.12em;text-transform:uppercase}
 .ih.open .ih-yd{display:none}
 @media(min-width:768px){.sbar2-pin{top:96px}.ih-yd{width:112px;height:112px;top:110px;right:28px}}
+.dx-cta{margin:18px 0 4px}.dx-cta .df-cta{padding:16px 18px}
+@media(max-width:767px){.dx-cta{display:none}}

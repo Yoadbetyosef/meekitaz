@@ -50,12 +50,12 @@ export function DiamondSheet({ d, open, onClose, onSwap, picture, onCert }: { d:
 }
 
 type Fit = { handle: string; title: string; price: number; image?: { url: string } };
-export function DiamondFirst({ d, picture, shape, onCert }: { d: FlowStone; picture: React.ReactNode; shape: string; onCert?: () => void }) {
+export function DiamondFirst({ d, picture, shape, onCert, cta }: { d: FlowStone; picture: React.ReactNode; shape: string; onCert?: () => void; cta?: React.ReactNode }) {
   const r = usePlanRoom();
   const [fits, setFits] = useState<Fit[] | null>(null), [busy, setBusy] = useState("");
   useEffect(() => {
     let live = true;
-    fetch(`/api/products?${new URLSearchParams({ handle: "engagement-rings", sort: "best", style: shape, metal: "Yellow gold" })}`).then(x => x.json())
+    fetch(`/api/products?${new URLSearchParams({ handle: "engagement-rings", sort: "best", shape, metal: "Yellow gold" })}`).then(x => x.json())
       .then((j: { products?: { handle: string; title: string; price: string; image?: { url: string } }[] }) => { if (live) setFits((j.products || []).slice(0, 10).map(p => ({ handle: p.handle, title: p.title, price: +p.price, image: p.image }))); })
       .catch(() => live && setFits([]));
     return () => { live = false; };
@@ -81,6 +81,7 @@ export function DiamondFirst({ d, picture, shape, onCert }: { d: FlowStone; pict
           <div className="dx-price"><b>{usdR(day(d.price))}</b><i>a day</i><small>{usdR(d.price)} · the diamond</small></div>
           <div className="dx-facts">{facts(d).map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
           <div className="dx-cert"><span className="dx-paper" /><div><b>{d.lab} {d.cert}</b><small>{d.measurements ? (/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`) : "Independently graded"}</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener" onClick={e => { if (onCert) { e.preventDefault(); onCert(); } }}>Certificate →</a>}</div>
+          {cta && <div className="dx-cta">{cta}</div>}
           <div className="dx-fits">
             <div className="dx-fh"><b>Settings that fit this diamond</b><a href={`/engagement-rings?style=${encodeURIComponent(shape)}&build=1`}>See all ›</a></div>
             <div className="dx-car">
