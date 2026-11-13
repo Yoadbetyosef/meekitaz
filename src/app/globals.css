@@ -4890,3 +4890,10 @@ main:has(.dx-first) .rsteps:not(.dx-steps){display:none}
 .cd-slide{padding:0 16px 14px}
 .cd-slide input[type=range]{width:100%;height:28px;margin:0;accent-color:#1C1A1B;cursor:pointer}
 .cd-ends{display:flex;justify-content:space-between;font:400 8.5px var(--body);letter-spacing:.1em;text-transform:uppercase;color:#888}
+/* (2026-11-13) the chosen way to pay is fully clear; the other one is pale until it is chosen (an old ".cd-pay{opacity:.6}" had
+   been fading both) */
+.cd-pay{opacity:1!important}
+.cd-pay .cd-pay-o{transition:opacity .25s ease,filter .25s ease}
+.cd-pay .cd-pay-o:not(.on){opacity:.45;filter:saturate(.4)}
+.cd-pay .cd-pay-o:not(.on):hover{opacity:.7}
+.cd-pay .cd-pay-o.on{opacity:1;filter:none}
