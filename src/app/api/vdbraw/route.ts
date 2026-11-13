@@ -8,6 +8,6 @@ export async function GET(req: NextRequest) {
   const pick = Object.fromEntries(Object.entries(d).filter(([k]) => /cert|pdf|file|lab|report|url/i.test(k)));
   const m = String((d as Record<string, unknown>).masked_cert_url || "");
   let probe = "";
-  if (m) { try { const r = await fetch(m, { redirect: "follow" }); probe = `${r.status} ${r.url} ${r.headers.get("content-type")} ${r.headers.get("x-frame-options") || ""} ${r.headers.get("content-security-policy") || ""} ${(r.headers.get("content-type") || "").includes("pdf") ? "PDF" : (await r.text()).slice(0, 300)}`; } catch (e) { probe = String(e); } }
+  if (m) { try { const r = await fetch(m, { redirect: "follow" }); probe = `${r.status} ${r.url} ${r.headers.get("content-type")} ${r.headers.get("x-frame-options") || ""} ${r.headers.get("content-security-policy") || ""} ${(r.headers.get("content-type") || "").includes("pdf") ? "PDF" : ((await r.text()).match(/(src|href|data)=["'][^"']+["']/gi) || []).slice(0, 40).join(" ")}`; } catch (e) { probe = String(e); } }
   return Response.json({ ...pick, probe });
 }
