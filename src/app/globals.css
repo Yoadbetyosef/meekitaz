@@ -4854,3 +4854,20 @@ main:has(.dx-first) .rsteps:not(.dx-steps){display:none}
 /* (2026-11-12) in the H1 square the ring waits top-right, so the 360° button lives bottom-right — nothing covers it */
 .h1-st .df-360,.dx-hero .df-360{top:auto!important;left:auto!important;right:14px!important;bottom:14px!important;z-index:5}
 .h1-st .df-win.is-vid .df-vid,.dx-hero .df-win.is-vid .df-vid{background:var(--bgc,#fff)}
+/* ===== The certificate, inside the site (approved 2026-11-12) ===== */
+.cs-sheet{display:flex;flex-direction:column}
+@media(max-width:767px){.cs-sheet{max-height:none;height:90vh}}
+@media(min-width:768px){.cs-sheet{width:620px!important}}
+.cs-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.cs-h small{display:block;font:400 8.5px var(--body);letter-spacing:.24em;text-transform:uppercase;color:#0D4FE7}.cs-h b{display:block;font:400 22px var(--display)}
+.cs-h button{border:1px solid #ccc;background:#fff;border-radius:999px;padding:8px 13px;font:400 9px var(--body);letter-spacing:.16em;text-transform:uppercase;cursor:pointer;color:inherit}
+.cs-pdf{position:relative;background:#5d5f63;border-radius:18px;padding:10px;flex:none}
+.cs-pdf iframe{display:block;width:100%;height:62vh;border:0;border-radius:6px;background:#fff}
+@media(min-width:768px){.cs-pdf iframe{height:70vh}}
+.cs-tag{position:absolute;right:14px;top:-9px;background:#1C1A1B;color:#fff;border-radius:999px;padding:3px 9px;font:400 7.5px var(--body);letter-spacing:.14em;text-transform:uppercase}
+.cs-note{margin:8px 0 0;text-align:center;font:italic 500 13px var(--sub);color:#666}
+.cs-ver{display:flex;align-items:center;gap:10px;margin-top:12px;background:#E8F4EC;border-radius:16px;padding:12px;font:400 9px var(--body);letter-spacing:.12em;text-transform:uppercase;color:#1E8A4F}
+.cs-ver>span{font-size:20px}.cs-ver b{display:block;font:italic 500 14px var(--sub);letter-spacing:0;text-transform:none;color:#2c5a3e}
+.cs-sum{background:#fff;border-radius:20px;padding:14px;margin-top:12px}.cs-sum h4{margin:0 0 8px;font:400 9.5px var(--body);letter-spacing:.22em;text-transform:uppercase}
+.cs-sum .dx-facts{margin-top:0}.cs-sum .dx-facts div{background:#faf7f3}.cs-sum .dx-meas{padding:4px 0 0;margin:0}
+.cs-open{flex:1;display:grid;place-items:center;border-radius:999px;padding:14px 0;font:400 9.5px var(--body);letter-spacing:.16em;text-transform:uppercase;border:1px solid #ccc;background:#fff;color:inherit;text-decoration:none}

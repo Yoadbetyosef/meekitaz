@@ -12,7 +12,7 @@ import type { FlowStone } from "./DiamondFlow";
 const SW: Record<string, string> = { "White gold": "linear-gradient(135deg,#F4F5F7,#BFC4CC)", "Yellow gold": "linear-gradient(135deg,#F3D27A,#C9982E)", "Rose gold": "linear-gradient(135deg,#F2C6B4,#C98C74)", Platinum: "linear-gradient(135deg,#F4F5F7,#AEB4BD)", Silver: "linear-gradient(135deg,#F4F5F7,#C9CDD3)" };
 const shortTitle = (t: string, shape: string) => t.replace(/^(Yellow|White|Rose) gold |^Platinum |^Silver /i, "").replace(new RegExp(`^${shape} Diamond `, "i"), "").replace(/ Engagement Ring/i, "");
 
-export function H1Stage({ d, shown, shape, picture }: { d: FlowStone; shown: Setting; shape: string; picture: React.ReactNode }) {
+export function H1Stage({ d, shown, shape, picture, onCert }: { d: FlowStone; shown: Setting; shape: string; picture: React.ReactNode; onCert?: () => void }) {
   const [dia, setDia] = useState(true);
   const k = shown.karat ? `${shown.karat} ` : "";
   return (
@@ -26,7 +26,7 @@ export function H1Stage({ d, shown, shape, picture }: { d: FlowStone; shown: Set
       </div>
       {dia ? (
         <div className="h1-cap"><span className="h1-k">Your diamond</span><b>{d.carat.toFixed(2)} ct {d.shape}</b>
-          <div className="h1-line">{[d.fancy || (d.color && `${d.color} color`), d.clarity, d.cut].filter(Boolean).map((x, i) => <span key={i}>{x}</span>)}<span className="ok">✓ {d.lab}</span>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener">Certificate →</a>}</div></div>
+          <div className="h1-line">{[d.fancy || (d.color && `${d.color} color`), d.clarity, d.cut].filter(Boolean).map((x, i) => <span key={i}>{x}</span>)}<span className="ok">✓ {d.lab}</span>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener" onClick={e => { if (onCert) { e.preventDefault(); onCert(); } }}>Certificate →</a>}</div></div>
       ) : (
         <div className="h1-cap"><span className="h1-k">Your ring</span><b>{shortTitle(shown.title, shape)} · {k}{shown.metal.replace(" gold", "")}</b>
           <div className="h1-line"><span>With your {d.carat.toFixed(2)} ct {d.shape.toLowerCase()}</span></div></div>

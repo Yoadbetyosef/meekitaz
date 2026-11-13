@@ -24,7 +24,7 @@ export function DiamondStrip({ d, onOpen }: { d: FlowStone; onOpen: () => void }
   );
 }
 
-export function DiamondSheet({ d, open, onClose, onSwap, picture }: { d: FlowStone; open: boolean; onClose: () => void; onSwap: () => void; picture: React.ReactNode }) {
+export function DiamondSheet({ d, open, onClose, onSwap, picture, onCert }: { d: FlowStone; open: boolean; onClose: () => void; onSwap: () => void; picture: React.ReactNode; onCert?: () => void }) {
   useEffect(() => { if (!open) return; const k = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [open, onClose]);
   return (
     <>
@@ -35,7 +35,7 @@ export function DiamondSheet({ d, open, onClose, onSwap, picture }: { d: FlowSto
         <h3>{d.carat.toFixed(2)} ct {d.shape}</h3>
         <span className="dx-igi">✓ {d.lab} certified · lab-grown</span>
         <div className="dx-facts">{facts(d).map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
-        <div className="dx-cert"><span className="dx-paper" /><div><b>{d.lab} {d.cert}</b><small>Independently graded</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener">View certificate →</a>}</div>
+        <div className="dx-cert"><span className="dx-paper" /><div><b>{d.lab} {d.cert}</b><small>Independently graded</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener" onClick={e => { if (onCert) { e.preventDefault(); onClose(); onCert(); } }}>View certificate →</a>}</div>
         <div className="dx-meas">
           {d.measurements && <div><span>Measurements</span><b>{/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`}</b></div>}
           {(d.polish || d.symmetry) && <div><span>Polish · Symmetry</span><b>{[d.polish, d.symmetry].filter(Boolean).join(" · ")}</b></div>}
@@ -50,7 +50,7 @@ export function DiamondSheet({ d, open, onClose, onSwap, picture }: { d: FlowSto
 }
 
 type Fit = { handle: string; title: string; price: number; image?: { url: string } };
-export function DiamondFirst({ d, picture, shape }: { d: FlowStone; picture: React.ReactNode; shape: string }) {
+export function DiamondFirst({ d, picture, shape, onCert }: { d: FlowStone; picture: React.ReactNode; shape: string; onCert?: () => void }) {
   const r = usePlanRoom();
   const [fits, setFits] = useState<Fit[] | null>(null), [busy, setBusy] = useState("");
   useEffect(() => {
@@ -80,7 +80,7 @@ export function DiamondFirst({ d, picture, shape }: { d: FlowStone; picture: Rea
           <p className="dx-sub">{[d.fancy || (d.color && `${d.color} color`), d.clarity && `${d.clarity} clarity`, d.cut && `${d.cut} cut`].filter(Boolean).join(" · ")}</p>
           <div className="dx-price"><b>{usdR(day(d.price))}</b><i>a day</i><small>{usdR(d.price)} · the diamond</small></div>
           <div className="dx-facts">{facts(d).map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
-          <div className="dx-cert"><span className="dx-paper" /><div><b>{d.lab} {d.cert}</b><small>{d.measurements ? (/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`) : "Independently graded"}</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener">Certificate →</a>}</div>
+          <div className="dx-cert"><span className="dx-paper" /><div><b>{d.lab} {d.cert}</b><small>{d.measurements ? (/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`) : "Independently graded"}</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener" onClick={e => { if (onCert) { e.preventDefault(); onCert(); } }}>Certificate →</a>}</div>
           <div className="dx-fits">
             <div className="dx-fh"><b>Settings that fit this diamond</b><a href={`/engagement-rings?style=${encodeURIComponent(shape)}&build=1`}>See all ›</a></div>
             <div className="dx-car">
@@ -96,5 +96,32 @@ export function DiamondFirst({ d, picture, shape }: { d: FlowStone; picture: Rea
         </div>
       </div>
     </div>
+  );
+}
+
+/* (approved 2026-11-12) The certificate, inside the site: the lab's own report in a sheet (bottom on phones, side on computers), the
+   short version under it, "Verified by" the lab, and "Back to my ring". The PDF comes through /api/cert so it can be framed. */
+export function CertSheet({ d, open, onClose }: { d: FlowStone; open: boolean; onClose: () => void }) {
+  useEffect(() => { if (!open) return; const k = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); }; window.addEventListener("keydown", k); return () => window.removeEventListener("keydown", k); }, [open, onClose]);
+  const src = d.certUrl ? `/api/cert?u=${encodeURIComponent(d.certUrl)}` : "";
+  return (
+    <>
+      <div className={`dx-dim${open ? " on" : ""}`} onClick={onClose} />
+      <aside className={`dx-sheet cs-sheet${open ? " on" : ""}`} role="dialog" aria-label="Certificate" aria-hidden={!open}>
+        <div className="cs-h"><div><small>Certificate · {d.lab}</small><b>{d.cert}</b></div><button type="button" onClick={onClose}>Close</button></div>
+        {open && src && <div className="cs-pdf"><span className="cs-tag">The real report</span><iframe src={`${src}#view=FitH&toolbar=0`} title={`${d.lab} certificate ${d.cert}`} /></div>}
+        <p className="cs-note">The official report, shown here — scroll it, zoom it.</p>
+        <div className="cs-ver"><span>✓</span><div>Verified by {d.lab}<b>Independently graded. The number is laser-inscribed on the stone.</b></div></div>
+        <div className="cs-sum"><h4>In short</h4>
+          <div className="dx-facts">{facts(d).map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
+          <div className="dx-meas">
+            {d.measurements && <div><span>Measurements</span><b>{/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`}</b></div>}
+            {(d.polish || d.symmetry) && <div><span>Polish · Symmetry</span><b>{[d.polish, d.symmetry].filter(Boolean).join(" · ")}</b></div>}
+            <div><span>Fluorescence</span><b>{d.fluor || "None"}</b></div>
+          </div>
+        </div>
+        <div className="dx-acts">{d.certUrl && <a className="cs-open" href={d.certUrl} target="_blank" rel="noopener">Open full PDF</a>}<button type="button" className="dx-keep" onClick={onClose}>Back to my ring</button></div>
+      </aside>
+    </>
   );
 }
