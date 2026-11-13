@@ -4881,3 +4881,12 @@ main:has(.dx-first) .rsteps:not(.dx-steps){display:none}
 @media(max-width:480px){.cs-tbl{grid-template-columns:1fr}}
 .cs-igi{display:flex;align-items:center;justify-content:center;margin-top:10px;height:50px;border-radius:999px;background:#fff;color:#1C1A1B;font:400 10px var(--body);letter-spacing:.16em;text-transform:uppercase;text-decoration:none}
 .cs-wait{display:grid;place-items:center;height:200px;color:#fff;font:italic 500 16px var(--sub)}
+/* ===== The bag: choose your days (approved 2026-11-13, "D1") ===== */
+.cd-pay-days{display:block!important;padding:0!important}
+.cd-pay-hit{all:unset;box-sizing:border-box;display:flex;align-items:flex-start;gap:12px;width:100%;padding:16px;cursor:pointer}
+.cd-pay-days .cd-pay-t{flex:1;min-width:0}
+.cd-days{display:block;margin-top:6px;font:400 10.5px var(--body);letter-spacing:.1em;text-transform:uppercase;color:#444}.cd-days b{font:400 15px var(--display);color:#1C1A1B;letter-spacing:0}
+.cd-end{display:block;margin-top:2px;font:italic 500 14px var(--sub);color:#555}.cd-end b{font:400 13px var(--display);color:#0D4FE7;font-style:normal}
+.cd-slide{padding:0 16px 14px}
+.cd-slide input[type=range]{width:100%;height:28px;margin:0;accent-color:#1C1A1B;cursor:pointer}
+.cd-ends{display:flex;justify-content:space-between;font:400 8.5px var(--body);letter-spacing:.1em;text-transform:uppercase;color:#888}

@@ -31,6 +31,8 @@ export default function CartDrawer() {
   const { cart, open, busy, setOpen, setQty, remove, rings, ringError, bagCount, setRingSize, removeRing, setCartRingSize, removeCartRing, checkout, addCare, setExpress } = useCart();
   const daily = useDaily();
   const [payDaily, setPayDaily] = useState(true); // (2026-11-10, approved "B3") a few dollars a day is the default choice
+  // (2026-11-13, approved "D1") the customer chooses the number of DAYS: fewer days = more a day; the finish date follows
+  const [days, setDays] = useState<number | null>(null);
   const planNow = usePlan();
   const [planAmt, setPlanAmt] = useState<number | undefined>(undefined);
   const router = useRouter();
@@ -50,6 +52,7 @@ export default function CartDrawer() {
   const needSize = rings.some(r => !r.size) || cartRings.some(r => !r.size) || plain.some(l => isRingLine(l) && !attr(l, "Ring size"));
   const ringsTotal = rings.reduce((t, r) => t + r.setting.price + r.stone.price, 0);
   const subtotal = (cart?.subtotal ?? 0) + ringsTotal;
+  const chosenDays = Math.min(120, Math.max(Math.min(120, Math.max(30, Math.ceil(subtotal / 50))), days ?? (planNow?.months ?? 4) * 30)), dayAmt = Math.ceil(subtotal / chosenDays);
   const cur = cart?.currency || "USD";
   const empty = lines.length === 0 && rings.length === 0;
   const leave = (url: string) => { setOpen(false); router.push(url); };
@@ -162,12 +165,26 @@ export default function CartDrawer() {
               <div><small>Taxes calculated at checkout</small></div>
               <div className="t"><span>Total</span><span>{money(subtotal, cur)}</span></div>
               {!daily && subtotal > 0 && (() => {
-                const mo = planNow?.months ?? 4, d = Math.ceil(subtotal / (30 * mo));
+                const maxD = 120, minD = Math.min(maxD, Math.max(30, Math.ceil(subtotal / 50))); // up to 4 months; never more than $50 a day
+                const dd = Math.min(maxD, Math.max(minD, days ?? (planNow?.months ?? 4) * 30)), d = Math.ceil(subtotal / dd);
+                const end = new Date(Date.now() + dd * 864e5).toLocaleDateString("en-US", { month: "long", day: "numeric" });
+                // what ships: one piece by its own name, or "all N pieces"
+                const pieces = plain.reduce((n, l) => n + l.quantity, 0) + rings.length;
+                const one = pieces === 1 ? (rings.length ? "ring" : (() => { const t = (plain[0]?.title || "").toLowerCase(); return /earring|stud|hoop|huggie/.test(t) ? "earrings" : /necklace|pendant|chain/.test(t) ? "necklace" : /bracelet|tennis|bangle/.test(t) ? "bracelet" : /band|ring/.test(t) ? "ring" : "piece"; })()) : "";
+                const ships = pieces <= 1 ? `your ${one || "piece"} ship${one === "earrings" ? "" : "s"} now` : `all ${pieces} pieces ship now`;
                 return <div className="cd-pay" role="radiogroup" aria-label="How to pay">
-                  <button type="button" role="radio" aria-checked={payDaily} className={`cd-pay-o${payDaily ? " on" : ""}`} onClick={() => setPayDaily(true)}>
-                    <i className="cd-rd" /><span className="cd-pay-t"><small>A few dollars a day <em>No interest</em></small><b>{money(d, cur).replace(/\.00$/, "")}</b> <i>a day · {mo} months</i></span>
-                    <span className="d-coin"><b>{money(d, cur).replace(/\.00$/, "")}</b><i>a day</i></span>
-                  </button>
+                  <div className={`cd-pay-o cd-pay-days${payDaily ? " on" : ""}`}>
+                    <button type="button" role="radio" aria-checked={payDaily} className="cd-pay-hit" onClick={() => setPayDaily(true)}>
+                      <i className="cd-rd" /><span className="cd-pay-t"><small>A few dollars a day <em>No interest</em></small><b>{money(d, cur).replace(/\.00$/, "")}</b> <i>a day</i>
+                        <span className="cd-days"><b>{dd}</b> days · {Math.round(dd / 3) / 10} months</span>
+                        <span className="cd-end">Paid off by <b>{end}</b> · {ships}</span></span>
+                      <span className="d-coin"><b>{money(d, cur).replace(/\.00$/, "")}</b><i>a day</i></span>
+                    </button>
+                    {payDaily && minD < maxD && <div className="cd-slide">
+                      <input type="range" min={minD} max={maxD} step={1} value={dd} aria-label="Number of days" onChange={e => setDays(+e.target.value)} />
+                      <div className="cd-ends"><span>{minD} days · {money(Math.ceil(subtotal / minD), cur).replace(/\.00$/, "")}/day</span><span>{maxD} days · {money(Math.ceil(subtotal / maxD), cur).replace(/\.00$/, "")}/day</span></div>
+                    </div>}
+                  </div>
                   <button type="button" role="radio" aria-checked={!payDaily} className={`cd-pay-o${payDaily ? "" : " on"}`} onClick={() => setPayDaily(false)}>
                     <i className="cd-rd" /><span className="cd-pay-t full"><small>Pay in full</small><b>{money(subtotal, cur)}</b> <i>today</i></span>
                   </button>
@@ -181,10 +198,10 @@ export default function CartDrawer() {
             {daily && !needSize ? <Link className="cd-co" href={`/daily/checkout?amt=${planAmt ?? (dailyOptions(subtotal).find(o => o.ok) || dailyOptions(subtotal)[4]).amt}`} onClick={() => setOpen(false)}>Start my plan · ${planAmt ?? (dailyOptions(subtotal).find(o => o.ok) || dailyOptions(subtotal)[4]).amt} a day</Link> : null}
             {daily && !needSize ? <a className="cd-co cd-full" href={rings.length ? undefined : cart?.checkoutUrl} onClick={rings.length ? () => checkout() : undefined}>or pay in full · {money(subtotal, cur)}</a>
             : needSize ? <button className="cd-co" disabled>Select your ring size to continue</button>
-              : payDaily && subtotal > 0 ? <Link className="cd-co" href={`/daily/checkout?amt=${Math.ceil(subtotal / (30 * (planNow?.months ?? 4)))}`} onClick={() => { if (!loadPlan()) savePlan({ day: Math.ceil(subtotal / 120), months: 4 }); setOpen(false); }}>Start at {money(Math.ceil(subtotal / (30 * (planNow?.months ?? 4))), cur).replace(/\.00$/, "")} a day</Link>
+              : payDaily && subtotal > 0 ? <Link className="cd-co" href={`/daily/checkout?amt=${dayAmt}&days=${chosenDays}`} onClick={() => { savePlan({ day: dayAmt, months: Math.max(1, Math.round(chosenDays / 30)) }); setOpen(false); }}>Start at {money(dayAmt, cur).replace(/\.00$/, "")} a day</Link>
               : rings.length > 0 ? <button className="cd-co" disabled={busy} onClick={checkout}>{busy ? "One moment…" : `Pay ${money(subtotal, cur)}`}</button>
               : <a className="cd-co" href={cart!.checkoutUrl}>Pay {money(subtotal, cur)}</a>}
-            {!daily && !needSize && subtotal > 0 && <p className="cd-pay-n">{payDaily ? `First payment today: ${money(Math.ceil(subtotal / (30 * (planNow?.months ?? 4))), cur).replace(/\.00$/, "")}. Wear it from the first one.` : "One payment, all yours."}</p>}
+            {!daily && !needSize && subtotal > 0 && <p className="cd-pay-n">{payDaily ? `First payment today: ${money(dayAmt, cur).replace(/\.00$/, "")}. Wear it from the first one.` : "One payment, all yours."}</p>}
             {installments(subtotal) && <p className="cd-inst">{installments(subtotal)}</p>}
             <div className="cd-wallets" aria-label="Ways to pay" role="group">
               <small>Pay with</small>
