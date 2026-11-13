@@ -37,15 +37,18 @@ function Icon360() { return <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse
 /** The diamond's photograph in a window the colour of its own backdrop, with the small 360° chip when the stone has a video. */
 function StoneWindow({ d, bg, alt, children }: { d: FlowStone; bg: string; alt: string; children?: React.ReactNode }) {
   const [vid, setVid] = useState(false);
+  // (2026-11-12) the 360° plays IN the square: the supplier's embed, or — for most stones — their 360° viewer page (an .html), framed
+  // right here. Only a plain video file the browser can't frame still opens on its own.
+  const live = d.embed || (d.video && /\.html?(\?|#|$)/i.test(d.video) ? d.video : null);
   return (
-    <div className="df-win" style={{ "--bgc": bg } as React.CSSProperties}>
-      {vid && d.embed
-        ? <iframe src={d.embed} title="360° view of the diamond" scrolling="no" allow="autoplay" className="df-vid" />
+    <div className={`df-win${vid ? " is-vid" : ""}`} style={{ "--bgc": bg } as React.CSSProperties}>
+      {vid && live
+        ? <iframe src={live} title="360° view of the diamond" scrolling="no" allow="autoplay; fullscreen" className="df-vid" />
         : <>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={d.image} alt={alt} referrerPolicy="no-referrer" />
         </>}
-      {d.embed
+      {live
         ? <button type="button" className="df-360" aria-pressed={vid} aria-label={vid ? "Back to the photo" : "See the diamond turn, 360 degrees"} onClick={() => setVid(v => !v)}><Icon360 /><span>{vid ? "Photo" : "360°"}</span></button>
         : d.video ? <a className="df-360" href={d.video} target="_blank" rel="noopener noreferrer" aria-label="See the diamond turn, 360 degrees (opens a video)"><Icon360 /><span>360°</span></a> : null}
       {children}

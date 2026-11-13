@@ -4851,3 +4851,6 @@ main:has(.dx-first) .rsteps:not(.dx-steps){display:none}
 /* the "About this diamond" sheet never peeks at the bottom of a phone while closed */
 .dx-sheet:not(.on){visibility:hidden;transition:transform .45s cubic-bezier(.2,.8,.2,1),visibility 0s .45s}
 .dx-sheet.on{visibility:visible}
+/* (2026-11-12) in the H1 square the ring waits top-right, so the 360° button lives bottom-right — nothing covers it */
+.h1-st .df-360,.dx-hero .df-360{top:auto!important;left:auto!important;right:14px!important;bottom:14px!important;z-index:5}
+.h1-st .df-win.is-vid .df-vid,.dx-hero .df-win.is-vid .df-vid{background:var(--bgc,#fff)}
