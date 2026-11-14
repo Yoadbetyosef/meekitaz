@@ -5136,3 +5136,13 @@ body.lk2 .pp-chip .pp-cta{letter-spacing:0!important;font-size:10px!important}bo
 .cart{transition:transform .25s,background-color .3s,opacity .45s ease,visibility .45s}
 @media(hover:hover){html body .cart.cart.cart:hover{background:#0D4FE7!important;border-color:#0D4FE7!important}.cart:hover .cart-w::after{transform:scaleX(0);transform-origin:right}}
 @media(max-width:767px){.cart-w{font-size:11px;padding-bottom:4px}.cart-w sup{font-size:8.5px;top:-8px;right:-10px}}
+
+/* (2026-11-14, approved B) NEW / Fancy colors as a print: full colour, square corners, a thin ink line around the card and around the photo */
+.nf-card{border-radius:0;box-shadow:none;border:1px solid var(--ink)}
+.nf-img{margin:clamp(18px,2.2vw,32px);border:1px solid var(--ink)}
+.nf-top,.nf-foot{position:absolute;z-index:10;left:0;right:50%;display:flex;justify-content:space-between;align-items:center;padding:18px clamp(20px,2.2vw,32px);font:500 11px/1 var(--f-nmono),ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);pointer-events:none}
+.nf-top{top:0}.nf-foot{bottom:0}
+.nf-sw{display:flex;gap:6px}.nf-sw i{width:26px;height:8px;border:1px solid var(--ink);opacity:.45;transition:opacity .3s}.nf-sw i.on{opacity:1}
+.nf-sw i:nth-child(1){background:#F7E9A8}.nf-sw i:nth-child(2){background:#F7D3DA}.nf-sw i:nth-child(3){background:#CFDCBE}
+@media(max-width:767px){.nf-card{border-radius:0}.nf-top,.nf-foot{right:0;padding:14px}.nf-layer{padding-top:40px}.nf-img{margin:0 14px}.nf-txt{text-align:left;align-items:flex-start;padding:22px 18px 52px}.nf-sub{margin:0 0 18px}}
+@media(min-width:768px){.nf-layer{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.nf-h{font-size:clamp(44px,5.3vw,88px)}}

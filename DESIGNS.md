@@ -37,3 +37,4 @@ and add a line here.
 - design/home-feed-reel-under-categories (2026-11-14): commit f0b8acf — the tall 9:16 feed reel under Shop by category on the home page (removed; component FeedReel.tsx kept).
 - design/ready-to-ship-on (2026-11-14): Ready to ship switched off with RTS_ON=false in src/lib/flags.ts (home section, film tile in the rings grid, /ready-to-ship and /reel pages). Set to true to restore.
 - design/bag-button-drawing (2026-11-14): commit ecc4177 — the round bag button with the bag drawing and a yellow count dot, before the word BAG with a line under it (option B).
+- design/home-new-fancy-rounded-card (2026-11-14): commit 130db70 — the NEW / Fancy colors block as a rounded card with a soft shadow, the bobbing white NEW badge in the corner and three dots, before the print frame (option B).

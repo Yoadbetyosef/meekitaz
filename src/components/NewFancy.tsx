@@ -11,7 +11,7 @@ const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) /
  *  The next colour floods in from the NEW badge in the corner in step with the scroll (no hard cut): the headline rises into place line by line,
  *  the text follows and the photo settles. Yellow (fancy colours) → pink (pink stones) → green (gemstones), each with a pause before the next. */
 export default function NewFancy() {
-  const pin = useRef<HTMLDivElement>(null), y = useRef<HTMLDivElement>(null), p = useRef<HTMLDivElement>(null), g = useRef<HTMLDivElement>(null), d1 = useRef<HTMLElement>(null), d2 = useRef<HTMLElement>(null), d3 = useRef<HTMLElement>(null);
+  const pin = useRef<HTMLDivElement>(null), y = useRef<HTMLDivElement>(null), p = useRef<HTMLDivElement>(null), g = useRef<HTMLDivElement>(null), d1 = useRef<HTMLElement>(null), d2 = useRef<HTMLElement>(null), d3 = useRef<HTMLElement>(null), cnt = useRef<HTMLSpanElement>(null);
   useEffect(() => {
     const el = pin.current; if (!el) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -42,6 +42,7 @@ export default function NewFancy() {
         (layer as HTMLElement & { inert: boolean }).inert = !on;
       });
       d1.current?.classList.toggle("on", idx === 0); d2.current?.classList.toggle("on", idx === 1); d3.current?.classList.toggle("on", idx === 2);
+      if (cnt.current) cnt.current.textContent = `0${idx + 1} / 03`;
     };
     let raf = 0; const onFrame = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; tick(); }); }; // at most one update per frame while scrolling
     tick(); window.addEventListener("scroll", onFrame, { passive: true }); window.addEventListener("resize", onFrame);
@@ -51,7 +52,6 @@ export default function NewFancy() {
   return (
     <section className="sec nf" id="new" aria-label="New: Fancy colors">
       <div className="wrap"><div className="nf-pin" ref={pin}><div className="nf-hold">
-        <span className="nf-bug" aria-hidden="true">NEW</span>
         <div className="nf-card">
           <div className="nf-layer nf-y" ref={y}>
             <div className="nf-txt">
@@ -77,7 +77,9 @@ export default function NewFancy() {
             </div>
             <div className="nf-img"><Image src={newGreen.img} alt="Emerald stud earring and ring" fill sizes="(max-width:767px) 92vw, 50vw" quality={82} /></div>
           </div>
-          <div className="nf-dots" aria-hidden="true"><i className="on" ref={d1} /><i ref={d2} /><i ref={d3} /></div>
+          {/* (2026-11-14, approved B) print frame: (New) and the count on top, three colour swatches underneath — instead of the bobbing NEW badge and the dots (archived in DESIGNS.md) */}
+          <div className="nf-top" aria-hidden="true"><span>(New)</span><span ref={cnt}>01 / 03</span></div>
+          <div className="nf-foot" aria-hidden="true"><span className="nf-sw"><i className="on" ref={d1} /><i ref={d2} /><i ref={d3} /></span><span>Yellow · Pink · Green</span></div>
         </div>
       </div></div></div>
     </section>
