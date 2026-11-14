@@ -5003,3 +5003,8 @@ body.mk-stone-rings:not(.mk-stone-docked) .sj-rings{opacity:0;width:0;pointer-ev
 .dx-lab b{font:700 19px/1 var(--display);letter-spacing:.08em;color:var(--ink)}
 .dx-lab small{display:block;font:600 6.5px var(--body);letter-spacing:.2em;text-transform:uppercase;color:#666;margin-top:4px}
 .dx-lab.lab-gia{border-color:#1C1A1B}.dx-lab.lab-igi{border-color:#1C1A1B}
+/* (approved 2026-11-14) IGI / GIA marks, transparent, on the certificate card */
+.dx-lab.dx-lab-img{border:0;border-radius:0;background:none;width:auto;height:auto;display:grid;place-items:center}
+.dx-lab-img.lab-igi img{width:64px;height:64px;object-fit:contain;display:block}
+.dx-lab-img.lab-gia img{width:110px;height:auto;display:block}
+@media(max-width:767px){.dx-lab-img.lab-igi img{width:54px;height:54px}.dx-lab-img.lab-gia img{width:84px}}

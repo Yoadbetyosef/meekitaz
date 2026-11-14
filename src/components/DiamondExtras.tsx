@@ -35,7 +35,7 @@ export function DiamondSheet({ d, open, onClose, onSwap, picture, onCert }: { d:
         <h3>{d.carat.toFixed(2)} ct {d.shape}</h3>
         <span className="dx-igi">✓ {d.lab} certified · lab-grown</span>
         <div className="dx-facts">{facts(d).map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
-        <div className="dx-cert"><span className={`dx-lab lab-${(d.lab || "").toLowerCase()}`} aria-label={`${d.lab} certified`}><b>{(d.lab || "").toUpperCase()}</b><small>Certified</small></span><div><b>{d.lab} {d.cert}</b><small>Independently graded</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener" onClick={e => { if (onCert) { e.preventDefault(); onClose(); onCert(); } }}>View certificate →</a>}</div>
+        <div className="dx-cert"><LabMark lab={d.lab} /><div><b>{/^(igi|gia)$/i.test(d.lab || "") ? `No. ${d.cert}` : `${d.lab} ${d.cert}`}</b><small>Independently graded</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener" onClick={e => { if (onCert) { e.preventDefault(); onClose(); onCert(); } }}>View certificate →</a>}</div>
         <div className="dx-meas">
           {d.measurements && <div><span>Measurements</span><b>{/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`}</b></div>}
           {(d.polish || d.symmetry) && <div><span>Polish · Symmetry</span><b>{[d.polish, d.symmetry].filter(Boolean).join(" · ")}</b></div>}
@@ -80,7 +80,7 @@ export function DiamondFirst({ d, picture, shape, onCert, cta }: { d: FlowStone;
           <p className="dx-sub">{[d.fancy || (d.color && `${d.color} color`), d.clarity && `${d.clarity} clarity`, d.cut && `${d.cut} cut`].filter(Boolean).join(" · ")}</p>
           <div className="dx-price"><b>{usdR(day(d.price))}</b><i>a day</i><small>{usdR(d.price)} · the diamond</small></div>
           <div className="dx-facts">{facts(d).map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
-          <div className="dx-cert"><span className={`dx-lab lab-${(d.lab || "").toLowerCase()}`} aria-label={`${d.lab} certified`}><b>{(d.lab || "").toUpperCase()}</b><small>Certified</small></span><div><b>{d.lab} {d.cert}</b><small>{d.measurements ? (/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`) : "Independently graded"}</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener" onClick={e => { if (onCert) { e.preventDefault(); onCert(); } }}>Certificate →</a>}</div>
+          <div className="dx-cert"><LabMark lab={d.lab} /><div><b>{/^(igi|gia)$/i.test(d.lab || "") ? `No. ${d.cert}` : `${d.lab} ${d.cert}`}</b><small>{d.measurements ? (/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`) : "Independently graded"}</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener" onClick={e => { if (onCert) { e.preventDefault(); onCert(); } }}>Certificate →</a>}</div>
           {cta && <div className="dx-cta">{cta}</div>}
           <div className="dx-fits">
             <div className="dx-fh"><b>Settings that fit this diamond</b><a href={`/engagement-rings?style=${encodeURIComponent(shape)}&build=1`}>See all ›</a></div>
@@ -125,7 +125,7 @@ export function CertSheet({ d, open, onClose }: { d: FlowStone; open: boolean; o
                 <div><span>Carat weight</span><b>{d.carat.toFixed(2)} ct</b></div><div><span>Color grade</span><b>{d.fancy || d.color || "—"}</b></div>
                 <div><span>Clarity grade</span><b>{d.clarity || "—"}</b></div><div><span>Cut grade</span><b>{d.cut || "—"}</b></div>
                 <div><span>Polish</span><b>{d.polish || "—"}</b></div><div><span>Symmetry</span><b>{d.symmetry || "—"}</b></div>
-                <div><span>Fluorescence</span><b>{d.fluor || "None"}</b></div><div><span>Inscription</span><b>{d.lab} {d.cert}</b></div>
+                <div><span>Fluorescence</span><b>{d.fluor || "None"}</b></div><div><span>Inscription</span><b>{/^(igi|gia)$/i.test(d.lab || "") ? `No. ${d.cert}` : `${d.lab} ${d.cert}`}</b></div>
               </div>
             </div>
             {d.certUrl && <a className="cs-igi" href={d.certUrl} target="_blank" rel="noopener">View the official report on {d.lab} ↗</a>}
@@ -146,4 +146,12 @@ export function CertSheet({ d, open, onClose }: { d: FlowStone; open: boolean; o
       </aside>
     </>
   );
+}
+
+/** (approved 2026-11-14) the grading lab's own mark on the certificate card: IGI seal, or the GIA seal + name; other labs keep the name seal */
+function LabMark({ lab }: { lab?: string | null }) {
+  const l = (lab || "").toLowerCase();
+  // eslint-disable-next-line @next/next/no-img-element
+  if (l === "igi" || l === "gia") return <span className={`dx-lab dx-lab-img lab-${l}`}><img src={`/brand/labs/${l}.png`} alt={`${l.toUpperCase()} certified`} /></span>;
+  return <span className={`dx-lab lab-${l}`} aria-label={`${lab} certified`}><b>{(lab || "").toUpperCase()}</b><small>Certified</small></span>;
 }
