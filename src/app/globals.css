@@ -5128,3 +5128,11 @@ body.lk2 .pp-chip .pp-cta{letter-spacing:0!important;font-size:10px!important}bo
 .rv-track .rv{display:flex!important;flex-direction:column!important;padding-bottom:0!important;grid-template-columns:none!important;column-gap:0!important;align-items:stretch!important}
 .rv-track .rv-body p{font-size:19px;line-height:1.35}
 .rv-track .rv-who{font-family:var(--body);gap:2px}.rv-track .rv-who b{font-family:var(--display);font-size:15px;font-weight:500}.rv-track .rv-who span{font-family:var(--display);font-size:13px}.rv-track .rv-who em{color:#0D4FE7;font-size:10.5px;letter-spacing:.06em}
+
+/* (2026-11-14, approved B) Bag button: the word with a line under it instead of the drawing */
+.cart-w{position:relative;display:block;font:500 12.5px/1 var(--f-nmono),ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;padding-bottom:5px}
+.cart-w::after{content:"";position:absolute;left:0;right:.1em;bottom:0;height:1px;background:currentColor;transform-origin:left;transition:transform .45s cubic-bezier(.7,0,.2,1)}
+.cart-w sup{position:absolute;top:-9px;right:-11px;font:500 9px/1 var(--f-nmono),ui-monospace,monospace;letter-spacing:0}
+.cart{transition:transform .25s,background-color .3s,opacity .45s ease,visibility .45s}
+@media(hover:hover){html body .cart.cart.cart:hover{background:#0D4FE7!important;border-color:#0D4FE7!important}.cart:hover .cart-w::after{transform:scaleX(0);transform-origin:right}}
+@media(max-width:767px){.cart-w{font-size:11px;padding-bottom:4px}.cart-w sup{font-size:8.5px;top:-8px;right:-10px}}

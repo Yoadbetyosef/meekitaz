@@ -45,8 +45,8 @@ export default function Nav() {
         </div>
       </nav>
       <button className="cart" aria-label={`Open bag${count ? `, ${count} items` : ""}`} onClick={() => { setOpen(false); openCart(true); }}>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M5 8h14l-1.2 12H6.2L5 8z" /><path d="M9 8V6a3 3 0 0 1 6 0v2" /></svg>
-        {count > 0 && <b>{count}</b>}
+        {/* (2026-11-14, approved B) the word instead of the bag drawing: BAG with a thin line under it, the count small above like a footnote. The drawing + yellow dot is in DESIGNS.md. */}
+        <span className="cart-w">Bag{count > 0 && <sup>{String(count).padStart(2, "0")}</sup>}</span>
       </button>
       <SearchPalette open={searching} onClose={() => setSearching(false)} />
       <div id="menu" className={`menu${open ? " open" : ""}`} aria-hidden={!open}>
