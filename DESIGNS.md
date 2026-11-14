@@ -34,3 +34,4 @@ and add a line here.
 - design/your-ring-appointment-button (2026-11-14): Your ring panel had "Book a private appointment" under Add to bag (replaced by five stars + signature).
 - design/home-open-and-fonts-before-new-language (2026-11-14): commit b8ec38f — the centred home opening and the Marcellus / Cormorant type as the default, before "A · index" and the new type became the site.
 - design/home-shop-by-category-tiles (2026-11-14): commit eb84df5 — Home "Shop by category" as black-and-white poster tiles that wake in colour, before the film row.
+- design/home-feed-reel-under-categories (2026-11-14): commit f0b8acf — the tall 9:16 feed reel under Shop by category on the home page (removed; component FeedReel.tsx kept).

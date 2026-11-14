@@ -5,7 +5,6 @@ import Film from "@/components/Film";
 import FloatingFilm from "@/components/FloatingFilm";
 import Categories from "@/components/Categories";
 import PhoneStory from "@/components/PhoneStory";
-import FeedReel from "@/components/FeedReel";
 import NewFancy from "@/components/NewFancy";
 import OneOfOne from "@/components/OneOfOne";
 import RtsBike from "@/components/RtsBike";
@@ -26,7 +25,7 @@ export default function Home() {
       <div className="over-fun">
       <Film />{/* phones */}
       <Categories />{/* (2026-11-09) Shop by category with the model photos again, everywhere */}
-      <FeedReel />
+      {/* (2026-11-14) the tall feed reel is off the home page for now — FeedReel.tsx is kept; archived as design/home-feed-reel-under-categories */}
       <FloatingFilm />
       {/* (2026-11-08) the feed reel lives in Shop by category now — not twice on the home page */}
       <NewFancy />
