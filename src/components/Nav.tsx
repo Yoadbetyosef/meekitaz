@@ -30,7 +30,7 @@ export default function Nav() {
   return (
     <>
       <nav className="nav" aria-label="Main">
-        <Link href="/" className="brand" aria-label="Meekitaz, home"><Logo className="brand-logo" />{/* eslint-disable-next-line @next/next/no-img-element */}<img className="brand-m" src="/brand/meekitaz-m-white.png" alt="" aria-hidden="true" /></Link>
+        <Link href="/" className="brand" aria-label="Meekitaz, home"><Logo className="brand-logo" />{/* eslint-disable-next-line @next/next/no-img-element */}<img className="brand-m" src="/brand/meekitaz-m-white-tight.png" alt="" aria-hidden="true" /></Link>
         <div className="nav-r">
           <NavJewel />
           <PillPlan onWish={() => { setOpen(false); openCart(false); window.dispatchEvent(new Event("mk-dream-open")); }} onSearch={() => { setOpen(false); openCart(false); setSearching(true); }} />
