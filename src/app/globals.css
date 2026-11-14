@@ -4969,3 +4969,8 @@ body.mk-stone-rings:not(.mk-stone-docked) .sj-rings{opacity:0;width:0;pointer-ev
 .sth-stage .sj-disc img,.ih-yd .sj-disc img{animation:sthSway2 6s ease-in-out infinite!important}
 @keyframes sthSway2{0%,100%{transform:scale(1.12) perspective(600px) rotateY(-10deg)}50%{transform:scale(1.12) perspective(600px) rotateY(10deg)}}
 .sj-row .sj-disc{border-radius:16px}.sj-row .sj-disc img{border-radius:16px!important}
+/* (2026-11-14) our own clear diamond renders on the disc (no supplier grey) */
+.sj-disc img,.cat-hero .sj-disc img,.nav .sj-disc img,.ih-yd .sj-disc img{width:74%!important;height:74%!important;object-fit:contain!important;border-radius:0!important;filter:drop-shadow(0 8px 10px rgba(0,0,0,.18))}
+.sj-btn .sj-disc img{width:82%!important;height:82%!important}
+.sj-row .sj-disc img{width:80%!important;height:80%!important}
+@keyframes sthSway2{0%,100%{transform:perspective(600px) rotateY(-14deg)}50%{transform:perspective(600px) rotateY(14deg) translateY(-6px)}}

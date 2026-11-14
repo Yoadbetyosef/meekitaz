@@ -7,15 +7,17 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { clearStone, type Stone } from "@/lib/setting";
 import { useStone } from "./StoneBar";
 import { DailyHeroBadge } from "./DailyPrice";
+import { stonePicture } from "@/lib/stonePicture";
 
 const usd = (n: number) => `$${Math.round(n).toLocaleString("en-US")}`;
 const shapeOf = (s: Stone) => (s.shape === "Elongated Cushion" ? "Cushion" : s.shape);
 const stoneHref = (s: Stone) => `/diamonds/${s.vendor}-${encodeURIComponent(s.stock)}`;
 const changeHref = (s: Stone) => `/diamonds?style=${encodeURIComponent(shapeOf(s))}`;
 
-function Disc({ s }: { s: Stone }) {
+/** (2026-11-14) our own clear render of the shape, not the supplier photo with its grey backdrop */
+export function Disc({ s }: { s: Stone }) {
   /* eslint-disable-next-line @next/next/no-img-element */
-  return <span className="sj-disc"><img src={s.image} alt="" referrerPolicy="no-referrer" /></span>;
+  return <span className="sj-disc"><img src={stonePicture(s.shape)} alt="" /></span>;
 }
 
 export default function StoneHero() {
