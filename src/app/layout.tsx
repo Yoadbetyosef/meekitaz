@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Marcellus, Marcellus_SC, Cormorant_Garamond, Mrs_Saint_Delafield } from "next/font/google";
+import { Marcellus, Marcellus_SC, Cormorant_Garamond, Mrs_Saint_Delafield, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import { SITE } from "@/lib/seo";
@@ -27,6 +27,11 @@ const prata = Marcellus({ weight: "400", subsets: ["latin"], variable: "--f-disp
 const cormorant = Cormorant_Garamond({ weight: ["500"], style: ["italic"], subsets: ["latin"], variable: "--f-sub", display: "swap" });
 const didact = Cormorant_Garamond({ weight: ["400", "500", "600"], style: ["normal", "italic"], subsets: ["latin"], variable: "--f-title", display: "swap" }); // jewelry (product) titles and regular text — Cormorant Garamond
 const script = Mrs_Saint_Delafield({ weight: "400", subsets: ["latin"], variable: "--f-script", display: "swap" }); // handwritten Meekitaz signature (home film card)
+// (approved 2026-11-14) the new language, now the site's type: Inter Tight headings + text, Instrument Serif italics, JetBrains Mono labels.
+// The body carries "lk2"; without it (the ?look=1 switch, off) the earlier Marcellus / Cormorant set shows again.
+const nSans = Inter_Tight({ weight: ["400", "500", "600"], subsets: ["latin"], variable: "--f-nsans", display: "swap" });
+const nSerif = Instrument_Serif({ weight: "400", style: ["normal", "italic"], subsets: ["latin"], variable: "--f-nserif", display: "swap" });
+const nMono = JetBrains_Mono({ weight: ["400", "500"], subsets: ["latin"], variable: "--f-nmono", display: "swap" });
 const archivo = Marcellus_SC({ weight: "400", subsets: ["latin"], variable: "--f-body", display: "swap" }); // small spaced labels, buttons, prices — Marcellus SC
 
 export const metadata: Metadata = {
@@ -45,9 +50,9 @@ export const viewport: Viewport = { themeColor: "#E5E3EF", viewportFit: "cover" 
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable} ${didact.variable} ${script.variable}`}>
+    <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable} ${didact.variable} ${script.variable} ${nSans.variable} ${nSerif.variable} ${nMono.variable}`}>
       <head><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_LD) }} /></head>
-      <body>
+      <body className="lk2">
         <div className="edge-t" aria-hidden="true" /><div className="edge-b" aria-hidden="true" />{/* phones: the browser bars always take the home page colour, whatever scrolls under them */}
         <DailyMode>
         <CartProvider>

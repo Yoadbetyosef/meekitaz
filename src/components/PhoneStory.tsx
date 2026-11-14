@@ -74,11 +74,14 @@ export default function PhoneStory() {
       })}
       {/* the announcement (approved 2026-11-10, "T1"): typed letter by letter; the small line; what we don't do struck through in ink one
           by one and what we do underlined; one button; five stars with faces; the Meekitaz signature, "We promise."; the hand with the fries */}
-      <div className={`pst-ann${at === 3 ? " on" : ""}${words > HEAD.length ? " done" : ""}`}>
+      <div className={`pst-ann pa${at === 3 ? " on" : ""}${words > HEAD.length ? " done" : ""}`}>
+        {/* (approved 2026-11-14, "A · index") left-aligned on a 12-column grid: a typewriter line, the headline in three lines with "bought." in italic,
+            the small line + button, what we don't do as a ruled list, then the stars, the signature and the fries along the bottom */}
+        <span className="pa-kick">Meekitaz Daily · From $1 a day · up to 4 months</span>
         <i className="pst-pl l" aria-hidden="true" /><i className="pst-pl r" aria-hidden="true" />
-        <p className="pst-h" aria-label={HEAD}>{(() => { let c = 0; return HEAD.split(" ").map((w, i) => { const word = <span key={i} className="pst-wd" aria-hidden="true">{[...w].map((ch, j) => { const k = c++; return <span key={j} className={k < words ? "w" : ""}>{ch}</span>; })}</span>; c++; return [word, " "]; }); })()}</p>
+        <p className="pst-h" aria-label={HEAD}>{(() => { let c = 0; return HEAD.split(" ").map((w, i) => { const word = <span key={i} className="pst-wd" aria-hidden="true">{[...w].map((ch, j) => { const k = c++; return <span key={j} className={k < words ? "w" : ""}>{ch}</span>; })}</span>; c++; return [word, i === 2 || i === 4 ? <br key={`b${i}`} className="pa-br" /> : " "]; }); })()}</p>
         <em className="pst-sub" aria-label={SUB}>{(() => { let c = 0; return SUB.split(" ").map((w, i) => { const word = <span key={i} className="pst-wd" aria-hidden="true">{[...w].map((ch, j) => { const k = c++; return <span key={j} className={k < subN ? "w" : ""}>{ch}</span>; })}</span>; c++; return [word, " "]; }); })()}</em>
-        <div className="pst-prom"><span><s>Loans</s> &amp; <s>interest</s></span><span><s>Credit checks</s></span><span><s>Rentals</s> — it’s yours</span><span><u>Everyone’s approved</u></span></div>
+        <div className="pst-prom"><span><i className="pa-lb">(No)</i><s>Loans</s> &amp; <s>interest</s></span><span><i className="pa-lb">(No)</i><s>Credit checks</s></span><span><i className="pa-lb">(No)</i><s>Rentals</s> — it’s yours</span><span><i className="pa-lb y">(Yes)</i><u>Everyone’s approved</u></span></div>
         <div className="pst-cta"><button type="button" className="pst-go" onClick={start}>Find yours at your price <span aria-hidden="true">&rarr;</span></button><small>From $1 a day · up to 4 months</small></div>
         <div className="pst-trust">
           <div className="pst-rev"><span className="pst-faces">{FACES.map(k => <img key={k} src={`/media/daily/faces/${k}.jpg`} alt="" />)}</span><div><b>5.0</b> <i aria-label="five stars">★★★★★</i><small>Loved by our clients</small></div></div>

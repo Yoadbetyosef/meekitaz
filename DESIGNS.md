@@ -32,3 +32,4 @@ and add a line here.
 - design/diamond-first-before-a (2026-11-13): starting from a diamond before A — no "next" line under Choose this diamond, rings page bar "now choose a setting", ring page said "Choose this setting · next: your diamond".
 - design/rings-stone-card-before-wow-a (2026-11-14): before "A" — the white "Your diamond" card under the Engagement Rings hero, the shapes row still shown, ring-page pip as a square photo.
 - design/your-ring-appointment-button (2026-11-14): Your ring panel had "Book a private appointment" under Add to bag (replaced by five stars + signature).
+- design/home-open-and-fonts-before-new-language (2026-11-14): commit b8ec38f — the centred home opening and the Marcellus / Cormorant type as the default, before "A · index" and the new type became the site.
