@@ -5020,3 +5020,6 @@ body.mk-stone-docked .nav{padding-left:16px!important;padding-right:20px!importa
 body.mk-stone-docked .nav .brand{margin-right:6px}
 body.mk-stone-docked .sj,body.mk-stone-docked .sj-btn{width:44px;height:44px}
 @media(max-width:767px){body.mk-stone-docked .nav{padding-left:10px!important;padding-right:12px!important}body.mk-stone-docked .nav-r{gap:2px!important}body.mk-stone-docked .nav .brand{margin-right:2px}body.mk-stone-docked .sj,body.mk-stone-docked .sj-btn{width:32px;height:32px}}
+/* (approved 2026-11-14, "P1") phone, with your diamond in the menu: the price chip says just "$11 ▾" so the M stays full size */
+@media(max-width:767px){body.mk-stone-docked .pp-chip small{display:none!important}body.mk-stone-docked .pp-chip{gap:6px}}
+body.mk-stone-docked .nav-r{flex:1 1 auto}body.mk-stone-docked .nav-r .nav-wish{margin-left:auto}
