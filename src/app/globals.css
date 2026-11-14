@@ -4987,3 +4987,12 @@ body.mk-stone-rings:not(.mk-stone-docked) .sj-rings{opacity:0;width:0;pointer-ev
 .ih-yt span{display:block;font:500 10px var(--body);letter-spacing:.12em;text-transform:uppercase;color:#666}
 .ih-ych{font:600 10px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);text-decoration:underline;text-underline-offset:3px;flex:none}
 @media(max-width:767px){.ih-yorb{width:54px;height:54px}.ih-yt b{font-size:18px}.ih-yrow{padding-bottom:10px;margin-bottom:10px}}
+/* (approved 2026-11-14, "3") Your ring: five stars + signature instead of the appointment button */
+.df-proof{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(28,26,27,.08)}
+.df-pr{display:flex;align-items:center;gap:12px;min-width:0}
+.df-faces{display:flex;flex:none}.df-faces img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 4px 10px -6px rgba(0,0,0,.4)}.df-faces img+img{margin-left:-11px}
+.df-sc{display:grid}.df-sc b{display:flex;align-items:center;gap:7px;font:400 24px/1 var(--display)}.df-sc b em{font-style:normal;color:#F2B01E;letter-spacing:1px;font-size:16px}
+.df-sc small{font:500 9px var(--body);letter-spacing:.22em;text-transform:uppercase;color:#666;margin-top:5px}
+.df-signed{text-align:center;flex:none}.df-sig{width:140px;height:auto;display:block}.df-signed small{display:block;font:italic 500 16px var(--sub);color:#444;margin-top:-6px}
+@media(max-width:767px){.df-faces img{width:32px;height:32px}.df-sc b{font-size:20px}.df-sc b em{font-size:13px}.df-sc small{font-size:8px;letter-spacing:.16em}.df-sig{width:108px}.df-signed small{font-size:14px}}
+.mk-sig.df-sig path.g{display:none}.mk-sig.df-sig path.s{stroke:#1C1A1B;stroke-width:6}
