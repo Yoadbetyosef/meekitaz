@@ -35,7 +35,7 @@ export function DiamondSheet({ d, open, onClose, onSwap, picture, onCert }: { d:
         <h3>{d.carat.toFixed(2)} ct {d.shape}</h3>
         <span className="dx-igi">✓ {d.lab} certified · lab-grown</span>
         <div className="dx-facts">{facts(d).map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
-        <div className="dx-cert"><span className="dx-paper" /><div><b>{d.lab} {d.cert}</b><small>Independently graded</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener" onClick={e => { if (onCert) { e.preventDefault(); onClose(); onCert(); } }}>View certificate →</a>}</div>
+        <div className="dx-cert"><span className={`dx-lab lab-${(d.lab || "").toLowerCase()}`} aria-label={`${d.lab} certified`}><b>{(d.lab || "").toUpperCase()}</b><small>Certified</small></span><div><b>{d.lab} {d.cert}</b><small>Independently graded</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener" onClick={e => { if (onCert) { e.preventDefault(); onClose(); onCert(); } }}>View certificate →</a>}</div>
         <div className="dx-meas">
           {d.measurements && <div><span>Measurements</span><b>{/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`}</b></div>}
           {(d.polish || d.symmetry) && <div><span>Polish · Symmetry</span><b>{[d.polish, d.symmetry].filter(Boolean).join(" · ")}</b></div>}
@@ -80,7 +80,7 @@ export function DiamondFirst({ d, picture, shape, onCert, cta }: { d: FlowStone;
           <p className="dx-sub">{[d.fancy || (d.color && `${d.color} color`), d.clarity && `${d.clarity} clarity`, d.cut && `${d.cut} cut`].filter(Boolean).join(" · ")}</p>
           <div className="dx-price"><b>{usdR(day(d.price))}</b><i>a day</i><small>{usdR(d.price)} · the diamond</small></div>
           <div className="dx-facts">{facts(d).map(([k, v]) => <div key={k}><small>{k}</small><b>{v}</b></div>)}</div>
-          <div className="dx-cert"><span className="dx-paper" /><div><b>{d.lab} {d.cert}</b><small>{d.measurements ? (/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`) : "Independently graded"}</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener" onClick={e => { if (onCert) { e.preventDefault(); onCert(); } }}>Certificate →</a>}</div>
+          <div className="dx-cert"><span className={`dx-lab lab-${(d.lab || "").toLowerCase()}`} aria-label={`${d.lab} certified`}><b>{(d.lab || "").toUpperCase()}</b><small>Certified</small></span><div><b>{d.lab} {d.cert}</b><small>{d.measurements ? (/mm/i.test(d.measurements) ? d.measurements : `${d.measurements} mm`) : "Independently graded"}</small></div>{d.certUrl && <a href={d.certUrl} target="_blank" rel="noopener" onClick={e => { if (onCert) { e.preventDefault(); onCert(); } }}>Certificate →</a>}</div>
           {cta && <div className="dx-cta">{cta}</div>}
           <div className="dx-fits">
             <div className="dx-fh"><b>Settings that fit this diamond</b><a href={`/engagement-rings?style=${encodeURIComponent(shape)}&build=1`}>See all ›</a></div>

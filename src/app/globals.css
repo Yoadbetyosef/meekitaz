@@ -4998,3 +4998,8 @@ body.mk-stone-rings:not(.mk-stone-docked) .sj-rings{opacity:0;width:0;pointer-ev
 .mk-sig.df-sig path.g{display:none}.mk-sig.df-sig path.s{stroke:#1C1A1B;stroke-width:6}
 /* bag: the same stars + signature right under the button, no border line above */
 .df-proof.cd-proof{margin:14px 0 6px;padding-top:0;border-top:0}
+/* (2026-11-14) the certificate card shows who graded it: IGI or GIA, as a clean name seal */
+.dx-lab{width:64px;height:64px;flex:none;border-radius:16px;border:1.5px solid var(--ink);display:grid;place-content:center;text-align:center;background:#fff;line-height:1}
+.dx-lab b{font:700 19px/1 var(--display);letter-spacing:.08em;color:var(--ink)}
+.dx-lab small{display:block;font:600 6.5px var(--body);letter-spacing:.2em;text-transform:uppercase;color:#666;margin-top:4px}
+.dx-lab.lab-gia{border-color:#1C1A1B}.dx-lab.lab-igi{border-color:#1C1A1B}
