@@ -2,6 +2,7 @@
 import { PlanSummary, usePlan, PriceA } from "./PlanKit";
 import { loadPlan, savePlan } from "@/lib/plan";
 import SizePicker from "./SizePicker";
+import ProofRow from "./ProofRow";
 import { DailyPlanPicker, DailyLine, DailyOwn, DailyArrival } from "./DailyPrice";
 import { useDaily } from "./DailyMode";
 import { SaveBagRow, SaveBagPrompt } from "./SaveBag";
@@ -201,6 +202,7 @@ export default function CartDrawer() {
               : payDaily && subtotal > 0 ? <Link className="cd-co" href={`/daily/checkout?amt=${dayAmt}&days=${chosenDays}`} onClick={() => { savePlan({ day: dayAmt, months: Math.max(1, Math.round(chosenDays / 30)) }); setOpen(false); }}>Start at {money(dayAmt, cur).replace(/\.00$/, "")} a day</Link>
               : rings.length > 0 ? <button className="cd-co" disabled={busy} onClick={checkout}>{busy ? "One moment…" : `Pay ${money(subtotal, cur)}`}</button>
               : <a className="cd-co" href={cart!.checkoutUrl}>Pay {money(subtotal, cur)}</a>}
+            {subtotal > 0 && <ProofRow className="cd-proof" />}
             {!daily && !needSize && subtotal > 0 && <p className="cd-pay-n">{payDaily ? `First payment today: ${money(dayAmt, cur).replace(/\.00$/, "")}. Wear it from the first one.` : "One payment, all yours."}</p>}
             {installments(subtotal) && <p className="cd-inst">{installments(subtotal)}</p>}
             <div className="cd-wallets" aria-label="Ways to pay" role="group">

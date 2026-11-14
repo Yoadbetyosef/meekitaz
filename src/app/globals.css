@@ -4996,3 +4996,5 @@ body.mk-stone-rings:not(.mk-stone-docked) .sj-rings{opacity:0;width:0;pointer-ev
 .df-signed{text-align:center;flex:none}.df-sig{width:140px;height:auto;display:block}.df-signed small{display:block;font:italic 500 16px var(--sub);color:#444;margin-top:-6px}
 @media(max-width:767px){.df-faces img{width:32px;height:32px}.df-sc b{font-size:20px}.df-sc b em{font-size:13px}.df-sc small{font-size:8px;letter-spacing:.16em}.df-sig{width:108px}.df-signed small{font-size:14px}}
 .mk-sig.df-sig path.g{display:none}.mk-sig.df-sig path.s{stroke:#1C1A1B;stroke-width:6}
+/* bag: the same stars + signature right under the button, no border line above */
+.df-proof.cd-proof{margin:14px 0 6px;padding-top:0;border-top:0}

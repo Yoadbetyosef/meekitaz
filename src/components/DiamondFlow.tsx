@@ -1,5 +1,5 @@
 "use client";
-import Signature from "./Signature";
+import ProofRow from "./ProofRow";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -201,14 +201,7 @@ export default function DiamondFlow({ d, bg, similar, similarSlot }: { d: FlowSt
             <DailyTotal price={total} label={shown ? "Your ring" : "Your diamond"} />
             <button type="button" className="df-cta" onClick={go}>{ctaText}{nextLine}</button>
             {/* (approved 2026-11-14, "3") five stars with our clients' faces + the Meekitaz signature, in place of the appointment button */}
-            <div className="df-proof">
-              <div className="df-pr">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <span className="df-faces">{["maya", "david", "jess", "linda"].map(k => <img key={k} src={`/media/daily/faces/${k}.jpg`} alt="" />)}</span>
-                <span className="df-sc"><b>5.0 <em aria-label="5 stars">★★★★★</em></b><small>Loved by our clients</small></span>
-              </div>
-              <div className="df-signed"><Signature on className="df-sig" /><small>We promise.</small></div>
-            </div>
+            <ProofRow />
             <div className="df-trust"><span>IGI / GIA certified, every stone</span><span>30-day free returns</span><span>Lifetime warranty</span><span>Free insured shipping</span></div>
           </aside>
         </div>
