@@ -5012,5 +5012,6 @@ body.mk-stone-rings:not(.mk-stone-docked) .sj-rings{opacity:0;width:0;pointer-ev
 .cs-lgimg{display:block;margin-bottom:6px}.cs-lgimg.lab-igi{width:64px;height:64px;object-fit:contain}.cs-lgimg.lab-gia{width:120px;height:auto}
 @media(max-width:767px){.cs-lgimg.lab-igi{width:52px;height:52px}.cs-lgimg.lab-gia{width:96px}}
 /* (approved 2026-11-14, "C") the M in the menu pill as big as fits — tight-cropped image, same pill */
-.brand-m{height:64px!important;margin:0!important}
-@media(max-width:767px){.brand-m{height:46px!important;margin:0!important}}
+.brand-m{height:64px!important;margin:-9px 0 -9px -4px!important}
+@media(max-width:767px){.brand-m{height:46px!important;margin:-7px 0 -7px -2px!important}}
+.nav .brand{flex:0 1 auto;min-width:36px}.brand-m{width:auto!important;max-width:100%!important;flex:none;object-fit:contain;object-position:0 50%}
