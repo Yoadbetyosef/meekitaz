@@ -1,4 +1,5 @@
 "use client";
+import PriceMoment from "./PriceMoment";
 import { useEffect, useRef, useState } from "react";
 import Signature from "./Signature";
 
@@ -49,15 +50,15 @@ export default function PhoneStory() {
   const colW = desk ? Math.round(h * IW / IH) : w;
   const k = desk ? h / IH : Math.max(w / IW, h / IH), ox = desk ? 0 : (w - IW * k) / 2, oy = desk ? 0 : (h - IH * k) / 2;
   const DT = [.305, .549, .293];
-  const start = () => {
-    // (2026-11-11, K3) the button doesn't pick an amount for them: it glides to the shop and opens "Choose your plan"
-    const cats = document.querySelector<HTMLElement>(".home-page #shop"); if (cats) cats.scrollIntoView({ behavior: "smooth", block: "start" });
-    try { localStorage.setItem("mk_plan_intro", "1"); } catch { /* ignore */ }
-    window.setTimeout(() => window.dispatchEvent(new Event("mk-plan-choose")), 800);
+  const start = (e: React.MouseEvent<HTMLButtonElement>) => {
+    // (2026-11-14, approved A) the button opens the price moment out of itself — the page stays where it is (see PriceMoment)
+    const r = e.currentTarget.getBoundingClientRect();
+    window.dispatchEvent(new CustomEvent("mk-price-open", { detail: { x: r.right - 34, y: r.top + r.height / 2 } }));
   };
   const hw = HEAD.split(" ");
   return (
     <div className="pst" ref={box} aria-label="Meekitaz">
+      <PriceMoment />
       {SL.map((s, i) => {
         const px = ox + s.fx * IW * k, py = oy + s.fy * IH * k;
         const tx = desk ? colW + 100 : s.tx * w, ty = desk ? DT[i] * h : s.ty * h;

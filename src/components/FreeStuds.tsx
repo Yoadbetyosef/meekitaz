@@ -57,7 +57,7 @@ export default function FreeStuds() {
     const s = load();
     if (s.signed || ss.get(S_SHOWN) || shownRef.current) return;
     const m = window.innerWidth < 768;
-    const fire = () => { if (shownRef.current || document.querySelector(".cdrawer.on, .menu.on, .menu.open")) return; open(); cleanup(); };
+    const fire = () => { if (shownRef.current || document.querySelector(".cdrawer.on, .menu.on, .menu.open, .pm.on")) return; open(); cleanup(); };
     const t = window.setTimeout(fire, m ? 12000 : 10000);
     const onScroll = () => { const h = document.documentElement; const p = (h.scrollTop + window.innerHeight) / h.scrollHeight; if (p >= (m ? 0.5 : 0.4) && h.scrollHeight > window.innerHeight * 1.5) fire(); };
     const onOut = (e: MouseEvent) => { if (!e.relatedTarget && e.clientY <= 0) fire(); };

@@ -5173,3 +5173,31 @@ body.lk2 .pp-chip .pp-cta{letter-spacing:0!important;font-size:10px!important}bo
   .oo2-list{padding:26px 6vw 0}
   .oo2-row{gap:12px;padding:12px 0}.oo2-im{width:64px;height:64px}.oo2-n{padding-top:2px;font-size:10.5px}.oo2-tx b{font-size:15px}.oo2-tx small{margin-top:5px}
 }
+
+/* (2026-11-14, approved A) The price moment: the whole screen becomes the price, opening out of the hero button */
+html.pm-lock{overflow:hidden}
+.pm{position:fixed;inset:0;z-index:9500;background:#0D4FE7;color:#fff;display:flex;flex-direction:column;padding:max(20px,env(safe-area-inset-top)) 22px max(26px,env(safe-area-inset-bottom));clip-path:circle(0 at var(--cx,50%) var(--cy,60%));visibility:hidden;transition:clip-path .8s cubic-bezier(.7,0,.2,1),visibility 0s .8s}
+.pm.on{clip-path:circle(150% at var(--cx,50%) var(--cy,60%));visibility:visible;transition:clip-path .9s cubic-bezier(.7,0,.2,1)}
+.pm button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+.pm-top,.pm-ends,.pm-pre,.pm-done{font:500 11px/1.2 var(--f-nmono),ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}
+.pm-top{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.5)}
+.pm-top button{padding:8px 0 8px 16px}
+.pm-mid{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:14px;max-width:760px;width:100%;margin:0 auto}
+.pm-num{margin:0;display:flex;align-items:baseline;justify-content:center;font:500 min(46vw,38vh)/.82 var(--display);letter-spacing:-.06em;font-variant-numeric:tabular-nums}
+.pm-num small{font:italic 400 .2em var(--f-nserif),Georgia,serif;letter-spacing:0;margin-left:.08em}
+.pm-what{margin:0;font:italic 400 clamp(24px,2.6vw,36px)/1.15 var(--f-nserif),Georgia,serif}
+.pm-ctl{width:100%;max-width:520px}
+.pm-ctl input{color:inherit;-webkit-appearance:none;appearance:none;width:100%;height:40px;background:none;margin:0;display:block}
+.pm-ctl input::-webkit-slider-runnable-track{height:1px;background:#fff}
+.pm-ctl input::-moz-range-track{height:1px;background:#fff}
+.pm-ctl input::-webkit-slider-thumb{-webkit-appearance:none;width:32px;height:32px;border-radius:50%;background:#fff;margin-top:-16px;border:0}
+.pm-ctl input::-moz-range-thumb{width:32px;height:32px;border-radius:50%;background:#fff;border:0}
+.pm-ends{display:flex;justify-content:space-between;gap:8px;opacity:.85}
+.pm-pre{display:flex;gap:8px}.pm .pm-pre button{border:1px solid #fff;border-radius:999px;padding:10px 16px}.pm .pm-pre button.on{background:#fff;color:#0D4FE7}
+.pm .pm-done{width:100%;max-width:520px;margin:6px auto 0;background:#fff;color:#0D4FE7;border-radius:999px;padding:20px 26px;display:flex;justify-content:space-between;font-size:12.5px;letter-spacing:.14em;transition:background .3s,color .3s}
+@media(hover:hover){.pm .pm-done:hover{background:#F7E9A8;color:#1C1A1B}}
+@media(max-width:767px){.pm-ends{font-size:9.5px;letter-spacing:.04em}}
+@media(max-height:560px){.pm-num{font-size:30vh}.pm-pre{display:none}}
+@media(prefers-reduced-motion:reduce){.pm,.pm.on{transition:none}}
+.pm-num{font-size:min(36vw,34vh)}.pm-num small{white-space:nowrap}
+@media(min-width:768px){.pm-num{font-size:min(24vw,38vh)}}

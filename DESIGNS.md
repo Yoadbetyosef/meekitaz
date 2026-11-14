@@ -39,3 +39,4 @@ and add a line here.
 - design/bag-button-drawing (2026-11-14): commit ecc4177 — the round bag button with the bag drawing and a yellow count dot, before the word BAG with a line under it (option B).
 - design/home-new-fancy-rounded-card (2026-11-14): commit 130db70 — the NEW / Fancy colors block as a rounded card with a soft shadow, the bobbing white NEW badge in the corner and three dots, before the print frame (option B).
 - design/home-one-of-one-cards (2026-11-14): commit 05d4123 — Home One of One with the blue dot label, "Never again." in blue italic and the pieces as round white cards, before "A · index" (line on top, fine italic, numbered list).
+- design/hero-button-jump-and-sheet (2026-11-14): commit 3e23fd5 — "Find yours at your price" glided down to Shop by category and opened the small Choose-your-plan card from the pill (K3), before the full-screen price moment (A). The pill card itself is unchanged and still opens from the pill.
