@@ -70,8 +70,9 @@ export function NavJewel() {
   const s = useStone(), path = usePathname();
   const [open, setOpen] = useState(false);
   useEffect(() => setOpen(false), [path]);
-  if (!s || path.startsWith("/diamonds/")) return null;
-  const onRings = path === "/engagement-rings";
+  // (2026-11-14) only where it belongs: the Engagement Rings page, once the hero's diamond has flown up into the menu
+  if (!s || s.fancy || path !== "/engagement-rings") return null;
+  const onRings = true;
   return (
     <span className={`sj${onRings ? " sj-rings" : ""}`}>
       <button type="button" className="sj-btn" aria-label="Your diamond" aria-expanded={open} onClick={() => setOpen(o => !o)}><Disc s={s} /></button>

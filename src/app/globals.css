@@ -4964,3 +4964,8 @@ body.mk-stone-rings:not(.mk-stone-docked) .sj-rings{opacity:0;width:0;pointer-ev
 .cat-hero .sj-disc img,.nav .sj-disc img{position:static;inset:auto;width:72%;height:72%;object-fit:contain;object-position:50% 50%}
 .sj-drop small{color:#0D4FE7!important;opacity:1!important}
 @media(max-width:767px){.nav-r:has(.sj){gap:10px}.sj,.sj-btn{width:30px;height:30px}body.mk-stone-rings:not(.mk-stone-docked) .sj-rings{width:0}}
+/* (2026-11-14) real diamond photos have their own grey backdrop: fill the whole circle with it, never a square inside */
+.sj-disc img,.cat-hero .sj-disc img,.nav .sj-disc img,.ih-yd .sj-disc img{width:100%!important;height:100%!important;object-fit:cover!important;mix-blend-mode:normal!important;border-radius:50%!important;transform-origin:50% 50%}
+.sth-stage .sj-disc img,.ih-yd .sj-disc img{animation:sthSway2 6s ease-in-out infinite!important}
+@keyframes sthSway2{0%,100%{transform:scale(1.12) perspective(600px) rotateY(-10deg)}50%{transform:scale(1.12) perspective(600px) rotateY(10deg)}}
+.sj-row .sj-disc{border-radius:16px}.sj-row .sj-disc img{border-radius:16px!important}
