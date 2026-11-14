@@ -5023,3 +5023,22 @@ body.mk-stone-docked .sj,body.mk-stone-docked .sj-btn{width:44px;height:44px}
 /* (approved 2026-11-14, "P1") phone, with your diamond in the menu: the price chip says just "$11 ▾" so the M stays full size */
 @media(max-width:767px){body.mk-stone-docked .pp-chip small{display:none!important}body.mk-stone-docked .pp-chip{gap:6px}}
 body.mk-stone-docked .nav-r{flex:1 1 auto}body.mk-stone-docked .nav-r .nav-wish{margin-left:auto}
+
+/* ===== (2026-11-14) "New language" switch — ?look=1. Only type and button hover change; layout, colours and content stay. ===== */
+.lk-sw{position:fixed;left:14px;bottom:14px;z-index:9000;display:flex;align-items:center;gap:10px;background:#121110;color:#fff;border:0;border-radius:999px;padding:8px 14px 8px 8px;font:500 11px/1 ui-monospace,Menlo,monospace;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;box-shadow:0 12px 30px -12px rgba(0,0,0,.6)}
+.lk-sw i{width:38px;height:22px;border-radius:999px;background:#444;position:relative;transition:background .25s;flex:none}
+.lk-sw i::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .25s}
+.lk-sw.on i{background:#0D4FE7}.lk-sw.on i::after{transform:translateX(16px)}
+@media(max-width:767px){.lk-sw{bottom:calc(86px + env(safe-area-inset-bottom));left:10px}.lk-sw span{display:none}.lk-sw{padding:8px}}
+body.lk2{--display:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif;--body:'JetBrains Mono',ui-monospace,Menlo,monospace;--f-body:'JetBrains Mono',ui-monospace,Menlo,monospace;--sub:'Instrument Serif','Times New Roman',serif;--f-sub:'Instrument Serif','Times New Roman',serif;--f-title:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif;--f-display:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif}
+body.lk2 h1,body.lk2 h2,body.lk2 h3,body.lk2 h4{font-family:var(--display);font-weight:500;letter-spacing:-.04em}
+body.lk2 h1 em,body.lk2 h2 em,body.lk2 h3 em,body.lk2 h1 i:not([class]),body.lk2 h2 i:not([class]),body.lk2 h1 small,body.lk2 h2 small{font-family:var(--sub)!important;font-style:italic;font-weight:400;letter-spacing:-.01em}
+body.lk2 .pcard-txt b,body.lk2 .pp-info h1,body.lk2 .pp-lk b,body.lk2 .cd-li h4,body.lk2 .sq-tx b{font-weight:500;letter-spacing:-.02em;zoom:1}
+/* the mono is wider than the old small caps: a touch smaller and tighter so labels keep their width */
+body.lk2 button,body.lk2 small,body.lk2 .eyebrow,body.lk2 label{letter-spacing:.04em}
+body.lk2 .eyebrow{font-weight:500}
+/* buttons: blue when you stand on them */
+body.lk2 .pp-add,body.lk2 .df-cta,body.lk2 .cd-co,body.lk2 .dly-go,body.lk2 .cx-btn,body.lk2 .sw-use,body.lk2 .pp-appt,body.lk2 .dretry{transition:background-color .3s,color .3s,border-color .3s}
+@media(hover:hover){body.lk2 .pp-add:not(:disabled):hover,body.lk2 .df-cta:hover,body.lk2 .cd-co:not(:disabled):hover,body.lk2 .dly-go:hover,body.lk2 .cx-btn:hover,body.lk2 .sw-use:hover,body.lk2 .pp-appt:hover,body.lk2 .dretry:hover,body.lk2 main a[class*="cta"]:hover,body.lk2 main button[class*="cta"]:hover,body.lk2 main a[class*="btn"]:hover,body.lk2 main button[class*="btn"]:not(:disabled):hover{background-color:#0D4FE7!important;color:#fff!important;border-color:#0D4FE7!important}}
+body.lk2 .pp-add:active,body.lk2 .df-cta:active,body.lk2 .cd-co:active{background-color:#0D4FE7!important;color:#fff!important}
+body.lk2 .pp-chip .pp-cta{letter-spacing:0!important;font-size:10px!important}body.lk2 .pp-chip small{letter-spacing:0!important}

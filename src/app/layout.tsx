@@ -7,6 +7,7 @@ import DesignLabGate from "@/components/DesignLabGate";
 import BgPalette from "@/components/BgPalette";
 import BarStudio from "@/components/BarStudio";
 import FontPalette from "@/components/FontPalette";
+import LookSwitch from "@/components/LookSwitch";
 import Footer from "@/components/Footer";
 import Toast from "@/components/Toast";
 import FreeStuds from "@/components/FreeStuds";
@@ -67,6 +68,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <BgPalette />
           <BarStudio />
           <FontPalette />
+          <LookSwitch />
         </CartProvider>
         </DailyMode>
       </body>
