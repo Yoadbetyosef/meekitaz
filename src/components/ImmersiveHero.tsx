@@ -226,7 +226,6 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
         })}
       </div>
       <div className="ih-shade" />
-      {pip}
       {open && <div className="ih-scrim" onClick={() => setOpen(false)} />}
       <span className="ih-cnt" aria-hidden="true">{String(cur + 1).padStart(2, "0")} / {String(N).padStart(2, "0")}</span>
       <div className="ih-dots" aria-label="Photos">{slides.map((sl, k) => (
@@ -263,6 +262,7 @@ export default function ImmersiveHero({ title, bigTitle, images, model, stone, s
         {open && focus.startsWith("row:") && <style>{`.ih.open.f-row .ih-rows>*:not([data-row="${focus.slice(4).replace(/"/g, "")}"]){display:none!important}`}</style>}
         {open && focus && <div className="ih-fh"><span>{focus === "metal" ? "Metal & colour" : focus === "shape" ? "The centre stone" : focus === "ai" ? "AI diamonds" : focus.slice(4)}</span><button type="button" onClick={() => setOpen(false)}>Done</button></div>}
         <div className="ih-pk">
+          {pip /* (approved 2026-11-14, "1") your diamond, first line of the panel */}
           {steps}
           <h2 className="ih-st" onClick={() => setOpen(o => !o)}>{bigTitle}</h2>
           {(chips && chips.length ? chips : (summary || []).map((t, k) => ({ label: t, kind: k === 0 ? "metal" as const : "shape" as const }))).length > 0 && <div className="ih-pills ih-pills-c1">{(chips && chips.length ? chips : (summary || []).map((t, k) => ({ label: t, kind: k === 0 ? "metal" as const : "shape" as const, row: undefined as string | undefined }))).map((c, k) => {
