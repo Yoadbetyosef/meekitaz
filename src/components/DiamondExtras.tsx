@@ -118,7 +118,7 @@ export function CertSheet({ d, open, onClose }: { d: FlowStone; open: boolean; o
         {open && inline === false && (
           <div className="cs-pdf"><span className="cs-tag">{d.lab} report</span>
             <div className="cs-page">
-              <div className="cs-pghd"><div className="cs-lg">{d.lab}<small>{d.lab === "IGI" ? "International Gemological Institute" : d.lab === "GIA" ? "Gemological Institute of America" : "Grading laboratory"}</small></div><div className="cs-no">Laboratory grown diamond report<span>{d.cert}</span></div></div>
+              <div className="cs-pghd"><div className="cs-lg">{/^(igi|gia)$/i.test(d.lab || "") ? <>{/* eslint-disable-next-line @next/next/no-img-element */}<img className={`cs-lgimg lab-${(d.lab || "").toLowerCase()}`} src={`/brand/labs/${(d.lab || "").toLowerCase()}.png`} alt={d.lab || ""} /></> : d.lab}<small>{d.lab === "IGI" ? "International Gemological Institute" : d.lab === "GIA" ? "Gemological Institute of America" : "Grading laboratory"}</small></div><div className="cs-no">Laboratory grown diamond report<span>{d.cert}</span></div></div>
               <div className="cs-pgt">Grading results</div>
               <div className="cs-tbl">
                 <div><span>Shape</span><b>{d.shape}</b></div>{d.measurements && <div><span>Measurements</span><b>{d.measurements.replace(/ ?mm$/i, "")} mm</b></div>}

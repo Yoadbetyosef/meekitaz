@@ -5008,3 +5008,6 @@ body.mk-stone-rings:not(.mk-stone-docked) .sj-rings{opacity:0;width:0;pointer-ev
 .dx-lab-img.lab-igi img{width:64px;height:64px;object-fit:contain;display:block}
 .dx-lab-img.lab-gia img{width:110px;height:auto;display:block}
 @media(max-width:767px){.dx-lab-img.lab-igi img{width:54px;height:54px}.dx-lab-img.lab-gia img{width:84px}}
+/* (2026-11-14) the report page header: the lab's own mark instead of the blue letters */
+.cs-lgimg{display:block;margin-bottom:6px}.cs-lgimg.lab-igi{width:64px;height:64px;object-fit:contain}.cs-lgimg.lab-gia{width:120px;height:auto}
+@media(max-width:767px){.cs-lgimg.lab-igi{width:52px;height:52px}.cs-lgimg.lab-gia{width:96px}}
