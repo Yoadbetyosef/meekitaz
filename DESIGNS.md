@@ -30,3 +30,4 @@ When a design is replaced, tag the last commit before the change: `git tag desig
 and add a line here.
 
 - design/diamond-first-before-a (2026-11-13): starting from a diamond before A — no "next" line under Choose this diamond, rings page bar "now choose a setting", ring page said "Choose this setting · next: your diamond".
+- design/rings-stone-card-before-wow-a (2026-11-14): before "A" — the white "Your diamond" card under the Engagement Rings hero, the shapes row still shown, ring-page pip as a square photo.

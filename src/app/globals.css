@@ -4910,3 +4910,54 @@ main:has(.dx-first) .rsteps:not(.dx-steps){display:none}
 @media(min-width:768px){.sbar2-pin{top:96px}.ih-yd{width:112px;height:112px;top:110px;right:28px}}
 .dx-cta{margin:18px 0 4px}.dx-cta .df-cta{padding:16px 18px}
 @media(max-width:767px){.dx-cta{display:none}}
+
+/* (approved 2026-11-14, "A") your diamond in the Engagement Rings hero, then a jewel in the menu */
+body.mk-stone-rings .cat-engagement-rings > .wrap{visibility:hidden}
+body.mk-stone-rings .cb-engagement-rings .shapes{display:none}
+.sth{position:absolute;inset:0;z-index:3;display:flex;align-items:flex-end;pointer-events:none}
+.sth a,.sth button,.sth .dly-badge,.sth [class*=badge]{pointer-events:auto}
+.sth-wrap{position:relative;z-index:2;color:#fff;padding-bottom:clamp(40px,6vw,80px);width:100%}
+.sth-wrap h1{font-size:clamp(42px,7.4vw,112px);line-height:.95;text-transform:uppercase}
+.sth-wrap h1 small{display:block;font:500 clamp(11px,1vw,14px) var(--body);letter-spacing:.3em;text-transform:uppercase;font-style:normal;color:#fff;opacity:.92;margin-bottom:1em}
+.sth-sub{margin:.5em 0 .8em;font:italic 500 clamp(19px,2.4vw,36px)/1.2 var(--sub);color:#fff}
+.sth-stage{position:absolute;right:max(14px,6vw);top:clamp(110px,16vh,170px);width:clamp(190px,28vw,400px);aspect-ratio:1;display:grid;place-items:center;transform-origin:70% 20%;will-change:transform,opacity}
+.sth-stage > a{display:block;width:62%;aspect-ratio:1;pointer-events:auto}
+.sth-glow{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.8),rgba(255,236,230,.3) 40%,transparent 68%);animation:sthBreathe 4s ease-in-out infinite}
+@keyframes sthBreathe{50%{transform:scale(1.07);opacity:.85}}
+.sj-disc{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 50% 40%,#fff 55%,#f1ece8);overflow:hidden}
+.sj-disc img{width:72%;height:72%;object-fit:contain;mix-blend-mode:multiply}
+.sth-stage .sj-disc{box-shadow:0 30px 60px -20px rgba(0,0,0,.55),inset 0 -8px 20px rgba(0,0,0,.06)}
+.sth-stage .sj-disc img{animation:sthSway 6s ease-in-out infinite}
+@keyframes sthSway{0%,100%{transform:perspective(600px) rotateY(-14deg)}50%{transform:perspective(600px) rotateY(14deg) translateY(-6px)}}
+.sth-spark{position:absolute;width:6px;height:6px;border-radius:50%;background:#fff;box-shadow:0 0 12px 4px #fff;animation:sthTw 2.4s infinite}
+.sth-spark.k0{left:16%;top:20%}.sth-spark.k1{left:72%;top:12%;animation-delay:.5s}.sth-spark.k2{left:84%;top:58%;animation-delay:.9s}.sth-spark.k3{left:20%;top:74%;animation-delay:1.3s}.sth-spark.k4{left:56%;top:88%;animation-delay:1.7s}
+@keyframes sthTw{0%,100%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1)}}
+.sth-tag{position:absolute;bottom:2%;left:50%;transform:translateX(-50%);white-space:nowrap;pointer-events:auto;background:rgba(255,255,255,.92);color:var(--ink);border-radius:999px;padding:7px 14px;font:600 10px var(--body);letter-spacing:.14em;text-transform:uppercase}
+.sth-tag a{color:var(--blue);text-decoration:underline;text-underline-offset:3px}
+@media(max-width:767px){.sth-stage{width:190px;top:96px;right:4px}.sth-wrap{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 92px)}}
+/* jewel in the menu pill */
+.sj{position:relative;display:inline-flex;align-items:center;transition:opacity .35s,width .45s cubic-bezier(.2,.8,.2,1);width:44px}
+body.mk-stone-rings:not(.mk-stone-docked) .sj-rings{opacity:0;width:0;pointer-events:none}
+.sj-btn{width:44px;height:44px;border-radius:50%;padding:0;border:0;background:none;cursor:pointer;position:relative;flex:none;box-shadow:0 0 0 2px rgba(255,255,255,.75),0 0 18px rgba(255,255,255,.7);overflow:hidden}
+.sj-btn::after{content:"";position:absolute;inset:-40%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.95) 50%,transparent 60%);animation:sjShine 3.2s infinite;pointer-events:none}
+@keyframes sjShine{0%{transform:translateX(-60%)}60%,100%{transform:translateX(60%)}}
+.sj-drop{position:absolute;top:calc(100% + 18px);right:-40px;width:330px;background:#fff;color:var(--ink);border-radius:24px;padding:16px;box-shadow:0 30px 60px -24px rgba(0,0,0,.45);z-index:200;display:block;text-align:left;animation:sjIn .25s}
+@keyframes sjIn{from{opacity:0;transform:translateY(-6px)}}
+.sj-drop small{display:block;font:600 9px var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--blue)}
+.sj-row{display:flex;gap:12px;align-items:center;margin-top:10px}.sj-row .sj-disc{width:68px;height:68px;flex:none;border-radius:16px;box-shadow:inset 0 0 0 1px #eee}
+.sj-row b{display:block;font:400 19px var(--display)}.sj-row em{display:block;font:500 10px var(--body);letter-spacing:.08em;color:#666;font-style:normal;margin-top:3px}
+.sj-p{display:block;font:italic 500 16px/1.3 var(--sub);margin:12px 0}
+.sj-acts{display:flex;gap:16px;flex-wrap:wrap}.sj-acts a,.sj-acts button{font:600 10px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);text-decoration:underline;text-underline-offset:3px;background:none;border:0;padding:0;cursor:pointer}
+@media(max-width:767px){.sj,.sj-btn{width:38px;height:38px}.sj-drop{position:fixed;top:82px;left:12px;right:12px;width:auto}}
+/* ring page with your diamond: the disc in the corner + the pair line */
+.ih-yd{background:none!important;border:0!important;box-shadow:none!important;width:96px!important;height:auto!important;text-align:center;border-radius:0!important}
+.ih-yd .sj-disc{width:96px;height:96px;box-shadow:0 18px 34px -14px rgba(0,0,0,.45),0 0 0 6px rgba(13,79,231,.08);animation:yd2 4s ease-in-out infinite}
+.ih-yd .sj-disc img{animation:sthSway 6s ease-in-out infinite;border-radius:0!important;width:72%!important;height:72%!important}
+@keyframes yd2{50%{box-shadow:0 18px 34px -14px rgba(0,0,0,.45),0 0 0 12px rgba(13,79,231,.05)}}
+.ih-yd b{display:block;margin-top:8px;font:600 8px var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--blue)}
+.ih-yd span:not(.sj-disc){position:static!important;transform:none!important;background:none!important;color:var(--ink)!important;padding:0!important;font:italic 500 14px var(--sub)!important;letter-spacing:0!important;text-transform:none!important;display:block}
+@media(min-width:768px){.ih-yd{width:140px!important}.ih-yd .sj-disc{width:140px;height:140px}}
+.ih-eq{display:flex;align-items:center;gap:8px;margin:0 0 12px;padding:10px 12px;border-radius:18px;background:#fff;border:1px solid rgba(28,26,27,.08)}
+.ih-eq i{width:40px;height:40px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1px #eee;display:grid;place-items:center;flex:none;overflow:hidden}.ih-eq i img{width:80%;height:80%;object-fit:contain}
+.ih-eq b{font:400 15px var(--display);color:#aaa}.ih-eq span{font:italic 500 15px/1.25 var(--sub);color:var(--ink)}
+.ih-foot .ih-eq{display:none}

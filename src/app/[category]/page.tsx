@@ -15,7 +15,7 @@ import { fancySwatches, vdbConfigured } from "@/lib/vdb";
 import RingsSection from "@/components/RingsSection";
 import SettingBar from "@/components/SettingBar";
 import JumpToResults from "@/components/JumpToResults";
-import StoneBar from "@/components/StoneBar";
+import StoneHero from "@/components/StoneHero";
 import GemTypeBar from "@/components/GemTypeBar";
 import { GEM_TYPES, gemQuery } from "@/lib/ringfilters";
 import { getProductsByQuery, shopifyConfigured } from "@/lib/shopify";
@@ -53,11 +53,11 @@ export default async function CategoryPage({ params, searchParams }: { params: P
         </picture>
         {(p.videoDesktop || p.videoMobile) && <HeroVideo desktop={p.videoDesktop} mobile={p.videoMobile} />}
         <div className="wrap"><h1><small>{p.small}</small>{p.title}</h1><DailyHeroBadge /></div>
+        {p.slug === "engagement-rings" && <Suspense fallback={null}><StoneHero /></Suspense>}
       </section>
       <div className={`catbody cb-${p.slug}${p.slug === "diamonds" ? " dm-page" : ""}`}>
         {p.slug === "diamonds" && <RingSteps step={2} />}
         {p.slug === "diamonds" && <Suspense fallback={null}><SettingBar /></Suspense>}
-        {p.slug === "engagement-rings" && <Suspense fallback={null}><StoneBar /></Suspense>}
         <JumpToResults />
         {n > 0 && p.styleHead && p.slug !== "necklaces" && p.slug !== "bands" && ( /* (2026-11-08) no style filter on Necklaces or Bands */
           <section className="shapes" aria-label={p.styleHead[0]}>
