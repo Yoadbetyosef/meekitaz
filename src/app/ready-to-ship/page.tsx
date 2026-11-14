@@ -1,3 +1,5 @@
+import { notFound } from "next/navigation";
+import { RTS_ON } from "@/lib/flags";
 import Link from "next/link";
 import RtsGrid from "@/components/RtsGrid";
 import { getReel } from "@/lib/shopify";
@@ -9,6 +11,7 @@ const KINDS = [["Ring", "Rings"], ["Earrings", "Earrings"], ["Necklace", "Neckla
 
 /* Ready to Ship · the full-screen fashion hero of every category page, the jewelry circles, then the design-C grid. */
 export default async function ReadyToShipPage({ searchParams }: { searchParams: Promise<{ type?: string; sort?: string }> }) {
+  if (!RTS_ON) notFound(); // switched off for now (src/lib/flags.ts)
   const { type = "", sort = "new" } = await searchParams;
   const [r, ...pics] = await Promise.all([
     getReel(24, null, type, sort).catch(() => ({ items: [], hasNext: false, cursor: null })),

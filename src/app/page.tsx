@@ -8,6 +8,7 @@ import PhoneStory from "@/components/PhoneStory";
 import NewFancy from "@/components/NewFancy";
 import OneOfOne from "@/components/OneOfOne";
 import RtsBike from "@/components/RtsBike";
+import { RTS_ON } from "@/lib/flags";
 import PressRow from "@/components/PressRow";
 import Reviews from "@/components/Reviews";
 import FeedBand from "@/components/FeedBand";
@@ -31,7 +32,7 @@ export default function Home() {
       {/* (2026-11-08) the feed reel lives in Shop by category now — not twice on the home page */}
       <NewFancy />
       <OneOfOne />
-      <RtsBike />{/* (2026-11-09) Ready to ship: the arch window */}
+      {RTS_ON && <RtsBike />}{/* (2026-11-09) Ready to ship: the arch window */}
       <PressRow />
       <Reviews />
       <FeedBand />{/* (2026-11-14) the feed reel, small, as one dark moment before Private clients */}

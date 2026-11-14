@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePlan, usePlanRoom, DailyTile, PlanBanner, PlanEmpty } from "./PlanKit";
 import { savePlan, clearPlan, planTotal, planOrderPaged, saveFit, usdR } from "@/lib/plan";
 import RtsVideoTile from "./RtsVideoTile";
+import { RTS_ON } from "@/lib/flags";
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { Product } from "@/lib/shopify";
@@ -154,7 +155,7 @@ export default function RingsBrowser({ initial, hasNext: h0, cursor: c0, handle 
                 <div className="pgrid-slot"><Link href="/products/white-gold-oval-diamond-hidden-halo-engagement-ring-with-pave-band" className="op-tile op-link op-tall"><img src="/media/rings-style-tile.webp" alt="A hand on oxblood tailored trousers wearing an oval diamond engagement ring with a hidden halo and pavé band" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "45% 55%" }} /><span className="op-cap"><small>The oval, hidden halo</small><b>Shop the style &rarr;</b></span></Link></div>
               )}
               {/* Engagement rings: further down, a Ready-to-Ship film → the in-stock rings */}
-              {handle === "engagement-rings" && i === 40 && items.length > 40 && <RtsVideoTile />}
+              {RTS_ON && handle === "engagement-rings" && i === 40 && items.length > 40 && <RtsVideoTile />}
               {/* Engagement rings: two rows after the Ready-to-Ship film, a tall "shop the style" photo → the three-stone pear ring */}
               {handle === "engagement-rings" && i === 46 && items.length > 46 && (
                 <div className="pgrid-slot"><Link href="/products/white-gold-three-stone-pear-diamond-ring-with-pear-side-stones" className="op-tile op-link op-tall"><img src="/media/rings-pear-style-tile.webp" alt="Smiling in champagne sunglasses, a three-stone pear diamond engagement ring with pear side stones on her finger" loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "50% 35%" }} /><span className="op-cap"><small>The three-stone pear</small><b>Shop the style &rarr;</b></span></Link></div>
