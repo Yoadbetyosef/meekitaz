@@ -10,6 +10,7 @@ import OneOfOne from "@/components/OneOfOne";
 import RtsBike from "@/components/RtsBike";
 import PressRow from "@/components/PressRow";
 import Reviews from "@/components/Reviews";
+import FeedBand from "@/components/FeedBand";
 import PrivateClients from "@/components/PrivateClients";
 
 export const metadata = { alternates: { canonical: "/" } };
@@ -33,6 +34,7 @@ export default function Home() {
       <RtsBike />{/* (2026-11-09) Ready to ship: the arch window */}
       <PressRow />
       <Reviews />
+      <FeedBand />{/* (2026-11-14) the feed reel, small, as one dark moment before Private clients */}
       <PrivateClients />
       </div>
     </main>
