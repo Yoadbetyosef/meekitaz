@@ -5122,3 +5122,9 @@ body.lk2 .pp-chip .pp-cta{letter-spacing:0!important;font-size:10px!important}bo
 .fb-btn i{width:40px;height:40px;border-radius:50%;background:#1C1A1B;color:#F8E9D9;display:grid;place-items:center;font-style:normal;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
 @media(hover:hover){.fb-btn:hover{background:#EFC5CA}.fb-btn:hover i{transform:rotate(-45deg)}}
 @media(max-width:767px){.fb{min-height:0}.fb-body{grid-template-columns:1fr;row-gap:8px;justify-items:stretch}.fb h2{font-size:clamp(46px,14vw,100px)!important}.fb-l{text-align:left}.fb-r{text-align:right}.fb-vid{height:auto;width:100%;aspect-ratio:4/5;margin:6px 0}.fb-btn{width:100%}}
+
+/* (2026-11-14) fix: the home review cards share the class name "rv" with the ring review step, whose rules (two columns,
+   110px bottom padding) had leaked onto them — put the cards back: photo on top, the words underneath */
+.rv-track .rv{display:flex!important;flex-direction:column!important;padding-bottom:0!important;grid-template-columns:none!important;column-gap:0!important;align-items:stretch!important}
+.rv-track .rv-body p{font-size:19px;line-height:1.35}
+.rv-track .rv-who{font-family:var(--body);gap:2px}.rv-track .rv-who b{font-family:var(--display);font-size:15px;font-weight:500}.rv-track .rv-who span{font-family:var(--display);font-size:13px}.rv-track .rv-who em{color:#0D4FE7;font-size:10.5px;letter-spacing:.06em}
