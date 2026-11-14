@@ -14,26 +14,28 @@ const usd = (n: number) => "$" + Math.round(n).toLocaleString("en-US");
 export default async function OneOfOne() {
   const picks = await getOneOfOneByHandles(PICKS).catch(() => []);
   const items = picks.length >= 4 ? picks : [...picks, ...(await getOneOfOne(8).catch(() => [])).filter(x => !picks.some(p => p.handle === x.handle))].slice(0, 4);
-  const preview = false; // only pieces tagged "One of One" ever show here
-  const claimed = items.filter(i => i.claimed).length, left = items.length - claimed;
+  const claimed = items.filter(i => i.claimed).length;
   return (
     <section className="oo2" aria-label="One of One">
+      {/* (2026-11-14, approved A · index) same stage, tidied: a thin line on top with (One of One), "Never again." in the fine italic,
+          and the pieces as a numbered list with square photos instead of round white cards. The cards version is in DESIGNS.md. */}
+      <div className="oo2-top" aria-hidden="true"><span>(One of One{claimed ? ` · ${claimed} claimed` : ""})</span><span>One stone · one setting · one ring</span></div>
       <div className="oo2-stage">
         <p className="oo2-big" aria-hidden="true">Made<br />once.</p>
         <img className="oo2-her" src="/media/home/one-of-one-scarf.webp" alt="" loading="lazy" />
       </div>
       <div className="oo2-copy">
-        <p className="ooo-eye"><i />One of One{claimed ? ` · ${claimed} claimed` : ""}</p>
-        <h2 className="oo2-h"><span className="oo2-sr">Made once. </span>Never again.</h2>
+        <h2 className="oo2-h"><span className="oo2-sr">One of One. Made once. </span>Never again.</h2>
         <p className="oo2-lead">One stone, one setting, one ring. When it&rsquo;s claimed, it&rsquo;s gone.</p>
         <Link href="/one-of-one" className="ooo-btn">See the one-of-ones &rarr;</Link>
       </div>
       {items.length > 0 && (
-        <div className="oo2-rail">
-          {items.slice(0, 4).map(i => (
-            <Link key={i.handle} href={`/products/${i.handle}`} className={`ooo-card${i.claimed ? " is-claimed" : ""}`}>
-              <span className="ooo-im">{i.image && <img src={photoSrc(i.image, 500, i.title)} alt={i.title} loading="lazy" />}{i.claimed && <span className="ooo-sold"><span>Claimed</span></span>}</span>
-              <b>{i.title}</b>{i.sub && <span>{i.sub}</span>}<em>{usd(i.price)}</em>
+        <div className="oo2-list">
+          {items.slice(0, 4).map((i, k) => (
+            <Link key={i.handle} href={`/products/${i.handle}`} className={`oo2-row${i.claimed ? " is-claimed" : ""}`}>
+              <span className="oo2-im">{i.image && <img src={photoSrc(i.image, 300, i.title)} alt="" loading="lazy" />}</span>
+              <span className="oo2-n">{String(k + 1).padStart(2, "0")}</span>
+              <span className="oo2-tx"><b>{i.title}</b><small>{[i.sub, i.claimed ? "Claimed" : usd(i.price)].filter(Boolean).join(" · ")}</small></span>
             </Link>
           ))}
         </div>
