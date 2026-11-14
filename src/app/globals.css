@@ -5015,3 +5015,8 @@ body.mk-stone-rings:not(.mk-stone-docked) .sj-rings{opacity:0;width:0;pointer-ev
 .brand-m{height:64px!important;margin:-9px 0 -9px -4px!important}
 @media(max-width:767px){.brand-m{height:46px!important;margin:-7px 0 -7px -2px!important}}
 .nav .brand{flex:0 1 auto;min-width:36px}.brand-m{width:auto!important;max-width:100%!important;flex:none;object-fit:contain;object-position:0 50%}
+/* (approved 2026-11-14, "K1") your diamond inside the pill: the M moves to the left edge, full size, the diamond right after it */
+body.mk-stone-docked .nav{padding-left:16px!important;padding-right:20px!important}body.mk-stone-docked .nav-r{gap:12px!important}
+body.mk-stone-docked .nav .brand{margin-right:6px}
+body.mk-stone-docked .sj,body.mk-stone-docked .sj-btn{width:44px;height:44px}
+@media(max-width:767px){body.mk-stone-docked .nav{padding-left:10px!important;padding-right:12px!important}body.mk-stone-docked .nav-r{gap:2px!important}body.mk-stone-docked .nav .brand{margin-right:2px}body.mk-stone-docked .sj,body.mk-stone-docked .sj-btn{width:32px;height:32px}}
