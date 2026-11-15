@@ -5256,7 +5256,7 @@ html.mk-intro-on:not(.mk-blue):not(.mk-day):not(.mk-words) .mk-intro5{display:bl
 /* ===== "Bold" (2026-11-14, a trial behind one small private switch — html.mi): the whole site in one loud, simple language.
    White paper and bone cards · ink · hot pink for every button and every emphasis · lime and sky as colour blocks · cobalt for the
    deep moments · big rounded cards · a heavy condensed grotesque for headlines, a wide sans for text. Off for everyone else. ===== */
-html.mi{--k-1C1A1B:#1B1B19;--k-121110:#1B1B19;--k-111111:#1B1B19;--k-3A2A28:#1B1B19;--k-7E0508:#1B1B19;--k-4B1425:#1B1B19;--k-0D4FE7:#3A3EB5;--k-2752E6:#3A3EB5;--k-1D3F7A:#3A3EB5;--k-1E8A4F:#3A3EB5;--k-2E7D4F:#3A3EB5;--k-C24E6A:#E95FB4;--k-E8738A:#E95FB4;--k-F08AAE:#E95FB4;--k-F42A3B:#E95FB4;--k-F98C95:#E95FB4;--k-FFC53D:#F2994A;--k-C29A55:#F2994A;--k-B9771A:#F2994A;--k-F8E9D9:#FFFFFF;--k-F5E8DB:#FFFFFF;--k-E5E3EF:#FFFFFF;--k-E4E8EC:#FFFFFF;--k-DFE4EA:#FFFFFF;--k-DCEBF4:#FFFFFF;--k-F4F5F7:#FFFFFF;--k-FBF8F3:#F1F0E7;--k-FDF8F3:#F1F0E7;--k-FAF7F3:#F1F0E7;--k-F4EFE8:#F1F0E7;--k-F6F1EA:#F1F0E7;--k-F0E6DA:#F1F0E7;--k-E3D9CD:#F1F0E7;--k-E9DCCD:#F1F0E7;--k-DFE2E6:#F1F0E7;--k-FBF7DF:#F1F0E7;--k-FFF8D8:#F1F0E7;--k-FDF8E6:#F1F0E7;--k-FEF5D9:#F1F0E7;--k-EFC5CA:#F6D0E8;--k-F7D3DA:#F6D0E8;--k-E8B4B8:#F6D0E8;--k-D4ADAD:#F6D0E8;--k-F2B8C6:#F6D0E8;--k-F6DCE5:#F6D0E8;--k-F2C6B4:#F6D0E8;--k-E9DDF3:#A9C0DC;--k-E6DCE8:#A9C0DC;--k-C4DEEE:#A9C0DC;--k-D6E4C8:#A9C0DC;--k-E8F4EC:#A9C0DC;--k-F7E9A8:#E1FF4F;--k-F7E58A:#E1FF4F;--k-F6E39A:#E1FF4F;--k-F3D27A:#E1FF4F;--ink:#1B1B19}
+html.mi{--k-1C1A1B:#1B1B19;--k-121110:#1B1B19;--k-111111:#1B1B19;--k-3A2A28:#1B1B19;--k-7E0508:#1B1B19;--k-4B1425:#1B1B19;--k-0D4FE7:#3A3EB5;--k-2752E6:#3A3EB5;--k-1D3F7A:#3A3EB5;--k-1E8A4F:#3A3EB5;--k-2E7D4F:#3A3EB5;--k-C24E6A:#E95FB4;--k-E8738A:#E95FB4;--k-F08AAE:#E95FB4;--k-F42A3B:#E95FB4;--k-F98C95:#E95FB4;--k-FFC53D:#F2994A;--k-C29A55:#F2994A;--k-B9771A:#F2994A;--k-F8E9D9:#BDBCB8;--k-F5E8DB:#BDBCB8;--k-E5E3EF:#BDBCB8;--k-E4E8EC:#BDBCB8;--k-DFE4EA:#BDBCB8;--k-DCEBF4:#BDBCB8;--k-F4F5F7:#BDBCB8;--k-FBF8F3:#F1F0E7;--k-FDF8F3:#F1F0E7;--k-FAF7F3:#F1F0E7;--k-F4EFE8:#F1F0E7;--k-F6F1EA:#F1F0E7;--k-F0E6DA:#F1F0E7;--k-E3D9CD:#F1F0E7;--k-E9DCCD:#F1F0E7;--k-DFE2E6:#F1F0E7;--k-FBF7DF:#F1F0E7;--k-FFF8D8:#F1F0E7;--k-FDF8E6:#F1F0E7;--k-FEF5D9:#F1F0E7;--k-EFC5CA:#F6D0E8;--k-F7D3DA:#F6D0E8;--k-E8B4B8:#F6D0E8;--k-D4ADAD:#F6D0E8;--k-F2B8C6:#F6D0E8;--k-F6DCE5:#F6D0E8;--k-F2C6B4:#F6D0E8;--k-E9DDF3:#A9C0DC;--k-E6DCE8:#A9C0DC;--k-C4DEEE:#A9C0DC;--k-D6E4C8:#A9C0DC;--k-E8F4EC:#A9C0DC;--k-F7E9A8:#E1FF4F;--k-F7E58A:#E1FF4F;--k-F6E39A:#E1FF4F;--k-F3D27A:#E1FF4F;--ink:#1B1B19}
 html.mi ::selection{background:#E95FB4;color:#1B1B19}
 /* emphasis: pink brackets on the big word, a pink line under the smaller ones — our own type stays exactly as it is */
 html.mi body.lk2 h1 em::before,html.mi .mkf-say em::before,html.mi body .pst .pa .pst-h .pst-wd:last-of-type::before{content:"[";color:#E95FB4;font-style:normal;margin-right:.04em}
@@ -5340,3 +5340,15 @@ html.mi .pr{background:#E95FB4;--pr-color:#1B1B19;--pr-k:1;margin:0;padding:26px
 html.mi .fb{background:#3A3EB5}html.mi .fb h2 em{color:#E1FF4F;text-decoration:none}
 html.mi body .pr.pr{background:#E95FB4!important}
 html.mi body.lk2 .fb h2 em{text-decoration:none}
+
+/* (2026-11-15) the trial now sits on "their grey" (#BDBCB8) instead of white: the page is grey, the colour lives in the blocks and
+   buttons, and the biggest headlines go white with lime brackets. The white-page version is commit 77511c5. */
+html.mi body,html.mi .bd{background-color:#BDBCB8}
+html.mi .bd3{background-color:#3A3EB5}
+html.mi body .pst .pa .pst-h,html.mi body .cfs .cf-h,html.mi body .oo2 .oo2-big,html.mi body .bd1>h2,html.mi body .rv-head h2{color:#fff}
+html.mi body .pst .pa .pst-h .pst-wd:last-of-type::before,html.mi body .pst .pa .pst-h .pst-wd:last-of-type::after,html.mi .mkf-say em::before,html.mi .mkf-say em::after{color:#E1FF4F}
+html.mi body.lk2 :is(h2,h3) em{text-decoration-color:#E1FF4F}
+html.mi .bd1-g>div:nth-child(2){background:#fff}
+html.mi .rv-track .rv:nth-child(4n){background:#fff}
+.pal-sw{background:conic-gradient(#BDBCB8 0 40%,#E95FB4 40% 60%,#E1FF4F 60% 80%,#3A3EB5 80%)}
+html.mi body .pst-prom s{color:rgba(27,27,25,.6)}html.mi body .pst-prom span{border-color:rgba(27,27,25,.3)}html.mi body .pa-lb{color:rgba(27,27,25,.7)}
