@@ -13,7 +13,6 @@ import PressRow from "@/components/PressRow";
 import Reviews from "@/components/Reviews";
 import FeedBand from "@/components/FeedBand";
 import PrivateClients from "@/components/PrivateClients";
-import { SysTicker, SysLogoBand } from "@/components/SysBits";
 
 export const metadata = { alternates: { canonical: "/" } };
 
@@ -27,7 +26,6 @@ export default function Home() {
       {/* (2026-11-08) the dancer's screen stays put; everything below rises over it */}
       <div className="over-fun">
       <Film />{/* phones */}
-      <SysTicker />{/* (2026-11-14) "system" trial — shows only with the private System switch on */}
       <Categories />{/* (2026-11-09) Shop by category with the model photos again, everywhere */}
       {/* (2026-11-14) the tall feed reel is off the home page for now — FeedReel.tsx is kept; archived as design/home-feed-reel-under-categories */}
       <FloatingFilm />
@@ -35,7 +33,6 @@ export default function Home() {
       <NewFancy />
       <OneOfOne />
       {RTS_ON && <RtsBike />}{/* (2026-11-09) Ready to ship: the arch window */}
-      <SysLogoBand />
       <PressRow />
       <Reviews />
       <FeedBand />{/* (2026-11-14) the feed reel, small, as one dark moment before Private clients */}
