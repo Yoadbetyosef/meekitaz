@@ -15,7 +15,7 @@ const FILMS: { href: string; title: string; sub: string; lab: string; film?: str
   { href: "/bands", title: "Bands", sub: "The one you never take off.", lab: "The bands", film: "bands-film" },
   { href: "/fancy-colors", title: "Fancy colors", sub: "Pink is a neutral.", lab: "The colours", film: "fancy-film" },
   { href: "/gemstones", title: "Gemstones", sub: "Green with envy.", lab: "The gems", film: "gems-film" }, // (2026-11-14) its film was missing from the row
-  { href: "/one-of-one", title: "One of One", sub: "Made once. Never again.", lab: "Made once", img: "/media/home/one-of-one-scarf.webp", pos: "50% 22%" }, // no film of its own yet
+  { href: "/one-of-one", title: "One of One", sub: "Made once. Never again.", lab: "Made once", film: "one-film" }, // (2026-11-14) her film: hand over her mouth with the toi-et-moi, then the smile — and back, so it loops. Computers get a wide cut around the hand (mirrored, so the ring sits clear of the title); phones the whole frame. The still it replaces: /media/home/one-of-one-scarf.webp at 50% 22%.
 ];
 const p2 = (n: number) => String(n).padStart(2, "0");
 // computers play the wide cut, phones the tall one (the Diamonds clip has one cut)
