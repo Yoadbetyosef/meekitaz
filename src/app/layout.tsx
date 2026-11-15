@@ -3,6 +3,7 @@ import { Marcellus, Marcellus_SC, Cormorant_Garamond, Mrs_Saint_Delafield, Inter
 import "./globals.css";
 import Nav from "@/components/Nav";
 import { SITE } from "@/lib/seo";
+import SizeSwitch from "@/components/SizeSwitch";
 import DesignLabGate from "@/components/DesignLabGate";
 import BgPalette from "@/components/BgPalette";
 import BarStudio from "@/components/BarStudio";
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <FontPalette />
         </CartProvider>
         </DailyMode>
+        <SizeSwitch />
       </body>
     </html>
   );
