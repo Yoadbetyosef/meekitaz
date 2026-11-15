@@ -6,18 +6,20 @@ import { useEffect, useRef, useState } from "react";
    lime (#D9F24B) as the signal colour · a status bar along the bottom (the promises rolling, New York's clock, how far down the page) ·
    mono labels that decode themselves as they come into view · a lime dot that trails the pointer · the ticker and the giant
    moving Meekitaz on the home page · the six diamond cuts as a set of signs. Nothing here shows unless the switch is on. */
-const SHOW = "mk-look-show", ON = "mk-sys-on";
+const SHOW = "mk-look-show", ON = "mk-sys-on", NN = "mk-nn-on";
 const MSGS: [string, string][] = [["No", "Loans & interest"], ["No", "Credit checks"], ["No", "Rentals — it’s yours"], ["Yes", "Everyone’s approved"], ["From", "$1 a day"]];
 const SCR = ".cf-hd > span, .cf-n, .oo2-top > span, .nf-top > span:first-child, .pa-kick-t, .fb-kick, .sy-cap";
 const POOL = "ABCDEFGHJKLMNPRSTUVWXYZ0123456789$#/";
 
 export default function SystemLayer() {
-  const [show, setShow] = useState(false), [on, setOn] = useState(false), [m, setM] = useState(0), [clock, setClock] = useState("");
+  const [show, setShow] = useState(false), [nn, setNn] = useState(false), [on, setOn] = useState(false), [m, setM] = useState(0), [clock, setClock] = useState("");
   const pct = useRef<HTMLSpanElement>(null), fill = useRef<HTMLElement>(null), cur = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    try { const s = localStorage.getItem(SHOW) === "1" || new URLSearchParams(location.search).get("look") === "1"; const o = s && localStorage.getItem(ON) === "1"; setShow(s); setOn(o); document.body.classList.toggle("sys2", o); } catch { /* private mode */ }
+    try { const s = localStorage.getItem(SHOW) === "1" || new URLSearchParams(location.search).get("look") === "1"; const o = s && localStorage.getItem(ON) === "1"; setShow(s); setOn(o); document.body.classList.toggle("sys2", o); const n = s && localStorage.getItem(NN) === "1"; setNn(n); document.documentElement.classList.toggle("nn", n); } catch { /* private mode */ }
   }, []);
   const flip = () => { const n = !on; setOn(n); document.body.classList.toggle("sys2", n); try { localStorage.setItem(ON, n ? "1" : "0"); } catch { /* ignore */ } };
+  // "New New": one colour language for the whole site (bone, stone, ink, lime) — see the end of globals.css
+  const flipNn = () => { const n = !nn; setNn(n); document.documentElement.classList.toggle("nn", n); try { localStorage.setItem(NN, n ? "1" : "0"); } catch { /* ignore */ } };
   useEffect(() => {
     if (!on) return;
     const a = window.setInterval(() => setM(x => (x + 1) % MSGS.length), 2200);
@@ -46,6 +48,7 @@ export default function SystemLayer() {
   if (!show) return null;
   return (
     <>
+      <button type="button" className={`lk-sw nn-sw${nn ? " on" : ""}`} role="switch" aria-checked={nn} onClick={flipNn}><i aria-hidden="true" /><span>{nn ? "New New · on" : "New New · off"}</span></button>
       <button type="button" className={`lk-sw sy-sw${on ? " on" : ""}`} role="switch" aria-checked={on} onClick={flip}><i aria-hidden="true" /><span>{on ? "System · on" : "System · off"}</span></button>
       {on && <>
         <div className="sy-bar" aria-hidden="true">
