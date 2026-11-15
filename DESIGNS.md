@@ -52,3 +52,4 @@ and add a line here.
 - trial/bold-look on grey (2026-11-15): the trial page colour moved from white to "their grey" #BDBCB8 (white big headlines, lime brackets). White-page version: commit 77511c5.
 - design/home-feed-dark-band (2026-11-15): commit f7533ae — the dark "Worn · reel · lightly." feed band (FeedBand.tsx, .fb styles still in globals.css), before the lime band with five reels in a row and shimmering squares (option A, .fd styles).
 - design/home-feed-lime-five (2026-11-15): commit 41bdb53 — the lime feed band with five reels in a row, before option C (the reel fills the band, lime squares sweep across, words on lime tags).
+- design/bag-circle-pink-count (2026-11-15): commit 7c1e6d8 — the BAG circle always pink glass with a tiny white count, before lime-when-full with a "+1" flash on add.

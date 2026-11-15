@@ -2,7 +2,7 @@
 import PillPlan from "./PillPlan";
 import { NavJewel } from "./StoneHero";
 import Logo from "./Logo";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -18,6 +18,13 @@ export default function Nav() {
   const pathname = usePathname();
   const { bagCount, setOpen: openCart } = useCart();
   const count = bagCount;
+  // (2026-11-15, approved "2 + 10") the BAG circle turns lime while something is in it, and flashes "+1" the moment a piece is added
+  const [flash, setFlash] = useState(0), prevCount = useRef<number | null>(null);
+  useEffect(() => {
+    const was = prevCount.current; prevCount.current = count;
+    if (was === null || count <= was) return; // first load, or a piece removed: no flash
+    setFlash(f => f + 1);
+  }, [count]);
   useEffect(() => { setOpen(false); setSearching(false); }, [pathname]);
   // (2026-11-09) anything can open the menu — e.g. Daily's "Start" when there are no categories on the page to scroll to
   useEffect(() => { const o = () => { openCart(false); setSearching(false); setOpen(true); }; window.addEventListener("mk-menu-open", o); return () => window.removeEventListener("mk-menu-open", o); }, [openCart]);
@@ -44,9 +51,10 @@ export default function Nav() {
           <button className="burger" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="menu" onClick={() => setOpen(o => !o)}><i /><i /><i /></button>
         </div>
       </nav>
-      <button className="cart" aria-label={`Open bag${count ? `, ${count} items` : ""}`} onClick={() => { setOpen(false); openCart(true); }}>
+      <button className={`cart${count > 0 ? " has" : ""}`} aria-label={`Open bag${count ? `, ${count} items` : ""}`} onClick={() => { setOpen(false); openCart(true); }}>
         {/* (2026-11-14, approved B) the word instead of the bag drawing: BAG with a thin line under it, the count small above like a footnote. The drawing + yellow dot is in DESIGNS.md. */}
         <span className="cart-w">Bag{count > 0 && <sup>{String(count).padStart(2, "0")}</sup>}</span>
+        {flash > 0 && <span className="cart-fl" key={flash} aria-hidden="true">+1</span>}
       </button>
       <SearchPalette open={searching} onClose={() => setSearching(false)} />
       <div id="menu" className={`menu${open ? " open" : ""}`} aria-hidden={!open}>
