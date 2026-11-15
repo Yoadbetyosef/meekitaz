@@ -2,8 +2,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-/* Home · Shop by category — "the films" (approved 2026-11-14). A thin rule with "Shop by category (08)", the line
-   "Serious diamonds, worn lightly." and one row of eight film cards that slides sideways: each category's own film plays
+/* Home · Shop by category — "the films" (approved 2026-11-14). A thin rule with "Shop by category (09)", the line
+   "Serious diamonds, worn lightly." and one row of nine film cards that slides sideways: each category's own film plays
    while its card is on screen, with its number and label, its name in large type and our line in italic. A counter, marks
    and arrows underneath (phones just swipe). The poster tiles this replaces are archived as design/home-shop-by-category-tiles. */
 const FILMS: { href: string; title: string; sub: string; lab: string; film?: string; img?: string; pos?: string }[] = [
@@ -14,6 +14,7 @@ const FILMS: { href: string; title: string; sub: string; lab: string; film?: str
   { href: "/bracelets", title: "Bracelets", sub: "Stacked for breakfast.", lab: "The wrist", film: "bracelets-film" },
   { href: "/bands", title: "Bands", sub: "The one you never take off.", lab: "The bands", film: "bands-film" },
   { href: "/fancy-colors", title: "Fancy colors", sub: "Pink is a neutral.", lab: "The colours", film: "fancy-film" },
+  { href: "/gemstones", title: "Gemstones", sub: "Green with envy.", lab: "The gems", film: "gems-film" }, // (2026-11-14) its film was missing from the row
   { href: "/one-of-one", title: "One of One", sub: "Made once. Never again.", lab: "Made once", img: "/media/home/one-of-one-scarf.webp", pos: "50% 22%" }, // no film of its own yet
 ];
 const p2 = (n: number) => String(n).padStart(2, "0");
