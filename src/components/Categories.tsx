@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { SysShape } from "./SysBits";
 
 /* Home · Shop by category — "the films" (approved 2026-11-14). A thin rule with "Shop by category (09)", the line
    "Serious diamonds, worn lightly." and one row of nine film cards that slides sideways: each category's own film plays
@@ -40,7 +41,7 @@ export default function Categories() {
   const onScroll = () => { const el = row.current, s = step(); if (el && s) setAt(Math.min(FILMS.length - 1, Math.round(el.scrollLeft / s))); };
   return (
     <section className="sec cfs" id="shop" aria-label="Shop by category">
-      <div className="cf-hd"><span>Shop by category</span><span>({p2(FILMS.length)})</span></div>
+      <div className="cf-hd"><span>Shop by category</span><SysShape /><span>({p2(FILMS.length)})</span></div>
       <h2 className="cf-h">Serious diamonds,<em>worn lightly.</em></h2>
       <div className="cf-row" ref={row} onScroll={onScroll}>
         {FILMS.map((t, i) => {

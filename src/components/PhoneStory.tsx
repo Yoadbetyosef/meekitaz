@@ -1,5 +1,6 @@
 "use client";
 import PriceMoment from "./PriceMoment";
+import { SysShape } from "./SysBits";
 import { useEffect, useRef, useState } from "react";
 import Signature from "./Signature";
 
@@ -78,7 +79,7 @@ export default function PhoneStory() {
       <div className={`pst-ann pa${at === 3 ? " on" : ""}${words > HEAD.length ? " done" : ""}`}>
         {/* (approved 2026-11-14, "A · index") left-aligned on a 12-column grid: a typewriter line, the headline in three lines with "bought." in italic,
             the small line + button, what we don't do as a ruled list, then the stars, the signature and the fries along the bottom */}
-        <span className="pa-kick">Meekitaz Daily · From $1 a day · up to 4 months</span>
+        <span className="pa-kick"><span className="pa-kick-t">Meekitaz Daily · From $1 a day · up to 4 months</span><SysShape /></span>
         <i className="pst-pl l" aria-hidden="true" /><i className="pst-pl r" aria-hidden="true" />
         <p className="pst-h" aria-label={HEAD}>{(() => { let c = 0; return HEAD.split(" ").map((w, i) => { const word = <span key={i} className="pst-wd" aria-hidden="true">{[...w].map((ch, j) => { const k = c++; return <span key={j} className={k < words ? "w" : ""}>{ch}</span>; })}</span>; c++; return [word, i === 2 || i === 4 ? <br key={`b${i}`} className="pa-br" /> : " "]; }); })()}</p>
         <em className="pst-sub" aria-label={SUB}>{(() => { let c = 0; return SUB.split(" ").map((w, i) => { const word = <span key={i} className="pst-wd" aria-hidden="true">{[...w].map((ch, j) => { const k = c++; return <span key={j} className={k < subN ? "w" : ""}>{ch}</span>; })}</span>; c++; return [word, " "]; }); })()}</em>

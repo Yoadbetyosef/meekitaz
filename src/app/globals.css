@@ -5252,3 +5252,52 @@ html.mk-intro-on:not(.mk-blue):not(.mk-day):not(.mk-words) .mk-intro5{display:bl
 .mkf-rule{position:absolute;left:20px;right:20px;bottom:calc(5vh + env(safe-area-inset-bottom) + clamp(64px,9vw,120px) + 14px);height:1px;background:#1C1A1B;z-index:3}
 @media(min-width:768px){.mkf-say{left:6vw;top:16vh}.mkf-hf{right:4vw;top:46%}.mkf-num{left:6vw}.mkf-rule{left:6vw;right:6vw}}
 @media(prefers-reduced-motion:reduce){.mkf-hf{animation:none}}
+
+/* ===== The "system" trial (2026-11-14): everything here is off unless the private System switch adds body.sys2 ===== */
+.sy-tk,.sy-logo,.sy-shape{display:none}
+.lk-sw.sy-sw{bottom:60px}.lk-sw.sy-sw.on i{background:#D9F24B}.lk-sw.sy-sw.on i::after{background:#1C1A1B}
+@media(max-width:767px){.lk-sw.sy-sw{bottom:calc(132px + env(safe-area-inset-bottom))}}
+body.sys2{--lime:#D9F24B;padding-bottom:34px}
+body.sys2 ::selection{background:#D9F24B;color:#1C1A1B}
+/* status bar */
+.sy-bar{position:fixed;left:0;right:0;bottom:0;z-index:54;height:calc(34px + env(safe-area-inset-bottom));padding:0 clamp(12px,3vw,40px) env(safe-area-inset-bottom);display:flex;align-items:center;justify-content:space-between;gap:14px;background:#1C1A1B;color:#F5E8DB;font:500 10.5px/1 var(--f-nmono),ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase}
+html.mk-intro-on .sy-bar{display:none}
+.sy-mid{flex:1;height:14px;overflow:hidden;text-align:center}.sy-mid>span{display:block;line-height:14px;animation:syRoll .35s cubic-bezier(.2,.9,.2,1)}
+@keyframes syRoll{from{transform:translateY(110%)}}
+.sy-mid em{font-style:normal;background:#D9F24B;color:#1C1A1B;padding:1px 5px;margin-right:7px}
+.sy-r{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums}.sy-prog{width:72px;height:1px;background:rgba(245,232,219,.3);position:relative}.sy-prog i{position:absolute;left:0;top:-1px;height:3px;background:#D9F24B;width:0}
+@media(max-width:767px){.sy-l,.sy-clk{display:none}.sy-mid{text-align:left}}
+body.sys2 .mia-launch,body.sys2 .lk-sw{margin-bottom:34px}
+/* the dot that trails the pointer */
+.sy-cur{position:fixed;left:0;top:0;z-index:99990;width:0;height:0;pointer-events:none}
+.sy-cur::after{content:"";position:absolute;left:14px;top:14px;width:12px;height:12px;border-radius:50%;background:#D9F24B;border:1px solid #1C1A1B;transition:width .25s,height .25s,left .25s,top .25s,background .25s}
+.sy-cur.big::after{width:44px;height:44px;left:-22px;top:-22px;background:rgba(217,242,75,.35)}
+@media(hover:none){.sy-cur{display:none}}
+/* ticker */
+body.sys2 .sy-tk{display:block;position:relative;z-index:6;overflow:hidden;background:#D9F24B;color:#1C1A1B;border-top:1px solid #1C1A1B;border-bottom:1px solid #1C1A1B}
+.sy-tk p{margin:0;white-space:nowrap;width:max-content;padding:14px 0;animation:syRun 46s linear infinite;font:500 13px/1 var(--f-nmono),ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase}
+.sy-tk span{padding-left:1.1em}.sy-tk i{font-style:normal;opacity:.55;padding-left:1.1em}
+@keyframes syRun{to{transform:translateX(-50%)}}
+/* the giant name */
+body.sys2 .sy-logo{display:block;position:relative;z-index:6;overflow:hidden;background:#0D4FE7;color:#D9F24B;padding:18px 0}
+.sy-lg-top,.sy-lg-bot{display:flex;justify-content:space-between;gap:12px;padding:0 clamp(14px,3.4vw,48px);font:500 11px/1.2 var(--f-nmono),ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase}
+.sy-lg-row{display:flex;width:max-content;gap:6vw;padding:2.2vw 0 0;will-change:transform}.sy-lg-row img{height:clamp(90px,21vw,330px);width:auto;display:block}
+.sy-lg-row.ghost{padding:0 0 2.2vw;margin-top:-3vw}.sy-lg-row.ghost img{height:clamp(60px,13vw,200px);opacity:.16}
+/* the cuts as signs */
+body.sys2 .sy-shape{display:inline-flex;align-items:center;gap:7px;border:1px solid currentColor;padding:4px 8px 4px 6px;margin-left:12px;vertical-align:middle;color:#1C1A1B;background:#D9F24B;font:500 10.5px/1 var(--f-nmono),ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.sy-shape svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;display:block}.sy-shape b{font-weight:500;min-width:8ch}
+/* the site's own pieces, in the system's voice */
+body.sys2 .cf-clip{border-radius:0}
+body.sys2 .cf{position:relative}
+body.sys2 .cf::before,body.sys2 .cf::after{content:"";position:absolute;z-index:3;width:13px;height:13px;background:linear-gradient(#1C1A1B,#1C1A1B) 6px 0/1px 13px no-repeat,linear-gradient(#1C1A1B,#1C1A1B) 0 6px/13px 1px no-repeat;pointer-events:none}
+body.sys2 .cf::before{left:-7px;top:-7px}body.sys2 .cf::after{right:-7px;bottom:-7px}
+body.sys2 .cf-n{left:0;top:0;background:#D9F24B;color:#1C1A1B;padding:6px 9px}
+body.sys2 .pst-tag small{display:inline-block;background:#D9F24B;color:#1C1A1B;padding:4px 7px}
+body.sys2 .nf-top>span:first-child,body.sys2 .oo2-top>span:first-child{background:#D9F24B;color:#1C1A1B;padding:3px 6px}
+@media(hover:hover){
+  html body.sys2 .pst .pa .pst-go:hover{background:#D9F24B!important;color:#1C1A1B!important}
+  html body.sys2 .cf:hover .cf-go{background:#D9F24B;color:#1C1A1B}
+  html body.sys2 .cart.cart.cart:hover{background:#D9F24B!important;border-color:#D9F24B!important;color:#1C1A1B!important}
+  html body.sys2 .pm .pm-done:hover{background:#D9F24B;color:#1C1A1B}
+}
+@media(prefers-reduced-motion:reduce){.sy-tk p{animation:none}}
