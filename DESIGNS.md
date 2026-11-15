@@ -55,3 +55,4 @@ and add a line here.
 - design/bag-circle-pink-count (2026-11-15): commit 7c1e6d8 — the BAG circle always pink glass with a tiny white count, before lime-when-full with a "+1" flash on add.
 | (2026-11-15) before commit "Bag: checkout button always live" | Bag: with a ring size missing the checkout button was grey and disabled, reading "Select your ring size to continue" (wallet icons disabled too) | return to commit 38fd01e |
 - design/footer-couture-drawings (2026-11-15): commit 1bbd07a — the footer with the Golden Couture drawings banner on cream and "Shhh." in a line above it, before the woman came back on a soft pink band with lime squares (option 6).
+- design/bold-colour-switch (2026-11-15): commit 7aac499 — the round "Bold" colour switch (grey page, pink, cobalt, lime; PaletteSwitch.tsx, html.mi rules and BoldBits sections are still in the code, only the switch is unmounted), before the 0·1·2·3 section-size switch replaced it.

@@ -1,4 +1,4 @@
-import PaletteSwitch from "@/components/PaletteSwitch";
+import SizeSwitch from "@/components/SizeSwitch";
 import type { Metadata, Viewport } from "next";
 import { Marcellus, Marcellus_SC, Cormorant_Garamond, Mrs_Saint_Delafield, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -75,7 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <FontPalette />
         </CartProvider>
         </DailyMode>
-        <PaletteSwitch />
+        <SizeSwitch />
       </body>
     </html>
   );
