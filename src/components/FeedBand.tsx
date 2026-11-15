@@ -12,7 +12,8 @@ export default function FeedBand() {
   const box = useRef<HTMLElement>(null), vid = useRef<HTMLVideoElement>(null), cv = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const el = box.current, v = vid.current, c = cv.current; if (!el || !v || !c) return;
-    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches, wide = window.matchMedia("(min-width:768px)").matches;
+    if (wide) v.poster = "/media/feed-wide-poster.jpg";
     let raf = 0, last = 0;
     const draw = (now: number) => {
       raf = requestAnimationFrame(draw); if (now - last < 50) return; last = now;
@@ -26,7 +27,7 @@ export default function FeedBand() {
       }
     };
     const io = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { if (!v.getAttribute("src")) v.src = "/media/feed-strip.mp4"; v.muted = true; v.play().catch(() => { /* the poster stays */ }); }
+      if (e.isIntersecting) { if (!v.getAttribute("src")) v.src = wide ? "/media/feed-wide.mp4" : "/media/feed-strip.mp4"; v.muted = true; v.play().catch(() => { /* the poster stays */ }); }
       else v.pause();
       cancelAnimationFrame(raf); if (e.isIntersecting && !still) raf = requestAnimationFrame(draw);
     }, { threshold: 0.12 });
