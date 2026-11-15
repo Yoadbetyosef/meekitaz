@@ -51,3 +51,4 @@ and add a line here.
 - trial/bold-look sections (2026-11-14): BoldBits.tsx adds three home sections (promise blocks, the statement across a photo, 120 days) and colours the reviews, press row and feed band — all only under html.mi.
 - trial/bold-look on grey (2026-11-15): the trial page colour moved from white to "their grey" #BDBCB8 (white big headlines, lime brackets). White-page version: commit 77511c5.
 - design/home-feed-dark-band (2026-11-15): commit f7533ae — the dark "Worn · reel · lightly." feed band (FeedBand.tsx, .fb styles still in globals.css), before the lime band with five reels in a row and shimmering squares (option A, .fd styles).
+- design/home-feed-lime-five (2026-11-15): commit 41bdb53 — the lime feed band with five reels in a row, before option C (the reel fills the band, lime squares sweep across, words on lime tags).
