@@ -5201,3 +5201,34 @@ html.pm-lock{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.pm,.pm.on{transition:none}}
 .pm-num{font-size:min(36vw,34vh)}.pm-num small{white-space:nowrap}
 @media(min-width:768px){.pm-num{font-size:min(24vw,38vh)}}
+
+/* ===== Site opening (approved 2026-11-14): "Less than your…" — blue, a faint white grid, the word rolling with its drawing, a mono meter
+   rolling $50 → $01. The cream "day with her" plays with ?intro=day, the first blue with ?intro=blue. ===== */
+.mk-intro4{display:none;position:fixed;inset:0;z-index:100000;background:#0D4FE7;color:#fff;overflow:hidden}
+html.mk-intro-on:not(.mk-blue):not(.mk-day) .mk-intro4{display:block}
+html.mk-intro-on:not(.mk-blue):not(.mk-day) .mk-intro3{display:none!important}
+.mk-intro4.out{animation:mkiLift .65s cubic-bezier(.8,0,.2,1) forwards}
+.mkl-grid{position:absolute;inset:0;z-index:1;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.075) 1px,transparent 1px);background-size:26px 26px;background-position:center top}
+.mkl-say{position:absolute;left:20px;right:20px;top:max(6vh,calc(env(safe-area-inset-top) + 16px));z-index:5;margin:0}
+.mkl-a{display:block;font:500 clamp(38px,5.6vw,84px)/1 var(--f-nsans),var(--display);letter-spacing:-.045em}
+.mkl-w{display:block;height:1.22em;overflow:hidden;font:italic 400 clamp(72px,11.5vw,180px)/1.1 var(--f-nserif),Georgia,serif;letter-spacing:-.02em;margin-top:-.04em}
+.mkl-w span{display:block;animation:mklRoll .3s cubic-bezier(.2,.9,.2,1)}
+@keyframes mklRoll{from{transform:translateY(105%) rotate(4deg)}}
+.mkl-stage{position:absolute;left:0;right:0;top:calc(max(6vh,calc(env(safe-area-inset-top) + 16px)) + clamp(38px,5.6vw,84px) + clamp(72px,11.5vw,180px)*1.15);bottom:calc(124px + env(safe-area-inset-bottom));z-index:3}
+.mkl-dr{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;animation:mklIn .24s cubic-bezier(.2,.9,.2,1) both}
+.mkl-dr img{height:94%;width:auto;max-width:86%;object-fit:contain;display:block;filter:brightness(0) invert(1);animation:mklDrift 1.2s linear both}
+@keyframes mklIn{from{transform:translateX(34vw) rotate(12deg) scale(1.12);opacity:0}}
+@keyframes mklDrift{from{transform:translateX(3.5vw) rotate(var(--r,3deg))}to{transform:translateX(-3.5vw) rotate(calc(var(--r,3deg)*-1))}}
+.mkl-bar{position:absolute;left:20px;right:20px;bottom:calc(18px + env(safe-area-inset-bottom));height:98px;border-top:1px solid #fff;z-index:5}
+.mkl-tk{position:absolute;left:0;top:-2px;height:3px;background:#fff;width:calc(var(--q,1)*100%)}
+.mkl-kn{position:absolute;top:-8px;left:calc(var(--q,1)*100%);width:15px;height:15px;border-radius:50%;background:#fff;transform:translateX(-50%)}
+.mkl-odo{position:absolute;left:0;bottom:0;display:flex;align-items:flex-end;font:500 clamp(56px,7.5vw,92px)/1 var(--f-nmono),ui-monospace,monospace;letter-spacing:-.04em;height:1em;overflow:hidden}
+.mkl-col{height:1em;overflow:hidden}.mkl-col b{display:block;font-weight:500;transition:transform .16s cubic-bezier(.3,.9,.2,1)}.mkl-col b i{display:block;height:1em;font-style:normal}
+.mkl-lbl,.mkl-u{position:absolute;right:0;font:500 11px/1.2 var(--f-nmono),ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}
+.mkl-lbl{top:12px}.mkl-u{bottom:8px}
+@media(min-width:768px){
+  .mkl-say{left:6vw;right:auto;top:16vh;width:46vw}
+  .mkl-stage{left:46vw;right:2vw;top:8vh;bottom:140px}
+  .mkl-bar{left:6vw;right:6vw;bottom:26px}
+}
+@media(prefers-reduced-motion:reduce){.mkl-dr,.mkl-dr img,.mkl-w span{animation:none}}

@@ -14,8 +14,10 @@ const ill = (i: number) => `<img src="/media/intro/d${i}.png" alt="" />`;
 /* W1 (approved 2026-11-08): our M / Meekitaz flicker with his six ink drawings woven in at the same pace, ending on the big Meekitaz watermark */
 const SEQ: [string, number, number | "full" | "ill"][] = [[msvg(true), 220, .3], [msvg(false), 180, .5], [ill(0), 180, "ill"], [wm, 180, .8], [ill(1), 160, "ill"], [msvg(false), 180, 1.0], [ill(2), 180, "ill"], [wm, 180, 1.4], [ill(3), 160, "ill"], [msvg(false), 160, 1.6], [ill(4), 160, "ill"], [wm, 180, 2.2], [ill(5), 180, "ill"], [wm, 560, "full"]];
 
+const LT: [string, string, number][] = [["/media/passage/n2.png", "heels.", -4], ["/media/passage/n3.png", "martini.", 5], ["/media/passage/k5.png", "shades.", -3], ["/media/passage/o6.png", "perfume.", 4], ["/media/passage/o7.png", "coffee.", 3], ["/media/passage/k1.png", "fries.", -2]];
+const DIGITS = "0123456789".split("");
 /* decided before React runs (inline script in the page), so the first frame is on screen at once even while the page is still loading */
-export const INTRO_GATE = `(function(){try{if(location.search.indexOf("intro=blue")>-1)document.documentElement.classList.add("mk-blue");if(sessionStorage.getItem("mk-intro"))return;var r=document.referrer;if(r&&new URL(r).origin===location.origin)return;sessionStorage.setItem("mk-intro","1");sessionStorage.setItem("mk-entry","1");document.documentElement.classList.add("mk-intro-on");}catch(e){}})();`;
+export const INTRO_GATE = `(function(){try{if(location.search.indexOf("intro=blue")>-1)document.documentElement.classList.add("mk-blue");if(location.search.indexOf("intro=day")>-1)document.documentElement.classList.add("mk-day");if(sessionStorage.getItem("mk-intro"))return;var r=document.referrer;if(r&&new URL(r).origin===location.origin)return;sessionStorage.setItem("mk-intro","1");sessionStorage.setItem("mk-entry","1");document.documentElement.classList.add("mk-intro-on");}catch(e){}})();`;
 
 export default function Intro() {
   const [done, setDone] = useState(false);
@@ -24,6 +26,31 @@ export default function Intro() {
     // (2026-11-10, approved "V3"): phones get their own opening — cream, a pink window, his drawings bursting out over its top edge,
     // then the window fills the screen and a huge white Meekitaz watermark spills past the edges. ~1.7s. Computers keep the blue (W1).
     // (2026-11-10) everywhere now, with the story; the old blue (W1) still plays with ?intro=blue so it can be seen again
+    // (approved 2026-11-14, "Less than your…"): blue with a barely-there white grid; "Less than your" stays put while the word rolls —
+    // heels, martini, shades, perfume, coffee, fries — each with its own drawing stamped in and drifting; along the bottom a mono meter
+    // whose digits roll from $50 down to $01. It stops on the fries and lifts onto her photos with their prices. ~3.1s.
+    // The cream "day with her" (S1) still plays with ?intro=day, the old blue (W1) with ?intro=blue.
+    const mode = new URLSearchParams(location.search).get("intro");
+    if (mode !== "blue" && mode !== "day") {
+      const it4 = document.getElementById("mk-intro4"), st = document.getElementById("mkl-stage"), wd = document.getElementById("mkl-w"), bar = document.getElementById("mkl-bar"), o1 = document.getElementById("mkl-o1"), o0 = document.getElementById("mkl-o0");
+      if (!it4 || !st || !wd || !bar || !o1 || !o0) return;
+      document.documentElement.style.overflow = "hidden";
+      LT.forEach(([src]) => { const im = new Image(); im.src = src; });
+      const BEAT = 380, T = BEAT * (LT.length - 1) + 200;
+      let t0 = 0, cur = -1, raf = 0, lifted = false, finished = false;
+      const tick = (now: number) => {
+        if (!t0) t0 = now; const e = now - t0, p = Math.min(1, e / T), k = p * p * (3 - 2 * p), f = 50 - 49 * k, d = Math.max(1, Math.round(f));
+        const i = Math.min(LT.length - 1, Math.floor(e / BEAT));
+        if (i !== cur) { cur = i; st.innerHTML = `<div class="mkl-dr"><img src="${LT[i][0]}" alt="" style="--r:${LT[i][2]}deg${i === LT.length - 1 ? ";animation-duration:3s" : ""}" /></div>`; wd.innerHTML = `<span>${LT[i][1]}</span>`; }
+        o1.style.transform = `translateY(-${Math.floor(d / 10)}em)`; o0.style.transform = `translateY(-${d % 10}em)`;
+        bar.style.setProperty("--q", String((f - 1) / 49 * .96 + .04));
+        if (e >= T + 1000 && !lifted) { lifted = true; it4.classList.add("out"); document.documentElement.classList.add("mk-intro-lift"); window.dispatchEvent(new Event("mk-intro-lift")); }
+        if (e >= T + 1650 && !finished) { finished = true; document.documentElement.style.overflow = ""; document.documentElement.classList.remove("mk-intro-on", "mk-intro-lift"); window.dispatchEvent(new Event("mk-intro-done")); setDone(true); return; }
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+      return () => { cancelAnimationFrame(raf); document.documentElement.style.overflow = ""; };
+    }
     if (new URLSearchParams(location.search).get("intro") !== "blue") {
       // (approved 2026-11-10, "S1 · a day with her", clean white): on our cream, a huge see-through white Meekitaz (along the height on
       // phones), and a day told in two seconds — morning coffee, sunglasses at 1 PM, a cocktail at 7, heels at 11, the cherries — pure white
@@ -73,6 +100,15 @@ export default function Intro() {
   if (done) return null;
   return (
     <>
+    <div className="mk-intro4" id="mk-intro4" aria-hidden="true">
+      <i className="mkl-grid" />
+      <p className="mkl-say"><span className="mkl-a">Less than your</span><span className="mkl-w" id="mkl-w" /></p>
+      <div className="mkl-stage" id="mkl-stage" />
+      <div className="mkl-bar" id="mkl-bar"><i className="mkl-tk" /><i className="mkl-kn" />
+        <div className="mkl-odo"><span>$</span><span className="mkl-col"><b id="mkl-o1" style={{ transform: "translateY(-5em)" }}>{DIGITS.map(d => <i key={d}>{d}</i>)}</b></span><span className="mkl-col"><b id="mkl-o0">{DIGITS.map(d => <i key={d}>{d}</i>)}</b></span></div>
+        <span className="mkl-lbl">A real diamond</span><span className="mkl-u">A day</span>
+      </div>
+    </div>
     <div className="mk-intro3" id="mk-intro3" aria-hidden="true"><i className="mki3-fr" id="mk-intro3-fr" /><div className="mki3-c" id="mk-intro3-c" /></div>
     <div className="mk-intro" id="mk-intro" aria-hidden="true">
       <i className="mki-grid" /><i className="mki-x x1" /><i className="mki-x x2" /><i className="mki-x x3" /><i className="mki-x x4" />
