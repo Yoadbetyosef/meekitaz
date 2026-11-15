@@ -5256,21 +5256,14 @@ html.mk-intro-on:not(.mk-blue):not(.mk-day):not(.mk-words) .mk-intro5{display:bl
 /* ===== "Bold" (2026-11-14, a trial behind one small private switch — html.mi): the whole site in one loud, simple language.
    White paper and bone cards · ink · hot pink for every button and every emphasis · lime and sky as colour blocks · cobalt for the
    deep moments · big rounded cards · a heavy condensed grotesque for headlines, a wide sans for text. Off for everyone else. ===== */
-html.mi{--k-1C1A1B:#1B1B19;--k-121110:#1B1B19;--k-111111:#1B1B19;--k-3A2A28:#1B1B19;--k-7E0508:#1B1B19;--k-4B1425:#1B1B19;--k-0D4FE7:#3A3EB5;--k-2752E6:#3A3EB5;--k-1D3F7A:#3A3EB5;--k-1E8A4F:#3A3EB5;--k-2E7D4F:#3A3EB5;--k-C24E6A:#E95FB4;--k-E8738A:#E95FB4;--k-F08AAE:#E95FB4;--k-F42A3B:#E95FB4;--k-F98C95:#E95FB4;--k-FFC53D:#F2994A;--k-C29A55:#F2994A;--k-B9771A:#F2994A;--k-F8E9D9:#FFFFFF;--k-F5E8DB:#FFFFFF;--k-E5E3EF:#FFFFFF;--k-E4E8EC:#FFFFFF;--k-DFE4EA:#FFFFFF;--k-DCEBF4:#FFFFFF;--k-F4F5F7:#FFFFFF;--k-FBF8F3:#F1F0E7;--k-FDF8F3:#F1F0E7;--k-FAF7F3:#F1F0E7;--k-F4EFE8:#F1F0E7;--k-F6F1EA:#F1F0E7;--k-F0E6DA:#F1F0E7;--k-E3D9CD:#F1F0E7;--k-E9DCCD:#F1F0E7;--k-DFE2E6:#F1F0E7;--k-FBF7DF:#F1F0E7;--k-FFF8D8:#F1F0E7;--k-FDF8E6:#F1F0E7;--k-FEF5D9:#F1F0E7;--k-EFC5CA:#F6D0E8;--k-F7D3DA:#F6D0E8;--k-E8B4B8:#F6D0E8;--k-D4ADAD:#F6D0E8;--k-F2B8C6:#F6D0E8;--k-F6DCE5:#F6D0E8;--k-F2C6B4:#F6D0E8;--k-E9DDF3:#A9C0DC;--k-E6DCE8:#A9C0DC;--k-C4DEEE:#A9C0DC;--k-D6E4C8:#A9C0DC;--k-E8F4EC:#A9C0DC;--k-F7E9A8:#E1FF4F;--k-F7E58A:#E1FF4F;--k-F6E39A:#E1FF4F;--k-F3D27A:#E1FF4F;--ink:#1B1B19;--f-nserif:var(--f-ml);--mc:var(--f-mc),"Arial Narrow",Impact,sans-serif;--ml:var(--f-ml),"Helvetica Neue",Arial,sans-serif}
-html.mi body.lk2{--display:var(--mc);--f-display:var(--mc);--sub:var(--ml);--f-sub:var(--ml);--f-title:var(--ml);color:#1B1B19}
+html.mi{--k-1C1A1B:#1B1B19;--k-121110:#1B1B19;--k-111111:#1B1B19;--k-3A2A28:#1B1B19;--k-7E0508:#1B1B19;--k-4B1425:#1B1B19;--k-0D4FE7:#3A3EB5;--k-2752E6:#3A3EB5;--k-1D3F7A:#3A3EB5;--k-1E8A4F:#3A3EB5;--k-2E7D4F:#3A3EB5;--k-C24E6A:#E95FB4;--k-E8738A:#E95FB4;--k-F08AAE:#E95FB4;--k-F42A3B:#E95FB4;--k-F98C95:#E95FB4;--k-FFC53D:#F2994A;--k-C29A55:#F2994A;--k-B9771A:#F2994A;--k-F8E9D9:#FFFFFF;--k-F5E8DB:#FFFFFF;--k-E5E3EF:#FFFFFF;--k-E4E8EC:#FFFFFF;--k-DFE4EA:#FFFFFF;--k-DCEBF4:#FFFFFF;--k-F4F5F7:#FFFFFF;--k-FBF8F3:#F1F0E7;--k-FDF8F3:#F1F0E7;--k-FAF7F3:#F1F0E7;--k-F4EFE8:#F1F0E7;--k-F6F1EA:#F1F0E7;--k-F0E6DA:#F1F0E7;--k-E3D9CD:#F1F0E7;--k-E9DCCD:#F1F0E7;--k-DFE2E6:#F1F0E7;--k-FBF7DF:#F1F0E7;--k-FFF8D8:#F1F0E7;--k-FDF8E6:#F1F0E7;--k-FEF5D9:#F1F0E7;--k-EFC5CA:#F6D0E8;--k-F7D3DA:#F6D0E8;--k-E8B4B8:#F6D0E8;--k-D4ADAD:#F6D0E8;--k-F2B8C6:#F6D0E8;--k-F6DCE5:#F6D0E8;--k-F2C6B4:#F6D0E8;--k-E9DDF3:#A9C0DC;--k-E6DCE8:#A9C0DC;--k-C4DEEE:#A9C0DC;--k-D6E4C8:#A9C0DC;--k-E8F4EC:#A9C0DC;--k-F7E9A8:#E1FF4F;--k-F7E58A:#E1FF4F;--k-F6E39A:#E1FF4F;--k-F3D27A:#E1FF4F;--ink:#1B1B19}
 html.mi ::selection{background:#E95FB4;color:#1B1B19}
-/* type */
-html.mi body.lk2 :is(h1,h2,h3,h4){font-weight:800;letter-spacing:-.005em!important}
-html.mi body :is(.cf-t b,.oo2-big,.pm-num,.mkf-say,.pst-tag b,.nf-h,.oo2 .oo2-h,.mgrid a span,.d-coin b,.price b){letter-spacing:-.005em!important}
-html.mi body .oo2 .oo2-h,html.mi body .mkf-say em{font-family:var(--mc);font-style:normal;font-weight:800}
-html.mi body.lk2 :is(h1,h2,h3) em,html.mi body.lk2 :is(h1,h2) i:not([class]){font-family:var(--mc)!important;font-style:normal;font-weight:800;letter-spacing:-.005em!important;color:inherit}
-html.mi body.lk2 h1 em::before,html.mi .mkf-say em::before{content:"[";color:#E95FB4;margin-right:.03em}
-html.mi body.lk2 h1 em::after,html.mi .mkf-say em::after{content:"]";color:#E95FB4;margin-left:.03em}
-html.mi body.lk2 :is(h2,h3) em{text-decoration:underline;text-decoration-color:#E95FB4;text-decoration-thickness:.085em;text-underline-offset:.1em}
-html.mi body :is(p,li,.nf-sub,.oo2-lead,.pa-sub,.cf-t i,.pm-what,.rv-body p){font-style:normal}
-html.mi body .cf-t i{font-family:var(--ml);font-weight:500}
+/* emphasis: pink brackets on the big word, a pink line under the smaller ones — our own type stays exactly as it is */
+html.mi body.lk2 h1 em::before,html.mi .mkf-say em::before,html.mi body .pst .pa .pst-h .pst-wd:last-of-type::before{content:"[";color:#E95FB4;font-style:normal;margin-right:.04em}
+html.mi body.lk2 h1 em::after,html.mi .mkf-say em::after,html.mi body .pst .pa .pst-h .pst-wd:last-of-type::after{content:"]";color:#E95FB4;font-style:normal;margin-left:.04em}
+html.mi body.lk2 :is(h2,h3) em{text-decoration:underline;text-decoration-color:#E95FB4;text-decoration-thickness:.07em;text-underline-offset:.12em}
 /* every button: pink, rounded, plain words */
-html.mi body .pill,html.mi body .pst .pa .pst-go,html.mi body .pc-form button,html.mi body .pc-next,html.mi body .cd-empty a,html.mi body .cd-co,html.mi body .pp-add,html.mi body .dcard-cta,html.mi body .dd-choose,html.mi body .nf-cta,html.mi body .sl-all,html.mi body .sq-all,html.mi body .lr-go,html.mi body .hush-cta,html.mi body .ooo-btn,html.mi body .df-cta,html.mi body .dly-go,html.mi body .pp-go,html.mi body .fb a{background:#E95FB4!important;color:#1B1B19!important;border-color:#E95FB4!important;border-radius:16px!important;font-family:var(--ml)!important;font-weight:500!important;font-size:16px!important;letter-spacing:0!important;text-transform:none!important}
+html.mi body .pill,html.mi body .pst .pa .pst-go,html.mi body .pc-form button,html.mi body .pc-next,html.mi body .cd-empty a,html.mi body .cd-co,html.mi body .pp-add,html.mi body .dcard-cta,html.mi body .dd-choose,html.mi body .nf-cta,html.mi body .sl-all,html.mi body .sq-all,html.mi body .lr-go,html.mi body .hush-cta,html.mi body .ooo-btn,html.mi body .df-cta,html.mi body .dly-go,html.mi body .pp-go,html.mi body .fb a{background:#E95FB4!important;color:#1B1B19!important;border-color:#E95FB4!important;border-radius:16px!important}
 @media(hover:hover){html.mi body .pill:hover,html.mi body .pst .pa .pst-go:hover,html.mi body .pc-form button:hover,html.mi body .pc-next:hover,html.mi body .cd-empty a:hover,html.mi body .cd-co:hover,html.mi body .pp-add:hover,html.mi body .dcard-cta:hover,html.mi body .dd-choose:hover,html.mi body .nf-cta:hover,html.mi body .sl-all:hover,html.mi body .sq-all:hover,html.mi body .lr-go:hover,html.mi body .hush-cta:hover,html.mi body .ooo-btn:hover,html.mi body .df-cta:hover,html.mi body .dly-go:hover,html.mi body .pp-go:hover,html.mi body .fb a:hover{background:#1B1B19!important;color:#fff!important;border-color:#1B1B19!important;filter:none}}
 html.mi body .pst .pa .pst-go span{background:#1B1B19;color:#fff}
 /* shapes: big soft corners, no hairline frames */
@@ -5280,24 +5273,28 @@ html.mi .oo2-im{border:0;border-radius:14px}
 html.mi .rv-track .rv{border-radius:28px;overflow:hidden}
 /* the bar on top: dark glass, pink chip */
 html.mi .nav,html.mi .cart{background:rgba(27,27,25,.74)!important;border-color:rgba(255,255,255,.12)!important}
-html.mi .pp-chip{background:#E95FB4!important;color:#1B1B19!important}
+html.mi .pp-chip{background:#E1FF4F!important;color:#1B1B19!important}
 /* the price moment: all pink, one giant number */
 html.mi .pm{background:#E95FB4;color:#1B1B19}
 html.mi .pm-top{border-color:rgba(27,27,25,.45)}
-html.mi .pm-num{font-weight:800}
 html.mi .pm-ctl input::-webkit-slider-runnable-track{background:#1B1B19}html.mi .pm-ctl input::-moz-range-track{background:#1B1B19}
 html.mi .pm-ctl input::-webkit-slider-thumb{background:#1B1B19}html.mi .pm-ctl input::-moz-range-thumb{background:#1B1B19}
 html.mi .pm .pm-pre button{border-color:#1B1B19;border-radius:12px}html.mi .pm .pm-pre button.on{background:#E1FF4F;color:#1B1B19;border-color:#E1FF4F}
-html.mi .pm .pm-done{background:#1B1B19;color:#fff;border-radius:16px;font:500 16px/1 var(--ml);letter-spacing:0;text-transform:none}
+html.mi .pm .pm-done{background:#1B1B19;color:#fff;border-radius:16px}
 @media(hover:hover){html.mi .pm .pm-done:hover{background:#E1FF4F;color:#1B1B19}html.mi .cf:hover .cf-go{background:#E95FB4;color:#1B1B19}html.mi body .cart.cart.cart:hover{background:#E95FB4!important;border-color:#E95FB4!important;color:#1B1B19!important}}
 /* the opening */
 html.mi .mkf-say em{color:#1B1B19}html.mi .mkf-num{color:#1B1B19}
-html.mi .mkf-num .mkl-odo{font-family:var(--mc);font-weight:800;letter-spacing:0}
 /* the one small switch (only a browser that has opened ?look=1 sees it) */
 .pal-sw{position:fixed;left:10px;bottom:10px;z-index:9000;width:30px;height:30px;border-radius:50%;border:2px solid #fff;padding:0;cursor:pointer;background:conic-gradient(#E95FB4 0 34%,#E1FF4F 34% 67%,#3A3EB5 67%);box-shadow:0 4px 14px rgba(0,0,0,.35);opacity:.6;transition:opacity .2s,transform .2s}
 .pal-sw:hover{opacity:1;transform:scale(1.1)}.pal-sw.on{opacity:1;box-shadow:0 0 0 2px #1B1B19,0 4px 14px rgba(0,0,0,.35)}
 @media(max-width:767px){.pal-sw{bottom:calc(10px + env(safe-area-inset-bottom));width:26px;height:26px}}
-html.mi body .pst .pa .pst-h{font-weight:800!important;letter-spacing:-.005em!important;word-spacing:.06em}
-html.mi body .pst .pa .pst-h .pst-wd:last-of-type{font:inherit;letter-spacing:inherit}
-html.mi body .pst .pa .pst-h .pst-wd:last-of-type::before{content:"[";color:#E95FB4}html.mi body .pst .pa .pst-h .pst-wd:last-of-type::after{content:"]";color:#E95FB4}
-html.mi body .pst .pa .pst-sub{font-style:normal}
+/* lime, wherever something is live or yours */
+html.mi .cf-n{left:0;top:0;background:#E1FF4F;color:#1B1B19;padding:6px 10px;border-radius:28px 0 12px 0}
+html.mi .pst-tag small{display:inline-block;background:#E1FF4F;color:#1B1B19;padding:4px 8px;border-radius:6px}
+html.mi .pst-prom u{text-decoration:none;background:linear-gradient(transparent 12%,#E1FF4F 12%,#E1FF4F 92%,transparent 92%);padding:0 .18em;margin-left:-.18em}
+html.mi .pa-lb.y{color:#1B1B19}
+html.mi .mkf-num{background:#E1FF4F;padding:.06em .16em .04em;border-radius:14px;gap:10px}
+html.mi .nf-top>span:first-child,html.mi .oo2-top>span:first-child{background:#E1FF4F;color:#1B1B19;padding:3px 7px;border-radius:5px}
+html.mi .cf-dots i.on{background:#E1FF4F;outline:1px solid #1B1B19}
+html.mi .nf-sw i.on{outline:2px solid #1B1B19;outline-offset:1px}
+html.mi .fb{--fb-acc:#E1FF4F}html.mi .fb h2 em{color:#E1FF4F;text-decoration-color:#E1FF4F}

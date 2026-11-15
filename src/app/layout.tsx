@@ -1,4 +1,3 @@
-import localFont from "next/font/local";
 import PaletteSwitch from "@/components/PaletteSwitch";
 import type { Metadata, Viewport } from "next";
 import { Marcellus, Marcellus_SC, Cormorant_Garamond, Mrs_Saint_Delafield, Inter_Tight, Instrument_Serif, JetBrains_Mono } from "next/font/google";
@@ -33,10 +32,6 @@ const script = Mrs_Saint_Delafield({ weight: "400", subsets: ["latin"], variable
 const nSans = Inter_Tight({ weight: ["400", "500", "600"], subsets: ["latin"], variable: "--f-nsans", display: "swap" });
 const nSerif = Instrument_Serif({ weight: "400", style: ["normal", "italic"], subsets: ["latin"], variable: "--f-nserif", display: "swap" });
 const nMono = JetBrains_Mono({ weight: ["400", "500"], subsets: ["latin"], variable: "--f-nmono", display: "swap" });
-// (2026-11-14) the "Bold" colour-and-type trial (html.mi, private switch): a condensed heavy grotesque for headlines and a wide sans for text.
-// Bundled files, not preloaded — nobody downloads them unless the switch is on.
-const mCond = localFont({ src: [{ path: "../fonts/cond-800.woff2", weight: "100 900", style: "normal" }, { path: "../fonts/cond-800.woff2", weight: "100 900", style: "italic" }], variable: "--f-mc", display: "swap", preload: false });
-const mWide = localFont({ src: [{ path: "../fonts/wide-var.woff2", weight: "100 900", style: "normal" }, { path: "../fonts/wide-var.woff2", weight: "100 900", style: "italic" }], variable: "--f-ml", display: "swap", preload: false });
 const archivo = Marcellus_SC({ weight: "400", subsets: ["latin"], variable: "--f-body", display: "swap" }); // small spaced labels, buttons, prices — Marcellus SC
 
 export const metadata: Metadata = {
@@ -55,7 +50,7 @@ export const viewport: Viewport = { themeColor: "#E5E3EF", viewportFit: "cover" 
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable} ${didact.variable} ${script.variable} ${nSans.variable} ${nSerif.variable} ${nMono.variable} ${mCond.variable} ${mWide.variable}`}>
+    <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable} ${didact.variable} ${script.variable} ${nSans.variable} ${nSerif.variable} ${nMono.variable}`}>
       <head><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_LD) }} /></head>
       <body className="lk2">
         <div className="edge-t" aria-hidden="true" /><div className="edge-b" aria-hidden="true" />{/* phones: the browser bars always take the home page colour, whatever scrolls under them */}
