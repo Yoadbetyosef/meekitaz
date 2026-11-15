@@ -5401,3 +5401,24 @@ html body .cd-co.cd-co.ok{background:#E1FF4F!important;color:#1C1A1B!important;o
 html body .cd-co.ok::after{display:none}
 @media(max-width:767px){.cd-ask{padding:20px 20px calc(22px + env(safe-area-inset-bottom,0px))}}
 @media(prefers-reduced-motion:reduce){.cd-ask,.cd-ask-dim{transition:none}}
+
+/* ===== (2026-11-15, approved "6") the footer with her again: a soft pink band on the cream; her photograph fades into the pink on every
+   side (no frame showing); lime squares come in from the far side and carry "Shhh."; the button and the links sit below on the cream ===== */
+.mkfoot.fq .mkfoot-in{justify-content:flex-start!important;padding-top:clamp(96px,13vh,132px)!important}
+.fq-band{position:relative;flex:1 1 auto;min-height:0;background:var(--k-EFC5CA,#EFC5CA);overflow:hidden}
+.fq-ph{position:absolute;left:27%;bottom:0;height:100%;aspect-ratio:4/5;transform:translateX(-50%);z-index:1;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 20%,#000 80%,transparent 100%),linear-gradient(180deg,transparent 0,#000 14%);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent 0,#000 20%,#000 80%,transparent 100%),linear-gradient(180deg,transparent 0,#000 14%);mask-composite:intersect}
+.fq-ph img{object-fit:cover}
+.fq-sq{position:absolute;left:44%;top:0;width:56%;height:100%;z-index:2;display:block}
+.fq-say{position:absolute;z-index:3;right:clamp(16px,4vw,56px);top:50%;transform:translateY(-50%);text-align:right;color:#1C1A1B}
+.fq-say h2{margin:0;font:600 min(13vw,30vh)/.85 var(--display);letter-spacing:-.05em}
+.fq-say p{margin:.5em 0 0;font:italic 500 min(3vw,7vh)/1.1 var(--sub);white-space:nowrap}
+.fq-low{position:relative;z-index:3;padding:clamp(12px,2.2vh,22px) clamp(16px,4vw,56px) clamp(8px,1.4vh,16px)}
+.mkfoot.fq .hush-cta{margin:0}
+@media(max-width:767px){
+.mkfoot.fq .mkfoot-in{padding-top:86px!important}
+.fq-ph{left:50%;height:62%}
+.fq-sq{left:0;width:100%;height:42%}
+.fq-say{right:auto;left:20px;top:5%;transform:none;text-align:left}
+.fq-say h2{font-size:min(24vw,15vh)}.fq-say p{font-size:min(6vw,3.6vh);margin-top:.3em}
+.fq-low{padding:14px 20px 6px}
+}
