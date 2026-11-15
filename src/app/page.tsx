@@ -13,6 +13,7 @@ import PressRow from "@/components/PressRow";
 import Reviews from "@/components/Reviews";
 import FeedBand from "@/components/FeedBand";
 import PrivateClients from "@/components/PrivateClients";
+import { BoldPromises, BoldStatement, BoldDays } from "@/components/BoldBits";
 
 export const metadata = { alternates: { canonical: "/" } };
 
@@ -26,12 +27,15 @@ export default function Home() {
       {/* (2026-11-08) the dancer's screen stays put; everything below rises over it */}
       <div className="over-fun">
       <Film />{/* phones */}
+      <BoldPromises />{/* (2026-11-14) "Bold" trial sections — shown only with the private switch on */}
       <Categories />{/* (2026-11-09) Shop by category with the model photos again, everywhere */}
       {/* (2026-11-14) the tall feed reel is off the home page for now — FeedReel.tsx is kept; archived as design/home-feed-reel-under-categories */}
       <FloatingFilm />
       {/* (2026-11-08) the feed reel lives in Shop by category now — not twice on the home page */}
       <NewFancy />
+      <BoldStatement />
       <OneOfOne />
+      <BoldDays />
       {RTS_ON && <RtsBike />}{/* (2026-11-09) Ready to ship: the arch window */}
       <PressRow />
       <Reviews />
