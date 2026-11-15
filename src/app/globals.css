@@ -5232,3 +5232,23 @@ html.mk-intro-on:not(.mk-blue):not(.mk-day) .mk-intro3{display:none!important}
   .mkl-bar{left:6vw;right:6vw;bottom:26px}
 }
 @media(prefers-reduced-motion:reduce){.mkl-dr,.mkl-dr img,.mkl-w span{animation:none}}
+
+/* ===== Site opening (approved 2026-11-14, "4"): cream, the hand and the fries, a blue mono meter $50 → $01. The six-word blue
+   version plays with ?intro=words. ===== */
+html.mk-intro-on:not(.mk-words) .mk-intro4{display:none!important}
+html.mk-intro-on.mk-words .mk-intro4{display:block}
+.mk-intro5{display:none;position:fixed;inset:0;z-index:100000;background:var(--home-bg,#F8E9D9);color:#1C1A1B;overflow:hidden}
+html.mk-intro-on:not(.mk-blue):not(.mk-day):not(.mk-words) .mk-intro5{display:block}
+.mk-intro5.out{animation:mkiLift .65s cubic-bezier(.8,0,.2,1) forwards}
+.mkf-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(28,26,27,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(28,26,27,.06) 1px,transparent 1px);background-size:26px 26px;background-position:center top}
+.mkf-say{position:absolute;left:20px;top:max(8vh,calc(env(safe-area-inset-top) + 18px));margin:0;z-index:3;font:500 clamp(40px,5.6vw,84px)/1 var(--f-nsans),var(--display);letter-spacing:-.045em}
+.mkf-say em{display:block;font:italic 400 1.04em var(--f-nserif),Georgia,serif;letter-spacing:-.02em;color:#0D4FE7}
+.mkf-hf{position:absolute;right:-4vw;top:50%;width:min(104vw,74vh);transform:translateY(-50%);z-index:2;animation:mkfReach 2.6s cubic-bezier(.2,.8,.2,1) both}
+.mkf-hf img{width:100%;height:auto;display:block}
+@keyframes mkfReach{from{transform:translate(40vw,-62%) rotate(8deg)}}
+.mkf-num{position:absolute;left:20px;bottom:calc(5vh + env(safe-area-inset-bottom));display:flex;align-items:flex-end;gap:12px;font-size:clamp(64px,9vw,120px);color:#0D4FE7;z-index:3}
+.mkf-num .mkl-odo{position:static;font-size:1em}
+.mkf-u{padding-bottom:14px;color:#1C1A1B;font:500 11px/1.2 var(--f-nmono),ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}
+.mkf-rule{position:absolute;left:20px;right:20px;bottom:calc(5vh + env(safe-area-inset-bottom) + clamp(64px,9vw,120px) + 14px);height:1px;background:#1C1A1B;z-index:3}
+@media(min-width:768px){.mkf-say{left:6vw;top:16vh}.mkf-hf{right:4vw;top:46%}.mkf-num{left:6vw}.mkf-rule{left:6vw;right:6vw}}
+@media(prefers-reduced-motion:reduce){.mkf-hf{animation:none}}

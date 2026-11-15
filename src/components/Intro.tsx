@@ -17,7 +17,7 @@ const SEQ: [string, number, number | "full" | "ill"][] = [[msvg(true), 220, .3],
 const LT: [string, string, number][] = [["/media/passage/n2.png", "heels.", -4], ["/media/passage/n3.png", "martini.", 5], ["/media/passage/k5.png", "shades.", -3], ["/media/passage/o6.png", "perfume.", 4], ["/media/passage/o7.png", "coffee.", 3], ["/media/passage/k1.png", "fries.", -2]];
 const DIGITS = "0123456789".split("");
 /* decided before React runs (inline script in the page), so the first frame is on screen at once even while the page is still loading */
-export const INTRO_GATE = `(function(){try{if(location.search.indexOf("intro=blue")>-1)document.documentElement.classList.add("mk-blue");if(location.search.indexOf("intro=day")>-1)document.documentElement.classList.add("mk-day");if(sessionStorage.getItem("mk-intro"))return;var r=document.referrer;if(r&&new URL(r).origin===location.origin)return;sessionStorage.setItem("mk-intro","1");sessionStorage.setItem("mk-entry","1");document.documentElement.classList.add("mk-intro-on");}catch(e){}})();`;
+export const INTRO_GATE = `(function(){try{if(location.search.indexOf("intro=blue")>-1)document.documentElement.classList.add("mk-blue");if(location.search.indexOf("intro=day")>-1)document.documentElement.classList.add("mk-day");if(location.search.indexOf("intro=words")>-1)document.documentElement.classList.add("mk-words");if(sessionStorage.getItem("mk-intro"))return;var r=document.referrer;if(r&&new URL(r).origin===location.origin)return;sessionStorage.setItem("mk-intro","1");sessionStorage.setItem("mk-entry","1");document.documentElement.classList.add("mk-intro-on");}catch(e){}})();`;
 
 export default function Intro() {
   const [done, setDone] = useState(false);
@@ -31,6 +31,26 @@ export default function Intro() {
     // whose digits roll from $50 down to $01. It stops on the fries and lifts onto her photos with their prices. ~3.1s.
     // The cream "day with her" (S1) still plays with ?intro=day, the old blue (W1) with ?intro=blue.
     const mode = new URLSearchParams(location.search).get("intro");
+    // (approved 2026-11-14, "4 · cream, the hand and the fries"): one drawing, one number. On our cream with a barely-there grid:
+    // "Less than your fries." (fries in blue), the coloured hand-and-fries drawing from the home page reaches in from the right, and
+    // a blue mono meter rolls $50 → $01 along the bottom. Then it lifts onto her photos with their prices. ~2.9s.
+    // The six-word blue version still plays with ?intro=words, "a day with her" with ?intro=day, the first blue with ?intro=blue.
+    if (mode !== "blue" && mode !== "day" && mode !== "words") {
+      const it5 = document.getElementById("mk-intro5"), f1 = document.getElementById("mkf-o1"), f0 = document.getElementById("mkf-o0");
+      if (!it5 || !f1 || !f0) return;
+      document.documentElement.style.overflow = "hidden";
+      const T = 1900;
+      let t0 = 0, raf = 0, lifted = false, finished = false;
+      const tick = (now: number) => {
+        if (!t0) t0 = now; const e = now - t0, p = Math.min(1, e / T), k = p * p * (3 - 2 * p), d = Math.max(1, Math.round(50 - 49 * k));
+        f1.style.transform = `translateY(-${Math.floor(d / 10)}em)`; f0.style.transform = `translateY(-${d % 10}em)`;
+        if (e >= T + 1000 && !lifted) { lifted = true; it5.classList.add("out"); document.documentElement.classList.add("mk-intro-lift"); window.dispatchEvent(new Event("mk-intro-lift")); }
+        if (e >= T + 1650 && !finished) { finished = true; document.documentElement.style.overflow = ""; document.documentElement.classList.remove("mk-intro-on", "mk-intro-lift"); window.dispatchEvent(new Event("mk-intro-done")); setDone(true); return; }
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+      return () => { cancelAnimationFrame(raf); document.documentElement.style.overflow = ""; };
+    }
     if (mode !== "blue" && mode !== "day") {
       const it4 = document.getElementById("mk-intro4"), st = document.getElementById("mkl-stage"), wd = document.getElementById("mkl-w"), bar = document.getElementById("mkl-bar"), o1 = document.getElementById("mkl-o1"), o0 = document.getElementById("mkl-o0");
       if (!it4 || !st || !wd || !bar || !o1 || !o0) return;
@@ -100,6 +120,14 @@ export default function Intro() {
   if (done) return null;
   return (
     <>
+    <div className="mk-intro5" id="mk-intro5" aria-hidden="true">
+      <i className="mkf-grid" />
+      <p className="mkf-say">Less than your<em>fries.</em></p>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <div className="mkf-hf"><img src="/media/home/hand-fries-ink.webp" alt="" /></div>
+      <i className="mkf-rule" />
+      <div className="mkf-num"><div className="mkl-odo"><span>$</span><span className="mkl-col"><b id="mkf-o1" style={{ transform: "translateY(-5em)" }}>{DIGITS.map(d => <i key={d}>{d}</i>)}</b></span><span className="mkl-col"><b id="mkf-o0">{DIGITS.map(d => <i key={d}>{d}</i>)}</b></span></div><span className="mkf-u">A day</span></div>
+    </div>
     <div className="mk-intro4" id="mk-intro4" aria-hidden="true">
       <i className="mkl-grid" />
       <p className="mkl-say"><span className="mkl-a">Less than your</span><span className="mkl-w" id="mkl-w" /></p>
