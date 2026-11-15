@@ -2,7 +2,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 /* Ring size picker for the bag: US 3–13 in quarter sizes, opens centred on the chosen size (or 6). */
-const SIZES = Array.from({ length: 41 }, (_, i) => 3 + i * 0.25);
+export const SIZES = Array.from({ length: 41 }, (_, i) => 3 + i * 0.25);
 export const fmtSize = (v: string | number) => { const s = Number(v); if (!isFinite(s) || !v) return ""; const w = Math.floor(s), f = Math.round((s - w) * 100); return `${w}${f === 25 ? "¼" : f === 50 ? "½" : f === 75 ? "¾" : ""}`; };
 
 export default function SizePicker({ id, value, disabled, onPick }: { id: string; value: string; disabled?: boolean; onPick: (v: string) => void }) {

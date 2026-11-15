@@ -5382,3 +5382,22 @@ html body .cart.cart.cart.has{background:#E1FF4F!important;border-color:#E1FF4F!
 @keyframes cartFl{0%{opacity:0;transform:scale(.6)}18%{opacity:1;transform:scale(1.14)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1)}}
 @media(hover:hover){html body .cart.cart.cart.has:hover{background:#1C1A1B!important;border-color:#1C1A1B!important;color:#E1FF4F!important}}
 @media(prefers-reduced-motion:reduce){.cart-fl{animation-duration:.01s}}
+
+/* (2026-11-15, approved "B") bag: the checkout button stays live; with no ring size it raises this lime sheet */
+.cd-ask-dim{position:absolute;inset:0;z-index:8;background:rgba(28,26,27,.42);opacity:0;pointer-events:none;transition:opacity .3s;border-radius:inherit}
+.cd-ask-dim.on{opacity:1;pointer-events:auto}
+.cd-ask{position:absolute;left:0;right:0;bottom:0;z-index:9;background:#E1FF4F;color:#1C1A1B;border-radius:26px 26px 0 0;padding:22px 24px calc(26px + env(safe-area-inset-bottom,0px));transform:translateY(105%);visibility:hidden;transition:transform .45s cubic-bezier(.2,.9,.2,1),visibility 0s .45s}
+.cd-ask.on{transform:none;visibility:visible;transition:transform .45s cubic-bezier(.2,.9,.2,1)}
+.cdrawer .cd-ask small{display:block;font:500 10px var(--body);letter-spacing:.16em;text-transform:uppercase}
+.cd-ask-h{margin:6px 0 4px;font:500 30px/1 var(--display);letter-spacing:-.03em}
+.cd-ask-h em{font:italic 400 34px var(--f-nserif,serif);letter-spacing:0}
+.cdrawer .cd-ask-for{margin:0 0 12px;font:400 11px/1.4 var(--body);opacity:.7}
+.cdrawer .cd-ask-x{position:absolute;top:18px;right:20px;border:0;background:none;padding:4px;font:500 10px var(--body);letter-spacing:.14em;text-transform:uppercase;text-decoration:underline;cursor:pointer;color:#1C1A1B}
+.cd-ask-list{max-height:min(214px,34vh);overflow-y:auto;overscroll-behavior:contain;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:2px}
+.cd-ask-list button{border:0;background:#fff;border-radius:12px;padding:12px 0;font:400 15px var(--body);cursor:pointer;color:#1C1A1B}
+.cd-ask-list button.whole{background:#1C1A1B;color:#fff;font-weight:600}
+.cd-ask-list button:hover,.cd-ask-list button:focus-visible{background:#F7D3DA;color:#1C1A1B}
+html body .cd-co.cd-co.ok{background:#E1FF4F!important;color:#1C1A1B!important;opacity:1}
+html body .cd-co.ok::after{display:none}
+@media(max-width:767px){.cd-ask{padding:20px 20px calc(22px + env(safe-area-inset-bottom,0px))}}
+@media(prefers-reduced-motion:reduce){.cd-ask,.cd-ask-dim{transition:none}}

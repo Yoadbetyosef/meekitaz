@@ -53,3 +53,4 @@ and add a line here.
 - design/home-feed-dark-band (2026-11-15): commit f7533ae — the dark "Worn · reel · lightly." feed band (FeedBand.tsx, .fb styles still in globals.css), before the lime band with five reels in a row and shimmering squares (option A, .fd styles).
 - design/home-feed-lime-five (2026-11-15): commit 41bdb53 — the lime feed band with five reels in a row, before option C (the reel fills the band, lime squares sweep across, words on lime tags).
 - design/bag-circle-pink-count (2026-11-15): commit 7c1e6d8 — the BAG circle always pink glass with a tiny white count, before lime-when-full with a "+1" flash on add.
+| (2026-11-15) before commit "Bag: checkout button always live" | Bag: with a ring size missing the checkout button was grey and disabled, reading "Select your ring size to continue" (wallet icons disabled too) | return to commit 38fd01e |

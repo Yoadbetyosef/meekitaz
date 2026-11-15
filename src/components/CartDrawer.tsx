@@ -1,13 +1,13 @@
 "use client";
 import { PlanSummary, usePlan, PriceA } from "./PlanKit";
 import { loadPlan, savePlan } from "@/lib/plan";
-import SizePicker from "./SizePicker";
+import SizePicker, { SIZES, fmtSize } from "./SizePicker";
 import ProofRow from "./ProofRow";
 import { DailyPlanPicker, DailyLine, DailyOwn, DailyArrival } from "./DailyPrice";
 import { useDaily } from "./DailyMode";
 import { SaveBagRow, SaveBagPrompt } from "./SaveBag";
 import { dailyOptions, dailyPlan } from "@/lib/daily";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -60,6 +60,40 @@ export default function CartDrawer() {
   const sizeBox = (id: string, value: string, onPick: (v: string) => void) => (
     <SizePicker id={id} value={value} disabled={busy} onPick={onPick} />
   );
+
+  // (2026-11-15, approved "B") the checkout button is always live: with a ring size missing it raises a lime sheet with the
+  // sizes, and once every ring has one it goes on to the checkout the customer asked for, without a second press
+  const needs = [
+    ...rings.filter(r => !r.size).map(r => ({ key: r.id, title: r.setting.title, pick: (v: string) => setRingSize(r.id, v) })),
+    ...cartRings.filter(r => !r.size).map(r => ({ key: r.build, title: r.setting.title, pick: (v: string) => { setCartRingSize([r.setting.id, r.stone.id], v); } })),
+    ...plain.filter(l => isRingLine(l) && !attr(l, "Ring size")).map(l => ({ key: l.id, title: l.title.replace(/ \((?:[^()]*)\)$/, ""), pick: (v: string) => { setCartRingSize([l.id], v); } })),
+  ];
+  const [want, setWant] = useState<"" | "plan" | "days" | "full">("");
+  const [hold, setHold] = useState(false), [lastSize, setLastSize] = useState("");
+  const askList = useRef<HTMLDivElement>(null);
+  const planDay = planAmt ?? (dailyOptions(subtotal).find(o => o.ok) || dailyOptions(subtotal)[4])?.amt;
+  const go = (w: "plan" | "days" | "full") => {
+    if (w === "plan") { setOpen(false); router.push(`/daily/checkout?amt=${planDay}`); }
+    else if (w === "days") { savePlan({ day: dayAmt, months: Math.max(1, Math.round(chosenDays / 30)) }); setOpen(false); router.push(`/daily/checkout?amt=${dayAmt}&days=${chosenDays}`); }
+    else if (rings.length > 0) checkout();
+    else if (cart?.checkoutUrl) window.location.href = cart.checkoutUrl;
+  };
+  const ask = (w: "plan" | "days" | "full") => { if (needSize) { setLastSize(""); setWant(w); } else go(w); };
+  const asking = !!want && needSize && !hold && needs.length > 0;
+  const sized = !!want && !!lastSize && (hold || !needSize);
+  useEffect(() => { if (!open) { setWant(""); setHold(false); } }, [open]);
+  useEffect(() => { if (!hold || busy) return; const t = setTimeout(() => setHold(false), 350); return () => clearTimeout(t); }, [hold, busy]);
+  useEffect(() => {
+    if (!want || needSize || busy || hold || !lastSize) return;
+    const t = setTimeout(() => { const w = want; setWant(""); go(w); }, 900);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [want, needSize, busy, hold, lastSize]);
+  useEffect(() => {
+    const l = askList.current; if (!asking || !l) return;
+    const t = l.querySelector<HTMLElement>('[data-s="6"]');
+    if (t) l.scrollTop = t.offsetTop - l.offsetTop - l.clientHeight / 2 + t.clientHeight / 2;
+  }, [asking, needs[0]?.key]);
 
   useEffect(() => {
     if (!open) return;
@@ -196,19 +230,18 @@ export default function CartDrawer() {
             </div>
             <SaveBagRow />
             {ringError && <p className="cd-err">{ringError}</p>}
-            {daily && !needSize ? <Link className="cd-co" href={`/daily/checkout?amt=${planAmt ?? (dailyOptions(subtotal).find(o => o.ok) || dailyOptions(subtotal)[4]).amt}`} onClick={() => setOpen(false)}>Start my plan · ${planAmt ?? (dailyOptions(subtotal).find(o => o.ok) || dailyOptions(subtotal)[4]).amt} a day</Link> : null}
-            {daily && !needSize ? <a className="cd-co cd-full" href={rings.length ? undefined : cart?.checkoutUrl} onClick={rings.length ? () => checkout() : undefined}>or pay in full · {money(subtotal, cur)}</a>
-            : needSize ? <button className="cd-co" disabled>Select your ring size to continue</button>
-              : payDaily && subtotal > 0 ? <Link className="cd-co" href={`/daily/checkout?amt=${dayAmt}&days=${chosenDays}`} onClick={() => { savePlan({ day: dayAmt, months: Math.max(1, Math.round(chosenDays / 30)) }); setOpen(false); }}>Start at {money(dayAmt, cur).replace(/\.00$/, "")} a day</Link>
-              : rings.length > 0 ? <button className="cd-co" disabled={busy} onClick={checkout}>{busy ? "One moment…" : `Pay ${money(subtotal, cur)}`}</button>
-              : <a className="cd-co" href={cart!.checkoutUrl}>Pay {money(subtotal, cur)}</a>}
+            {sized ? <button className="cd-co ok" disabled>Size {fmtSize(lastSize)} ✓ · on to checkout</button>
+              : daily ? <button className="cd-co" disabled={busy} onClick={() => ask("plan")}>Start my plan · ${planDay} a day</button>
+              : payDaily && subtotal > 0 ? <button className="cd-co" disabled={busy} onClick={() => ask("days")}>Start at {money(dayAmt, cur).replace(/\.00$/, "")} a day</button>
+              : <button className="cd-co" disabled={busy} onClick={() => ask("full")}>{busy ? "One moment…" : `Pay ${money(subtotal, cur)}`}</button>}
+            {daily && !sized && <button className="cd-co cd-full" disabled={busy} onClick={() => ask("full")}>or pay in full · {money(subtotal, cur)}</button>}
             {subtotal > 0 && <ProofRow className="cd-proof" />}
             {!daily && !needSize && subtotal > 0 && <p className="cd-pay-n">{payDaily ? `First payment today: ${money(dayAmt, cur).replace(/\.00$/, "")}. Wear it from the first one.` : "One payment, all yours."}</p>}
             {installments(subtotal) && <p className="cd-inst">{installments(subtotal)}</p>}
             <div className="cd-wallets" aria-label="Ways to pay" role="group">
               <small>Pay with</small>
               {/* the wallets themselves run inside Shopify's checkout; each icon takes the customer straight there */}
-              <button type="button" className="cd-wgo" disabled={busy || needSize} onClick={() => (rings.length > 0 ? checkout() : (window.location.href = cart!.checkoutUrl))} aria-label="Go to checkout to pay with a wallet"></button>
+              <button type="button" className="cd-wgo" disabled={busy} onClick={() => ask("full")} aria-label="Go to checkout to pay with a wallet"></button>
               <i className="w-apple" title="Apple Pay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.7c0-2.4 2-3.5 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9s-1.9-.9-3.2-.8c-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.3 1.2 9.7.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.4.9-1.4 1.3-2.7 1.3-2.8 0 0-2.6-1-2.6-3.9zM14 5.6c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.2-.6 2.8-1.4z"/></svg>Pay</i>
               <i className="w-gpay" title="Google Pay">G Pay</i>
               <i className="w-shop" title="Shop Pay">shop</i>
@@ -218,6 +251,17 @@ export default function CartDrawer() {
             <Trust />
           </div>
         )}
+        </div>
+        <div className={`cd-ask-dim${asking ? " on" : ""}`} onClick={() => setWant("")} aria-hidden="true" />
+        <div className={`cd-ask${asking ? " on" : ""}`} role="dialog" aria-label="Choose your ring size" aria-hidden={!asking}>
+          <button type="button" className="cd-ask-x" onClick={() => setWant("")} tabIndex={asking ? 0 : -1}>Not now</button>
+          <small>One last thing</small>
+          <p className="cd-ask-h">your <em>ring size.</em></p>
+          {needs[0] && <p className="cd-ask-for">{needs[0].title}</p>}
+          <div className="cd-ask-list" ref={askList} role="listbox" aria-label="Ring size">
+            {SIZES.map(z => <button key={z} type="button" role="option" aria-selected={false} data-s={z} tabIndex={asking ? 0 : -1} className={Number.isInteger(z) ? "whole" : ""}
+              onClick={() => { const n = needs[0]; if (!n) return; setLastSize(String(z)); setHold(true); n.pick(String(z)); }}>{fmtSize(z)}</button>)}
+          </div>
         </div>
       </aside>
     </>
