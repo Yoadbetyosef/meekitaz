@@ -5354,3 +5354,18 @@ html.mi .rv-track .rv:nth-child(4n){background:#fff}
 html.mi body .pst-prom s{color:rgba(27,27,25,.6)}html.mi body .pst-prom span{border-color:rgba(27,27,25,.3)}html.mi body .pa-lb{color:rgba(27,27,25,.7)}
 /* (2026-11-15, option 5) lighter grey #C9C8C3; every giant headline on the grey is white */
 html.mi body .rv-nav~* h2,html.mi body section:has(>.rv-track) h2.h2,html.mi body .oo2 .oo2-h{color:#fff}
+/* ===== Home · the feed (approved 2026-11-15, "A"): lime band, the reel five across, squares that shimmer ===== */
+.fd{position:relative;z-index:6;background:#E1FF4F;color:#1C1A1B;overflow:hidden;--fdp:clamp(16px,4vw,56px)}
+.fd-cv{position:absolute;inset:0;width:100%;height:100%;z-index:3;pointer-events:none}
+.fd-hd,.fd-ft{position:relative;z-index:5;display:flex;justify-content:space-between;align-items:center;gap:14px}
+.fd-hd{margin:0 var(--fdp);padding:16px 0;border-bottom:1px solid #1C1A1B;font:500 11px/1.25 var(--f-nmono),ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase}
+body .fd .fd-h{position:relative;z-index:5;margin:0;text-align:center;padding:clamp(20px,3vw,44px) var(--fdp) clamp(14px,2vw,28px);font:500 clamp(64px,13vw,220px)/.86 var(--display);letter-spacing:-.05em;color:#1C1A1B}
+body .fd .fd-h em{font:italic 400 1.03em var(--f-nserif),Georgia,serif;letter-spacing:-.02em}
+.fd-row{position:relative;z-index:2;display:grid;grid-template-columns:repeat(5,1fr);height:clamp(300px,42vw,620px)}
+.fd-row div{overflow:hidden;background:#1C1A1B}.fd-row video{display:block;width:100%;height:100%;object-fit:cover}
+.fd-ft{padding:16px var(--fdp) 20px}
+.fd-ft p{margin:0;font:italic 400 clamp(20px,2.4vw,34px)/1.2 var(--f-nserif),Georgia,serif}
+.fd-btn{display:inline-flex;align-items:center;gap:16px;white-space:nowrap;background:#1C1A1B;color:#fff;border-radius:999px;padding:8px 8px 8px 22px;text-decoration:none;font:500 11px/1 var(--f-nmono),ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;transition:background .3s}
+.fd-btn i{width:40px;height:40px;border-radius:50%;background:#E1FF4F;color:#1C1A1B;display:grid;place-items:center;font-style:normal;font-size:16px}
+@media(hover:hover){.fd-btn:hover{background:#0D4FE7}}
+@media(max-width:767px){.fd-row{grid-template-columns:repeat(3,1fr);height:62vw}.fd-row div:nth-child(n+4){display:none}.fd-ft{flex-direction:column;align-items:flex-start}}
