@@ -18,5 +18,5 @@ export default function PaletteSwitch() {
   }, []);
   if (!show) return null;
   const flip = () => { const n = !on; setOn(n); document.documentElement.classList.toggle("mi", n); try { localStorage.setItem(ON, n ? "1" : "0"); } catch { /* ignore */ } };
-  return <button type="button" className={`pal-sw${on ? " on" : ""}`} role="switch" aria-checked={on} aria-label="Plum colours" title={on ? "Plum colours: on" : "Plum colours: off"} onClick={flip} />;
+  return <button type="button" className={`pal-sw${on ? " on" : ""}`} role="switch" aria-checked={on} aria-label="Bold look" title={on ? "Bold look: on" : "Bold look: off"} onClick={flip} />;
 }
