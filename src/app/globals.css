@@ -5298,3 +5298,7 @@ html.mi .nf-top>span:first-child,html.mi .oo2-top>span:first-child{background:#E
 html.mi .cf-dots i.on{background:#E1FF4F;outline:1px solid #1B1B19}
 html.mi .nf-sw i.on{outline:2px solid #1B1B19;outline-offset:1px}
 html.mi .fb{--fb-acc:#E1FF4F}html.mi .fb h2 em{color:#E1FF4F;text-decoration-color:#E1FF4F}
+/* (2026-11-14) no lime tab on the category films — the label is plain white again; the bag circle and the bag drawer follow the new colours on phones too */
+html.mi .cf-n{left:14px;top:12px;background:none;color:#fff;padding:0;border-radius:0}
+html.mi body .nav.nav.nav,html.mi body .cart.cart.cart.cart{background:rgba(27,27,25,.74)!important;border-color:rgba(255,255,255,.12)!important;color:#fff!important}
+html.mi .cdrawer{background:#fff}
