@@ -81,7 +81,7 @@ export function MidiHeadline() {
       w.style.clipPath = `inset(${Math.max(0, y - w.offsetTop)}px 0 0 0)`;
       q(".mdh-sub").style.opacity = String(cl((d - .7) / .18));
       q(".mdh-card").style.opacity = String(cl((d - .88) / .18));
-      q(".mdh-txt").style.opacity = String(cl((d - 1.01) / .18));
+      q(".mdh-txt").style.opacity = String(cl((d - (window.innerWidth < 768 ? .74 : 1.01)) / .18)); // phones: the line and the button arrive right after the photograph, then it all holds still
       q(".mdh-wash").style.opacity = String(cl((d - (end - .32)) / .3));
     };
     const on = () => { if (!raf) raf = requestAnimationFrame(draw); };
@@ -102,7 +102,7 @@ export function MidiHeadline() {
         <p className="mdh-sub">Worn lightly.</p>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <div className="mdh-card" aria-hidden="true"><img src="/media/intro/d0.png" alt="" loading="lazy" /></div>
-        <p className="mdh-txt">Lipstick first. Ring always. <Link href="/engagement-rings">Shop engagement rings &rarr;</Link></p>
+        <p className="mdh-txt">Lipstick first. Ring always. <Link href="/engagement-rings" className="mdh-a">Shop engagement rings <i aria-hidden="true">&rarr;</i></Link></p>
         <div className="mdh-wash" />
       </div>
     </section>

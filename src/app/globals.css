@@ -5508,7 +5508,7 @@ html.md2 .mdh{height:285vh}
 .mdh-card{position:absolute;z-index:4;left:3vw;bottom:8vh;width:min(40vw,280px);height:min(24vh,176px);overflow:hidden;border-radius:26px;background:var(--k-0D4FE7,#0D4FE7);display:grid;place-items:center;opacity:0}
 .mdh-card img{height:min(19vh,138px);width:auto}
 .mdh-txt{position:absolute;z-index:4;right:3vw;bottom:4vh;max-width:min(34vw,430px);margin:0;color:#fff;font:600 clamp(16px,1.9vw,27px)/1.15 var(--display);letter-spacing:-.02em;opacity:0}
-.mdh-txt a{color:#E1FF4F;white-space:nowrap}
+.mdh-txt a{color:#E1FF4F;white-space:nowrap}.mdh-txt a i{font-style:normal}
 .mdh-wash{position:absolute;inset:0;z-index:5;background:var(--k-F8E9D9,#F8E9D9);opacity:0;pointer-events:none}
 @media(max-width:767px){
 .mdn-ph{background-position:88% 50%;justify-content:flex-end;padding-bottom:7vh}
@@ -5517,11 +5517,14 @@ html.md2 .mdh{height:285vh}
 .mdh-big{left:0;right:0;top:0;height:100%;font-size:15.5vw}
 .mdh-big b{position:absolute;left:3vw;bottom:62px;font-size:14.5vw;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;line-height:.9}
 .mdh-big span{display:inline}
-html.md2 .mdh{height:240vh}
+html.md2 .mdh{height:330vh}
 .mdh-tp{left:24vw;right:30px;top:100px}
 .mdh-vl{left:4px;font-size:8.5px}.mdh-vr{right:8px}
-.mdh-sub{top:auto;bottom:66px;left:24vw;font:500 10px/1.5 var(--f-nmono),ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase}
-.mdh-txt{max-width:none;right:26px;left:24vw;bottom:20px;font-size:15px}
+.mdh-sub{top:auto;bottom:118px;left:24vw;font:500 10px/1.5 var(--f-nmono),ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase}
+.mdh-txt{max-width:none;right:26px;left:24vw;bottom:22px;font-size:17px}
+/* phones: the site's own clear button, not a text link */
+.mdh-txt a.mdh-a{display:flex;align-items:center;justify-content:space-between;height:52px;margin-top:10px;padding:0 8px 0 20px;border-radius:999px;background:#1C1A1B;color:#fff;text-decoration:none;font:500 11px var(--f-nmono),ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase}
+.mdh-txt a.mdh-a i{width:36px;height:36px;border-radius:50%;background:#fff;color:#1C1A1B;display:grid;place-items:center;font-size:15px}
 .mdh-card{display:none}
 }
 @media(prefers-reduced-motion:reduce){.mdn-st div{animation:none}}
