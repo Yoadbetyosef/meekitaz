@@ -81,9 +81,9 @@ export function MidiHeadline() {
   return (
     <section className="mdh" ref={sec} aria-label="Serious diamonds, worn lightly.">
       <div className="mdh-pin">
-        <p className="mdh-big" aria-hidden="true">Serious<br />diamonds</p>
+        <p className="mdh-big" aria-hidden="true"><span>Serious</span><span>diamonds</span></p>
         <div className="mdh-im" />
-        <p className="mdh-big mdh-w" aria-hidden="true">Serious<br />diamonds</p>
+        <p className="mdh-big mdh-w" aria-hidden="true"><span>Serious</span><span>diamonds</span></p>
         <p className="mdh-sub">Worn lightly.</p>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <div className="mdh-card" aria-hidden="true"><img src="/media/intro/d0.png" alt="" loading="lazy" /></div>

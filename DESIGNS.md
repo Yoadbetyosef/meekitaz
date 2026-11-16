@@ -72,3 +72,5 @@ and add a line here.
 - trial/midi-headline-photo-one (2026-11-15): commit d351034 — the trial giant-headline section with the One of One film poster behind it and the blue drawing card on phones, before the dusty-rose blouse photo (daily-number-2.jpg); the number section went back to the woman in black.
 - design/home-categories-order (2026-11-15): commit de87b23 — Shop by category with Diamonds second and Bands sixth, before the two swapped places.
 - design/home-category-arrow-white-circle (2026-11-15): commit 8b78de6 — the white round arrow on the Shop by category film cards (blue on hover), before the pink rounded-square arrow.
+- trial/midi-phone-layouts (2026-11-15): commit 846f0c9 — the trial on phones before: the number section came after the phone film section (not first over the opening), and the giant headline sat on a lavender band above the photograph.
+- design/home-category-arrow-touch (2026-11-15): commit 846f0c9 — on touch screens the category arrow was the white rounded square (pink showed only on hover), before it became always pink and turned there.

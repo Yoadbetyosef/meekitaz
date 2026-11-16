@@ -5498,6 +5498,7 @@ html.md2 .mdh{height:285vh}
 .mdh-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--k-F8E9D9,#F8E9D9)}
 .mdh-big{position:absolute;left:3vw;right:3vw;top:16vh;margin:0;font:600 clamp(44px,9vw,170px)/.86 var(--display);letter-spacing:-.055em;text-transform:uppercase;color:#1C1A1B}
 .mdh-big.mdh-w{color:#fff;z-index:3}
+.mdh-big span{display:block}
 .mdh-im{position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,rgba(40,24,52,.5),rgba(40,24,52,0) 52%),#D8D0E8 url(/media/home/daily-number-2.jpg) 100% 40%/cover;will-change:transform}
 .mdh-sub{position:absolute;z-index:4;left:3vw;top:calc(16vh + min(9vw,170px) * 1.78 + 2vh);margin:0;color:#fff;font:600 clamp(26px,4.4vw,70px)/1 var(--display);letter-spacing:-.035em;opacity:0}
 .mdh-card{position:absolute;z-index:4;left:3vw;bottom:8vh;width:min(40vw,280px);height:min(24vh,176px);overflow:hidden;border-radius:26px;background:var(--k-0D4FE7,#0D4FE7);display:grid;place-items:center;opacity:0}
@@ -5507,9 +5508,14 @@ html.md2 .mdh{height:285vh}
 .mdh-wash{position:absolute;inset:0;z-index:5;background:var(--k-F8E9D9,#F8E9D9);opacity:0;pointer-events:none}
 @media(max-width:767px){
 .mdn-ph{background-position:88% 50%;justify-content:flex-end;padding-bottom:7vh}
-.mdh-im{background:linear-gradient(180deg,rgba(40,24,52,.55),rgba(40,24,52,0) 46%),#D8D0E8 url(/media/home/daily-number-2.jpg) 66% 100%/auto 66vh no-repeat}.mdh-big{font-size:15vw}
-.mdh-sub{top:calc(16vh + 27vw + 1vh)}
-.mdh-txt{max-width:46vw;right:auto;left:3vw;bottom:11vh;font-size:15px}
+.mdh-im{background:linear-gradient(180deg,rgba(40,24,52,.5),rgba(40,24,52,0) 30%,rgba(60,20,30,0) 62%,rgba(60,20,30,.6)),#B06A72 url(/media/home/daily-number-2.jpg) 66% 50%/cover}
+/* phones (approved "C"): the photograph fills the screen; "Serious" sits under the menu, "Diamonds" at the bottom, she is between them */
+.mdh-big{left:0;right:0;top:0;height:100%;font-size:16vw}
+.mdh-big span{position:absolute;left:5vw}
+.mdh-big span:first-child{top:100px}
+.mdh-big span:last-child{bottom:104px}
+.mdh-sub{top:auto;bottom:70px;left:5vw;font-size:6.4vw}
+.mdh-txt{max-width:none;right:5vw;left:5vw;bottom:20px;font-size:15px}
 .mdh-card{display:none}
 }
 @media(prefers-reduced-motion:reduce){.mdn-st div{animation:none}}
@@ -5518,3 +5524,5 @@ html.md2 .mdh{height:285vh}
    with a black arrow that turns pink (#E95FB4) on hover, in place of the white circle that turned blue */
 html body .cf-go{border-radius:14px;background:#fff;color:#1C1A1B}
 @media(hover:hover){html body .cf:hover .cf-go{background:#E95FB4;color:#1C1A1B}}
+/* (2026-11-15) phones and tablets have no hover, so there the arrow always shows its pink, turned state */
+@media(hover:none){html body .cf-go{background:#E95FB4;color:#1C1A1B;transform:rotate(-45deg)}}

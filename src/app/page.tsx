@@ -27,9 +27,9 @@ export default function Home() {
       <HomeOpenPhone><PhoneStory /><DailyCoinSection /></HomeOpenPhone>{/* (2026-11-09) the first screen everywhere: the film from the left, the hand from the right */}
       {/* (2026-11-08) the dancer's screen stays put; everything below rises over it */}
       <div className="over-fun">
+      <MidiNumber />{/* (2026-11-15) trial, shown only with the private FX switch on "added"; first, so on phones it is what rises over the opening */}
       <Film />{/* phones */}
       <BoldPromises />{/* (2026-11-14) "Bold" trial sections — shown only with the private switch on */}
-      <MidiNumber />{/* (2026-11-15) trial, shown only with the private FX switch on "added" */}
       <Categories />{/* (2026-11-09) Shop by category with the model photos again, everywhere */}
       {/* (2026-11-14) the tall feed reel is off the home page for now — FeedReel.tsx is kept; archived as design/home-feed-reel-under-categories */}
       <FloatingFilm />
