@@ -91,9 +91,14 @@ export function MidiHeadline() {
   return (
     <section className="mdh" ref={sec} aria-label="Serious diamonds, worn lightly.">
       <div className="mdh-pin">
-        <p className="mdh-big" aria-hidden="true"><span>Serious</span><span>diamonds</span></p>
-        <div className="mdh-im" />
-        <p className="mdh-big mdh-w" aria-hidden="true"><span>Serious</span><span>diamonds</span></p>
+        <p className="mdh-big" aria-hidden="true"><b><span>Serious</span> <span>diamonds</span></b></p>
+        <div className="mdh-im">
+          {/* (2026-11-15, approved "A") mono writing along the edges; it rides up with the photograph */}
+          <div className="mdh-m mdh-tp" aria-hidden="true"><span>(01) Engagement rings</span><span>From $1 a day</span></div>
+          <span className="mdh-m mdh-vl" aria-hidden="true">Meekitaz · New York · Lab-grown diamonds</span>
+          <span className="mdh-m mdh-vr" aria-hidden="true">Graded by IGI or GIA · Free insured shipping · 30-day free returns · Lifetime warranty</span>
+        </div>
+        <p className="mdh-big mdh-w" aria-hidden="true"><b><span>Serious</span> <span>diamonds</span></b></p>
         <p className="mdh-sub">Worn lightly.</p>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <div className="mdh-card" aria-hidden="true"><img src="/media/intro/d0.png" alt="" loading="lazy" /></div>

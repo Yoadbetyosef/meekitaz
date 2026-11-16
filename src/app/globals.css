@@ -5496,11 +5496,15 @@ html.md2 .mdn,html.md2 .mdh{display:block;position:relative}
 @keyframes mdnmq{to{transform:translateX(-50%)}}
 html.md2 .mdh{height:285vh}
 .mdh-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--k-F8E9D9,#F8E9D9)}
-.mdh-big{position:absolute;left:3vw;right:3vw;top:16vh;margin:0;font:600 clamp(44px,9vw,170px)/.86 var(--display);letter-spacing:-.055em;text-transform:uppercase;color:#1C1A1B}
+.mdh-big{position:absolute;left:3vw;right:3vw;top:calc(112px + 5vh);margin:0;font:600 clamp(44px,9vw,170px)/.86 var(--display);letter-spacing:-.055em;text-transform:uppercase;color:#1C1A1B}
 .mdh-big.mdh-w{color:#fff;z-index:3}
-.mdh-big span{display:block}
+.mdh-big b{display:block;font-weight:inherit}.mdh-big span{display:block}
+.mdh-m{position:absolute;color:#fff;font:500 10px/1.5 var(--f-nmono),ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.mdh-tp{left:3vw;right:44px;top:112px;display:flex;justify-content:space-between;border-top:1px solid #fff;padding-top:6px}
+.mdh-vl{left:12px;top:50%;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);opacity:.85}
+.mdh-vr{right:12px;top:50%;writing-mode:vertical-rl;transform:translateY(-50%)}
 .mdh-im{position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,rgba(40,24,52,.5),rgba(40,24,52,0) 52%),#D8D0E8 url(/media/home/daily-number-2.jpg) 100% 40%/cover;will-change:transform}
-.mdh-sub{position:absolute;z-index:4;left:3vw;top:calc(16vh + min(9vw,170px) * 1.78 + 2vh);margin:0;color:#fff;font:600 clamp(26px,4.4vw,70px)/1 var(--display);letter-spacing:-.035em;opacity:0}
+.mdh-sub{position:absolute;z-index:4;left:3vw;top:calc(112px + 5vh + min(9vw,170px) * 1.78 + 2vh);margin:0;color:#fff;font:600 clamp(26px,4.4vw,70px)/1 var(--display);letter-spacing:-.035em;opacity:0}
 .mdh-card{position:absolute;z-index:4;left:3vw;bottom:8vh;width:min(40vw,280px);height:min(24vh,176px);overflow:hidden;border-radius:26px;background:var(--k-0D4FE7,#0D4FE7);display:grid;place-items:center;opacity:0}
 .mdh-card img{height:min(19vh,138px);width:auto}
 .mdh-txt{position:absolute;z-index:4;right:3vw;bottom:4vh;max-width:min(34vw,430px);margin:0;color:#fff;font:600 clamp(16px,1.9vw,27px)/1.15 var(--display);letter-spacing:-.02em;opacity:0}
@@ -5509,11 +5513,15 @@ html.md2 .mdh{height:285vh}
 @media(max-width:767px){
 .mdn-ph{background-position:88% 50%;justify-content:flex-end;padding-bottom:7vh}
 .mdh-im{background:linear-gradient(180deg,rgba(40,24,52,.5),rgba(40,24,52,0) 30%,rgba(60,20,30,0) 62%,rgba(60,20,30,.6)),#B06A72 url(/media/home/daily-number-2.jpg) 66% 50%/cover}
-/* phones: the photograph fills the screen and the whole headline sits at the bottom on her blouse, clear of her face and the ring */
-.mdh-big{left:5vw;right:5vw;top:auto;bottom:96px;font-size:14.5vw}
+/* phones (approved "A"): the photograph fills the screen, the headline stands up the left side, mono writing runs along both edges */
+.mdh-big{left:0;right:0;top:0;height:100%;font-size:15.5vw}
+.mdh-big b{position:absolute;left:3vw;bottom:62px;font-size:14.5vw;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;line-height:.9}
+.mdh-big span{display:inline}
 html.md2 .mdh{height:240vh}
-.mdh-sub{top:auto;bottom:70px;left:5vw;font-size:6.4vw}
-.mdh-txt{max-width:none;right:5vw;left:5vw;bottom:20px;font-size:15px}
+.mdh-tp{left:24vw;right:30px;top:100px}
+.mdh-vl{left:4px;font-size:8.5px}.mdh-vr{right:8px}
+.mdh-sub{top:auto;bottom:66px;left:24vw;font:500 10px/1.5 var(--f-nmono),ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase}
+.mdh-txt{max-width:none;right:26px;left:24vw;bottom:20px;font-size:15px}
 .mdh-card{display:none}
 }
 @media(prefers-reduced-motion:reduce){.mdn-st div{animation:none}}
