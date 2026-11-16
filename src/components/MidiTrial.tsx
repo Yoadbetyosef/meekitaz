@@ -85,7 +85,7 @@ export function MidiHeadline() {
         <p className="mdh-sub">Worn lightly.</p>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <div className="mdh-card" aria-hidden="true"><img src="/media/intro/d0.png" alt="" loading="lazy" /></div>
-        <p className="mdh-txt">One stone, one setting, one ring. When it&rsquo;s claimed, it&rsquo;s gone. <Link href="/one-of-one">See the one-of-ones &rarr;</Link></p>
+        <p className="mdh-txt">Lipstick first. Ring always. <Link href="/engagement-rings">Shop engagement rings &rarr;</Link></p>
         <div className="mdh-wash" />
       </div>
     </section>
