@@ -5460,3 +5460,7 @@ html body .home-page .sec-head-row h2.h2{font-size:22px!important}
 html body .fd .fd-in{min-height:92svh!important}
 html body .fd .fd-h{font-size:23vw!important}
 }
+
+/* (2026-11-15, approved "2") footer watermark: the wordmark, huge and soft, along the bottom of the band */
+.fq-wm{position:absolute;left:-3%;width:106%;bottom:-7%;aspect-ratio:2400/568;z-index:2;pointer-events:none;background:#fff;opacity:.34;-webkit-mask:url(/brand/meekitaz-logo-white.png) center/contain no-repeat;mask:url(/brand/meekitaz-logo-white.png) center/contain no-repeat}
+@media(max-width:767px){.fq-wm{left:-18%;width:136%;bottom:-3%}}

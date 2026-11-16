@@ -60,3 +60,4 @@ and add a line here.
 - design/home-size-switch-3-rhythms (2026-11-15): commit 1bde583 — the private 0·1·2·3 switch with all three trial rhythms (1 Big / small — chosen, 2 Statements, 3 Quiet).
 - design/home-phone-sizes-before-rhythm (2026-11-15): commit 8779d03 — the phone sizes of the home page before the phone "Big / small" rhythm (category films 84vw at 4:5, the floating diamond full width, "Worn lightly" at 64px).
 - design/home-phone-switch-3-rhythms (2026-11-15): commit 9f57220 — the private 0·1·2·3 switch with all three trial phone rhythms (1 Big / small — chosen, 2 Statements, 3 A screen each).
+- design/footer-6-no-watermark (2026-11-15): commit 9b360a5 — the footer with her and the lime squares, before the soft Meekitaz watermark was added along the bottom of the band.

@@ -14,6 +14,8 @@ export default function Footer() {
         <div className="fq-band">
           <div className="fq-ph"><Image src={hushCard.img} alt="A woman with a finger to her lips, wearing yellow cushion diamond studs, a tennis necklace and an oval diamond ring" fill sizes="(max-width:767px) 90vw, 50vw" quality={78} /></div>
           <FooterSquares />
+          {/* (2026-11-15, approved "2") the wordmark as a huge soft watermark along the bottom of the band, over the pink and the lime, below her face */}
+          <div className="fq-wm" aria-hidden="true" />
           <section className="fq-say" aria-label="Quiet flex"><h2>Shhh.</h2><p>Serious diamonds, worn lightly.</p></section>
         </div>
         <div className="fq-low"><Link href={hushCard.href} className="hush-cta">{hushCard.cta}</Link></div>
