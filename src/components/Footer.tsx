@@ -4,6 +4,7 @@ import { categories, hushCard } from "@/lib/data";
 import { legalLinks } from "@/lib/legal";
 import FooterFx from "./FooterFx";
 import FooterSquares from "./FooterSquares";
+import FooterBird from "./FooterBird";
 
 /** The closing: an all-pink footer revealed under the page. She rises from behind the giant wordmark. */
 export default function Footer() {
@@ -18,6 +19,7 @@ export default function Footer() {
           <div className="fq-wm" aria-hidden="true" />
           <section className="fq-say" aria-label="Quiet flex"><h2>Shhh.</h2><p>Serious diamonds, worn lightly.</p></section>
         </div>
+        <FooterBird />
         <div className="fq-low"><Link href={hushCard.href} className="hush-cta">{hushCard.cta}</Link></div>
         <div className="mkf-under">
           <nav className="mkf-l" aria-label="Shop">{categories.map(c => <Link key={c.slug} href={`/${c.slug}`}>{c.nav}</Link>)}</nav>
