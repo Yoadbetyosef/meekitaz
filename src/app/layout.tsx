@@ -3,6 +3,7 @@ import { Marcellus, Marcellus_SC, Cormorant_Garamond, Mrs_Saint_Delafield, Inter
 import "./globals.css";
 import Nav from "@/components/Nav";
 import { SITE } from "@/lib/seo";
+import { FxSwitch2, FxRise, FxBird } from "@/components/FxTrial2";
 import DesignLabGate from "@/components/DesignLabGate";
 import BgPalette from "@/components/BgPalette";
 import BarStudio from "@/components/BarStudio";
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <FontPalette />
         </CartProvider>
         </DailyMode>
+        <FxRise /><FxBird /><FxSwitch2 />
       </body>
     </html>
   );
