@@ -5468,14 +5468,3 @@ html body .fd .fd-h{font-size:23vw!important}
 /* (2026-11-15, approved "4") the swallow with the pink box lands on "Shhh." as the footer is revealed (FooterBird.tsx) */
 .fq-bird{position:absolute;left:0;top:0;width:clamp(96px,11vw,180px);aspect-ratio:300/275;pointer-events:none;z-index:5;will-change:transform;transform:translate3d(-200%,0,0);background:url(/media/rts/swallow-flap.webp) 0 0/1200% 100% no-repeat}
 @media(max-width:767px){.fq-bird{width:84px}.fq-say{top:13%}}
-
-/* ===== (2026-11-15) TRIAL 2 — two gentle scroll effects behind the private "Scroll FX" switch (FxTrial2.tsx). Nothing applies without html.fx2. ===== */
-.fx-sw{position:fixed;left:14px;bottom:14px;z-index:300;border:0;border-radius:999px;background:#1C1A1B;color:#fff;padding:11px 16px;font:500 11px var(--body);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;box-shadow:0 10px 30px -12px rgba(0,0,0,.5)}
-.fx-sw.on{background:#E1FF4F;color:#1C1A1B}
-.fxw{display:inline-block;overflow:hidden;vertical-align:bottom;padding:0 .06em .14em;margin:0 -.06em -.14em}
-.fxw>span{display:inline-block;transform:translateY(112%);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
-.fxr.fx-in .fxw>span{transform:none}
-html.fx2 .fxb{clip-path:inset(0 0 100% 0);transform:translateY(28%);transition:clip-path .9s cubic-bezier(.2,.8,.2,1),transform .9s cubic-bezier(.2,.8,.2,1)}
-html.fx2 .fxb.fx-in{clip-path:inset(-10% -10% -10% -10%);transform:none}
-.fx-bird{position:fixed;left:0;top:0;width:clamp(96px,11vw,180px);aspect-ratio:300/275;pointer-events:none;z-index:55;visibility:hidden;will-change:transform;background:url(/media/rts/swallow-flap.webp) 0 0/1200% 100% no-repeat}
-@media(max-width:767px){.fx-bird{width:84px}}
