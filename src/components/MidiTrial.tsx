@@ -64,13 +64,15 @@ export function MidiHeadline() {
     const q = (c: string) => s.querySelector<HTMLElement>(c)!; let raf = 0;
     const draw = () => {
       raf = 0; if (!live()) return;
-      const r = s.getBoundingClientRect(), H = window.innerHeight, p = cl(-r.top / Math.max(1, r.height - H)), y = (1 - cl(p / .3)) * H, w = q(".mdh-w");
+      // timed in screens scrolled (d), not as a share of the section, so the opening keeps its pace whatever the section's length:
+      // the photo rises over the first .66 of a screen, the words follow, and it fades out completely over the last .3 before the end
+      const r = s.getBoundingClientRect(), H = window.innerHeight, d = Math.max(0, -r.top) / H, end = Math.max(.1, r.height / H - 1), y = (1 - cl(d / .66)) * H, w = q(".mdh-w");
       q(".mdh-im").style.transform = `translate3d(0,${y}px,0)`;
       w.style.clipPath = `inset(${Math.max(0, y - w.offsetTop)}px 0 0 0)`;
-      q(".mdh-sub").style.opacity = String(cl((p - .32) / .08));
-      q(".mdh-card").style.opacity = String(cl((p - .4) / .08));
-      q(".mdh-txt").style.opacity = String(cl((p - .46) / .08));
-      q(".mdh-wash").style.opacity = String(cl((p - .8) / .14));
+      q(".mdh-sub").style.opacity = String(cl((d - .7) / .18));
+      q(".mdh-card").style.opacity = String(cl((d - .88) / .18));
+      q(".mdh-txt").style.opacity = String(cl((d - 1.01) / .18));
+      q(".mdh-wash").style.opacity = String(cl((d - (end - .32)) / .3));
     };
     const on = () => { if (!raf) raf = requestAnimationFrame(draw); };
     draw(); window.addEventListener("scroll", on, { passive: true }); window.addEventListener("resize", on);
