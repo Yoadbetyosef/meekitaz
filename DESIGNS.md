@@ -70,3 +70,4 @@ and add a line here.
 - trial/midi-number-photo (2026-11-15): commit 21c7edd — the trial number section with the ring-hand film poster (rings-film-desktop-poster.jpg) behind it, before his own photo (woman in black, emerald-cut ring) replaced it.
 - trial/midi-number-photo-black (2026-11-15): commit fd6bcfc — the trial number section with the woman in black (daily-number.jpg, still in the repo), before the dusty-rose blouse photo (daily-number-2.jpg); on phones the number sat over the photo, now it sits under it on ink.
 - trial/midi-headline-photo-one (2026-11-15): commit d351034 — the trial giant-headline section with the One of One film poster behind it and the blue drawing card on phones, before the dusty-rose blouse photo (daily-number-2.jpg); the number section went back to the woman in black.
+- design/home-categories-order (2026-11-15): commit de87b23 — Shop by category with Diamonds second and Bands sixth, before the two swapped places.

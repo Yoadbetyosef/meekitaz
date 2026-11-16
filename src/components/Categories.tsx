@@ -8,11 +8,11 @@ import { useEffect, useRef, useState } from "react";
    and arrows underneath (phones just swipe). The poster tiles this replaces are archived as design/home-shop-by-category-tiles. */
 const FILMS: { href: string; title: string; sub: string; lab: string; film?: string; img?: string; pos?: string }[] = [
   { href: "/engagement-rings", title: "Engagement rings", sub: "One stone. The whole conversation.", lab: "The rings", film: "rings-film" },
-  { href: "/diamonds", title: "Diamonds", sub: "Loose stones, serious sizes.", lab: "The stones", film: "daily/hero" },
+  { href: "/bands", title: "Bands", sub: "The one you never take off.", lab: "The bands", film: "bands-film" },
   { href: "/earrings", title: "Earrings", sub: "A ball cap. Two carats.", lab: "The studs", film: "earrings-film" },
   { href: "/necklaces", title: "Necklaces", sub: "Layered. Then layered again.", lab: "The neck", film: "necklaces-film" },
   { href: "/bracelets", title: "Bracelets", sub: "Stacked for breakfast.", lab: "The wrist", film: "bracelets-film" },
-  { href: "/bands", title: "Bands", sub: "The one you never take off.", lab: "The bands", film: "bands-film" },
+  { href: "/diamonds", title: "Diamonds", sub: "Loose stones, serious sizes.", lab: "The stones", film: "daily/hero" },
   { href: "/fancy-colors", title: "Fancy colors", sub: "Pink is a neutral.", lab: "The colours", film: "fancy-film" },
   { href: "/gemstones", title: "Gemstones", sub: "Green with envy.", lab: "The gems", film: "gems-film" }, // (2026-11-14) its film was missing from the row
   { href: "/one-of-one", title: "One of One", sub: "Made once. Never again.", lab: "Made once", film: "one-film" }, // (2026-11-14) her film: hand over her mouth with the toi-et-moi, then the smile — and back, so it loops. Computers get a wide cut around the hand (mirrored, so the ring sits clear of the title); phones the whole frame. The still it replaces: /media/home/one-of-one-scarf.webp at 50% 22%.
