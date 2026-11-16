@@ -42,8 +42,18 @@ export function MidiNumber() {
       grid.current?.querySelectorAll("i").forEach((g, i) => g.classList.toggle("on", i < Math.round(p * 10)));
     };
     const on = () => { if (!raf) raf = requestAnimationFrame(draw); };
-    draw(); window.addEventListener("scroll", on, { passive: true }); window.addEventListener("resize", on);
-    return () => { window.removeEventListener("scroll", on); window.removeEventListener("resize", on); if (raf) cancelAnimationFrame(raf); };
+    // phones: the opening is taller than the screen and scrolls away, so nothing could climb over it. While this trial is on, it
+    // scrolls until its last screen is showing and then stays put, and this section (with the page below) climbs over it as on computers.
+    const hop = document.querySelector<HTMLElement>(".home-page .hop.hop-daily");
+    const hold = () => {
+      if (!hop) return;
+      if (live() && window.matchMedia("(max-width:767px)").matches) { hop.style.setProperty("position", "sticky", "important"); hop.style.top = `${Math.min(0, window.innerHeight - hop.offsetHeight)}px`; }
+      else { hop.style.removeProperty("position"); hop.style.top = ""; }
+    };
+    const re = () => { hold(); on(); };
+    hold(); draw(); const late = window.setTimeout(hold, 1500);
+    window.addEventListener("scroll", re, { passive: true }); window.addEventListener("resize", re);
+    return () => { window.clearTimeout(late); window.removeEventListener("scroll", re); window.removeEventListener("resize", re); if (raf) cancelAnimationFrame(raf); if (hop) { hop.style.removeProperty("position"); hop.style.top = ""; } };
   }, []);
   return (
     <section className="mdn" ref={sec} aria-label="Meekitaz Daily">

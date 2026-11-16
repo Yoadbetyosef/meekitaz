@@ -74,3 +74,4 @@ and add a line here.
 - design/home-category-arrow-white-circle (2026-11-15): commit 8b78de6 — the white round arrow on the Shop by category film cards (blue on hover), before the pink rounded-square arrow.
 - trial/midi-phone-layouts (2026-11-15): commit 846f0c9 — the trial on phones before: the number section came after the phone film section (not first over the opening), and the giant headline sat on a lavender band above the photograph.
 - design/home-category-arrow-touch (2026-11-15): commit 846f0c9 — on touch screens the category arrow was the white rounded square (pink showed only on hover), before it became always pink and turned there.
+- trial/midi-phone-split-headline (2026-11-15): commit ce88030 — the trial headline on phones with "Serious" under the menu and "Diamonds" at the bottom (over her sunglasses), and the opening scrolling away on phones, before the headline moved to the bottom and the opening stays put while the number section climbs over it.
