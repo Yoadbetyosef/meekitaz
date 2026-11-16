@@ -5483,7 +5483,7 @@ html.md1 .nf-sw i.on,html.md1 .nf-sw i:has(~ i.on){background:#E1FF4F!important;
 /* md2 · added: two new sections */
 .mdn,.mdh{display:none}
 html.md2 .mdn,html.md2 .mdh{display:block;position:relative}
-.mdn-ph{position:relative;height:92vh;display:flex;flex-direction:column;justify-content:center;padding:0 clamp(18px,5vw,72px);color:#fff;background:#222 url(/media/home/daily-number.jpg) 70% 50%/cover}
+.mdn-ph{position:relative;height:92vh;display:flex;flex-direction:column;justify-content:center;padding:0 clamp(18px,5vw,72px);color:#fff;background:#222 url(/media/home/daily-number-2.jpg) 60% 30%/cover}
 .mdn-ph::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.55),transparent 70%)}
 .mdn-ph>*{position:relative}
 .mdn-n{font:600 clamp(80px,15vw,230px)/.9 var(--display);letter-spacing:-.05em}
@@ -5506,7 +5506,7 @@ html.md2 .mdh{height:320vh}
 .mdh-txt a{color:#E1FF4F;white-space:nowrap}
 .mdh-wash{position:absolute;inset:0;z-index:5;background:var(--k-F8E9D9,#F8E9D9);opacity:0;pointer-events:none}
 @media(max-width:767px){
-.mdn-ph{background-position:88% 50%;justify-content:flex-end;padding-bottom:7vh}
+.mdn-ph{height:auto;padding-top:calc(62vh + 26px);padding-bottom:30px;background:#1C1A1B url(/media/home/daily-number-2.jpg) 64% 0/auto 62vh no-repeat}.mdn-ph::before{display:none}
 .mdh-im{background-image:url(/media/one-film-poster.jpg)}
 .mdh-sub{top:calc(16vh + 22vw + 2vh)}
 .mdh-txt{max-width:88vw;bottom:auto;top:calc(16vh + 24vw + 11vh)}
