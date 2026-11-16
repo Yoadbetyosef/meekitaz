@@ -5494,7 +5494,7 @@ html.md2 .mdn,html.md2 .mdh{display:block;position:relative}
 .mdn-st div{display:inline-block;animation:mdnmq 40s linear infinite}
 .mdn-st span{margin-right:3.2em}.mdn-st span::before{content:"";display:inline-block;width:.6em;height:.6em;background:#E1FF4F;outline:1px solid #1C1A1B;margin-right:.9em}
 @keyframes mdnmq{to{transform:translateX(-50%)}}
-html.md2 .mdh{height:320vh}
+html.md2 .mdh{height:290vh}
 .mdh-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--k-F8E9D9,#F8E9D9)}
 .mdh-big{position:absolute;left:3vw;right:3vw;top:16vh;margin:0;font:600 clamp(44px,9vw,170px)/.86 var(--display);letter-spacing:-.055em;text-transform:uppercase;color:#1C1A1B}
 .mdh-big.mdh-w{color:#fff;z-index:3}

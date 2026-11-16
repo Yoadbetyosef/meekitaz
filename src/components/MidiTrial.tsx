@@ -70,7 +70,7 @@ export function MidiHeadline() {
       q(".mdh-sub").style.opacity = String(cl((p - .32) / .08));
       q(".mdh-card").style.opacity = String(cl((p - .4) / .08));
       q(".mdh-txt").style.opacity = String(cl((p - .46) / .08));
-      q(".mdh-wash").style.opacity = String(cl((p - .78) / .18));
+      q(".mdh-wash").style.opacity = String(cl((p - .88) / .12) * .85);
     };
     const on = () => { if (!raf) raf = requestAnimationFrame(draw); };
     draw(); window.addEventListener("scroll", on, { passive: true }); window.addEventListener("resize", on);
