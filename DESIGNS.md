@@ -62,3 +62,4 @@ and add a line here.
 - design/home-phone-switch-3-rhythms (2026-11-15): commit 9f57220 — the private 0·1·2·3 switch with all three trial phone rhythms (1 Big / small — chosen, 2 Statements, 3 A screen each).
 - design/footer-6-no-watermark (2026-11-15): commit 9b360a5 — the footer with her and the lime squares, before the soft Meekitaz watermark was added along the bottom of the band.
 - design/footer-no-swallow (2026-11-15): commit caa08ee — the footer before the swallow with the pink box lands on "Shhh."; on phones "Shhh." sat a little higher (5% from the top of the band, now 13% to leave her room under the menu).
+- trial/scroll-fx-switch (2026-11-15): commit before it f67f461 (67f4611) — the private "Scroll FX" on/off switch (meekitaz.com/?look=1) with three trial scroll effects: the house line filling with ink after the opening, Shop by category passing sideways while locked, and the lime-squares curtain into Fancy colors and the reviews. Off for every visitor.

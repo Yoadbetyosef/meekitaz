@@ -4,6 +4,7 @@ import { DailyCoinSection } from "@/components/DailyPlanSection";
 import Film from "@/components/Film";
 import FloatingFilm from "@/components/FloatingFilm";
 import Categories from "@/components/Categories";
+import { FxLine } from "@/components/FxTrial";
 import PhoneStory from "@/components/PhoneStory";
 import NewFancy from "@/components/NewFancy";
 import OneOfOne from "@/components/OneOfOne";
@@ -26,6 +27,7 @@ export default function Home() {
       <HomeOpenPhone><PhoneStory /><DailyCoinSection /></HomeOpenPhone>{/* (2026-11-09) the first screen everywhere: the film from the left, the hand from the right */}
       {/* (2026-11-08) the dancer's screen stays put; everything below rises over it */}
       <div className="over-fun">
+      <FxLine />{/* (2026-11-15) trial, shown only with the private Scroll FX switch on */}
       <Film />{/* phones */}
       <BoldPromises />{/* (2026-11-14) "Bold" trial sections — shown only with the private switch on */}
       <Categories />{/* (2026-11-09) Shop by category with the model photos again, everywhere */}
