@@ -5468,3 +5468,48 @@ html body .fd .fd-h{font-size:23vw!important}
 /* (2026-11-15, approved "4") the swallow with the pink box lands on "Shhh." as the footer is revealed (FooterBird.tsx) */
 .fq-bird{position:absolute;left:0;top:0;width:clamp(96px,11vw,180px);aspect-ratio:300/275;pointer-events:none;z-index:5;will-change:transform;transform:translate3d(-200%,0,0);background:url(/media/rts/swallow-flap.webp) 0 0/1200% 100% no-repeat}
 @media(max-width:767px){.fq-bird{width:84px}.fq-say{top:13%}}
+
+/* ===== (2026-11-15) TRIAL — the Midi-style scroll language behind the private three-way switch (MidiTrial.tsx).
+   Nothing applies without html.md1 ("on existing") or html.md2 ("added"). ===== */
+.md-sw{position:fixed;left:14px;bottom:14px;z-index:300;border:0;border-radius:999px;background:#1C1A1B;color:#fff;padding:11px 16px;font:500 11px var(--body);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;box-shadow:0 10px 30px -12px rgba(0,0,0,.5)}
+.md-sw.on{background:#E1FF4F;color:#1C1A1B}
+/* md1 · on existing: the counters the page already has become lime pixel meters */
+html.md1 .cf-dots{gap:4px}
+html.md1 .cf-dots i,html.md1 .cf-dots i.on{width:14px;height:14px;background:rgba(28,26,27,.14)}
+html.md1 .cf-dots i.on,html.md1 .cf-dots i:has(~ i.on){background:#E1FF4F;outline:1px solid #1C1A1B;outline-offset:-1px}
+html.md1 .nf-sw{gap:4px}
+html.md1 .nf-sw i{width:14px;height:14px;background:rgba(28,26,27,.14)!important;border:0;opacity:1}
+html.md1 .nf-sw i.on,html.md1 .nf-sw i:has(~ i.on){background:#E1FF4F!important;outline:1px solid #1C1A1B;outline-offset:-1px}
+/* md2 · added: two new sections */
+.mdn,.mdh{display:none}
+html.md2 .mdn,html.md2 .mdh{display:block;position:relative}
+.mdn-ph{position:relative;height:92vh;display:flex;flex-direction:column;justify-content:center;padding:0 clamp(18px,5vw,72px);color:#fff;background:#222 url(/media/rings-film-desktop-poster.jpg) center/cover}
+.mdn-ph::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.55),transparent 70%)}
+.mdn-ph>*{position:relative}
+.mdn-n{font:600 clamp(80px,15vw,230px)/.9 var(--display);letter-spacing:-.05em}
+.mdn p{margin:.2em 0 .7em;max-width:13em;font:600 clamp(24px,3.6vw,52px)/1.05 var(--display);letter-spacing:-.03em;color:#fff}
+.mdn-g{display:grid;grid-template-columns:repeat(5,clamp(30px,3.4vw,46px));gap:5px}
+.mdn-g i{aspect-ratio:1;background:rgba(255,255,255,.3)}.mdn-g i.on{background:#E1FF4F}
+.mdn-st{background:#fff;overflow:hidden;padding:18px 0;white-space:nowrap;font:500 12px var(--f-nmono),ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:#1C1A1B}
+.mdn-st div{display:inline-block;animation:mdnmq 40s linear infinite}
+.mdn-st span{margin-right:3.2em}.mdn-st span::before{content:"";display:inline-block;width:.6em;height:.6em;background:#E1FF4F;outline:1px solid #1C1A1B;margin-right:.9em}
+@keyframes mdnmq{to{transform:translateX(-50%)}}
+html.md2 .mdh{height:320vh}
+.mdh-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--k-F8E9D9,#F8E9D9)}
+.mdh-big{position:absolute;left:3vw;right:3vw;top:16vh;margin:0;font:600 clamp(44px,12.4vw,230px)/.86 var(--display);letter-spacing:-.055em;text-transform:uppercase;color:#1C1A1B}
+.mdh-big.mdh-w{color:#fff;z-index:3}
+.mdh-im{position:absolute;inset:0;z-index:2;background:#222 url(/media/one-film-desktop-poster.jpg) center/cover;will-change:transform}
+.mdh-sub{position:absolute;z-index:4;left:3vw;top:calc(16vh + min(12.4vw,230px) * 1.78 + 2vh);margin:0;color:#fff;font:600 clamp(26px,4.4vw,70px)/1 var(--display);letter-spacing:-.035em;opacity:0}
+.mdh-card{position:absolute;z-index:4;left:3vw;bottom:8vh;width:min(40vw,280px);height:min(24vh,176px);overflow:hidden;border-radius:26px;background:var(--k-0D4FE7,#0D4FE7);display:grid;place-items:center;opacity:0}
+.mdh-card img{height:min(19vh,138px);width:auto}
+.mdh-txt{position:absolute;z-index:4;right:3vw;bottom:14vh;max-width:min(44vw,520px);margin:0;color:#fff;font:600 clamp(18px,2.6vw,38px)/1.12 var(--display);letter-spacing:-.02em;opacity:0}
+.mdh-txt a{color:#E1FF4F;white-space:nowrap}
+.mdh-wash{position:absolute;inset:0;z-index:5;background:var(--k-F8E9D9,#F8E9D9);opacity:0;pointer-events:none}
+@media(max-width:767px){
+.mdn-ph{background-image:url(/media/rings-film-poster.jpg)}
+.mdh-im{background-image:url(/media/one-film-poster.jpg)}
+.mdh-sub{top:calc(16vh + 22vw + 2vh)}
+.mdh-txt{max-width:88vw;bottom:auto;top:calc(16vh + 24vw + 11vh)}
+.mdh-card{bottom:10vh;width:44vw;height:20vh}.mdh-card img{height:16vh}
+}
+@media(prefers-reduced-motion:reduce){.mdn-st div{animation:none}}
