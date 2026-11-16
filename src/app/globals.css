@@ -5514,7 +5514,7 @@ html.md2 .mdh{height:320vh}
 }
 @media(prefers-reduced-motion:reduce){.mdn-st div{animation:none}}
 
-/* (2026-11-15) Shop by category: the arrow on each film card is the pink rounded square from the "Bold" trial (#E95FB4, 14px corners),
-   in place of the white circle that turned blue on hover */
-html body .cf-go{border-radius:14px;background:#E95FB4;color:#1C1A1B}
-@media(hover:hover){html body .cf:hover .cf-go{background:#1C1A1B;color:#E95FB4}}
+/* (2026-11-15) Shop by category: the arrow on each film card is exactly the one from the "Bold" trial: a white rounded square (14px corners)
+   with a black arrow that turns pink (#E95FB4) on hover, in place of the white circle that turned blue */
+html body .cf-go{border-radius:14px;background:#fff;color:#1C1A1B}
+@media(hover:hover){html body .cf:hover .cf-go{background:#E95FB4;color:#1C1A1B}}
