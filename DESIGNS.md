@@ -58,3 +58,5 @@ and add a line here.
 - design/bold-colour-switch (2026-11-15): commit 7aac499 — the round "Bold" colour switch (grey page, pink, cobalt, lime; PaletteSwitch.tsx, html.mi rules and BoldBits sections are still in the code, only the switch is unmounted), before the 0·1·2·3 section-size switch replaced it.
 - design/home-sizes-before-rhythm (2026-11-15): commit 7aac499 — the home page section sizes before "Big / small" (category heading 90px on two lines, smaller category films, Fancy colors boxed at 1180px, reviews heading 54px, 100px section padding).
 - design/home-size-switch-3-rhythms (2026-11-15): commit 1bde583 — the private 0·1·2·3 switch with all three trial rhythms (1 Big / small — chosen, 2 Statements, 3 Quiet).
+- design/home-phone-sizes-before-rhythm (2026-11-15): commit 8779d03 — the phone sizes of the home page before the phone "Big / small" rhythm (category films 84vw at 4:5, the floating diamond full width, "Worn lightly" at 64px).
+- design/home-phone-switch-3-rhythms (2026-11-15): commit 9f57220 — the private 0·1·2·3 switch with all three trial phone rhythms (1 Big / small — chosen, 2 Statements, 3 A screen each).

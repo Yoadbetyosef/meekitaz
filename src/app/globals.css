@@ -5445,44 +5445,18 @@ html body .cfs .cf-h{font-size:30px!important}
 html body .nf .nf-h{font-size:14vw!important;line-height:.92!important}
 }
 
-/* ===== (2026-11-15) Three trial phone rhythms for the home page, behind the private switch (SizeSwitch.tsx). Phones only;
-   nothing applies unless html has .pm1 / .pm2 / .pm3. ===== */
-.sz-sw{position:fixed;left:14px;bottom:14px;z-index:300;display:flex;gap:2px;padding:4px;border-radius:999px;background:#1C1A1B;box-shadow:0 10px 30px -12px rgba(0,0,0,.5)}
-.sz-sw button{width:34px;height:34px;border-radius:50%;border:0;background:none;color:#fff;font:500 12px var(--body);cursor:pointer}
-.sz-sw button.on{background:#E1FF4F;color:#1C1A1B}
+/* ===== (2026-11-15, approved "1") Home page rhythm on phones, Big / small: the pictures and the loud moments are bigger, everything between them smaller and closer ===== */
 @media(max-width:767px){
 /* 1 · Big / small: the pictures and the three loud moments get bigger, everything between them gets smaller and closer */
-html.pm1 body .cfs .cf{flex-basis:88vw!important}
-html.pm1 body .cfs .cf-clip{aspect-ratio:3/4!important}
-html.pm1 body .cfs .cf-t b{font-size:13vw!important}
-html.pm1 body .mkfilm.fl .fl-img{width:58%!important;margin-left:auto!important;margin-right:auto!important}
-html.pm1 body .mkfilm.fl .fl-txt h2{font-size:26px!important}
-html.pm1 body .mkfilm.fl{padding-bottom:26px!important}
-html.pm1 body .nf .nf-h{font-size:15vw!important}
-html.pm1 body .home-page .sec:has(.sec-head-row),html.pm1 body .home-page .sec:has(.pc-grid){padding-top:34px!important;padding-bottom:34px!important}
-html.pm1 body .home-page .sec-head-row h2.h2{font-size:22px!important}
-html.pm1 body .fd .fd-in{min-height:92svh!important}
-html.pm1 body .fd .fd-h{font-size:23vw!important}
-/* 2 · Statements: every heading is large, with more air between the sections */
-html.pm2 body .home-page .sec{padding-top:76px!important;padding-bottom:76px!important}
-html.pm2 body .home-page .sec.nf{padding-top:0!important}
-html.pm2 body .cfs .cf-h{font-size:14vw!important;line-height:.9!important;letter-spacing:-.05em!important}
-html.pm2 body .mkfilm.fl .fl-txt h2{font-size:12.5vw!important;line-height:.94!important}
-html.pm2 body .mkfilm.fl{padding-bottom:70px!important}
-html.pm2 body .nf .nf-h{font-size:15vw!important}
-html.pm2 body .home-page .sec-head-row h2.h2{font-size:11.5vw!important;line-height:.94!important;letter-spacing:-.04em!important}
-html.pm2 body .home-page .pc-body h2{font-size:9vw!important;line-height:1!important}
-html.pm2 body .fd .fd-h{font-size:21vw!important}
-/* 3 · A screen each: each loud moment fills the phone screen; the quiet ones stay small */
-html.pm3 body .cfs .cf{flex-basis:90vw!important}
-html.pm3 body .cfs .cf-clip{aspect-ratio:9/14!important}
-html.pm3 body .cfs .cf-t b{font-size:14vw!important}
-html.pm3 body .mkfilm.fl{min-height:100svh!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
-html.pm3 body .mkfilm.fl .fl-txt h2{font-size:13vw!important;line-height:.94!important}
-html.pm3 body .nf .nf-hold{top:8vh!important;height:86vh!important}
-html.pm3 body .nf .nf-h{font-size:15vw!important}
-html.pm3 body .home-page .sec:has(.sec-head-row),html.pm3 body .home-page .sec:has(.pc-grid){padding-top:38px!important;padding-bottom:38px!important}
-html.pm3 body .home-page .sec-head-row h2.h2{font-size:22px!important}
-html.pm3 body .fd .fd-in{min-height:100svh!important}
-html.pm3 body .fd .fd-h{font-size:25vw!important}
+html body .cfs .cf{flex-basis:88vw!important}
+html body .cfs .cf-clip{aspect-ratio:3/4!important}
+html body .cfs .cf-t b{font-size:13vw!important}
+html body .mkfilm.fl .fl-img{width:58%!important;margin-left:auto!important;margin-right:auto!important}
+html body .mkfilm.fl .fl-txt h2{font-size:26px!important}
+html body .mkfilm.fl{padding-bottom:26px!important}
+html body .nf .nf-h{font-size:15vw!important}
+html body .home-page .sec:has(.sec-head-row),html body .home-page .sec:has(.pc-grid){padding-top:34px!important;padding-bottom:34px!important}
+html body .home-page .sec-head-row h2.h2{font-size:22px!important}
+html body .fd .fd-in{min-height:92svh!important}
+html body .fd .fd-h{font-size:23vw!important}
 }
