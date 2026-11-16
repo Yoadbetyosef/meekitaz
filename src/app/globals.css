@@ -5540,3 +5540,12 @@ html body .cf-go{border-radius:14px;background:#fff;color:#1C1A1B}
    lower so she has room to land under the menu, and the lime reaches a little further down behind it */
 .fq-bird{width:clamp(180px,18vw,340px)}
 @media(max-width:767px){.fq-bird{width:34vw}.fq-say{top:21%}.fq-sq{height:47%}}
+
+/* (2026-11-16) Fancy colors on phones: the card fills the screen under the menu and the words are tighter, so the photograph gets
+   a tall frame again (the bigger heading had squeezed it into a thin strip that cut her) */
+@media(max-width:767px){
+html body .nf .nf-hold{top:88px!important;height:calc(100svh - 100px)!important}
+html body .nf .nf-h{font-size:12.5vw!important;line-height:.92!important}
+html body .nf .nf-txt{padding:16px 18px 50px}
+html body .nf .nf-sub{margin:0 0 14px;font-size:15px;line-height:1.35}
+}
