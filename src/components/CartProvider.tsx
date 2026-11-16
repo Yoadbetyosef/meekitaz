@@ -52,6 +52,17 @@ export default function CartProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     fetch("/api/cart").then(r => r.json()).then(d => { setCart(d.cart ?? null); setConfigured(d.configured !== false); }).catch(() => {});
   }, []);
+  // Coming back from Shopify's checkout with the browser's Back button, the page returns exactly as it was left: still "busy" from the
+  // moment it sent the customer on, so nothing in the bag could be removed or changed. Unlock it and read the bag again.
+  useEffect(() => {
+    const back = (e: PageTransitionEvent) => {
+      if (!e.persisted) return;
+      setBusy(false); setRingError(""); setRings(loadRings());
+      fetch("/api/cart").then(r => r.json()).then(d => { setCart(d.cart ?? null); }).catch(() => {});
+    };
+    window.addEventListener("pageshow", back);
+    return () => window.removeEventListener("pageshow", back);
+  }, []);
   useEffect(() => { const sync = () => setRings(loadRings()); sync(); window.addEventListener("mk-rings", sync); window.addEventListener("storage", sync); return () => { window.removeEventListener("mk-rings", sync); window.removeEventListener("storage", sync); }; }, []);
 
   const run = useCallback(async (body: unknown, openAfter = false) => {
