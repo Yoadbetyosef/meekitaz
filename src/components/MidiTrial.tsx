@@ -71,18 +71,25 @@ export function MidiHeadline() {
   const sec = useRef<HTMLElement>(null);
   useEffect(() => {
     const s = sec.current; if (!s) return;
-    const q = (c: string) => s.querySelector<HTMLElement>(c)!; let raf = 0;
+    const q = (c: string) => s.querySelector<HTMLElement>(c)!; let raf = 0, cur = -1;
+    const pin = q(".mdh-pin"), im = q(".mdh-im"), w = q(".mdh-w"), sub = q(".mdh-sub"), card = q(".mdh-card"), txt = q(".mdh-txt"), wash = q(".mdh-wash");
+    // Timed in screens scrolled (d), not as a share of the section, so the opening keeps its pace whatever the section's length: the
+    // photo rises over the first .66 of a screen, the words follow, and it fades out completely over the last .3 before the end.
+    // Smoothness (phones): the screen height is the pinned frame's own height, which does not change when the browser's bar slides
+    // away (window.innerHeight does, and made the photo jump), and the photo glides toward where the scroll is instead of snapping to it.
     const draw = () => {
       raf = 0; if (!live()) return;
-      // timed in screens scrolled (d), not as a share of the section, so the opening keeps its pace whatever the section's length:
-      // the photo rises over the first .66 of a screen, the words follow, and it fades out completely over the last .3 before the end
-      const r = s.getBoundingClientRect(), H = window.innerHeight, d = Math.max(0, -r.top) / H, end = Math.max(.1, r.height / H - 1), y = (1 - cl(d / .66)) * H, w = q(".mdh-w");
-      q(".mdh-im").style.transform = `translate3d(0,${y}px,0)`;
-      w.style.clipPath = `inset(${Math.max(0, y - w.offsetTop)}px 0 0 0)`;
-      q(".mdh-sub").style.opacity = String(cl((d - .7) / .18));
-      q(".mdh-card").style.opacity = String(cl((d - .88) / .18));
-      q(".mdh-txt").style.opacity = String(cl((d - (window.innerWidth < 768 ? .74 : 1.01)) / .18)); // phones: the line and the button arrive right after the photograph, then it all holds still
-      q(".mdh-wash").style.opacity = String(cl((d - (end - .32)) / .3));
+      const r = s.getBoundingClientRect(), H = pin.offsetHeight || window.innerHeight, target = Math.max(0, -r.top) / H, end = Math.max(.1, r.height / H - 1);
+      if (cur < 0 || r.bottom < -H || r.top > H * 2) cur = target; else cur += (target - cur) * .16;
+      if (Math.abs(target - cur) < .0008) cur = target;
+      const d = cur, y = (1 - cl(d / .66)) * H, phone = window.innerWidth < 768;
+      im.style.transform = `translate3d(0,${y.toFixed(1)}px,0)`;
+      w.style.clipPath = `inset(${Math.max(0, y - w.offsetTop).toFixed(1)}px 0 0 0)`;
+      sub.style.opacity = String(cl((d - .7) / .18));
+      card.style.opacity = String(cl((d - .88) / .18));
+      txt.style.opacity = String(cl((d - (phone ? .74 : 1.01)) / .18));
+      wash.style.opacity = String(cl((d - (end - .32)) / .3));
+      if (cur !== target) raf = requestAnimationFrame(draw);
     };
     const on = () => { if (!raf) raf = requestAnimationFrame(draw); };
     draw(); window.addEventListener("scroll", on, { passive: true }); window.addEventListener("resize", on);
