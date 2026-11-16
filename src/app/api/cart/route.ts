@@ -6,7 +6,8 @@ import { getDiamond, vdbConfigured } from "@/lib/vdb";
 import { adminConfigured, ensureConfiguredVariant, ensureKaratVariant, ensureStoneVariant, getProductOptions } from "@/lib/shopifyAdmin";
 import { addonFor, completeSel, selLabel } from "@/lib/options";
 
-const SIZES = new Set(Array.from({ length: 21 }, (_, i) => String(3 + i * 0.5)));
+// the same quarter sizes the bag offers (3 to 13). It used to accept half sizes only, so a ¼ or ¾ size was refused and checkout failed.
+const SIZES = new Set(Array.from({ length: 41 }, (_, i) => String(3 + i * 0.25)));
 
 const COOKIE = "meekitaz_cart";
 const FREE_STUDS_VARIANT = "gid://shopify/ProductVariant/67828260569325";
