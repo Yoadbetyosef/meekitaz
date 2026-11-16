@@ -23,29 +23,8 @@ const src = (f: string, wide: boolean) => f === "daily/hero" ? { v: "/media/dail
   : wide ? { v: `/media/${f}-desktop.mp4`, p: `/media/${f}-desktop-poster.jpg` } : { v: `/media/${f}.mp4`, p: `/media/${f}-poster.jpg` };
 
 export default function Categories() {
+  const row = useRef<HTMLDivElement>(null);
   const [at, setAt] = useState(0), [wide, setWide] = useState(true);
-  const row = useRef<HTMLDivElement>(null), sec = useRef<HTMLElement>(null), inn = useRef<HTMLDivElement>(null);
-  // (2026-11-15) TRIAL, only while html.fx is on (the private "Scroll FX" switch, FxTrial.tsx): the section locks in place and the
-  // row of films passes sideways as the page is scrolled down. With the switch off none of this runs and the row swipes as before.
-  useEffect(() => {
-    const s = sec.current, n = inn.current, r = row.current; if (!s || !n || !r) return;
-    let raf = 0, extra = 0, run = 0, top = 0, live = false;
-    const build = () => {
-      live = document.documentElement.classList.contains("fx");
-      if (!live) { s.style.height = ""; n.style.top = ""; return; }
-      s.style.height = "";
-      const cs = getComputedStyle(s), pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
-      extra = Math.max(0, r.scrollWidth - r.clientWidth); top = Math.max(70, (window.innerHeight - n.offsetHeight) / 2);
-      run = extra * (window.innerWidth >= 768 ? .42 : .6); // the films pass faster than the page scrolls, so the lock stays short
-      s.style.height = `${n.offsetHeight + pad + run}px`; n.style.top = `${top}px`;
-    };
-    const draw = () => { raf = 0; if (!live || !run) return; const b = s.getBoundingClientRect(), padTop = parseFloat(getComputedStyle(s).paddingTop); r.scrollLeft = Math.max(0, Math.min(1, (top - (b.top + padTop)) / run)) * extra; };
-    const on = () => { if (!raf) raf = requestAnimationFrame(draw); };
-    const re = () => { build(); on(); };
-    build(); draw(); const late = window.setTimeout(re, 900);
-    window.addEventListener("scroll", on, { passive: true }); window.addEventListener("resize", re); window.addEventListener("mk-fx", re);
-    return () => { window.clearTimeout(late); window.removeEventListener("scroll", on); window.removeEventListener("resize", re); window.removeEventListener("mk-fx", re); if (raf) cancelAnimationFrame(raf); s.style.height = ""; n.style.top = ""; };
-  }, [wide]);
   useEffect(() => { const m = window.matchMedia("(min-width:768px)"), f = () => setWide(m.matches); f(); m.addEventListener("change", f); return () => m.removeEventListener("change", f); }, []);
   useEffect(() => {
     const el = row.current; if (!el) return;
@@ -60,8 +39,7 @@ export default function Categories() {
   const go = (d: number) => row.current?.scrollBy({ left: d * step(), behavior: "smooth" });
   const onScroll = () => { const el = row.current, s = step(); if (el && s) setAt(Math.min(FILMS.length - 1, Math.round(el.scrollLeft / s))); };
   return (
-    <section className="sec cfs" id="shop" aria-label="Shop by category" ref={sec}>
-      <div className="cfs-in" ref={inn}>
+    <section className="sec cfs" id="shop" aria-label="Shop by category">
       <div className="cf-hd"><span>Shop by category</span><span>({p2(FILMS.length)})</span></div>
       <h2 className="cf-h">Serious diamonds,<em>worn lightly.</em></h2>
       <div className="cf-row" ref={row} onScroll={onScroll}>
@@ -84,7 +62,6 @@ export default function Categories() {
         <span className="cf-cnt">{p2(at + 1)} / {p2(FILMS.length)}</span>
         <span className="cf-dots" aria-hidden="true">{FILMS.map((_, i) => <i key={i} className={i === at ? "on" : ""} />)}</span>
         <span className="cf-ar"><button type="button" aria-label="Previous category" onClick={() => go(-1)}>&larr;</button><button type="button" aria-label="Next category" onClick={() => go(1)}>&rarr;</button></span>
-      </div>
       </div>
     </section>
   );

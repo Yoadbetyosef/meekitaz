@@ -5468,20 +5468,3 @@ html body .fd .fd-h{font-size:23vw!important}
 /* (2026-11-15, approved "4") the swallow with the pink box lands on "Shhh." as the footer is revealed (FooterBird.tsx) */
 .fq-bird{position:absolute;left:0;top:0;width:clamp(96px,11vw,180px);aspect-ratio:300/275;pointer-events:none;z-index:5;will-change:transform;transform:translate3d(-200%,0,0);background:url(/media/rts/swallow-flap.webp) 0 0/1200% 100% no-repeat}
 @media(max-width:767px){.fq-bird{width:84px}.fq-say{top:13%}}
-
-/* ===== (2026-11-15) TRIAL — three scroll effects behind the private "Scroll FX" switch (FxTrial.tsx). Nothing applies without html.fx. ===== */
-.fx-sw{position:fixed;left:14px;bottom:14px;z-index:300;border:0;border-radius:999px;background:#1C1A1B;color:#fff;padding:11px 16px;font:500 11px var(--body);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;box-shadow:0 10px 30px -12px rgba(0,0,0,.5)}
-.fx-sw.on{background:#E1FF4F;color:#1C1A1B}
-.fx-cur{position:fixed;inset:0;width:100%;height:100%;z-index:55;pointer-events:none;display:none}
-html.fx .fx-cur{display:block}
-.fxl{display:none}
-html.fx .fxl{display:block;position:relative;height:230vh;background:var(--k-F8E9D9,#F8E9D9)}
-.fxl-pin{position:sticky;top:0;height:100vh;height:100svh;display:grid;place-items:center;padding:0 clamp(18px,6vw,90px)}
-.fxl p{margin:0;max-width:14ch;font:500 clamp(40px,8.6vw,150px)/.95 var(--display);letter-spacing:-.045em;color:#1C1A1B}
-.fxl p span{opacity:.13;transition:opacity .25s}
-.fxl p span.on{opacity:1}
-.fxl p em{font:italic 400 1.04em var(--sub);letter-spacing:-.02em}
-html.fx body .cfs{overflow:visible!important;overflow-x:clip!important}
-html.fx .cfs-in{position:sticky}
-html.fx .cf-row{scroll-snap-type:none!important;overflow-x:hidden!important}
-html.fx .cf-ar{visibility:hidden}
