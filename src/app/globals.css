@@ -5535,3 +5535,8 @@ html body .cf-go{border-radius:14px;background:#fff;color:#1C1A1B}
 @media(hover:hover){html body .cf:hover .cf-go{background:#E95FB4;color:#1C1A1B}}
 /* (2026-11-15) phones and tablets have no hover, so there the arrow always shows its pink, turned state */
 @media(hover:none){html body .cf-go{background:#E95FB4;color:#1C1A1B;transform:rotate(-45deg)}}
+
+/* (2026-11-16, approved "A") the footer swallow, big: about two and a half times its earlier size; on phones "Shhh." sits a little
+   lower so she has room to land under the menu, and the lime reaches a little further down behind it */
+.fq-bird{width:clamp(180px,18vw,340px)}
+@media(max-width:767px){.fq-bird{width:34vw}.fq-say{top:21%}.fq-sq{height:47%}}
