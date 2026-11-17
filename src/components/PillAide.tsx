@@ -19,8 +19,8 @@ export default function PillAide({ path, day, leftDay, prod, onPlan, close }: { 
   const { cart, rings, add, addRing, setOpen: setBag } = useCart();
   const [busy, setBusy] = useState(false), [hit, setHit] = useState(-1), [ans, setAns] = useState<Ans | null>(null), [text, setText] = useState("");
   const alive = useRef(true);
-  useEffect(() => { alive.current = true; return () => { alive.current = false; document.body.classList.remove("pa-think"); }; }, []);
-  useEffect(() => { document.body.classList.toggle("pa-think", busy); }, [busy]);
+  useEffect(() => { alive.current = true; return () => { alive.current = false; document.body.classList.remove("pai-think"); }; }, []);
+  useEffect(() => { document.body.classList.toggle("pai-think", busy); }, [busy]);
 
   async function ask(q: string, i = -1) {
     const m = q.trim(); if (!m || busy) return;
@@ -75,19 +75,19 @@ export default function PillAide({ path, day, leftDay, prod, onPlan, close }: { 
     ];
   }
   return (
-    <div className={`pa${busy ? " think" : ""}`}>
+    <div className={`pai${busy ? " think" : ""}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <div className="pa-hd"><img src={MARCEL} alt="" /><div><b>{head}</b><small>Marcel · here with you</small></div></div>
-      <div className="pa-plan"><span>Your plan</span><b>{day ? `${usdR(day)} a day` : "Not chosen yet"}</b><button type="button" onClick={onPlan}>{day ? "Change" : "Choose"}</button></div>
-      <div className="pa-acts">{acts.map((a, i) => <button key={a.label} type="button" className={`${i === 0 ? "pri" : ""}${hit === i && busy ? " hit" : ""}`} disabled={busy} onClick={a.run}><span>{a.label}<small>{a.sub}</small></span><i aria-hidden="true">&rarr;</i></button>)}</div>
-      {busy && <div className="pa-wait" aria-live="polite">Marcel is thinking<i /><i /><i /></div>}
-      {ans && <div className="pa-ans" aria-live="polite">
+      <div className="pai-hd"><img src={MARCEL} alt="" /><div><b>{head}</b><small>Marcel · here with you</small></div></div>
+      <div className="pai-plan"><span>Your plan</span><b>{day ? `${usdR(day)} a day` : "Not chosen yet"}</b><button type="button" onClick={onPlan}>{day ? "Change" : "Choose"}</button></div>
+      <div className="pai-acts">{acts.map((a, i) => <button key={a.label} type="button" className={`${i === 0 ? "pri" : ""}${hit === i && busy ? " hit" : ""}`} disabled={busy} onClick={a.run}><span>{a.label}<small>{a.sub}</small></span><i aria-hidden="true">&rarr;</i></button>)}</div>
+      {busy && <div className="pai-wait" aria-live="polite">Marcel is thinking<i /><i /><i /></div>}
+      {ans && <div className="pai-ans" aria-live="polite">
         {ans.text && <p>{ans.text}</p>}
-        {!!ans.cards?.length && <div className="pa-cards">{ans.cards.map(c => <a key={c.url} href={c.url}>{c.image && /* eslint-disable-next-line @next/next/no-img-element */ <img src={c.image} alt="" />}<b>{c.title}</b><em>{c.price}</em></a>)}</div>}
-        {!!ans.chips?.length && <div className="pa-chips">{ans.chips.map(c => <button key={c} type="button" onClick={() => void ask(c)}>{c}</button>)}</div>}
-        <button type="button" className="pa-more" onClick={() => { close(); window.dispatchEvent(new Event("mk-marcel-open")); }}>Keep talking with Marcel</button>
+        {!!ans.cards?.length && <div className="pai-cards">{ans.cards.map(c => <a key={c.url} href={c.url}>{c.image && /* eslint-disable-next-line @next/next/no-img-element */ <img src={c.image} alt="" />}<b>{c.title}</b><em>{c.price}</em></a>)}</div>}
+        {!!ans.chips?.length && <div className="pai-chips">{ans.chips.map(c => <button key={c} type="button" onClick={() => void ask(c)}>{c}</button>)}</div>}
+        <button type="button" className="pai-more" onClick={() => { close(); window.dispatchEvent(new Event("mk-marcel-open")); }}>Keep talking with Marcel</button>
       </div>}
-      <form className="pa-ask" onSubmit={e => { e.preventDefault(); void ask(text); }}>
+      <form className="pai-ask" onSubmit={e => { e.preventDefault(); void ask(text); }}>
         <input value={text} onChange={e => setText(e.target.value)} placeholder="Something else? Ask Marcel…" aria-label="Ask Marcel" maxLength={1000} />
         <button disabled={busy || !text.trim()} aria-label="Send">&rarr;</button>
       </form>
