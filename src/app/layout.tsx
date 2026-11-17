@@ -4,6 +4,7 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import { SITE } from "@/lib/seo";
 import { MidiSwitch } from "@/components/MidiTrial";
+import { PillSwitch } from "@/components/PillPlan";
 import DesignLabGate from "@/components/DesignLabGate";
 import BgPalette from "@/components/BgPalette";
 import BarStudio from "@/components/BarStudio";
@@ -76,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </CartProvider>
         </DailyMode>
         <MidiSwitch />
+        <PillSwitch />
       </body>
     </html>
   );

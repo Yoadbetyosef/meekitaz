@@ -5549,3 +5549,27 @@ html body .nf .nf-h{font-size:12.5vw!important;line-height:.92!important}
 html body .nf .nf-txt{padding:16px 18px 50px}
 html body .nf .nf-sub{margin:0 0 14px;font-size:15px;line-height:1.35}
 }
+
+/* ── (2026-11-16) TRIAL: the pill winks — private "Pill" switch (html.pw1 lime / html.pw2 our colours). See PillPlan.tsx ── */
+.pw-sw{bottom:60px}
+html.pw1 .pp-chip,html.pw2 .pp-chip{max-width:230px;overflow:hidden;transition:max-width .5s cubic-bezier(.2,.8,.2,1),background .3s,color .3s}
+html.pw1 .pp-chip.pw-go,html.pw2 .pp-chip.pw-go{max-width:340px;padding:0 18px 0 10px!important;background:#E1FF4F!important;color:#1C1A1B!important}
+.pw-b{display:inline-flex;align-items:center;gap:8px;animation:pwIn .4s .1s both}
+.pw-b img{height:24px;width:auto;display:block}
+.pw-b em{font:500 11px/1 var(--f-nmono),ui-monospace,monospace;font-style:normal;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+@keyframes pwIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:none}}
+/* the swallow: sits on the pill's top edge */
+html.pw1 .pp-chip.pw-bird,html.pw2 .pp-chip.pw-bird{overflow:visible}
+.pw-swl{position:absolute;left:-10px;bottom:calc(100% - 12px);width:48px;height:44px;background:url(/media/rts/swallow-flap.webp) -432px 0/576px 44px no-repeat;animation:pwBird .55s cubic-bezier(.2,.9,.3,1.4) both;pointer-events:none}
+html.pw1 .pp-chip.pw-bird,html.pw2 .pp-chip.pw-bird{position:relative;padding:0 20px 0 34px!important}html.pw1 .pp-chip.pw-go,html.pw2 .pp-chip.pw-go{flex:none!important}
+@keyframes pwBird{from{opacity:0;transform:translate(-26px,-22px) rotate(-14deg)}to{opacity:1;transform:none}}
+/* our colours, one for each kind of wink */
+html.pw2 .pp-chip.pw-saved{background:#E95FB4!important;color:#fff!important}
+html.pw2 .pp-chip.pw-fits{background:#0D4FE7!important;color:#fff!important}
+html.pw2 .pp-chip.pw-over{background:#1C1A1B!important;color:#fff!important}
+html.pw2 .pp-chip.pw-bird{background:#F7D3DA!important;color:#1C1A1B!important}
+html.pw2 .pp-chip.pw-saved img,html.pw2 .pp-chip.pw-fits img,html.pw2 .pp-chip.pw-over img{filter:invert(1)}
+@media(max-width:767px){body.pw-on .nav-wish,body.pw-on .nav-search{display:none!important}html.pw1 .pp-chip.pw-go,html.pw2 .pp-chip.pw-go{max-width:280px;padding:0 12px 0 8px!important}.pw-b{gap:6px}.pw-b em{font-size:10px;letter-spacing:0}.pw-b img{height:20px}}
+@media(prefers-reduced-motion:reduce){.pw-b,.pw-swl{animation:none}html.pw1 .pp-chip,html.pw2 .pp-chip{transition:none}}
+html.pw1 .pp-chip.pw-go.pw-bird,html.pw2 .pp-chip.pw-go.pw-bird{padding:0 18px 0 40px!important}
+.pw-swl{left:-4px;bottom:calc(100% - 20px)}
