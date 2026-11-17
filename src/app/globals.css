@@ -5637,3 +5637,18 @@ html.pmo1 .pp-chip{position:relative}
 @keyframes pmoFace{0%,100%{opacity:0}10%,90%{opacity:1}}
 @keyframes pmoWink{0%,40%,62%,100%{transform:scaleY(1)}48%,56%{transform:scaleY(.12)}}
 @keyframes pmoZ{0%{opacity:0;transform:translate(0,4px) scale(.6)}30%{opacity:1}100%{opacity:0;transform:translate(6px,-14px) scale(1.15)}}
+
+/* ── (2026-11-17) TRIAL: our drawings on the pill (same private "Pill" switch, html.pmo1). The price steps aside, a drawing runs across or rises, the price is back ── */
+html.pmo1 .pp-chip{overflow:hidden;transition:background .3s}
+.pp-chip.pmo-toon>:not(.pmo-act){opacity:0;transition:opacity .2s}
+html.pmo1 .pp-chip>*{transition:opacity .25s}
+.pmo-act{position:absolute;inset:0;z-index:4;pointer-events:none;opacity:1!important}
+.pmo-act img{position:absolute;height:32px;width:auto;max-width:none;top:3px;left:0;opacity:0}
+.pmo-act img.run{animation:pmoRun 1.5s cubic-bezier(.3,0,.7,1) both,pmoHop .16s ease-in-out infinite alternate}
+.pmo-act img.run.rtl{animation-name:pmoRunB,pmoHop}
+.pmo-act img.pop{left:50%;animation:pmoRise 1.9s cubic-bezier(.3,1.5,.5,1) both}
+.pmo-act.par img.run{height:27px;top:6px;animation:pmoRun 2.6s linear both,pmoHop .16s ease-in-out infinite alternate}
+@keyframes pmoRun{0%{left:-56px;opacity:1}100%{left:100%;opacity:1}}
+@keyframes pmoRunB{0%{left:100%;opacity:1}100%{left:-56px;opacity:1}}
+@keyframes pmoHop{to{margin-top:-3px}}
+@keyframes pmoRise{0%,100%{transform:translate(-50%,44px);opacity:1}18%{transform:translate(-50%,0) rotate(-8deg);opacity:1}45%{transform:translate(-50%,0) rotate(8deg);opacity:1}70%{transform:translate(-50%,0) rotate(-4deg);opacity:1}82%{transform:translate(-50%,0);opacity:1}}
