@@ -25,11 +25,14 @@ const SEEN = "mk_plan_intro";
 type Wink = { kind: "bag" | "saved" | "fits" | "over" | "back" | "bird"; text: string; ic?: string };
 const pillOn = () => { try { const c = document.documentElement.classList; return c.contains("pw1") || c.contains("pw2"); } catch { return false; } };
 // (2026-11-17) the switch now turns on the assistant pill (html.pa1, see PillAide.tsx); the winks (pw1/pw2) stay in the code, switched off
-const KEY_PW = "mk-pa", SHOW_PW = "mk-look-show", NAMES_PW = ["Pill · off", "Pill · assistant"];
+// (2026-11-17, later) the assistant was cancelled; the switch now turns on the pill's moods (html.pmo1): it winks, looks at you, falls asleep
+const KEY_PW = "mk-pmo", SHOW_PW = "mk-look-show", NAMES_PW = ["Pill · off", "Pill · moods"];
+const moodsOn = () => { try { return document.documentElement.classList.contains("pmo1") && !window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch { return false; } };
+type Mood = "wink" | "look" | "sleep" | null;
 const aideOn = () => { try { return document.documentElement.classList.contains("pa1"); } catch { return false; } };
 export function PillSwitch() {
   const [show, setShow] = useState(false), [v, setV] = useState(0);
-  const apply = (n: number) => { const c = document.documentElement.classList; c.remove("pw1", "pw2", "pa1"); if (n) c.add("pa1"); };
+  const apply = (n: number) => { const c = document.documentElement.classList; c.remove("pw1", "pw2", "pa1", "pmo1"); if (n) c.add("pmo1"); };
   useEffect(() => {
     try {
       const q = new URLSearchParams(location.search).get("look");
@@ -56,6 +59,35 @@ export default function PillPlan(_: { onWish: () => void; onSearch: () => void }
     window.addEventListener("mk-plan-ctx", on); return () => window.removeEventListener("mk-plan-ctx", on);
   }, []);
   const [wink, setWink] = useState<Wink | null>(null);
+  /* ── the pill's moods (trial, private "Pill" switch): for a couple of seconds the pill becomes a little face.
+     wink: now and then, and when something goes into the bag · look: when the pointer comes near, its eyes follow it ·
+     sleep: after half a minute with nothing happening, until you move again. Never while the card is open. ── */
+  const [mood, setMood] = useState<Mood>(null);
+  const moodRef = useRef<Mood>(null); moodRef.current = mood;
+  const chipRef = useRef<HTMLButtonElement>(null), mt = useRef(0);
+  const feel = (m: Mood, ms = 0) => { window.clearTimeout(mt.current); setMood(m); if (m && ms) mt.current = window.setTimeout(() => setMood(null), ms); };
+  const feelRef = useRef(feel); feelRef.current = feel;
+  useEffect(() => { if (open) feelRef.current(null); }, [open]);
+  useEffect(() => {
+    let idle = 0, next = 0, lookAt = 0, alive = true;
+    const quiet = () => !moodsOn() || openRef.current || document.hidden;
+    const armIdle = () => { window.clearTimeout(idle); idle = window.setTimeout(() => { if (alive && !quiet() && !moodRef.current) feelRef.current("sleep"); }, 30000); };
+    const armWink = (ms: number) => { window.clearTimeout(next); next = window.setTimeout(() => { if (!alive) return; if (!quiet() && !moodRef.current) feelRef.current("wink", 2600); armWink(22000 + Math.random() * 20000); }, ms); };
+    const awake = () => { if (moodRef.current === "sleep") feelRef.current("wink", 2600); armIdle(); };
+    const move = (e: PointerEvent) => {
+      awake();
+      const el = chipRef.current; if (!el || quiet() || e.pointerType === "touch") return;
+      const r = el.getBoundingClientRect(); if (!r.width) return;
+      const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2), near = Math.hypot(dx, dy) < 190, over = Math.abs(dx) < r.width / 2 + 4 && Math.abs(dy) < r.height / 2 + 4;
+      if (moodRef.current === "look") {
+        el.style.setProperty("--pmo-x", `${Math.max(-1, Math.min(1, dx / 160)) * 4}px`); el.style.setProperty("--pmo-y", `${Math.max(-1, Math.min(1, dy / 160)) * 3}px`);
+        if (!near || over) feelRef.current(null);
+      } else if (!moodRef.current && near && !over && Date.now() - lookAt > 20000) { lookAt = Date.now(); feelRef.current("look", 4500); }
+    };
+    armIdle(); armWink(5000);
+    window.addEventListener("pointermove", move, { passive: true }); window.addEventListener("scroll", awake, { passive: true }); window.addEventListener("keydown", awake); window.addEventListener("pointerdown", awake, { passive: true });
+    return () => { alive = false; window.clearTimeout(idle); window.clearTimeout(next); window.clearTimeout(mt.current); window.removeEventListener("pointermove", move); window.removeEventListener("scroll", awake); window.removeEventListener("keydown", awake); window.removeEventListener("pointerdown", awake); };
+  }, []);
   const wt = useRef(0), quiet = useRef(""), openRef = useRef(false); openRef.current = open;
   const say = (w: Wink, passive = false) => {
     if (!pillOn() || openRef.current) return;
@@ -80,7 +112,7 @@ export default function PillPlan(_: { onWish: () => void; onSearch: () => void }
         if (!seen) window.setTimeout(() => sayRef.current({ kind: "back", text: "Still in your bag.", ic: "martini" }, true), 2600); }
       return;
     }
-    if (count > was) sayRef.current({ kind: "bag", text: "In the bag.", ic: "ringbox" });
+    if (count > was) { sayRef.current({ kind: "bag", text: "In the bag.", ic: "ringbox" }); if (moodsOn() && !openRef.current) feelRef.current("wink", 2600); }
   }, [count]);
   // the Dream list: one more saved
   useEffect(() => {
@@ -153,7 +185,7 @@ export default function PillPlan(_: { onWish: () => void; onSearch: () => void }
   const chip = r ? <><b>{usdR(r.p.day)}</b><small>a day</small></> : <span className="pp-cta">Choose your plan</span>;
   return (
     <div className="pp-wrap" ref={wrap}>
-      <button type="button" className={`pp-chip${wink ? ` pw-go pw-${wink.kind}` : ""}`} aria-expanded={open} aria-controls="pp-sheet" onClick={() => { setWink(null); setAide(aideOn()); setOpen(o => !o); }}>{/* eslint-disable-next-line @next/next/no-img-element */}<img className="pai-av" src="/media/marcel.png" alt="" />{wink ? <>{wink.kind === "bird" && <i className="pw-swl" aria-hidden="true" />}<span className="pw-b" key={wink.kind + wink.text}>{wink.kind === "bird" ? null : wink.ic ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={`/media/icons/${wink.ic}.png`} alt="" /> : null}<em>{wink.text}</em></span></> : <>{chip}<span className="pp-dot" aria-hidden="true">{open ? "▴" : "▾"}</span></>}</button>
+      <button type="button" ref={chipRef} className={`pp-chip${wink ? ` pw-go pw-${wink.kind}` : ""}`} aria-expanded={open} aria-controls="pp-sheet" onClick={() => { setWink(null); setAide(aideOn()); setOpen(o => !o); }}>{/* eslint-disable-next-line @next/next/no-img-element */}<img className="pai-av" src="/media/marcel.png" alt="" />{wink ? <>{wink.kind === "bird" && <i className="pw-swl" aria-hidden="true" />}<span className="pw-b" key={wink.kind + wink.text}>{wink.kind === "bird" ? null : wink.ic ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={`/media/icons/${wink.ic}.png`} alt="" /> : null}<em>{wink.text}</em></span></> : <>{chip}<span className="pp-dot" aria-hidden="true">{open ? "▴" : "▾"}</span></>}{mood && <span className={`pmo pmo-${mood}`} aria-hidden="true"><i /><u /><i />{mood === "sleep" && <><b>z</b><b>z</b></>}</span>}</button>
       <div id="pp-sheet" className={`pp-sheet${open ? " on" : ""}${aide ? " pai-on" : ""}`} role="dialog" aria-label={r ? "Your Meekitaz Daily plan" : "Choose your plan"} aria-hidden={!open}>
         <button type="button" className="pp-x" onClick={() => setOpen(false)} aria-label="Close">×</button>
         {aide ? (open ? <PillAide path={path} day={r ? r.p.day : null} leftDay={leftDay} prod={prod} onPlan={() => setAide(false)} close={() => setOpen(false)} /> : null) : r ? (() => {

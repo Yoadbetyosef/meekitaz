@@ -14,6 +14,7 @@ import ShareSheet from "@/components/ShareSheet";
 import DailyMode from "@/components/DailyMode";
 import { DailyBar } from "@/components/DailyPrice";
 import DreamList from "@/components/DreamList";
+import { PillSwitch } from "@/components/PillPlan";
 import MiaChat from "@/components/MiaChat";
 import PressFx from "@/components/PressFx";
 import CartProvider from "@/components/CartProvider";
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <FontPalette />
         </CartProvider>
         </DailyMode>
+        <PillSwitch />
       </body>
     </html>
   );

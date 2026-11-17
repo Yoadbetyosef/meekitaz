@@ -5618,3 +5618,22 @@ body.pai-think .pp-sheet.pai-on:before{opacity:.9;animation:paiWave 1.6s linear 
 .pai-ask button{width:34px;height:34px;border-radius:50%;border:0;background:#1C1A1B;color:#fff;cursor:pointer;flex:none}.pai-ask button:disabled{opacity:.3}
 .pai{max-height:calc(100svh - 150px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}.pai::-webkit-scrollbar{display:none}
 @media(prefers-reduced-motion:reduce){body.pai-think .pp-chip,.pai-acts button.hit,body.pai-think .pp-sheet.pai-on:before,.pai.think .pai-hd img,.pai-wait i{animation:none!important}}
+
+/* ── (2026-11-17) TRIAL: the pill's moods — private "Pill" switch (html.pmo1). The pill becomes a little face for a moment. See PillPlan.tsx ── */
+html.pmo1 .pp-chip{position:relative}
+.pmo{position:absolute;inset:0;z-index:3;border-radius:inherit;display:flex;align-items:center;justify-content:center;gap:9px;background:#E1FF4F;overflow:hidden;pointer-events:none;animation:pmoIn .28s ease both}
+.pmo i{width:8px;height:8px;border-radius:50%;background:#1C1A1B;flex:none}
+.pmo u{width:16px;height:8px;border:2.5px solid #1C1A1B;border-top:0;border-radius:0 0 16px 16px;margin-top:6px;flex:none;text-decoration:none}
+.pmo-wink{animation:pmoFace 2.6s both}
+.pmo-wink i:last-of-type{animation:pmoWink 2.6s both}
+.pmo-look{animation:pmoFace 4.5s both}
+.pmo-look i{transform:translate(var(--pmo-x,0),var(--pmo-y,0));transition:transform .08s linear}
+.pmo-sleep{background:#DCEBF4}
+.pmo-sleep i{height:2.5px;width:9px;border-radius:2px}
+.pmo-sleep u{width:7px;height:7px;border:2.5px solid #1C1A1B;border-radius:50%;margin-top:5px}
+.pmo-sleep b{position:absolute;right:16%;top:46%;font:700 10px/1 var(--f-nmono),ui-monospace,monospace;color:#1C1A1B;opacity:0;animation:pmoZ 1.8s ease-out infinite}
+.pmo-sleep b:last-of-type{right:8%;animation-delay:.7s}
+@keyframes pmoIn{from{opacity:0}to{opacity:1}}
+@keyframes pmoFace{0%,100%{opacity:0}10%,90%{opacity:1}}
+@keyframes pmoWink{0%,40%,62%,100%{transform:scaleY(1)}48%,56%{transform:scaleY(.12)}}
+@keyframes pmoZ{0%{opacity:0;transform:translate(0,4px) scale(.6)}30%{opacity:1}100%{opacity:0;transform:translate(6px,-14px) scale(1.15)}}
