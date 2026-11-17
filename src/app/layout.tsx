@@ -50,7 +50,7 @@ export const viewport: Viewport = { themeColor: "#E5E3EF", viewportFit: "cover" 
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable} ${didact.variable} ${script.variable} ${nSans.variable} ${nSerif.variable} ${nMono.variable}`}>
+    <html lang="en" className={`${prata.variable} ${cormorant.variable} ${archivo.variable} ${didact.variable} ${script.variable} ${nSans.variable} ${nSerif.variable} ${nMono.variable} md2`}>{/* md2: the two approved scroll sections (the number that counts up, the Engagement rings headline) are on for everyone — see MidiTrial.tsx */}
       <head><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_LD) }} /></head>
       <body className="lk2">
         <div className="edge-t" aria-hidden="true" /><div className="edge-b" aria-hidden="true" />{/* phones: the browser bars always take the home page colour, whatever scrolls under them */}
