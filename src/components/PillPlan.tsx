@@ -129,7 +129,7 @@ export default function PillPlan(_: { onWish: () => void; onSearch: () => void }
           else { playRef.current(first ? guest : POOL[Math.floor(Math.random() * POOL.length)]); first = false; }
         }
       }
-      armWink(18000 + Math.random() * 16000);
+      armWink(50000 + Math.random() * 40000); // live for everyone: something small about once a minute
     }, ms); };
     const awake = () => { if (moodRef.current === "sleep") feelRef.current("wink", 2600); armIdle(); };
     const move = (e: PointerEvent) => {
@@ -143,7 +143,7 @@ export default function PillPlan(_: { onWish: () => void; onSearch: () => void }
         if (!near || over) feelRef.current(null);
       } else if (!moodRef.current && near && !over && Date.now() - lookAt > 20000) { lookAt = Date.now(); feelRef.current("look", 4500); }
     };
-    armIdle(); armWink(5000);
+    armIdle(); armWink(12000);
     window.addEventListener("pointermove", move, { passive: true }); window.addEventListener("scroll", awake, { passive: true }); window.addEventListener("keydown", awake); window.addEventListener("pointerdown", awake, { passive: true });
     return () => { alive = false; window.clearTimeout(idle); window.clearTimeout(next); window.clearTimeout(mt.current); window.removeEventListener("pointermove", move); window.removeEventListener("scroll", awake); window.removeEventListener("keydown", awake); window.removeEventListener("pointerdown", awake); };
   }, []);
