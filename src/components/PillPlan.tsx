@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import { usePlanRoom } from "./PlanKit";
 import { useCart } from "./CartProvider";
 import { wishList } from "@/lib/wish";
+import PillAide, { type ProdCtx } from "./PillAide";
 import { savePlan, saveFit, planTotal, usdR } from "@/lib/plan";
 
 /* The smart pill.
@@ -23,20 +24,22 @@ const SEEN = "mk_plan_intro";
    a page and three times a visit, and never while the plan card is open. The private switch also has a "colours" setting. */
 type Wink = { kind: "bag" | "saved" | "fits" | "over" | "back" | "bird"; text: string; ic?: string };
 const pillOn = () => { try { const c = document.documentElement.classList; return c.contains("pw1") || c.contains("pw2"); } catch { return false; } };
-const KEY_PW = "mk-pw", SHOW_PW = "mk-look-show", NAMES_PW = ["Pill · off", "Pill · winks", "Pill · winks, colours"];
+// (2026-11-17) the switch now turns on the assistant pill (html.pa1, see PillAide.tsx); the winks (pw1/pw2) stay in the code, switched off
+const KEY_PW = "mk-pa", SHOW_PW = "mk-look-show", NAMES_PW = ["Pill · off", "Pill · assistant"];
+const aideOn = () => { try { return document.documentElement.classList.contains("pa1"); } catch { return false; } };
 export function PillSwitch() {
   const [show, setShow] = useState(false), [v, setV] = useState(0);
-  const apply = (n: number) => { const c = document.documentElement.classList; c.remove("pw1", "pw2"); if (n) c.add(`pw${n}`); };
+  const apply = (n: number) => { const c = document.documentElement.classList; c.remove("pw1", "pw2", "pa1"); if (n) c.add("pa1"); };
   useEffect(() => {
     try {
       const q = new URLSearchParams(location.search).get("look");
       if (q === "0") localStorage.removeItem(KEY_PW);
-      const s = q === "1" || (q !== "0" && localStorage.getItem(SHOW_PW) === "1"), n = s ? Math.max(0, Math.min(2, Number(localStorage.getItem(KEY_PW)) || 0)) : 0;
+      const s = q === "1" || (q !== "0" && localStorage.getItem(SHOW_PW) === "1"), n = s ? Math.max(0, Math.min(1, Number(localStorage.getItem(KEY_PW)) || 0)) : 0;
       setShow(s); setV(n); apply(n);
     } catch { /* private mode: no switch */ }
   }, []);
   if (!show) return null;
-  return <button type="button" className={`md-sw pw-sw${v ? " on" : ""}`} onClick={() => { const n = (v + 1) % 3; setV(n); apply(n); try { localStorage.setItem(KEY_PW, String(n)); } catch { /* ignore */ } }}>{NAMES_PW[v]}</button>;
+  return <button type="button" className={`md-sw pw-sw${v ? " on" : ""}`} onClick={() => { const n = (v + 1) % 2; setV(n); apply(n); try { localStorage.setItem(KEY_PW, String(n)); } catch { /* ignore */ } }}>{NAMES_PW[v]}</button>;
 }
 
 export default function PillPlan(_: { onWish: () => void; onSearch: () => void }) {
@@ -46,6 +49,12 @@ export default function PillPlan(_: { onWish: () => void; onSearch: () => void }
   useEffect(() => { setOpen(false); }, [path]);
   // ── the winks (trial) ──
   const { cart, rings } = useCart();
+  const [aide, setAide] = useState(false), [prod, setProd] = useState<ProdCtx>(null);
+  useEffect(() => { setProd(null); }, [path]);
+  useEffect(() => {
+    const on = (e: Event) => { const d = (e as CustomEvent).detail as { kind?: string; perDay?: number; fits?: boolean } | undefined; if (d?.kind === "prod" && d.perDay) setProd({ perDay: d.perDay, fits: !!d.fits }); };
+    window.addEventListener("mk-plan-ctx", on); return () => window.removeEventListener("mk-plan-ctx", on);
+  }, []);
   const [wink, setWink] = useState<Wink | null>(null);
   const wt = useRef(0), quiet = useRef(""), openRef = useRef(false); openRef.current = open;
   const say = (w: Wink, passive = false) => {
@@ -144,10 +153,10 @@ export default function PillPlan(_: { onWish: () => void; onSearch: () => void }
   const chip = r ? <><b>{usdR(r.p.day)}</b><small>a day</small></> : <span className="pp-cta">Choose your plan</span>;
   return (
     <div className="pp-wrap" ref={wrap}>
-      <button type="button" className={`pp-chip${wink ? ` pw-go pw-${wink.kind}` : ""}`} aria-expanded={open} aria-controls="pp-sheet" onClick={() => { setWink(null); setOpen(o => !o); }}>{wink ? <>{wink.kind === "bird" && <i className="pw-swl" aria-hidden="true" />}<span className="pw-b" key={wink.kind + wink.text}>{wink.kind === "bird" ? null : wink.ic ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={`/media/icons/${wink.ic}.png`} alt="" /> : null}<em>{wink.text}</em></span></> : <>{chip}<span className="pp-dot" aria-hidden="true">{open ? "▴" : "▾"}</span></>}</button>
-      <div id="pp-sheet" className={`pp-sheet${open ? " on" : ""}`} role="dialog" aria-label={r ? "Your Meekitaz Daily plan" : "Choose your plan"} aria-hidden={!open}>
+      <button type="button" className={`pp-chip${wink ? ` pw-go pw-${wink.kind}` : ""}`} aria-expanded={open} aria-controls="pp-sheet" onClick={() => { setWink(null); setAide(aideOn()); setOpen(o => !o); }}>{/* eslint-disable-next-line @next/next/no-img-element */}<img className="pa-av" src="/media/marcel.png" alt="" />{wink ? <>{wink.kind === "bird" && <i className="pw-swl" aria-hidden="true" />}<span className="pw-b" key={wink.kind + wink.text}>{wink.kind === "bird" ? null : wink.ic ? /* eslint-disable-next-line @next/next/no-img-element */ <img src={`/media/icons/${wink.ic}.png`} alt="" /> : null}<em>{wink.text}</em></span></> : <>{chip}<span className="pp-dot" aria-hidden="true">{open ? "▴" : "▾"}</span></>}</button>
+      <div id="pp-sheet" className={`pp-sheet${open ? " on" : ""}${aide ? " pa-on" : ""}`} role="dialog" aria-label={r ? "Your Meekitaz Daily plan" : "Choose your plan"} aria-hidden={!open}>
         <button type="button" className="pp-x" onClick={() => setOpen(false)} aria-label="Close">×</button>
-        {r ? (() => {
+        {aide ? (open ? <PillAide path={path} day={r ? r.p.day : null} leftDay={leftDay} prod={prod} onPlan={() => setAide(false)} close={() => setOpen(false)} /> : null) : r ? (() => {
           const { p, bag, left, leftDay, fit } = r, total = planTotal(p), used = Math.min(100, total ? bag / total * 100 : 0);
           return <>
             <div className="pp-row"><span>Your plan · a day</span><b>{usdR(p.day)}</b></div>

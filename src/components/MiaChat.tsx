@@ -80,6 +80,8 @@ export default function MiaChat() {
   }, [open]);
 
   useEffect(() => { body.current?.scrollTo({ top: 1e6, behavior: "smooth" }); }, [msgs, busy]);
+  // the assistant pill hands a conversation over to the chat window
+  useEffect(() => { const on = () => { conv.current = ls.get(K_CONV); setOpen(true); }; window.addEventListener("mk-marcel-open", on); return () => window.removeEventListener("mk-marcel-open", on); }, []);
 
   async function send(t: string) {
     const m = t.trim(); if (!m || busy) return;
