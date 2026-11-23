@@ -171,13 +171,18 @@ export async function refreshWhiteSnapshot(): Promise<number> {
   } catch (e) { console.error("[white snapshot]", e); }
   return items.length;
 }
-/** Our copy of the white inventory, or [] when there is none yet. Never waits on the supplier. */
+/** Our copy of the white inventory: memory, then the database, then the cron's cached shards; [] only when none of them has it. */
 export async function getWhite(): Promise<Diamond[]> {
   if (whiteCache && Date.now() - whiteCache.at < 10 * 60 * 1000) return whiteCache.items;
   if (!whiteBusy) whiteBusy = (async () => {
     const snap = await loadWhiteSnapshot();
     if (snap && snap.items.length) { whiteCache = snap; return snap.items; }
-    return [];
+    // (2026-11-23) the database can be unreachable (quota, outage): rebuild the copy from the shards the cron keeps in Vercel's
+    // data cache — cache reads, not supplier calls, when the cron has run. A rebuild cut short by the budget is kept for 2 minutes only.
+    const t0 = Date.now(), budget = 12_000;
+    const items = await harvestWhite(budget);
+    if (items.length >= 500) { whiteCache = { at: Date.now() - t0 >= budget ? Date.now() - 8 * 60 * 1000 : Date.now(), items }; return items; }
+    return whiteCache ? whiteCache.items : [];
   })().catch(() => (whiteCache ? whiteCache.items : [])).finally(() => { whiteBusy = null; });
   return whiteCache ? whiteCache.items : whiteBusy;
 }
